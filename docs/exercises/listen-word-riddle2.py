@@ -8,5 +8,5 @@ ka = 0
 
 for index in MESSAGE:
 
-    print(f'Lücke {ALPHABET[MAPPING[MESSAGE[ka]]]}', end='🚀\n')
+    print(f'luis {ALPHABET[MAPPING[MESSAGE[ka]]]}', end='🚀\n')
     ka = ka + 1
