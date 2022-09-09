@@ -3,18 +3,14 @@
 zahlen = []
 primzahlen = []
 ka = True
-
 for i in range(2, 100):
     zahlen.append(i)
-
-
-for zahl in zahlen:
-    for primzahl in primzahlen:
-        if zahl % primzahl == 0:
+for q in zahlen:
+    for p in primzahlen:
+        if q % p == 0:
             ka = False
-
+            break
     if ka == True:
-        primzahlen.append(zahl)
+        primzahlen.append(q)
     ka = True
-
 print(primzahlen)
