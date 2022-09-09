@@ -12,6 +12,7 @@ for q in zahlen:
     for w in primzahlen:
         if q % w == 0:
             ka = True
+            break
 
     if ka == True:
         primzahlen.append(q)
