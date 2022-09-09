@@ -1,10 +1,15 @@
 
+import time
 
 zahlen = []
 primzahlen = []
 ka = True
-for i in range(2, 100):
+
+timee = time.time()
+
+for i in range(2, 1000):
     zahlen.append(i)
+
 for q in zahlen:
     for p in primzahlen:
         if q % p == 0:
@@ -14,3 +19,5 @@ for q in zahlen:
         primzahlen.append(q)
     ka = True
 print(primzahlen)
+
+print(time.time() - timee)
