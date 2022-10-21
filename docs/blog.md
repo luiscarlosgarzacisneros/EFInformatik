@@ -16,3 +16,6 @@ Listen gemacht
 16. sept.
 spielfeld gemacht
 
+21. okt.
+hangman angefangen, topdown modell angeschaut
+
