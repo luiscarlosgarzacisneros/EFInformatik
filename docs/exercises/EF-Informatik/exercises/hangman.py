@@ -16,6 +16,7 @@ def eingabe():
 
 
 def auswerten(buchstabe):
+
     if buchstabe in gesucht:
         gefunden.append(buchstabe)
     else:
@@ -33,24 +34,21 @@ def show():
 
 
 def gewonnen():
-    return False
+    pass
 
 
 def game_over():
-    pass
+    if len(falsch_geraten) > 10:
+        True
 
 
 def play():
     while not game_over():
-
-        buchstabe = eingabe()
-        auswerten(buchstabe)
-        print(buchstabe)
         show()
-    if gewonnen():
-        print('...')
-    else:
-        print('...')
+        inp = eingabe()
+        auswerten(inp)
+    if game_over() == True:
+        print('Verloren)')
 
 
 play()

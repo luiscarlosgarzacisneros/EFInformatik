@@ -2,7 +2,7 @@
 
 def board1():
     artzeile = 3
-
+    print("    1      2      3      4      5")
     for i in range(5):
         print("+------+------+------+------+------+")
         artzeile = 0
@@ -10,7 +10,7 @@ def board1():
         print("I      I      I      I      I      I")
         artzeile = artzeile + 1
 
-        print("I   2  I   2  I   2  I   2  I   2  I")
+        print("I   2  I   2  I   2  I   2  I   2  I  1")
         artzeile = artzeile + 1
 
         print("I      I      I      I      I      I")
@@ -26,16 +26,19 @@ board = [
     [2, 4, 4, 4, 4]
 ]
 
-zahlen = [1, 2, 3, 4, 5]
+zeilnummer = 1
 
+print('  1 2 3 4 5 ')
 
-print(' 1 2 3 4 5 ')
 
 for zeile in board:
+    print(" ", end="")
     for zelle in zeile:
         print(' -', end='')
-    print(' ')
 
+    print(' ')
+    print(zeilnummer, end="")
+    zeilnummer = zeilnummer + 1
     for zelle in zeile:
         print(f'|{zelle}', end='')
     print('|')
@@ -43,3 +46,5 @@ for zeile in board:
 for zelle in board[0]:
     print(' -', end='')
 print(' ')
+
+board1()

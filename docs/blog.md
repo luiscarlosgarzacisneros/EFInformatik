@@ -19,3 +19,6 @@ spielfeld gemacht
 21. okt.
 hangman angefangen, topdown modell angeschaut
 
+28.okt 
+hangman, aufgaben funktionen * viereck, selbsttest
+
