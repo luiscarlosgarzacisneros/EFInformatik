@@ -12,7 +12,7 @@ const config = {
   tagline: 'EFInformatik',
   url: `https://${USERNAME}.github.io/`,
   baseUrl: `/${REPO_NAME}/`,
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
 
