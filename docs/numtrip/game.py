@@ -70,10 +70,35 @@ def board1():
 def feldlöschen():
     zeile = input('zeile: ')
     spalte = input('spalte: ')
-    zeile = int(zeile)
-    spalte = int(spalte)
 
-    board[zeile - 1][spalte - 1] = ' '
+    eingabe_zeile = True
+    eingabe_spalte = True
+
+    if not zeile.isnumeric():
+        eingabe_zeile = False
+    if not spalte.isnumeric():
+        eingabe_spalte = False
+
+    if zeile.isnumeric():
+        zeile = int(zeile)
+
+        if zeile < 0:
+            eingabe_zeile = False
+        if zeile > 5:
+            eingabe_zeile = False
+
+    if spalte.isnumeric():
+        spalte = int(spalte)
+
+        if spalte < 0:
+            eingabe_spalte = False
+        if spalte > 5:
+            eingabe_spalte = False
+
+    if eingabe_zeile and eingabe_spalte == True:
+        board[zeile - 1][spalte - 1] = ' '
+    else:
+        print('Fehlerhafte Eingabe')
 
 
 spielen = True
