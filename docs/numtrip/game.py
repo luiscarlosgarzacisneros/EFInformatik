@@ -1,7 +1,19 @@
 
+board = [
+        [2, 4, 666, 88, 8],
+        [4, 222222, 8, 2, 1],
+        [4, 69, 88, 4, 2],
+        [2, 88, 1111, 44444, 1],
+        [2, 4, 444, 444, 4]
+        ]
+
 
 def board1():
     artzeile = 3
+    zeile = 0
+    spalte = 0
+    zahlrechts = 1
+
     print("    1      2      3      4      5")
     for i in range(5):
         print("+------+------+------+------+------+")
@@ -10,7 +22,44 @@ def board1():
         print("I      I      I      I      I      I")
         artzeile = artzeile + 1
 
-        print("I   2  I   2  I   2  I   2  I   2  I  1")
+        for o in range(5):
+            if len(str(board[zeile][spalte])) == 1:
+                print('I   ', end='')
+                print(board[zeile][spalte], end='')
+                print('  ', end='')
+
+            if len(str(board[zeile][spalte])) == 2:
+                print('I  ', end='')
+                print(board[zeile][spalte], end='')
+                print('  ', end='')
+
+            if len(str(board[zeile][spalte])) == 3:
+                print('I  ', end='')
+                print(board[zeile][spalte], end='')
+                print(' ', end='')
+
+            if len(str(board[zeile][spalte])) == 4:
+                print('I ', end='')
+                print(board[zeile][spalte], end='')
+                print(' ', end='')
+
+            if len(str(board[zeile][spalte])) == 5:
+                print('I ', end='')
+                print(board[zeile][spalte], end='')
+                print('', end='')
+
+            if len(str(board[zeile][spalte])) == 6:
+                print('I', end='')
+                print(board[zeile][spalte], end='')
+                print('', end='')
+
+            spalte = spalte + 1
+
+        print('I  ', end='')
+        print(zahlrechts)
+        zahlrechts = zahlrechts + 1
+        zeile = zeile + 1
+        spalte = 0
         artzeile = artzeile + 1
 
         print("I      I      I      I      I      I")
@@ -18,33 +67,22 @@ def board1():
     print("+------+------+------+------+------+")
 
 
-board = [
-    [2, 4, 1, 8, 8],
-    [4, 2, 8, 2, 1],
-    [4, 4, 8, 4, 2],
-    [2, 8, 1, 4, 1],
-    [2, 4, 4, 4, 4]
-]
+def feldlöschen():
+    zeile = input('zeile: ')
+    spalte = input('spalte: ')
+    zeile = int(zeile)
+    spalte = int(spalte)
 
-zeilnummer = 1
-
-print('  1 2 3 4 5 ')
+    board[zeile - 1][spalte - 1] = ' '
 
 
-for zeile in board:
-    print(" ", end="")
-    for zelle in zeile:
-        print(' -', end='')
+spielen = True
 
-    print(' ')
-    print(zeilnummer, end="")
-    zeilnummer = zeilnummer + 1
-    for zelle in zeile:
-        print(f'|{zelle}', end='')
-    print('|')
 
-for zelle in board[0]:
-    print(' -', end='')
-print(' ')
+def play():
+    while spielen == True:
+        board1()
+        feldlöschen()
 
-board1()
+
+play()
