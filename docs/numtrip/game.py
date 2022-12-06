@@ -1,10 +1,10 @@
 
 board = [
-        [88, 88, 666, 88, 88],
-        [88, 222222, 8, 2, 1],
-        [4, 69, 88, 4, 2],
-        [2, 88, 1111, 44444, 1],
-        [2, 4, 444, 444, 4]
+        [2, 2, 2, 4, 2],
+        [2, 2, 2, 4, 2],
+        [2, 2, 2, 4, 2],
+        [2, 2, 2, 2, 4],
+        [2, 2, 2, 2, 2]
         ]
 
 
@@ -23,9 +23,8 @@ def board1():
         artzeile = artzeile + 1
 
         for o in range(5):
-            anzleer = 6 - int(len(str(board[zeile][spalte])))
             print('I', end='')
-            for g in range(anzleer):
+            for g in range(6 - int(len(str(board[zeile][spalte])))):
                 print(' ', end='')
             print(board[zeile][spalte], end='')
 
@@ -78,7 +77,42 @@ def feldlöschen():
             fehler = 'zahl muss kleiner als 5 sein'
 
     if eingabe_zeile and eingabe_spalte == True:
+        ausgewähltezahl = board[zeile - 1][spalte - 1]
         board[zeile - 1][spalte - 1] = ' '
+
+        spalte = 1
+        zeile = 1
+        for i in range(8):
+            for i in range(5):
+                for i in range(5):
+                    if board[zeile - 1][spalte - 1] == ' ':
+                        feld1 = 0
+                        feld2 = 0
+                        feld3 = 0
+                        feld4 = 0
+
+                        if zeile < 4.1:
+                            feld1 = board[zeile][spalte - 1]
+                        if zeile - 2 > -1:
+                            feld2 = board[zeile - 2][spalte - 1]
+                        if spalte < 4.1:
+                            feld3 = board[zeile - 1][spalte]
+                        if spalte - 2 > -1:
+                            feld4 = board[zeile - 1][spalte - 2]
+
+                        if feld1 == ausgewähltezahl:
+                            board[zeile][spalte - 1] = ' '
+                        if feld2 == ausgewähltezahl:
+                            board[zeile - 2][spalte - 1] = ' '
+                        if feld3 == ausgewähltezahl:
+                            board[zeile - 1][spalte] = ' '
+                        if feld4 == ausgewähltezahl:
+                            board[zeile - 1][spalte - 2] = ' '
+                    spalte = spalte + 1
+                spalte = 1
+                zeile = zeile + 1
+            zeile = 1
+
     else:
         print('Fehlerhafte Eingabe')
         print(fehler)
