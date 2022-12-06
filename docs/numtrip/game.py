@@ -1,4 +1,6 @@
 
+import random
+
 board = [
         [2, 2, 2, 4, 2],
         [2, 2, 2, 4, 2],
@@ -43,8 +45,12 @@ def board1():
 
 
 def feldlöschen():
+
     zeile = input('zeile: ')
     spalte = input('spalte: ')
+
+    zeilex = int(zeile) - 1
+    spaltex = int(spalte) - 1
 
     eingabe_zeile = True
     eingabe_spalte = True
@@ -78,10 +84,28 @@ def feldlöschen():
 
     if eingabe_zeile and eingabe_spalte == True:
         ausgewähltezahl = board[zeile - 1][spalte - 1]
-        board[zeile - 1][spalte - 1] = ' '
+        o = False
+        if zeile < 5:
+            if int(board[zeile][spalte - 1]) == int(board[zeile - 1][spalte - 1]):
+                o = True
+        if zeile > -1:
+            if int(board[zeile - 2][spalte - 1]) == int(board[zeile - 1][spalte - 1]):
+                o = True
+        if spalte < 5:
+            if int(board[zeile - 1][spalte]) == int(board[zeile - 1][spalte - 1]):
+                o = True
+        if spalte > -1:
+            if int(board[zeile - 1][spalte - 2]) == int(board[zeile - 1][spalte - 1]):
+                o = True
+
+        if o == True:
+            board[zeile - 1][spalte - 1] = ' '
+        else:
+            print('X')
 
         spalte = 1
         zeile = 1
+
         for i in range(8):
             for i in range(5):
                 for i in range(5):
@@ -112,6 +136,35 @@ def feldlöschen():
                 spalte = 1
                 zeile = zeile + 1
             zeile = 1
+
+        if o == True:
+            board[int(zeilex)][int(spaltex)] = str(int(ausgewähltezahl) * 2)
+
+        spalte = 0
+        zeile = 0
+        for i in range(100):
+            for i in range(5):
+                for i in range(5):
+                    if zeile + 1 < 5:
+                        if board[zeile + 1][spalte] == ' ':
+                            board[zeile + 1][spalte] = board[zeile][spalte]
+                            board[zeile][spalte] = ' '
+                        zeile = zeile + 1
+                zeile = 0
+                spalte = spalte + 1
+            spalte = 0
+
+            numbers = [1, 2, 4]
+            if board[0][0] == ' ':
+                board[0][0] = str(random.choice(numbers))
+            if board[0][1] == ' ':
+                board[0][1] = str(random.choice(numbers))
+            if board[0][2] == ' ':
+                board[0][2] = str(random.choice(numbers))
+            if board[0][3] == ' ':
+                board[0][3] = str(random.choice(numbers))
+            if board[0][4] == ' ':
+                board[0][4] = str(random.choice(numbers))
 
     else:
         print('Fehlerhafte Eingabe')
