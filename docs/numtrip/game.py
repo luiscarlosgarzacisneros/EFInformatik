@@ -3,12 +3,14 @@
 import random
 
 board = [
-        [2, 2, 2, 4, 2],
-        [2, 2, 2, 4, 2],
-        [2, 2, 2, 4, 2],
-        [2, 2, 2, 2, 4],
-        [2, 2, 2, 2, 2]
+        [2, 4, 8, 4, 2],
+        [4, 2, 4, 2, 4],
+        [2, 4, 2, 4, 2],
+        [4, 2, 4, 2, 4],
+        [2, 4, 2, 4, 2]
         ]
+
+gewonnen = False
 
 
 def board1():
@@ -46,6 +48,8 @@ def board1():
 
 
 def feldlöschen():
+
+    global gewonnen
 
     zeile = input('zeile: ')
     spalte = input('spalte: ')
@@ -140,6 +144,8 @@ def feldlöschen():
 
         if o == True:
             board[int(zeilex)][int(spaltex)] = str(int(ausgewähltezahl) * 2)
+        if board[int(zeilex)][int(spaltex)] == 1024:
+            gewonnen = True
 
         spalte = 0
         zeile = 0
@@ -175,10 +181,56 @@ def feldlöschen():
 spielen = True
 
 
+def gameloop():
+    global spielen
+    verloren = True
+    x = 0
+    y = 0
+    a = board[x][y]
+    for i in range(5):
+        x = 0
+        for j in range(5):
+            a = board[x][y]
+            if x > 1:
+                try:
+                    if board[x - 1][y] == a:
+                        verloren = False
+                except:
+                    pass
+            if x < 1:
+                try:
+                    if board[x + 1][y] == a:
+                        verloren = False
+                except:
+                    pass
+            if y > 1:
+                try:
+                    if board[x][y - 1] == a:
+                        verloren = False
+                except:
+                    pass
+            if y < 1:
+                try:
+                    if board[x][y + 1] == a:
+                        verloren = False
+                except:
+                    pass
+            x = x + 1
+        y = y + 1
+    if verloren == True:
+        print('game over')
+        spielen = False
+
+
 def play():
     while spielen == True:
         board1()
         feldlöschen()
+        gameloop()
+        if gewonnen == True:
+            print('gewonnen')
+            break
 
 
+# mind python3
 play()
