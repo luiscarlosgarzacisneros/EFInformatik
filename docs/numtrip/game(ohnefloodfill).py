@@ -5,7 +5,7 @@ gewonnen = False
 spielen = True
 
 board = []
-numbers = [1, 2, 4, 8]
+numbers = [1, 1, 1]
 
 
 def generateboard():
@@ -30,7 +30,6 @@ def board1():
 
         print("I      I      I      I      I      I")
 
-        # Zeile mit board Element
         for o in range(5):
             print('I', end='')
             for g in range(6 - int(len(str(board[zeile][spalte])))):
@@ -47,26 +46,6 @@ def board1():
 
         print("I      I      I      I      I      I")
     print("+------+------+------+------+------+")
-
-
-def floodfill(x, y, wert):
-    # füllt Nachbarszellen mit dem gleichen Wert mit ' '
-    if x + 1 < 5:
-        if board[x + 1][y] == wert:
-            board[x + 1][y] = ' '
-            floodfill(x + 1, y, wert)
-    if x - 1 > -1:
-        if board[x - 1][y] == wert:
-            board[x - 1][y] = ' '
-            floodfill(x - 1, y, wert)
-    if y + 1 < 5:
-        if board[x][y + 1] == wert:
-            board[x][y + 1] = ' '
-            floodfill(x, y + 1, wert)
-    if y - 1 > -1:
-        if board[x][y - 1] == wert:
-            board[x][y - 1] = ' '
-            floodfill(x, y - 1, wert)
 
 
 def feldlöschen():
@@ -113,7 +92,7 @@ def feldlöschen():
         spaltex = int(spalte) - 1
         # wenn eingabe richtig
         züge = züge + 1
-        ausgewähltezahl = board[zeilex][spaltex]
+        ausgewähltezahl = board[zeile - 1][spalte - 1]
 
         # hat das ausgewählte feld einen Nachbarn mit der gleichen zahl
         o = False
@@ -121,22 +100,58 @@ def feldlöschen():
             if int(board[zeilex + 1][spaltex]) == int(board[zeilex][spaltex]):
                 o = True
         if zeilex - 1 > -1:
-            if int(board[zeilex - 1][spaltex]) == int(board[zeilex][spaltex]):
+            if int(board[zeilex - 1][spaltex]) == int(board[zeilex - 1][spaltex - 1]):
                 o = True
         if spaltex + 1 < 5:
-            if int(board[zeilex][spaltex + 1]) == int(board[zeilex][spaltex]):
+            if int(board[zeilex][spaltex + 1]) == int(board[zeilex - 1][spaltex - 1]):
                 o = True
         if spaltex - 1 > -1:
-            if int(board[zeilex][spaltex - 1]) == int(board[zeilex][spaltex]):
+            if int(board[zeilex][spaltex - 1]) == int(board[zeilex - 1][spaltex - 1]):
                 o = True
 
-        # Wenn ja, dann wird dieses Feld gelöscht & floodfill von da aus gemacht. Wenn nein dann kann man diese Feld nicht auswähen:X
+        # Wenn ja, dann wird dieses Feld gelöscht, wenn nein dann kann man diese Feld nicht auswähen:X
         if o == True:
-            floodfill(zeilex, spaltex, board[zeilex][spaltex])
-            # Wenn die Eingabe korrekt war wird das ausgewählte Feld mal 2 gerechnet
-            board[int(zeilex)][int(spaltex)] = str(int(ausgewähltezahl) * 2)
+            board[zeile - 1][spalte - 1] = ' '
         else:
             print('X')
+
+        # alle ' ' Felder werden geprüft, ob sie Nachbarsfelder der ausgewählten Zahl haben
+        spalte = 1
+        zeile = 1
+        for i in range(9):
+            for i in range(5):
+                for i in range(5):
+                    if board[zeile - 1][spalte - 1] == ' ':
+                        feld1 = 0
+                        feld2 = 0
+                        feld3 = 0
+                        feld4 = 0
+
+                        if zeile < 4.1:
+                            feld1 = board[zeile][spalte - 1]
+                        if zeile - 2 > -1:
+                            feld2 = board[zeile - 2][spalte - 1]
+                        if spalte < 4.1:
+                            feld3 = board[zeile - 1][spalte]
+                        if spalte - 2 > -1:
+                            feld4 = board[zeile - 1][spalte - 2]
+
+                        if feld1 == ausgewähltezahl:
+                            board[zeile][spalte - 1] = ' '
+                        if feld2 == ausgewähltezahl:
+                            board[zeile - 2][spalte - 1] = ' '
+                        if feld3 == ausgewähltezahl:
+                            board[zeile - 1][spalte] = ' '
+                        if feld4 == ausgewähltezahl:
+                            board[zeile - 1][spalte - 2] = ' '
+                    spalte = spalte + 1
+                spalte = 1
+                zeile = zeile + 1
+            zeile = 1
+
+        # Wenn die Eingabe korrekt war wird das ausgewählte Feld mal 2 gerechnet
+        if o == True:
+            board[int(zeilex)][int(spaltex)] = str(int(ausgewähltezahl) * 2)
 
         # Felder oberhalb eines ' ' Feldes gehen 1 nah unten. Alle Felder werden überprüft
         spalte = 0
