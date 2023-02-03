@@ -31,6 +31,7 @@ def board1():
         print("I      I      I      I      I      I")
 
         # Zeile mit board Element
+        # Die Zahl sollte in der Mitte der Zelle sein, nicht Rechtsbündig
         for o in range(5):
             print('I', end='')
             for g in range(6 - int(len(str(board[zeile][spalte])))):
@@ -68,6 +69,8 @@ def floodfill(x, y, wert):
             board[x][y - 1] = ' '
             floodfill(x, y - 1, wert)
 
+# mehr einzelne Definitionen. 
+# Definition passender benennen.
 
 def feldlöschen():
     global züge
@@ -180,6 +183,7 @@ def feldlöschen():
 
 # Es wird überprüft, ob ein Feld ein Nachbarsfeld der gleichen Zahl hat. Wenn nein hat der spieler verloren.
 
+# Die ganzen try-except sind hier nicht nögtig. 1. Wegen dem 'past', 2. wird es bei z.B. bei Eingaben, oder Dateien benutzt.
 
 def verloren():
     global spielen
@@ -192,29 +196,17 @@ def verloren():
         for j in range(5):
             a = board[x][y]
             if x > 1:
-                try:
-                    if board[x - 1][y] == a:
-                        verloren = False
-                except:
-                    pass
+                if board[x - 1][y] == a:
+                    verloren = False
             if x < 1:
-                try:
-                    if board[x + 1][y] == a:
-                        verloren = False
-                except:
-                    pass
+                if board[x + 1][y] == a:
+                    verloren = False
             if y > 1:
-                try:
-                    if board[x][y - 1] == a:
-                        verloren = False
-                except:
-                    pass
+                if board[x][y - 1] == a:
+                    verloren = False
             if y < 1:
-                try:
-                    if board[x][y + 1] == a:
-                        verloren = False
-                except:
-                    pass
+                if board[x][y + 1] == a:
+                    verloren = False
             x = x + 1
         y = y + 1
     if verloren == True:
