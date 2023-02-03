@@ -72,7 +72,7 @@ def floodfill(x, y, wert):
 # mehr einzelne Definitionen. 
 # Definition passender benennen.
 
-def feldlöschen():
+def eingabe():
     global züge
     global gewonnen
 
@@ -221,7 +221,7 @@ def play():
     global gewonnen
     while spielen == True:
         board1()
-        feldlöschen()
+        eingabe()
         verloren()
         print(f'zug:{züge}')
         if gewonnen == True:
