@@ -5,7 +5,7 @@ gewonnen = False
 spielen = True
 
 board = []
-numbers = [1, 1, 1]
+numbers = [1, 2, 4, 8]
 
 
 def generateboard():
@@ -209,7 +209,7 @@ def verloren():
             if x > 1:
                 try:
                     if board[x - 1][y] == a:
-                        verloren = False
+                        return False
                 except:
                     pass
             if x < 1:
@@ -232,7 +232,7 @@ def verloren():
                     pass
             x = x + 1
         y = y + 1
-    if verloren == True:
+    if  == True:
         print('game over')
         spielen = False
         board1()
@@ -242,10 +242,12 @@ def verloren():
 
 def play():
     global gewonnen
-    while spielen == True:
+    while spielen:
         board1()
         feldlöschen()
         verloren()
+        if not verloren():
+            print('game over')
         print(f'zug:{züge}')
         if gewonnen == True:
             print('gewonnen')

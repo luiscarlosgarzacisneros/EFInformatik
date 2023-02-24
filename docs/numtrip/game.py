@@ -4,7 +4,11 @@ züge = 1
 gewonnen = False
 spielen = True
 
-board = []
+board = [[1, 2, 1, 2, 1],
+         [2, 1, 2, 1, 2],
+         [1, 2, 1, 2, 1],
+         [2, 1, 2, 1, 2],
+         [1, 2, 1, 2, 2]]
 numbers = [1, 2, 4, 8]
 
 
@@ -154,7 +158,13 @@ def feldlöschen():
             spalte = 0
 
             # wenn ein Feld oben leer ist, wird es mit einer zufälligen Zahl (1,2 oder 4) gefüllt.
+            
             numbers = [1, 2, 4]
+            for x in range(5):
+                if board[0][x] == ' ':
+                    board[0][x] = str(random.choice(numbers))
+                
+            
             if board[0][0] == ' ':
                 board[0][0] = str(random.choice(numbers))
             if board[0][1] == ' ':
@@ -192,29 +202,17 @@ def verloren():
         for j in range(5):
             a = board[x][y]
             if x > 1:
-                try:
-                    if board[x - 1][y] == a:
-                        verloren = False
-                except:
-                    pass
+                if board[x - 1][y] == a:
+                    verloren = False
             if x < 1:
-                try:
-                    if board[x + 1][y] == a:
-                        verloren = False
-                except:
-                    pass
+                if board[x + 1][y] == a:
+                    verloren = False
             if y > 1:
-                try:
-                    if board[x][y - 1] == a:
-                        verloren = False
-                except:
-                    pass
+                if board[x][y - 1] == a:
+                    verloren = False
             if y < 1:
-                try:
-                    if board[x][y + 1] == a:
-                        verloren = False
-                except:
-                    pass
+                if board[x][y + 1] == a:
+                    verloren = False
             x = x + 1
         y = y + 1
     if verloren == True:
@@ -238,7 +236,6 @@ def play():
             break
 
 
-generateboard()
 play()
 
 
