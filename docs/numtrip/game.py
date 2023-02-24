@@ -35,6 +35,7 @@ def board1():
         print("I      I      I      I      I      I")
 
         # Zeile mit board Element
+        # Die Zahl sollte in der Mitte der Zelle sein, nicht Rechtsbündig
         for o in range(5):
             print('I', end='')
             for g in range(6 - int(len(str(board[zeile][spalte])))):
@@ -72,8 +73,10 @@ def floodfill(x, y, wert):
             board[x][y - 1] = ' '
             floodfill(x, y - 1, wert)
 
+# mehr einzelne Definitionen. 
+# Definition passender benennen.
 
-def feldlöschen():
+def eingabe():
     global züge
     global gewonnen
 
@@ -190,6 +193,7 @@ def feldlöschen():
 
 # Es wird überprüft, ob ein Feld ein Nachbarsfeld der gleichen Zahl hat. Wenn nein hat der spieler verloren.
 
+# Die ganzen try-except sind hier nicht nögtig. 1. Wegen dem 'past', 2. wird es bei z.B. bei Eingaben, oder Dateien benutzt.
 
 def verloren():
     global spielen
@@ -227,7 +231,7 @@ def play():
     global gewonnen
     while spielen == True:
         board1()
-        feldlöschen()
+        eingabe()
         verloren()
         print(f'zug:{züge}')
         if gewonnen == True:
