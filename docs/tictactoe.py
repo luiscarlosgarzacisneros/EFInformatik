@@ -74,7 +74,7 @@ def evaluatepos(board):
 
 def minimax(position, depth, maxplayer):
     # X:maxplayer,spieler O:minplayer,computer
-    if depth == 0 or gameover(board, 'X') == True or gameover(board, 'X') == True:
+    if depth == 0 or gameover(board, 'X') == True or gameover(board, 'O') == True:
         return evaluatepos(positionboard)
 
     if maxplayer:
@@ -94,8 +94,9 @@ def minimax(position, depth, maxplayer):
 
 def play():
     round = 1
-    while gameover(board, 'X') == False:
-        gameover(board)
+    while gameover(board, 'X') == False and gameover(board, 'O') == False:
+        gameover(board, 'X')
+        gameover(board, 'O')
         printboard()
         player()
         round = round + 1
