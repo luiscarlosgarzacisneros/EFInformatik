@@ -6,9 +6,9 @@ board = [
     [' ', ' ', ' '],
 ]
 board2 = [
-    ['U', 'U', 'U'],
-    ['U', 'U', 'U'],
-    ['U', ' ', ' '],
+    ['X', ' ', ' '],
+    [' ', 'X', 'X'],
+    [' ', ' ', ' '],
 ]
 
 
@@ -20,13 +20,12 @@ def generate_children(boa, player, parentn, depth):
     # tree: [[[child1],[child2],[childn],[position matrix],[position number],[parent position number],[depth]],[...]]
 
     global positioncounter
+    positioncounter = positioncounter + 1
     boardposition = []
     y = 0
     boardcopy = copy.deepcopy(boa)
 
     if depth < 4:
-        positioncounter = positioncounter + 1
-
         for i in range(3):
             x = 0
             for j in range(3):
@@ -38,7 +37,6 @@ def generate_children(boa, player, parentn, depth):
                     pass
                 x = x + 1
             y = y + 1
-
         boardposition.append(copy.deepcopy(boa))  # position
         boardposition.append(positioncounter)  # positionnummer (id)
         boardposition.append(parentn)  # parentposition
@@ -49,16 +47,12 @@ def generate_children(boa, player, parentn, depth):
             newplayer = 'X'
         else:
             newplayer == 'O'
-
-        for e in range(len(boardposition) - 4):
-            matrix = copy.deepcopy(boardposition[e])
-            generate_children(matrix, 'O', positioncounter, depth + 1)
-
     else:
         pass
 
 
-generate_children(board2, 'O', -1, 0)
+generate_children(board, 'O', -1, 0)
+generate_children(board2, 'O', 0, 1)
 
 x = 0
 for pp in range(len(tree)):
@@ -67,13 +61,3 @@ for pp in range(len(tree)):
         print(tree[x][y])
         y = y + 1
     x = x + 1
-
-# children of the position
-# position
-
-# position number id
-# parent position number id
-# depth of position
-
-
-# parent pos n id not working!!!!!!!!
