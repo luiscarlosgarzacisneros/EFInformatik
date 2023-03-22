@@ -25,7 +25,7 @@ def player():
     board[y][x] = 'X'
 
 
-def gameover(board, xoro):
+def gewonnen(board, xoro):
     # board ist in dieser funktion die ausgewählte matrix, nicht DAS board.
     # horizontal
     if board[0][0] == xoro and board[0][1] == xoro and board[0][2] == xoro:
@@ -66,16 +66,18 @@ def generatechildren(board, xturn):
 
 def evaluatepos(board):
     # board ist hier wieder das ausgawählte Spielfeld
-    if gameover(board, 'X') == True:
+    if gewonnen(board, 'X') == True:
         return 100
-    elif gameover(board, 'O') == True:
+    elif gewonnen(board, 'O') == True:
         return -100
+    else:
+        return 0
 
 
 def minimax(position, depth, maxplayer):
     # X:maxplayer,spieler O:minplayer,computer
-    if depth == 0 or gameover(board, 'X') == True or gameover(board, 'O') == True:
-        return evaluatepos(positionboard)
+    if depth == 0 or gewonnen(position, 'X') == True or gewonnen(position, 'O') == True:
+        return evaluatepos(position)
 
     if maxplayer:
         maxvalue = -100
@@ -94,9 +96,9 @@ def minimax(position, depth, maxplayer):
 
 def play():
     round = 1
-    while gameover(board, 'X') == False and gameover(board, 'O') == False:
-        gameover(board, 'X')
-        gameover(board, 'O')
+    while gewonnen(board, 'X') == False and gewonnen()(board, 'O') == False:
+        gewonnen()(board, 'X')
+        gewonnen()(board, 'O')
         printboard()
         player()
         round = round + 1

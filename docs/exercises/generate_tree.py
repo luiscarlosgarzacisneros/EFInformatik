@@ -28,6 +28,7 @@ def generate_children(boa, player, parentn, depth):
 
     global positioncounter
     boardposition = []
+    children = []
     y = 0
     boardcopy = copy.deepcopy(boa)
 
@@ -40,7 +41,7 @@ def generate_children(boa, player, parentn, depth):
             for j in range(3):
                 if boardcopy[x][y] == ' ':
                     boardcopy[x][y] = str(player)
-                    boardposition.append(boardcopy)
+                    children.append(boardcopy)
                     boardcopy = copy.deepcopy(boa)
                 else:
                     pass
@@ -48,11 +49,12 @@ def generate_children(boa, player, parentn, depth):
             y = y + 1
 
         # children werden zu tree appended, zusatzinfos von parent-pos
+        boardposition.append(copy.deepcopy(children))
         boardposition.append(copy.deepcopy(boa))  # position
         boardposition.append(positioncounter)  # positionnummer (id)
         boardposition.append(parentn)  # parentposition
         boardposition.append(copy.deepcopy(depth))  # anzahl züge, um auf diese position zu kommen
-        tree.append(copy.deepcopy(boardposition))  # alle mögliche nächste positionen
+        tree.extend(copy.deepcopy(boardposition))  # alle mögliche nächste positionen
 
         # spieler wird gewechselt
         newplayer = 'O'
@@ -63,8 +65,8 @@ def generate_children(boa, player, parentn, depth):
 
         # children von children werden rekursiv generiert
         parentid = copy.deepcopy(positioncounter)
-        for e in range(len(boardposition) - 4):
-            matrix = copy.deepcopy(boardposition[e])
+        for e in range(len(children)):
+            matrix = copy.deepcopy(children[e])
             generate_children(matrix, newplayer, parentid, depth + 1)
 
     else:
@@ -74,14 +76,7 @@ def generate_children(boa, player, parentn, depth):
 
 # output-------------------------------
 generate_children(board2, 'O', -1, 0)
-
-x = 0
-for pp in range(len(tree)):
-    y = 0
-    for p in range(len(tree[x])):
-        print(tree[x][y])
-        y = y + 1
-    x = x + 1
+print(tree)
 # -------------------------------------
 
 
