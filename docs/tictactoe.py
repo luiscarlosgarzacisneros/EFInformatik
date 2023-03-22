@@ -105,7 +105,7 @@ def minimax(position, depth, maxplayer):
                 pass
             x = x + 1
         y = y + 1
-    #
+
     if maxplayer:
         maxvalue = -100
         for child in children:
@@ -125,3 +125,5 @@ def minimax(position, depth, maxplayer):
 minimax(board, 0, True)
 print(bestmove)
 print(minimax(board, 0, True))
+
+# try returnin list with [value][bestmove]

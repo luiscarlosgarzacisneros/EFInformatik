@@ -106,6 +106,7 @@ def minimax(position, depth, maxplayer):
             x = x + 1
         y = y + 1
     #
+    print(children)
     if maxplayer:
         maxvalue = -100
         for child in children:
@@ -121,7 +122,39 @@ def minimax(position, depth, maxplayer):
         return minvalue
 
 
+firstgenchildren = []
+scores = []
+
+
+def minimaxer(startingpos):
+    boardcopy = copy.deepcopy(startingpos)
+    y = 0
+    for i in range(3):
+        x = 0
+        for j in range(3):
+            if boardcopy[x][y] == ' ':
+                boardcopy[x][y] = str(player)
+                firstgenchildren.append(boardcopy)
+                boardcopy = copy.deepcopy(startingpos)
+            else:
+                pass
+            x = x + 1
+        y = y + 1
+
+    for firstgenchild in firstgenchildren:
+        score = minimax(firstgenchild, 1, True)
+        scores.append(score)
+
+
+bestmove = firstgenchildren[scores.index(max(scores))]
+
+
 # ------------------------------------
-minimax(board, 0, True)
+minimax(board, 0, False)
 print(bestmove)
-print(minimax(board, 0, True))
+print(minimax(board, 0, False))
+
+# try returning list[value][board]
+# try if depth =1
+# try making minimax for all 1 depth children manually and comparing their scores. -> new function
+# test if test above works
