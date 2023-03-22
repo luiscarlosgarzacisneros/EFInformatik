@@ -1,10 +1,17 @@
 import copy
 
+# boards--------------
 board = [
     [' ', ' ', ' '],
     [' ', ' ', ' '],
     [' ', ' ', ' '],
 ]
+board2 = [
+    ['U', 'U', 'U'],
+    ['U', 'U', 'U'],
+    [' ', ' ', ' '],
+]
+# --------------------
 
 
 def printboard():
@@ -50,20 +57,6 @@ def gewonnen(board, xoro):
         return False
 
 
-def generatechildren(board, xturn):
-    # [matrix][alle children]
-    xturn = False
-    tree = []
-
-    boardcopy = copy.deepcopy(board)
-    for s in boardcopy:
-        if s == ' ':
-            s = 'O'
-            tree.append(boardcopy)
-        else:
-            pass
-
-
 def evaluatepos(board):
     # board ist hier wieder das ausgawählte Spielfeld
     if gewonnen(board, 'X') == True:
@@ -74,37 +67,61 @@ def evaluatepos(board):
         return 0
 
 
+d = 3
+minimaxc = 0
+bestmove = []
+value = 0
+
+
 def minimax(position, depth, maxplayer):
+    global value
+    global minimaxc
+    minimaxc = minimaxc + 1
     # X:maxplayer,spieler O:minplayer,computer
-    if depth == 0 or gewonnen(position, 'X') == True or gewonnen(position, 'O') == True:
+    if depth == d or gewonnen(position, 'X') == True or gewonnen(position, 'O') == True:
         return evaluatepos(position)
 
+    # ----
+    boardcopy = copy.deepcopy(position)
+    children = []
+    # -----
+
+    # Spieler
+    if maxplayer:
+        player = 'X'
+    else:
+        player = 'O'
+
+    # children generieren
+    y = 0
+    for i in range(3):
+        x = 0
+        for j in range(3):
+            if boardcopy[x][y] == ' ':
+                boardcopy[x][y] = str(player)
+                children.append(boardcopy)
+                boardcopy = copy.deepcopy(position)
+            else:
+                pass
+            x = x + 1
+        y = y + 1
+    #
     if maxplayer:
         maxvalue = -100
-        for child in position:
-            value = minimax(child, depth - 1, False)
+        for child in children:
+            value = minimax(child, depth + 1, False)
             maxvalue = max(value, maxvalue)
         return maxvalue
 
     if not maxplayer:
         minvalue = 100
-        for child in position:
-            value = minimax(child, depth - 1, True)
+        for child in children:
+            value = minimax(child, depth + 1, True)
             minvalue = min(value, minvalue)
         return minvalue
 
 
-def play():
-    round = 1
-    while gewonnen(board, 'X') == False and gewonnen()(board, 'O') == False:
-        gewonnen()(board, 'X')
-        gewonnen()(board, 'O')
-        printboard()
-        player()
-        round = round + 1
-        print(round)
-    printboard()
-    print('GAME OVER')
-
-
-play()
+# ------------------------------------
+minimax(board, 0, True)
+print(bestmove)
+print(minimax(board, 0, True))

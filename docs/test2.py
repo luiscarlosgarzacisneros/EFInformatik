@@ -1,5 +1,3 @@
-# Möglichkeitenbaum
-
 import copy
 
 # boards--------------
@@ -16,75 +14,114 @@ board2 = [
 # --------------------
 
 
-# generate_children variabeln-----
-tree = []
-positioncounter = -1
-# ---------------------------------
+def printboard():
+    print('  1   2   3')
+    print('-------------')
+    for i in range(3):
+        print('I ', end='')
+        for j in range(3):
+            print(board[i][j], end='')
+            print(' I ', end='')
+        print(i + 1)
+        print('-------------')
 
 
-# -------------------------------------------------------------------------------------------------------------
-def generate_children(boa, player, parentn, depth):
-    # tree: [[[child1],[child2],[childn],[position matrix],[position number],[parent position number],[depth]],[...]]
+def player():
+    x = int(input('x: ')) - 1
+    y = int(input('y: ')) - 1
+    board[y][x] = 'X'
 
-    global positioncounter
-    boardposition = []
-    children = []
-    y = 0
-    boardcopy = copy.deepcopy(boa)
 
-    if depth < 4:
-        positioncounter = positioncounter + 1
-
-        # children generieren
-        for i in range(3):
-            x = 0
-            for j in range(3):
-                if boardcopy[x][y] == ' ':
-                    boardcopy[x][y] = str(player)
-                    children.append(boardcopy)
-                    boardcopy = copy.deepcopy(boa)
-                else:
-                    pass
-                x = x + 1
-            y = y + 1
-
-        # children werden zu tree appended, zusatzinfos von parent-pos
-        boardposition.append(copy.deepcopy(children))
-        boardposition.append(copy.deepcopy(boa))  # position
-        boardposition.append(positioncounter)  # positionnummer (id)
-        boardposition.append(parentn)  # parentposition
-        boardposition.append(copy.deepcopy(depth))  # anzahl züge, um auf diese position zu kommen
-        tree.extend(copy.deepcopy(boardposition))  # alle mögliche nächste positionen
-
-        # spieler wird gewechselt
-        newplayer = 'O'
-        if player == 'O':
-            newplayer = 'X'
-        else:
-            newplayer == 'O'
-
-        # children von children werden rekursiv generiert
-        parentid = copy.deepcopy(positioncounter)
-        for e in range(len(children)):
-            matrix = copy.deepcopy(children[e])
-            generate_children(matrix, newplayer, parentid, depth + 1)
-
+def gewonnen(board, xoro):
+    # board ist in dieser funktion die ausgewählte matrix, nicht DAS board.
+    # horizontal
+    if board[0][0] == xoro and board[0][1] == xoro and board[0][2] == xoro:
+        return True
+    elif board[1][0] == xoro and board[1][1] == xoro and board[1][2] == xoro:
+        return True
+    elif board[2][0] == xoro and board[2][1] == xoro and board[2][2] == xoro:
+        return True
+    # vertikal
+    elif board[0][0] == xoro and board[1][0] == xoro and board[2][0] == xoro:
+        return True
+    elif board[0][1] == xoro and board[1][1] == xoro and board[2][1] == xoro:
+        return True
+    elif board[0][2] == xoro and board[1][2] == xoro and board[2][2] == xoro:
+        return True
+    # diagonal
+    elif board[0][0] == xoro and board[1][1] == xoro and board[2][2] == xoro:
+        return True
+    elif board[0][2] == xoro and board[1][1] == xoro and board[2][0] == xoro:
+        return True
     else:
-        pass
-# -------------------------------------------------------------------------------------------------------------
+        return False
 
 
-# output-------------------------------
-generate_children(board2, 'O', -1, 0)
-print(tree)
-# -------------------------------------
+def evaluatepos(board):
+    # board ist hier wieder das ausgawählte Spielfeld
+    if gewonnen(board, 'X') == True:
+        return 100
+    elif gewonnen(board, 'O') == True:
+        return -100
+    else:
+        return 0
 
 
-# ----------------------------
-# children of the position
-# position
-#
-# position number id
-# parent position number id
-# depth of position
-# ----------------------------
+d = 3
+minimaxc = 0
+bestmove = []
+value = 0
+
+
+def minimax(position, depth, maxplayer):
+    global value
+    global minimaxc
+    minimaxc = minimaxc + 1
+    # X:maxplayer,spieler O:minplayer,computer
+    if depth == d or gewonnen(position, 'X') == True or gewonnen(position, 'O') == True:
+        return evaluatepos(position)
+
+    # ----
+    boardcopy = copy.deepcopy(position)
+    children = []
+    # -----
+
+    # Spieler
+    if maxplayer:
+        player = 'X'
+    else:
+        player = 'O'
+
+    # children generieren
+    y = 0
+    for i in range(3):
+        x = 0
+        for j in range(3):
+            if boardcopy[x][y] == ' ':
+                boardcopy[x][y] = str(player)
+                children.append(boardcopy)
+                boardcopy = copy.deepcopy(position)
+            else:
+                pass
+            x = x + 1
+        y = y + 1
+    #
+    if maxplayer:
+        maxvalue = -100
+        for child in children:
+            value = minimax(child, depth + 1, False)
+            maxvalue = max(value, maxvalue)
+        return maxvalue
+
+    if not maxplayer:
+        minvalue = 100
+        for child in children:
+            value = minimax(child, depth + 1, True)
+            minvalue = min(value, minvalue)
+        return minvalue
+
+
+# ------------------------------------
+minimax(board, 0, True)
+print(bestmove)
+print(minimax(board, 0, True))
