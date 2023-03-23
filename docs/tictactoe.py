@@ -1,17 +1,17 @@
 import copy
 
-# boards--------------
 board = [
     [' ', ' ', ' '],
     [' ', ' ', ' '],
-    [' ', ' ', ' '],
+    [' ', ' ', ' ']
 ]
-board2 = [
-    ['U', 'U', 'U'],
-    ['U', 'U', 'U'],
-    [' ', ' ', ' '],
-]
-# --------------------
+
+
+def player():
+    x = int(input('x: ')) - 1
+    y = int(input('y: ')) - 1
+    if board[y][x] == ' ':
+        board[y][x] = 'X'
 
 
 def printboard():
@@ -24,12 +24,6 @@ def printboard():
             print(' I ', end='')
         print(i + 1)
         print('-------------')
-
-
-def player():
-    x = int(input('x: ')) - 1
-    y = int(input('y: ')) - 1
-    board[y][x] = 'X'
 
 
 def gewonnen(board, xoro):
@@ -57,16 +51,6 @@ def gewonnen(board, xoro):
         return False
 
 
-def evaluatepos(board):
-    # board ist hier wieder das ausgawählte Spielfeld
-    if gewonnen(board, 'X') == True:
-        return 100
-    elif gewonnen(board, 'O') == True:
-        return -100
-    else:
-        return 0
-
-
 d = 3
 minimaxc = 0
 bestmove = []
@@ -78,8 +62,16 @@ def minimax(position, depth, maxplayer):
     global minimaxc
     minimaxc = minimaxc + 1
     # X:maxplayer,spieler O:minplayer,computer
-    if depth == d or gewonnen(position, 'X') == True or gewonnen(position, 'O') == True:
-        return evaluatepos(position)
+    if gewonnen(position, 'O'):
+        return -1
+    elif gewonnen(position, 'X'):
+        return 1
+    elif depth == d:
+        return 0
+    elif position.count(' ') == 0:
+        return 0
+    else:
+        pass
 
     # ----
     boardcopy = copy.deepcopy(position)
@@ -105,25 +97,88 @@ def minimax(position, depth, maxplayer):
                 pass
             x = x + 1
         y = y + 1
+    #
 
     if maxplayer:
-        maxvalue = -100
+        maxvalue = -10
         for child in children:
             value = minimax(child, depth + 1, False)
-            maxvalue = max(value, maxvalue)
+            if value > maxvalue:
+                maxvalue = value
         return maxvalue
 
     if not maxplayer:
-        minvalue = 100
+        minvalue = 10
         for child in children:
             value = minimax(child, depth + 1, True)
-            minvalue = min(value, minvalue)
+            if value < minvalue:
+                minvalue = value
         return minvalue
 
 
-# ------------------------------------
-minimax(board, 0, True)
-print(bestmove)
-print(minimax(board, 0, True))
+firstgenchildren = []
+scores = []
 
-# try returnin list with [value][bestmove]
+
+def minimaxer(startpos):
+    firstgenchildren.clear()
+    scores.clear()
+    boardc = copy.deepcopy(startpos)
+    y = 0
+    for i in range(3):
+        x = 0
+        for j in range(3):
+            if boardc[x][y] == ' ':
+                boardc[x][y] = str('O')
+                firstgenchildren.append(boardc)
+                boardc = copy.deepcopy(startpos)
+            else:
+                pass
+            x = x + 1
+        y = y + 1
+
+    for firstgenchild in firstgenchildren:
+        score = int(minimax(firstgenchild, 1, False))
+        scores.append(copy.deepcopy(score))
+        score = 0
+
+
+def newboard():
+    indx = scores.index(min(scores))
+    bestmove = copy.deepcopy(firstgenchildren[indx])
+    board.clear()
+    board.extend(copy.deepcopy(bestmove))
+    bestmove.clear()
+
+
+def printf():
+    for b in firstgenchildren:
+        print('  1   2   3')
+        print('-------------')
+        for i in range(3):
+            print('I ', end='')
+            for j in range(3):
+                print(b[i][j], end='')
+                print(' I ', end='')
+            print(i + 1)
+            print('-------------')
+        print(minimax(b, 0, False))
+        print(evaluatepos(b))
+
+
+def play():
+    while True:
+        printboard()
+        player()
+        minimaxer(board)
+        newboard()
+        print(minimaxc)
+        #
+        # printf()
+        # print(len(firstgenchildren))
+        # print(scores)
+        # print(scores.index(min(scores)))
+        #
+
+
+play()
