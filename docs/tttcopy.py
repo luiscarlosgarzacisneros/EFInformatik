@@ -52,7 +52,7 @@ def gewonnen(board, xoro):
 
 
 minimaxc = 0
-d = 3
+d = 9
 
 
 def genchildren(position, playerk):
@@ -71,9 +71,6 @@ def genchildren(position, playerk):
     #
     global minimaxc
     minimaxc = minimaxc + 1
-    #
-    print(minimaxc)
-    print(children)
     #
     return children
 
@@ -114,12 +111,56 @@ def minimax(position, depth, maxplayer):
         return minvalue
 
 
-def minimaxer(board):
-    pass
+nextmoves = []
+scores = []
+move = []
 
 
-minimax(board, 0, False)
-print(minimaxc)
+def minimaxer(boa):
+    nextmoves.clear()
+    scores.clear()
+    move.clear()
+    for firstgenchild in genchildren(boa, 'O'):
+        nextmoves.append(copy.deepcopy(firstgenchild))
+        scores.append(minimax(firstgenchild, 1, True))
+    #
+    move.extend(copy.deepcopy(nextmoves[scores.index(min(scores))]))
 
 
-# children matrix, wird sie gelöscht?
+def gameover(boar):
+    isover = True
+    for q in range(3):
+        if boar[q].count(' ') > 0:
+            isover = False
+    return isover
+
+
+def play():
+    while not gameover(board):
+        printboard()
+        player()
+        minimaxer(board)
+        board.clear()
+        board.extend(copy.deepcopy(move))
+        print(minimaxc)
+        # for i in range(len(nextmoves)):
+        #     print(nextmoves[i][0])
+        #     print(nextmoves[i][1])
+        #     print(nextmoves[i][2])
+        #     print(scores[i])
+
+
+play()
+#
+# print(gameover(board))
+# print(nextmoves)
+#
+# minimaxer(board)
+# for i in range(len(nextmoves)):
+#     print(nextmoves[i][0])
+#     print(nextmoves[i][1])
+#     print(nextmoves[i][2])
+#     print(scores[i])
+# print(move)
+# print(minimaxc)
+# print(scores)
