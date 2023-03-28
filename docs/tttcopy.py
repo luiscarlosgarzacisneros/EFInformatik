@@ -5,13 +5,27 @@ board = [
     [' ', ' ', ' '],
     [' ', ' ', ' ']
 ]
+#
+minimaxc = 0
+d = 9
+nextmoves = []
+scores = []
+move = []
+#
 
 
 def player():
-    x = int(input('x: ')) - 1
-    y = int(input('y: ')) - 1
-    if board[y][x] == ' ':
-        board[y][x] = 'X'
+    try:
+        x = int(input('x: ')) - 1
+        y = int(input('y: ')) - 1
+        if board[y][x] == ' ':
+            board[y][x] = 'X'
+        else:
+            print('FELD BESETZT')
+            player()
+    except:
+        print('EINGABE NICHT KORREKT')
+        player()
 
 
 def printboard():
@@ -27,7 +41,6 @@ def printboard():
 
 
 def gewonnen(board, xoro):
-    # board ist in dieser funktion die ausgewählte matrix, nicht DAS board.
     # horizontal
     if board[0][0] == xoro and board[0][1] == xoro and board[0][2] == xoro:
         return True
@@ -49,10 +62,6 @@ def gewonnen(board, xoro):
         return True
     else:
         return False
-
-
-minimaxc = 0
-d = 9
 
 
 def genchildren(position, playerk):
@@ -101,7 +110,7 @@ def minimax(position, depth, maxplayer):
             if value > maxvalue:
                 maxvalue = value
         return maxvalue
-
+    #
     if not maxplayer:
         minvalue = 10
         for child in genchildren(position, playerj):
@@ -111,12 +120,9 @@ def minimax(position, depth, maxplayer):
         return minvalue
 
 
-nextmoves = []
-scores = []
-move = []
-
-
 def minimaxer(boa):
+    global minimaxc
+    minimaxc = 0
     nextmoves.clear()
     scores.clear()
     move.clear()
@@ -136,32 +142,22 @@ def gameover(boar):
 
 
 def play():
-    while not gameover(board):
+    while not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
         printboard()
         player()
-        minimaxer(board)
-        board.clear()
-        board.extend(copy.deepcopy(move))
-        print(minimaxc)
-        # for i in range(len(nextmoves)):
-        #     print(nextmoves[i][0])
-        #     print(nextmoves[i][1])
-        #     print(nextmoves[i][2])
-        #     print(scores[i])
+        if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+            minimaxer(board)
+            board.clear()
+            board.extend(copy.deepcopy(move))
+            print(minimaxc)
+    printboard()
+    print('GAME OVER')
+    if gewonnen(board, 'O'):
+        print(':( VERLOREN')
+    elif gewonnen(board, 'X'):
+        print(':) GEWONNEN')
+    else:
+        print(':l UNENTSCHIEDEN')
 
 
 play()
-#
-# print(gameover(board))
-# print(nextmoves)
-#
-# minimaxer(board)
-# for i in range(len(nextmoves)):
-#     print(nextmoves[i][0])
-#     print(nextmoves[i][1])
-#     print(nextmoves[i][2])
-#     print(scores[i])
-# print(move)
-# print(minimaxc)
-# print(scores)
-#
