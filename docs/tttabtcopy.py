@@ -2,12 +2,9 @@ import copy
 import time
 
 board = [
-    [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' '],
+    [' ', ' ', ' '],
+    [' ', ' ', ' ']
 ]
 #
 minimaxc = 0
@@ -15,38 +12,16 @@ d = 9
 nextmoves = []
 scores = []
 move = []
+maxtime = 1
 #
-
-
-def printboard(board):
-    print('  1   2   3   4   5   6   7')
-    print('-----------------------------')
-    for i in range(6):
-        print('I ', end='')
-        for j in range(7):
-            print(board[i][j], end='')
-            print(' I ', end='')
-        print(i + 1)
-        print('-----------------------------')
-
-
-def fall(board, y, x, player):
-    if y <= 4:
-        if board[y + 1][x] == ' ':
-            board[y + 1][x] = player
-            board[y][x] = ' '
-            y = y + 1
-            fall(board, y, x, player)
-        else:
-            pass
 
 
 def player():
     try:
         x = int(input('x: ')) - 1
-        if board[0][x] == ' ':
-            board[0][x] = 'X'
-            fall(board, 0, x, 'X')
+        y = int(input('y: ')) - 1
+        if board[y][x] == ' ':
+            board[y][x] = 'X'
         else:
             print('FELD BESETZT')
             player()
@@ -55,35 +30,55 @@ def player():
         player()
 
 
-def gewonnen(board, player):
-    gew = False
+def printboard():
+    print('  1   2   3')
+    print('-------------')
+    for i in range(3):
+        print('I ', end='')
+        for j in range(3):
+            print(board[i][j], end='')
+            print(' I ', end='')
+        print(i + 1)
+        print('-------------')
+
+
+def gewonnen(board, xoro):
     # horizontal
-    for q in range(4):
-        for w in range(6):
-            if board[w][q] == player and board[w][q + 1] == player and board[w][q + 2] == player and board[w][q + 3] == player:
-                gew = True
+    if board[0][0] == xoro and board[0][1] == xoro and board[0][2] == xoro:
+        return True
+    elif board[1][0] == xoro and board[1][1] == xoro and board[1][2] == xoro:
+        return True
+    elif board[2][0] == xoro and board[2][1] == xoro and board[2][2] == xoro:
+        return True
     # vertikal
-    for q in range(7):
-        for w in range(3):
-            if board[w][q] == player and board[w + 1][q] == player and board[w + 2][q] == player and board[w + 3][q] == player:
-                gew = True
+    elif board[0][0] == xoro and board[1][0] == xoro and board[2][0] == xoro:
+        return True
+    elif board[0][1] == xoro and board[1][1] == xoro and board[2][1] == xoro:
+        return True
+    elif board[0][2] == xoro and board[1][2] == xoro and board[2][2] == xoro:
+        return True
     # diagonal
-    for q in range(4):
-        for w in range(3):
-            if board[w][q] == player and board[w + 1][q + 1] == player and board[w + 2][q + 2] == player and board[w + 3][q + 3] == player:
-                gew = True
-    return gew
+    elif board[0][0] == xoro and board[1][1] == xoro and board[2][2] == xoro:
+        return True
+    elif board[0][2] == xoro and board[1][1] == xoro and board[2][0] == xoro:
+        return True
+    else:
+        return False
 
 
 def genchildren(position, playerk):
     children = []
     boardcopy = copy.deepcopy(position)
-    for x in range(7):
-        if boardcopy[0][x] == ' ':
-            boardcopy[0][x] = str(playerk)
-            fall(boardcopy, 0, x, playerk)
-            children.append(boardcopy)
-            boardcopy = copy.deepcopy(position)
+    y = 0
+    for i in range(3):
+        x = 0
+        for j in range(3):
+            if boardcopy[x][y] == ' ':
+                boardcopy[x][y] = str(playerk)
+                children.append(boardcopy)
+                boardcopy = copy.deepcopy(position)
+            x = x + 1
+        y = y + 1
     #
     global minimaxc
     minimaxc = minimaxc + 1
@@ -144,16 +139,19 @@ def minimaxer(boa):
     nextmoves.clear()
     scores.clear()
     move.clear()
+    start = time.time()
     for firstgenchild in genchildren(boa, 'O'):
         nextmoves.append(copy.deepcopy(firstgenchild))
         scores.append(minimax(firstgenchild, 1, True, -2, 2))
+        if (time.time() - start) > maxtime:
+            break
     #
     move.extend(copy.deepcopy(nextmoves[scores.index(min(scores))]))
 
 
 def gameover(boar):
     isover = True
-    for q in range(6):
+    for q in range(3):
         if boar[q].count(' ') > 0:
             isover = False
     return isover
@@ -161,14 +159,17 @@ def gameover(boar):
 
 def play():
     while not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
-        printboard(board)
+        printboard()
         player()
         if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+            start = time.time()
             minimaxer(board)
+            end = time.time()
             board.clear()
             board.extend(copy.deepcopy(move))
+            print(end - start)
             print(minimaxc)
-    printboard(board)
+    printboard()
     print('GAME OVER')
     if gewonnen(board, 'O'):
         print(':( VERLOREN')
@@ -179,3 +180,5 @@ def play():
 
 
 play()
+
+# funktioniert nicht!

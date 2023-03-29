@@ -12,6 +12,7 @@ d = 9
 nextmoves = []
 scores = []
 move = []
+maxtime = 3
 #
 
 
@@ -85,9 +86,10 @@ def genchildren(position, playerk):
     return children
 
 
-def minimax(position, depth, maxplayer):
+def minimax(position, depth, maxplayer, alpha, beta):
     # X:maxplayer,spieler O:minplayer,computer
     # Spieler
+    # alpha: best maxpl, beta: best minpl
     if maxplayer:
         playerj = 'X'
     else:
@@ -107,17 +109,27 @@ def minimax(position, depth, maxplayer):
     if maxplayer:
         maxvalue = -10
         for child in genchildren(position, playerj):
-            value = minimax(child, depth + 1, False)
+            value = minimax(child, depth + 1, False, alpha, beta)
             if value > maxvalue:
                 maxvalue = value
+            # pruning
+            if value > alpha:
+                alpha = value
+            if beta <= alpha:
+                break
         return maxvalue
     #
     if not maxplayer:
         minvalue = 10
         for child in genchildren(position, playerj):
-            value = minimax(child, depth + 1, True)
+            value = minimax(child, depth + 1, True, alpha, beta)
             if value < minvalue:
                 minvalue = value
+            # pruning
+            if value < beta:
+                beta = value
+            if beta <= alpha:
+                break
         return minvalue
 
 
@@ -127,9 +139,12 @@ def minimaxer(boa):
     nextmoves.clear()
     scores.clear()
     move.clear()
+    start = time.time()
     for firstgenchild in genchildren(boa, 'O'):
         nextmoves.append(copy.deepcopy(firstgenchild))
-        scores.append(minimax(firstgenchild, 1, True))
+        scores.append(minimax(firstgenchild, 1, True, -2, 2))
+        if (time.time() - start) > maxtime:
+            break
     #
     move.extend(copy.deepcopy(nextmoves[scores.index(min(scores))]))
 

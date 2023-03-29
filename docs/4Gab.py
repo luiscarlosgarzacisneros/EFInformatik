@@ -26,7 +26,7 @@ def printboard(board):
         for j in range(7):
             print(board[i][j], end='')
             print(' I ', end='')
-        print(i + 1)
+        print('')
         print('-----------------------------')
 
 
@@ -67,10 +67,15 @@ def gewonnen(board, player):
         for w in range(3):
             if board[w][q] == player and board[w + 1][q] == player and board[w + 2][q] == player and board[w + 3][q] == player:
                 gew = True
-    # diagonal
+    # diagonal1
     for q in range(4):
         for w in range(3):
             if board[w][q] == player and board[w + 1][q + 1] == player and board[w + 2][q + 2] == player and board[w + 3][q + 3] == player:
+                gew = True
+    # diagonal2
+    for q in range(4):
+        for w in range(3):
+            if board[w][q + 3] == player and board[w + 1][q + 2] == player and board[w + 2][q + 1] == player and board[w + 3][q] == player:
                 gew = True
     return gew
 
@@ -164,9 +169,12 @@ def play():
         printboard(board)
         player()
         if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+            start = time.time()
             minimaxer(board)
+            end = time.time()
             board.clear()
             board.extend(copy.deepcopy(move))
+            print(end - start)
             print(minimaxc)
     printboard(board)
     print('GAME OVER')
@@ -179,3 +187,5 @@ def play():
 
 
 play()
+
+# braucht zu viel zeit
