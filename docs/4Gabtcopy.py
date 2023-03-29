@@ -195,3 +195,4 @@ play()
 # funktioniert vielleicht
 # spiel randomizieren
 # OO_O, OOO auch reward
+#tyrytryrtytryryt
