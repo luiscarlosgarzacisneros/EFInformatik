@@ -1,5 +1,6 @@
 import copy
 import time
+import random
 
 board = [
     [' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -11,10 +12,12 @@ board = [
 ]
 #
 minimaxc = 0
-d = 6
+d = 8
 nextmoves = []
 scores = []
 move = []
+moves=[]
+bestscores=[]
 maxtime = 15
 #
 
@@ -150,6 +153,7 @@ def minimaxer(boa):
     nextmoves.clear()
     scores.clear()
     move.clear()
+    moves.clear()
     start = time.time()
     for firstgenchild in genchildren(boa, 'O'):
         nextmoves.append(copy.deepcopy(firstgenchild))
@@ -157,7 +161,10 @@ def minimaxer(boa):
         if (time.time() - start) > maxtime:
             break
     #
-    move.extend(copy.deepcopy(nextmoves[scores.index(min(scores))]))
+    for y in range(len(scores)):
+        if scores[y]==(min(scores)):
+            moves.append(copy.deepcopy(nextmoves[y]))
+    move.extend(copy.deepcopy(random.choice(moves)))
 
 
 def gameover(boar):

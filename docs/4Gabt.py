@@ -192,4 +192,4 @@ def play():
 
 play()
 
-# funktioniert vielleicht
+# funktioniert, aber schlecht
