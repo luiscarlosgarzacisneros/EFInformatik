@@ -164,6 +164,31 @@ def minimaxer(boa):
     for y in range(len(scores)):
         if scores[y]==(min(scores)):
             moves.append(copy.deepcopy(nextmoves[y]))
+    #
+    if scores.count(1)== len(scores):
+        #
+        nextmoves.clear()
+        scores.clear()
+        moves.clear()
+        #
+        for t in genchildren(boa, 'O'):
+            # return
+            if gewonnen(t, 'O') == True:
+                val= -1
+            elif gewonnen(t, 'X') == True:
+                val= 1
+            else:
+                val= 0
+            scores.append(val)
+        #
+        for p in range(len(scores)):
+            if scores[p]==(min(scores)):
+                moves.append(copy.deepcopy(t[p]))
+        #
+        
+    #
+    print(scores)
+    #
     move.extend(copy.deepcopy(random.choice(moves)))
 
 
