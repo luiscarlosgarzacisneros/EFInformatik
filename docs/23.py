@@ -251,14 +251,10 @@ def inarow(board, player, otherplayer):
                     score=score+3
     return score
 
-print(inarow(board,'X','O'))
-
 
 def evaluatepos(board):
     score=0
-    if gewonnen(board,'X'):
-        score=score+100
-    elif gewonnen(board,'O'):
-        score=score-100
+    score=(inarow(board,'X','O'))-(inarow(board,'O','X'))
     return score
     
+print(evaluatepos(board))
