@@ -258,3 +258,5 @@ def evaluatepos(board):
     return score
     
 print(evaluatepos(board))
+
+# funktioniert nicht

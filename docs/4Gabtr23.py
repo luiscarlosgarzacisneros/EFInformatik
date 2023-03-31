@@ -334,6 +334,8 @@ def minimaxer(boa):
         if (time.time() - start) > maxtime:
             break
     #
+    print(scores)
+    #
     for y in range(len(scores)):
         if scores[y]==(min(scores)):
             moves.append(copy.deepcopy(nextmoves[y]))
@@ -372,6 +374,6 @@ def play():
 
 play()
 
-# funktioniert vielleicht
+# funktioniert nicht
 # spiel randomizieren
 # OO_O, OOO auch reward
