@@ -121,11 +121,11 @@ def inarow(board, player, otherplayer):
             #
             if other==0:
                 if filled==4:
-                    score=score+100
+                    score=score+10000
                 if filled==3:
-                    score=score+10
+                    score=score+100
                 if filled==2:
-                    score=score+3
+                    score=score+10
     # vertikal
     for q in range(7):
         for w in range(3):
@@ -162,11 +162,11 @@ def inarow(board, player, otherplayer):
             #
             if other==0:
                 if filled==4:
-                    score=score+100
+                    score=score+10000
                 if filled==3:
-                    score=score+10
+                    score=score+100
                 if filled==2:
-                    score=score+3
+                    score=score+10
     # diagonal1
     for q in range(4):
         for w in range(3):
@@ -203,11 +203,11 @@ def inarow(board, player, otherplayer):
             #
             if other==0:
                 if filled==4:
-                    score=score+100
+                    score=score+10000
                 if filled==3:
-                    score=score+10
+                    score=score+100
                 if filled==2:
-                    score=score+3
+                    score=score+10
     # diagonal2
     for q in range(4):
         for w in range(3):
@@ -244,11 +244,11 @@ def inarow(board, player, otherplayer):
             #
             if other==0:
                 if filled==4:
-                    score=score+100
+                    score=score+10000
                 if filled==3:
-                    score=score+10
+                    score=score+100
                 if filled==2:
-                    score=score+3
+                    score=score+10
     return score
 
 
