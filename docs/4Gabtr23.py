@@ -278,7 +278,7 @@ def inarow(board, player, otherplayer):
                 if other==2:
                     score=score-3
     return score
-
+    
 
 def genchildren(position, playerk):
     children = []
