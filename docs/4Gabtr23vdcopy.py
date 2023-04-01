@@ -19,6 +19,7 @@ move = []
 moves=[]
 bestscores=[]
 maxtime = 20
+turn=0
 #
 
 
@@ -376,7 +377,10 @@ def gameover(boar):
 
 
 def play():
+    global turn
     while not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+        turn =turn+1
+        print(turn)
         printboard(board)
         player()
         if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
@@ -387,6 +391,7 @@ def play():
             board.extend(copy.deepcopy(move))
             print(end - start)
             print(minimaxc)
+    print(turn)
     printboard(board)
     print('GAME OVER')
     if gewonnen(board, 'O'):
@@ -398,4 +403,3 @@ def play():
 
 
 play()
-
