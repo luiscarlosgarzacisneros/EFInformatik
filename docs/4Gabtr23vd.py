@@ -171,16 +171,16 @@ def inarow(board, player, otherplayer):
                 if filled==4:
                     score=score+10000
                 if filled==3:
-                    score=score+100
+                    score=score+50
                 if filled==2:
-                    score=score+3
+                    score=score+1
             elif filled==0:
                 if other==4:
                     score=score-10000
                 if other==3:
-                    score=score-100
+                    score=score-50
                 if other==2:
-                    score=score-3
+                    score=score-1
     # diagonal1
     for q in range(4):
         for w in range(3):
