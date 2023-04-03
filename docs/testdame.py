@@ -57,26 +57,37 @@ def xy():
 
 
 def schlagenplayer(playerk, boardk, vx,vy,zx,zy):
-    boardcopy=copy.deepcopy(boardk)
-    if zx==vx +2 and boardcopy[vy+1][vx+1]=='O':
-        boardcopy[zy][zx]='X'
-        boardcopy[vy][vx]=' '
-        boardcopy[vy-1][vx+1]=' '
-        try:
-            schlagenplayer('X',boardcopy,int(input('von x: ')) - 1, int(input('von y: ')) - 1, int(input('zu x: ')) - 1, int(input('zu y: ')) - 1)
-        except:
-            print('EINGABE NICHT KORREKT')
-            schlagenplayer('X',boardcopy,int(input('von x: ')) - 1, int(input('von y: ')) - 1, int(input('zu x: ')) - 1, int(input('zu y: ')) - 1)
-    elif zx==vx-2 and boardcopy[vy-1][vx-1]=='O':
-        boardcopy[zy][zx]='X'
-        boardcopy[vy][vx]=' '
-        boardcopy[vy-1][vx-1]=' '
-        try:
-            schlagenplayer('X',boardcopy,int(input('von x: ')) - 1, int(input('von y: ')) - 1, int(input('zu x: ')) - 1, int(input('zu y: ')) - 1)
-        except:
-            print('EINGABE NICHT KORREKT')
-            schlagenplayer('X',boardcopy,int(input('von x: ')) - 1, int(input('von y: ')) - 1, int(input('zu x: ')) - 1, int(input('zu y: ')) - 1)
-    return boardcopy
+    
+    print('ok')
+    if zx< 9 and zy<9 and zx> 0 and zy>0:
+        print('yes')
+        boardcopy=copy.deepcopy(boardk)
+        if zx==vx +2 and copy.deepcopy(boardcopy)[vy+1][vx+1]=='O':
+            print('kr')
+            boardcopy[zy][zx]='X'
+            boardcopy[vy][vx]=' '
+            boardcopy[vy-1][vx+1]=' '
+            nvy=zy
+            nvx=zx
+            nzx=int(input('zu x: ')) - 1
+            nzy=int(input('zu y: ')) - 1
+            printboard(boardcopy)
+            schlagenplayer('X',copy.deepcopy(boardcopy),nvx,nvy,nzx,nzy)
+
+        if zx==vx-2 and copy.deepcopy(boardcopy)[vy-1][vx-1]=='O':
+            print('kr')
+            boardcopy[zy][zx]='X'
+            boardcopy[vy][vx]=' '
+            boardcopy[vy-1][vx-1]=' '
+            vy=zy
+            vx=zx
+
+            printboard(boardcopy)
+            schlagenplayer('X',copy.deepcopy(boardcopy),vx,vy,zx,zy)
+            
+        
+        return copy.deepcopy(boardcopy)
+
 
 def player(playerk, boardk, vy,vx,zy,zx):
     boardcopy=copy.deepcopy(boardk)
@@ -233,7 +244,7 @@ def genchildren(position, playerq):
     #print(rs[t])
 
 printboard(board)
-printboard(xy())
+print(xy())
 
 ########################
 # genchildren mit schlagen, falls schlagen, keine anderen children.
