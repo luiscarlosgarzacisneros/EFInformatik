@@ -8,7 +8,7 @@ import random
 board = [
     [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
@@ -55,7 +55,13 @@ def xy():
         print('EINGABE NICHT KORREKT')
         xy()
 
-
+def schlagenmoeglichX(y,x,boar):
+    if boar[y-2][x-2]==' 'and boar[y-1][x-1]=='O':
+        return True
+    if boar[y-2][x+2]==' ' and boar[y-1][x+1]==' ':
+        return True
+    else:
+        return False
 
 
 def player(playerk, boardk, vy,vx,zy,zx):
@@ -78,17 +84,18 @@ def player(playerk, boardk, vy,vx,zy,zx):
                 elif zy==vy- 2:
                     while True:
                         if zy==vy- 2:
-                            print('ok')
                             if zx==vx +2 and boardcopy[vy-1][vx+1]=='O':
-                                
+        
                                 boardcopy[zy][zx]='X'
                                 boardcopy[vy][vx]=' '
                                 boardcopy[vy-1][vx+1]=' '
                                 printboard(boardcopy)
-                                vx = zx
-                                vy = zy
+                                vx = copy.deepcopy(zx)
+                                vy = copy.deepcopy(zy)
                                 zx = int(input('zu x: ')) - 1
                                 zy = int(input('zu y: ')) - 1
+                                if not schlagenmoeglichX(vy,vx,boardcopy):
+                                    break
                                 
                             elif zx==vx-2 and boardcopy[vy-1][vx-1]=='O':
                                 
@@ -96,15 +103,15 @@ def player(playerk, boardk, vy,vx,zy,zx):
                                 boardcopy[vy][vx]=' '
                                 boardcopy[vy-1][vx-1]=' '
                                 printboard(boardcopy)
-                                vx = zx
-                                vy = zy
+                                vx = copy.deepcopy(zx)
+                                vy = copy.deepcopy(zy)
                                 zx = int(input('zu x: ')) - 1
                                 zy = int(input('zu y: ')) - 1
-                                
+                                if not schlagenmoeglichX(vy,vx,boardcopy):
+                                    break
                             else:
-                                repeat=False
-                                break
-                            
+                                zx = int(input('zu x: ')) - 1
+                                zy = int(input('zu y: ')) - 1
                     return(boardcopy)
 
                 else:
@@ -249,4 +256,4 @@ printboard(xy())
 ########################
 # genchildren mit schlagen, falls schlagen, keine anderen children.
 #clear rs and ret
-#for loop
+#schlagenmoeglich geht nicht
