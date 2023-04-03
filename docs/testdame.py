@@ -49,7 +49,7 @@ def xy():
         vy = int(input('von y: ')) - 1
         zx = int(input('zu x: ')) - 1
         zy = int(input('zu y: ')) - 1
-        player('X',board,vy,vx,zy,zx)
+        return player('X',board,vy,vx,zy,zx)
     except:
         print('EINGABE NICHT KORREKT')
         xy()
@@ -228,9 +228,12 @@ def genchildren(position, playerq):
 
 #schlagen(board,'X',0)
 
-for t in range(len(rets)):
-    printboard(rets[t])
-    print(rs[t])
+#for t in range(len(rets)):
+    #printboard(rets[t])
+    #print(rs[t])
+
+printboard(board)
+printboard(xy())
 
 ########################
 # genchildren mit schlagen, falls schlagen, keine anderen children.
