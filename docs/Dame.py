@@ -1,3 +1,6 @@
+
+
+
 import copy
 import time
 import random
@@ -46,33 +49,33 @@ def xy():
         vy = int(input('von y: ')) - 1
         zx = int(input('zu x: ')) - 1
         zy = int(input('zu y: ')) - 1
-        player('X',board,vy,vx,zy,zx)
+        return player('X',board,vy,vx,zy,zx)
     except:
         print('EINGABE NICHT KORREKT')
         xy()
 
 
 
-def schlagenplayer(playerk, boardk, vy,vx,zy,zx):
+def schlagenplayer(playerk, boardk, vx,vy,zx,zy):
     boardcopy=copy.deepcopy(boardk)
     if zx==vx +2 and boardcopy[vy+1][vx+1]=='O':
         boardcopy[zy][zx]='X'
         boardcopy[vy][vx]=' '
         boardcopy[vy-1][vx+1]=' '
         try:
-            schlagenplayer('X',boardcopy,int(input('von y: ')) - 1,int(input('von x: ')) - 1,int(input('zu y: ')) - 1, int(input('zu x: ')) - 1)
+            schlagenplayer('X',boardcopy,int(input('von x: ')) - 1, int(input('von y: ')) - 1, int(input('zu x: ')) - 1, int(input('zu y: ')) - 1)
         except:
             print('EINGABE NICHT KORREKT')
-            schlagenplayer('X',boardcopy,int(input('von y: ')) - 1,int(input('von x: ')) - 1,int(input('zu y: ')) - 1, int(input('zu x: ')) - 1)
+            schlagenplayer('X',boardcopy,int(input('von x: ')) - 1, int(input('von y: ')) - 1, int(input('zu x: ')) - 1, int(input('zu y: ')) - 1)
     elif zx==vx-2 and boardcopy[vy-1][vx-1]=='O':
         boardcopy[zy][zx]='X'
         boardcopy[vy][vx]=' '
         boardcopy[vy-1][vx-1]=' '
         try:
-            schlagenplayer('X',boardcopy,int(input('von y: ')) - 1,int(input('von x: ')) - 1,int(input('zu y: ')) - 1, int(input('zu x: ')) - 1)
+            schlagenplayer('X',boardcopy,int(input('von x: ')) - 1, int(input('von y: ')) - 1, int(input('zu x: ')) - 1, int(input('zu y: ')) - 1)
         except:
             print('EINGABE NICHT KORREKT')
-            schlagenplayer('X',boardcopy,int(input('von y: ')) - 1,int(input('von x: ')) - 1,int(input('zu y: ')) - 1, int(input('zu x: ')) - 1)
+            schlagenplayer('X',boardcopy,int(input('von x: ')) - 1, int(input('von y: ')) - 1, int(input('zu x: ')) - 1, int(input('zu y: ')) - 1)
     return boardcopy
 
 def player(playerk, boardk, vy,vx,zy,zx):
@@ -93,7 +96,7 @@ def player(playerk, boardk, vy,vx,zy,zx):
                         print('EINGABE NICHT KORREKT')
                         player(playerk, boardk)
                 elif zy==vy- 2:
-                    schlagenplayer(playerk, boardk, vy,vx,zy,zx)
+                    schlagenplayer(playerk, boardk, vx,vy,zx,zy)
 
                 else:
                     print('EINGABE NICHT KORREKT')
@@ -225,10 +228,13 @@ def genchildren(position, playerq):
 
 #schlagen(board,'X',0)
 
-for t in range(len(rets)):
-    printboard(rets[t])
-    print(rs[t])
+#for t in range(len(rets)):
+    #printboard(rets[t])
+    #print(rs[t])
+
+printboard(board)
+printboard(xy())
 
 ########################
 # genchildren mit schlagen, falls schlagen, keine anderen children.
-#clear rs and rets
+#clear rs and ret
