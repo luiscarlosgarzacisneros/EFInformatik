@@ -3,14 +3,14 @@ import time
 import random
 
 board = [
+    [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
 minimaxc = 0
@@ -42,11 +42,12 @@ def xy():
         vy = int(input('von y: ')) - 1
         zx = int(input('zu x: ')) - 1
         zy = int(input('zu y: ')) - 1
+        player('X',board,vy,vx,zy,zx)
     except:
         print('EINGABE NICHT KORREKT')
         xy()
 
-def player(playerk, boardk):
+def player(playerk, boardk, vy,vx,zy,zx):
     try:
         if zy<9 and zy>0 and zx>0 and zx<9 and boardk[vy][vx] == playerk:
             if playerk=='X':
@@ -86,6 +87,50 @@ def player(playerk, boardk):
         player(playerk, boardk)
 
 
+def genchildren(position, playerq):
+    children = []
+    boardcopy = copy.deepcopy(position)
+    y = 0
+    for i in range(8):
+        x = 0
+        for j in range(8):
+            if boardcopy[y][x] == playerq:
+                if playerq=='X':
+                    if y-1>-1 and x-1>-1 and boardcopy[y-1][x-1]==' ':
+                        boardcopy[y-1][x-1]='X'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    if y-1>-1 and x+ 1<8 and boardcopy[y-1][x+ 1]==' ':
+                        boardcopy[y-1][x+ 1]='X'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    else:
+                        pass
+                elif playerq=='O':
+                    if y+ 1<8 and x-1>-1 and  boardcopy[y+ 1][x-1]==' ':
+                        boardcopy[y+1][x-1]='O'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    if y+ 1<8 and x+ 1<8 and boardcopy[y+ 1][x+ 1]==' ':
+                        boardcopy[y+ 1][x+ 1]='O'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    else:
+                        pass
+                else:
+                    pass
+            x = x + 1
+        y = y + 1
+    #
+    global minimaxc
+    minimaxc = minimaxc + 1
+    #
+    return children
+
 printboard(board)
-player('O',board)
-printboard(board)
+for t in genchildren(board,'O'):
+    printboard(t)
