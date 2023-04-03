@@ -7,9 +7,9 @@ board = [
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
@@ -22,6 +22,10 @@ moves=[]
 bestscores=[]
 maxtime = 20
 turn=0
+#
+rs=[]
+rets=[]
+
 #
 
 
@@ -49,20 +53,48 @@ def xy():
 
 
 
+def schlagenplayer(playerk, boardk, vy,vx,zy,zx):
+    boardcopy=copy.deepcopy(boardk)
+    if zx==vx +2 and boardcopy[vy+1][vx+1]=='O':
+        boardcopy[zy][zx]='X'
+        boardcopy[vy][vx]=' '
+        boardcopy[vy-1][vx+1]=' '
+        try:
+            schlagenplayer('X',boardcopy,int(input('von y: ')) - 1,int(input('von x: ')) - 1,int(input('zu y: ')) - 1, int(input('zu x: ')) - 1)
+        except:
+            print('EINGABE NICHT KORREKT')
+            schlagenplayer('X',boardcopy,int(input('von y: ')) - 1,int(input('von x: ')) - 1,int(input('zu y: ')) - 1, int(input('zu x: ')) - 1)
+    elif zx==vx-2 and boardcopy[vy-1][vx-1]=='O':
+        boardcopy[zy][zx]='X'
+        boardcopy[vy][vx]=' '
+        boardcopy[vy-1][vx-1]=' '
+        try:
+            schlagenplayer('X',boardcopy,int(input('von y: ')) - 1,int(input('von x: ')) - 1,int(input('zu y: ')) - 1, int(input('zu x: ')) - 1)
+        except:
+            print('EINGABE NICHT KORREKT')
+            schlagenplayer('X',boardcopy,int(input('von y: ')) - 1,int(input('von x: ')) - 1,int(input('zu y: ')) - 1, int(input('zu x: ')) - 1)
+    return boardcopy
+
 def player(playerk, boardk, vy,vx,zy,zx):
+    boardcopy=copy.deepcopy(boardk)
     try:
-        if zy<9 and zy>0 and zx>0 and zx<9 and boardk[vy][vx] == playerk:
+        if zy<9 and zy>0 and zx>0 and zx<9 and boardcopy[vy][vx] == playerk and boardcopy[zy][zx]==' ':
             if playerk=='X':
                 if zy==vy- 1:
                     if zx==vx +1:
-                        boardk[zy][zx]='X'
-                        boardk[vy][vx]=' '
+                        boardcopy[zy][zx]='X'
+                        boardcopy[vy][vx]=' '
+                        return boardcopy
                     elif zx==vx-1:
-                        boardk[zy][zx]='X'
-                        boardk[vy][vx]=' '
+                        boardcopy[zy][zx]='X'
+                        boardcopy[vy][vx]=' '
+                        return boardcopy
                     else:
                         print('EINGABE NICHT KORREKT')
                         player(playerk, boardk)
+                elif zy==vy- 2:
+                    schlagenplayer(playerk, boardk, vy,vx,zy,zx)
+
                 else:
                     print('EINGABE NICHT KORREKT')
                     player(playerk, boardk)
@@ -73,18 +105,38 @@ def player(playerk, boardk, vy,vx,zy,zx):
         print('EINGABE NICHT KORREKT')
         player(playerk, boardk)
 
-def schlagen(pos, playert):
-    ret=False
+
+
+def schlagen(pos, playert,r):
+    boardcopy=copy.deepcopy(pos)
+    #am anfang=0
     if playert=='O':
         y = 0
         for i in range(8):
             x = 0
             for j in range(8):
-                if y+2<8 and x+2<8 and pos[y][x]=='O' and pos[y+2][x+2]==' ' and pos[y+1][x+1]=='X':
-                    ret=True
-                if y+2<8 and x-2<8 and pos[y][x]=='O' and pos[y+2][x-2]==' ' and pos[y+1][x-1]=='X':
-                    ret=True
-                    
+                if y+2<8 and x+2<8 and boardcopy[y][x]=='O' and boardcopy[y+2][x+2]==' ' and boardcopy[y+1][x+1]=='X':
+                    r=r+1
+                    boardcopy[y][x]=' '
+                    boardcopy[y+2][x+2]='O'
+                    boardcopy[y+1][x+1]=' '
+                    rets.append(copy.deepcopy(boardcopy))
+                    rs.append(copy.deepcopy(r))
+                    schlagen(boardcopy, playert,r)
+                    boardcopy=copy.deepcopy(pos)
+                    r=0
+
+                if y+2<8 and x-2<8 and boardcopy[y][x]=='O' and boardcopy[y+2][x-2]==' ' and boardcopy[y+1][x-1]=='X':
+                    r=r+1
+                    boardcopy[y][x]=' '
+                    boardcopy[y+2][x-2]='O'
+                    boardcopy[y+1][x-1]=' '
+                    rets.append(copy.deepcopy(boardcopy))
+                    rs.append(copy.deepcopy(r))
+                    schlagen(boardcopy, playert,r)
+                    boardcopy=copy.deepcopy(pos)
+                    r=0
+
                 x = x + 1
             y = y + 1
         #
@@ -93,14 +145,32 @@ def schlagen(pos, playert):
         for i in range(8):
             x = 0
             for j in range(8):
-                if y-2<8 and x+2<8 and pos[y][x]=='X' and pos[y-2][x+2]==' ' and pos[y-1][x+1]=='O':
-                    ret=True
-                if y-2<8 and x-2<8 and pos[y][x]=='X' and pos[y-2][x-2]==' ' and pos[y-1][x-1]=='O':
-                    ret=True
+                if y-2<8 and x+2<8 and boardcopy[y][x]=='X' and boardcopy[y-2][x+2]==' ' and boardcopy[y-1][x+1]=='O':
+                    r=r+1
+                    boardcopy[y][x]=' '
+                    boardcopy[y-2][x+2]='X' 
+                    boardcopy[y-1][x+1]=' '
+                    rets.append(copy.deepcopy(boardcopy))
+                    rs.append(copy.deepcopy(r))
+                    schlagen(boardcopy, playert,r)
+                    boardcopy=copy.deepcopy(pos)
+                    r=0
+                    
+                if y-2<8 and x-2<8 and boardcopy[y][x]=='X' and boardcopy[y-2][x-2]==' ' and boardcopy[y-1][x-1]=='O':
+                    r=r+1
+                    boardcopy[y][x]=' '
+                    boardcopy[y-2][x-2]='X'
+                    boardcopy[y-1][x-1]=' '
+                    rets.append(copy.deepcopy(boardcopy))
+                    rs.append(copy.deepcopy(r))
+                    schlagen(boardcopy, playert,r)
+                    boardcopy=copy.deepcopy(pos)
+                    r=0
                     
                 x = x + 1
             y = y + 1
         #
+
 
 
 def genchildren(position, playerq):
@@ -147,8 +217,18 @@ def genchildren(position, playerq):
     #
     return children
 
-printboard(board)
+#printboard(board)
 #for t in genchildren(board,'O'):
     #printboard(t)
-xy()
-printboard(board)
+#xy()
+#printboard(board)
+
+#schlagen(board,'X',0)
+
+for t in range(len(rets)):
+    printboard(rets[t])
+    print(rs[t])
+
+########################
+# genchildren mit schlagen, falls schlagen, keine anderen children.
+#clear rs and rets
