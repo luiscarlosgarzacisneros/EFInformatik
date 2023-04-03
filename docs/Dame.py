@@ -47,6 +47,8 @@ def xy():
         print('EINGABE NICHT KORREKT')
         xy()
 
+
+
 def player(playerk, boardk, vy,vx,zy,zx):
     try:
         if zy<9 and zy>0 and zx>0 and zx<9 and boardk[vy][vx] == playerk:
@@ -64,27 +66,41 @@ def player(playerk, boardk, vy,vx,zy,zx):
                 else:
                     print('EINGABE NICHT KORREKT')
                     player(playerk, boardk)
-            elif playerk=='O':
-                if zy==vy+ 1:
-                    print('ok')
-                    if zx==vx+ 1:
-                        boardk[zy][zx]='O'
-                        boardk[vy][vx]=' '
-                    elif zx==vx-1:
-                        boardk[zy][zx]='O'
-                        boardk[vy][vx]=' '
-                    else:
-                        print('EINGABE NICHT KORREKT')
-                        player(playerk, boardk)
-                else:
-                    print('EINGABE NICHT KORREKT')
-                    player(playerk, boardk)
         else:
             print('EINGABE NICHT KORREKT')
             player(playerk, boardk)
     except:
         print('EINGABE NICHT KORREKT')
         player(playerk, boardk)
+
+def schlagen(pos, playert):
+    ret=False
+    if playert=='O':
+        y = 0
+        for i in range(8):
+            x = 0
+            for j in range(8):
+                if y+2<8 and x+2<8 and pos[y][x]=='O' and pos[y+2][x+2]==' ' and pos[y+1][x+1]=='X':
+                    ret=True
+                if y+2<8 and x-2<8 and pos[y][x]=='O' and pos[y+2][x-2]==' ' and pos[y+1][x-1]=='X':
+                    ret=True
+                    
+                x = x + 1
+            y = y + 1
+        #
+    elif playert=='X':
+        y = 0
+        for i in range(8):
+            x = 0
+            for j in range(8):
+                if y-2<8 and x+2<8 and pos[y][x]=='X' and pos[y-2][x+2]==' ' and pos[y-1][x+1]=='O':
+                    ret=True
+                if y-2<8 and x-2<8 and pos[y][x]=='X' and pos[y-2][x-2]==' ' and pos[y-1][x-1]=='O':
+                    ret=True
+                    
+                x = x + 1
+            y = y + 1
+        #
 
 
 def genchildren(position, playerq):
@@ -132,5 +148,7 @@ def genchildren(position, playerq):
     return children
 
 printboard(board)
-for t in genchildren(board,'O'):
-    printboard(t)
+#for t in genchildren(board,'O'):
+    #printboard(t)
+xy()
+printboard(board)
