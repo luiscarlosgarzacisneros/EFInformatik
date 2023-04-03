@@ -8,7 +8,7 @@ import random
 board = [
     [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
@@ -55,7 +55,13 @@ def xy():
         print('EINGABE NICHT KORREKT')
         xy()
 
-
+def schlagenmoeglichX(y,x,boar):
+    if boar[y-2][x-2]==' 'and boar[y-1][x-1]=='O':
+        return True
+    if boar[y-2][x+2]==' ' and boar[y-1][x+1]==' ':
+        return True
+    else:
+        return False
 
 
 def player(playerk, boardk, vy,vx,zy,zx):
@@ -76,7 +82,9 @@ def player(playerk, boardk, vy,vx,zy,zx):
                         print('EINGABE NICHT KORREKT')
                         player(playerk, boardk)
                 elif zy==vy- 2:
-                    while True:
+                    nvy=vy
+                    nvx=vx
+                    while schlagenmoeglichX(nvy,nvx,boardcopy):
                         if zy==vy- 2:
                             if zx==vx +2 and boardcopy[vy-1][vx+1]=='O':
         
@@ -244,4 +252,4 @@ printboard(xy())
 ########################
 # genchildren mit schlagen, falls schlagen, keine anderen children.
 #clear rs and ret
-#for loop
+#schlagenmoeglich geht nicht
