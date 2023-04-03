@@ -78,9 +78,8 @@ def player(playerk, boardk, vy,vx,zy,zx):
                 elif zy==vy- 2:
                     while True:
                         if zy==vy- 2:
-                            print('ok')
                             if zx==vx +2 and boardcopy[vy-1][vx+1]=='O':
-                                
+        
                                 boardcopy[zy][zx]='X'
                                 boardcopy[vy][vx]=' '
                                 boardcopy[vy-1][vx+1]=' '
@@ -100,10 +99,6 @@ def player(playerk, boardk, vy,vx,zy,zx):
                                 vy = zy
                                 zx = int(input('zu x: ')) - 1
                                 zy = int(input('zu y: ')) - 1
-                                
-                            else:
-                                repeat=False
-                                break
                             
                     return(boardcopy)
 
