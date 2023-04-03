@@ -379,18 +379,18 @@ def gameover(boar):
 def play():
     global turn
     while not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+        start = time.time()
+        minimaxer(board)
+        end = time.time()
+        board.clear()
+        board.extend(copy.deepcopy(move))
+        print(end - start)
+        print(minimaxc)
         if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
-            start = time.time()
-            minimaxer(board)
-            end = time.time()
-            board.clear()
-            board.extend(copy.deepcopy(move))
-            print(end - start)
-            print(minimaxc)
-        turn =turn+1
-        print(turn)
-        printboard(board)
-        player()
+            turn =turn+1
+            print(turn)
+            printboard(board)
+            player()
     print(turn)
     printboard(board)
     print('GAME OVER')
