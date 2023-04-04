@@ -135,6 +135,7 @@ def player(playerk, boardk):
         player(playerk, boardk)
 
 def genchildrenschlagen(y,x,position,playerq):
+    boardcopy = copy.deepcopy(position)
     children=[]
     if playerq=='X':
         if y-2>-1 and x-2>-1 and boardcopy[y-1][x-1]=='O' and boardcopy[y-2][x-2]==' ':
