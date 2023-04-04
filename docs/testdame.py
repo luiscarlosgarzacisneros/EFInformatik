@@ -142,19 +142,17 @@ def genchildrenschlagen(y,x,position,playerq):
             boardcopy[y-1][x-1]=' '
             boardcopy[y-2][x-2]='X'
             boardcopy[y][x]=' '
-            children.append(boardcopy)
-            y=y-2
-            x=x-2
-            genchildrenschlagen(y,x,boardcopy,playerq)
+            children.append(copy.deepcopy(boardcopy))
+            genchildrenschlagen(y-2,x-2,boardcopy,playerq)
             boardcopy = copy.deepcopy(position)
         if y-2>-1 and x+ 2<8 and boardcopy[y-1][x+ 1]=='O' and boardcopy[y-2][x+2]==' ':
             boardcopy[y-1][x+1]=' '
             boardcopy[y-2][x+2]='X'
             boardcopy[y][x]=' '
-            children.append(boardcopy)
+            children.append(copy.deepcopy(boardcopy))
             y=y-2
             x=x+2
-            genchildrenschlagen(y,x,boardcopy,playerq)
+            genchildrenschlagen(y-2,x+2,boardcopy,playerq)
             boardcopy = copy.deepcopy(position)
         else:
             pass
@@ -163,19 +161,19 @@ def genchildrenschlagen(y,x,position,playerq):
             boardcopy[y+1][x-1]=' '
             boardcopy[y+2][x-2]='O'
             boardcopy[y][x]=' '
-            children.append(boardcopy)
+            children.append(copy.deepcopy(boardcopy))
             y=y+2
             x=x-2
-            genchildrenschlagen(y,x,boardcopy,playerq)
+            genchildrenschlagen(y+2,x-2,boardcopy,playerq)
             boardcopy = copy.deepcopy(position)
         if y+ 2<8 and x+ 2<8 and boardcopy[y+ 1][x+ 1]=='X' and boardcopy[y+2][x+2]==' ':
             boardcopy[y+1][x+1]=' '
             boardcopy[y+2][x+2]='O'
             boardcopy[y][x]=' '
-            children.append(boardcopy)
+            children.append(copy.deepcopy(boardcopy))
             y=y+2
             x=x+2
-            genchildrenschlagen(y,x,boardcopy,playerq)
+            genchildrenschlagen(y+2,x+2,boardcopy,playerq)
             boardcopy = copy.deepcopy(position)
         else:
             pass
