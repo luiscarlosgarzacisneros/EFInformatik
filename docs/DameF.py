@@ -36,7 +36,6 @@ turn=0
 w=[]
 childrens=[]
 yesschlagen=False
-playerok=False
 #
 
 
@@ -124,12 +123,12 @@ def player(playerk, boardk):
                     if zx==vx +1:
                         boardcopy[zy][zx]='X'
                         boardcopy[vy][vx]=' '
-                        playerok=True
+                        
                         return boardcopy
                     elif zx==vx-1:
                         boardcopy[zy][zx]='X'
                         boardcopy[vy][vx]=' '
-                        playerok=True
+                        
                         return boardcopy
                     else:
                         print('EINGABE NICHT KORREKT')
@@ -139,7 +138,7 @@ def player(playerk, boardk):
                     if not yesschlagen:
                         print('EINGABE NICHT KORREKT')
                         player(playerk, boardk)
-                    playerok=True
+                    
                     return f
                     
                 else:
@@ -391,3 +390,4 @@ play()
 #print(gewonnen(board,'X'))
 
 
+#wenn eingabe einmal falsch dann ist sie immer falsch
