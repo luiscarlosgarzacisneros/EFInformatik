@@ -337,9 +337,16 @@ def play():
         turn =turn+1
         print(turn)
         printboard(board)
-        w=copy.deepcopy(player('X',board))
-        board.clear()
-        board.extend(w)
+        bo=copy.deepcopy(board)
+        while True:
+            w=copy.deepcopy(player('X',board))
+            board.clear()
+            try:
+                board.extend(w)
+                break
+            except:
+                board.extend(bo)
+                continue
         if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
             start = time.time()
             minimaxer(board)
@@ -359,7 +366,7 @@ def play():
         print(':l UNENTSCHIEDEN')
 
 
-#play()
+play()
 
 
 
@@ -368,6 +375,6 @@ def play():
 #printboard(player('X',board))
 ############
 #printboard(board)
-for t in genchildren(board2,'X'):
-    printboard(t)
-print(gewonnen(board,'X'))
+#for t in genchildren(board2,'X'):
+    #printboard(t)
+#print(gewonnen(board,'X'))
