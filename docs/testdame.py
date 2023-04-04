@@ -124,18 +124,21 @@ def player(playerk, boardk):
         player(playerk, boardk)
 
 def genchildrenschlagen(position,playerq):
+    children=[]
     if playerq=='X':
         if y-2>-1 and x-2>-1 and boardcopy[y-1][x-1]=='O' and boardcopy[y-2][x-2]==' ':
             boardcopy[y-1][x-1]=' '
             boardcopy[y-2][x-2]='X'
             boardcopy[y][x]=' '
             children.append(boardcopy)
+            genchildrenschlagen(position,playerq)
             boardcopy = copy.deepcopy(position)
         if y-2>-1 and x+ 2<8 and boardcopy[y-1][x+ 1]=='O' and boardcopy[y-2][x+2]==' ':
             boardcopy[y-1][x+1]=' '
             boardcopy[y-2][x+2]='X'
             boardcopy[y][x]=' '
             children.append(boardcopy)
+            genchildrenschlagen(position,playerq)
             boardcopy = copy.deepcopy(position)
         else:
             pass
@@ -151,10 +154,11 @@ def genchildrenschlagen(position,playerq):
             boardcopy[y+2][x+2]='O'
             boardcopy[y][x]=' '
             children.append(boardcopy)
+            genchildrenschlagen(position,playerq)
             boardcopy = copy.deepcopy(position)
         else:
             pass
-
+    return children
 
 def genchildren(position, playerq):
     children = []
@@ -177,7 +181,8 @@ def genchildren(position, playerq):
                         boardcopy = copy.deepcopy(position)
                     else:
                         pass
-                    genchildrenschlagen(boardcopy,'X')
+                    for g in genchildrenschlagen(boardcopy,'X'):
+                        children.append(g)
                 elif playerq=='O':
                     if y+ 1<8 and x-1>-1 and  boardcopy[y+ 1][x-1]==' ':
                         boardcopy[y+1][x-1]='O'
@@ -191,7 +196,8 @@ def genchildren(position, playerq):
                         boardcopy = copy.deepcopy(position)
                     else:
                         pass
-                    genchildrenschlagen(boardcopy,'O')
+                    for h in genchildrenschlagen(boardcopy,'O'):
+                        children.append(h)
                 else:
                     pass
             x = x + 1
