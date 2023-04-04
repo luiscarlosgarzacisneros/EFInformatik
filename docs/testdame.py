@@ -305,7 +305,6 @@ def play():
         turn =turn+1
         print(turn)
         printboard(board)
-        w.clear()
         w=copy.deepcopy(player('X',board))
         board.clear()
         board.extend(w)
