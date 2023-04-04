@@ -35,6 +35,7 @@ maxtime = 20
 turn=0
 w=[]
 childrens=[]
+yesschlagen=False
 #
 
 
@@ -62,6 +63,8 @@ def schlagenmoeglichX(y,x,boar):
     return r
 
 def schlagenplayer(vy,vx,zy,zx,boardcopy):
+    global yesschlagen
+    yesschlagen=False
     while schlagenmoeglichX(vy,vx,boardcopy):
         try:
             if zy==vy- 2 and zx==vx +2 and boardcopy[vy-1][vx+1]=='O':
@@ -75,6 +78,7 @@ def schlagenplayer(vy,vx,zy,zx,boardcopy):
                     break
                 zx = int(input('zu x: ')) - 1
                 zy = int(input('zu y: ')) - 1
+                yesschlagen=True
                                     
             elif zy==vy- 2 and zx==vx-2 and boardcopy[vy-1][vx-1]=='O':
                 boardcopy[zy][zx]='X'
@@ -87,6 +91,7 @@ def schlagenplayer(vy,vx,zy,zx,boardcopy):
                     break
                 zx = int(input('zu x: ')) - 1
                 zy = int(input('zu y: ')) - 1
+                yesschlagen=True
             else:
                 zx = int(input('zu x: ')) - 1
                 zy = int(input('zu y: ')) - 1
@@ -100,6 +105,7 @@ def schlagenplayer(vy,vx,zy,zx,boardcopy):
     return boardcopy
 
 def player(playerk, boardk):
+    global yesschlagen
     boardcopy=copy.deepcopy(boardk)
     try:
         vx = int(input('von x: ')) - 1
@@ -121,9 +127,16 @@ def player(playerk, boardk):
                         boardcopy[zy][zx]='X'
                         boardcopy[vy][vx]=' '
                         return boardcopy
+                    else:
+                        print('EINGABE NICHT KORREKT')
+                        player(playerk, boardk)
                 elif zy==vy- 2:
                     f=schlagenplayer(vy,vx,zy,zx,boardcopy)
+                    if not yesschlagen:
+                        print('EINGABE NICHT KORREKT')
+                        player(playerk, boardk)
                     return f
+                    
                 else:
                     print('EINGABE NICHT KORREKT')
                     player(playerk, boardk)
