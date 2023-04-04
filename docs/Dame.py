@@ -35,8 +35,8 @@ maxtime = 20
 turn=0
 w=[]
 childrens=[]
+yesschlagen=False
 #
-
 
 def printboard(board):
     print('  1   2   3   4   5   6   7   8')
@@ -60,80 +60,6 @@ def schlagenmoeglichX(y,x,boar):
     else:
         r=False
     return r
-
-def schlagenplayer(vy,vx,zy,zx,boardcopy):
-    while schlagenmoeglichX(vy,vx,boardcopy):
-        try:
-            if zy==vy- 2 and zx==vx +2 and boardcopy[vy-1][vx+1]=='O':
-                boardcopy[zy][zx]='X'
-                boardcopy[vy][vx]=' '
-                boardcopy[vy-1][vx+1]=' '
-                printboard(boardcopy)
-                vx = zx
-                vy = zy
-                if not schlagenmoeglichX(vy,vx,boardcopy):
-                    break
-                zx = int(input('zu x: ')) - 1
-                zy = int(input('zu y: ')) - 1
-                                    
-            elif zy==vy- 2 and zx==vx-2 and boardcopy[vy-1][vx-1]=='O':
-                boardcopy[zy][zx]='X'
-                boardcopy[vy][vx]=' '
-                boardcopy[vy-1][vx-1]=' '
-                printboard(boardcopy)
-                vx = zx
-                vy = zy
-                if not schlagenmoeglichX(vy,vx,boardcopy):
-                    break
-                zx = int(input('zu x: ')) - 1
-                zy = int(input('zu y: ')) - 1
-            else:
-                zx = int(input('zu x: ')) - 1
-                zy = int(input('zu y: ')) - 1
-                schlagenplayer(vy,vx,zy,zx,boardcopy)
-                
-        except:
-            print('EINGABE NICHT KORREKT')
-            zx = int(input('zu x: ')) - 1
-            zy = int(input('zu y: ')) - 1
-            schlagenplayer(vy,vx,zy,zx,boardcopy)
-    return boardcopy
-
-def player(playerk, boardk):
-    boardcopy=copy.deepcopy(boardk)
-    try:
-        vx = int(input('von x: ')) - 1
-        vy = int(input('von y: ')) - 1
-        zx = int(input('zu x: ')) - 1
-        zy = int(input('zu y: ')) - 1
-    except:
-        print('EINGABE NICHT KORREKT')
-        player(playerk, boardk)
-    try:
-        if zy<9 and zy>0 and zx>0 and zx<9 and boardcopy[vy][vx] == playerk and boardcopy[zy][zx]==' ':
-            if playerk=='X':
-                if zy==vy- 1:
-                    if zx==vx +1:
-                        boardcopy[zy][zx]='X'
-                        boardcopy[vy][vx]=' '
-                        return boardcopy
-                    elif zx==vx-1:
-                        boardcopy[zy][zx]='X'
-                        boardcopy[vy][vx]=' '
-                        return boardcopy
-                elif zy==vy- 2:
-                    f=schlagenplayer(vy,vx,zy,zx,boardcopy)
-                    return f
-                else:
-                    print('EINGABE NICHT KORREKT')
-                    player(playerk, boardk)
-                
-        else:
-            print('EINGABE NICHT KORREKT')
-            player(playerk, boardk)
-    except:
-        print('EINGABE NICHT KORREKT')
-        player(playerk, boardk)
 
 def genchildrenschlagen(y,x,position,playerq):
     boardcopy = copy.deepcopy(position)
@@ -271,7 +197,6 @@ def minimax(position, depth, maxplayer, alpha, beta):
 
     # return
     pos =copy.deepcopy(position)
-
     f=evaluatepos(pos)
     if gewonnen(position, 'O') == True:
         return f
@@ -331,43 +256,19 @@ def minimaxer(boa):
     move.extend(copy.deepcopy(random.choice(moves)))
 
 
-def play():
-    global turn
-    while not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
-        turn =turn+1
-        print(turn)
-        printboard(board)
-        w=copy.deepcopy(player('X',board))
-        board.clear()
-        board.extend(w)
-        if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
-            start = time.time()
-            minimaxer(board)
-            end = time.time()
-            board.clear()
-            board.extend(copy.deepcopy(move))
-            print(end - start)
-            print(minimaxc)
-    print(turn)
-    printboard(board)
-    print('GAME OVER')
-    if gewonnen(board, 'X'):
-        print(':( VERLOREN')
-    elif gewonnen(board, 'O'):
-        print(':) GEWONNEN')
-    else:
-        print(':l UNENTSCHIEDEN')
-
-
-#play()
+#yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, gewonnen, gameover
+#no: player, playerschlagen, play, damewerden, damegenchildren, evaluateposdame, playerdame, playerschlagendame
 
 
 
+
+#########
 #print(schlagenmoeglichX(5,2,board))
 #printboard(board)
-#printboard(player('X',board))
 ############
-#printboard(board)
-for t in genchildren(board2,'X'):
-    printboard(t)
-print(gewonnen(board,'X'))
+#printboard(board2)
+#for t in genchildren(board2,'X'):
+    #printboard(t)
+#print(gewonnen(board2,'X'))
+#print(evaluatepos(board2))
+
