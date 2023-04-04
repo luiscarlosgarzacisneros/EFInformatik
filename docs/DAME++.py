@@ -6,7 +6,7 @@ board = [
     [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
     ['O', ' ', 'O', ' ', 'O', ' ', 'O',' '],
     [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
     [' ', 'X', ' ', 'X', ' ', 'X', ' ','X'],
@@ -34,9 +34,7 @@ bestscores=[]
 maxtime = 20
 turn=0
 #
-rs=[]
-rets=[]
-#
+
 
 def printboard(board):
     print('  1   2   3   4   5   6   7   8')
@@ -237,6 +235,79 @@ def gewonnen(otherplayer,pos):
         return True
     else:
         return False
+    
+
+
+def minimax(position, depth, maxplayer, alpha, beta):
+    # X:maxplayer,spieler O:minplayer,computer
+    # Spieler
+    # alpha: best maxpl, beta: best minpl
+    if maxplayer:
+        playerj = 'X'
+    else:
+        playerj = 'O'
+
+    # return
+    pos =copy.deepcopy(position)
+
+    f=evaluatepos(pos)
+    if gewonnen(position, 'O') == True:
+        return f
+    elif gewonnen(position, 'X') == True:
+        return f
+    elif depth == d:
+        return f
+    elif genchildren(position, playerj) == []:
+        return f
+    #
+    if maxplayer:
+        maxvalue = -100000000000
+        for child in genchildren(position, playerj):
+            value = minimax(child, depth + 1, False, alpha, beta)
+            if value > maxvalue:
+                maxvalue = value
+            # pruning
+            if value > alpha:
+                alpha = value
+            if beta <= alpha:
+                break
+        return maxvalue
+    #
+    if not maxplayer:
+        minvalue = 1000000000000
+        for child in genchildren(position, playerj):
+            value = minimax(child, depth + 1, True, alpha, beta)
+            if value < minvalue:
+                minvalue = value
+            # pruning
+            if value < beta:
+                beta = value
+            if beta <= alpha:
+                break
+        return minvalue
+
+
+def minimaxer(boa):
+    global minimaxc
+    minimaxc = 0
+    nextmoves.clear()
+    scores.clear()
+    move.clear()
+    moves.clear()
+    start = time.time()
+    for firstgenchild in genchildren(boa, 'O'):
+        nextmoves.append(copy.deepcopy(firstgenchild))
+        scores.append(minimax(firstgenchild, 1, True, -1000000000000, 100000000000000))
+        if (time.time() - start) > maxtime:
+            break
+    #
+    print(scores)
+    #
+    for y in range(len(scores)):
+        if scores[y]==(min(scores)):
+            moves.append(copy.deepcopy(nextmoves[y]))
+    move.extend(copy.deepcopy(random.choice(moves)))
+
 
 #print(schlagenmoeglichX(5,2,board))
 #printboard(board)
@@ -244,6 +315,6 @@ def gewonnen(otherplayer,pos):
 
 
 printboard(board)
-for t in genchildren(board,'X'):
+for t in genchildren(board,'O'):
     printboard(t)
 print(gewonnen('O',board2))
