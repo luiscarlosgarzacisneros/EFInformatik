@@ -160,7 +160,7 @@ def genchildren(position, playerq):
                         boardcopy[y][x]=' '
                         children.append(boardcopy)
                         boardcopy = copy.deepcopy(position)
-                    if y-21>-1 and x+ 2<8 and boardcopy[y-1][x+ 1]=='O' and boardcopy[y-2][x+2]==' ':
+                    if y-2>-1 and x+ 2<8 and boardcopy[y-1][x+ 1]=='O' and boardcopy[y-2][x+2]==' ':
                         boardcopy[y-1][x+1]=' '
                         boardcopy[y-2][x+2]='X'
                         boardcopy[y][x]=' '
@@ -244,6 +244,6 @@ def gewonnen(otherplayer,pos):
 
 
 printboard(board)
-for t in genchildren(board,'O'):
+for t in genchildren(board,'X'):
     printboard(t)
 print(gewonnen('O',board2))
