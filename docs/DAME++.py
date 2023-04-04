@@ -13,6 +13,17 @@ board = [
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
+board2 = [
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
+    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
+]
+#
 minimaxc = 0
 d = 5
 nextmoves = []
@@ -123,6 +134,53 @@ def player(playerk, boardk):
         print('EINGABE NICHT KORREKT')
         player(playerk, boardk)
 
+def genchildrenschlagen(y,x,position,playerq):
+    boardcopy = copy.deepcopy(position)
+    children=[]
+    if playerq=='X':
+        if y-2>-1 and x-2>-1 and boardcopy[y-1][x-1]=='O' and boardcopy[y-2][x-2]==' ':
+            boardcopy[y-1][x-1]=' '
+            boardcopy[y-2][x-2]='X'
+            boardcopy[y][x]=' '
+            children.append(boardcopy)
+            y=y-2
+            x=x-2
+            genchildrenschlagen(y,x,position,playerq)
+            boardcopy = copy.deepcopy(position)
+        if y-2>-1 and x+ 2<8 and boardcopy[y-1][x+ 1]=='O' and boardcopy[y-2][x+2]==' ':
+            boardcopy[y-1][x+1]=' '
+            boardcopy[y-2][x+2]='X'
+            boardcopy[y][x]=' '
+            children.append(boardcopy)
+            y=y-2
+            x=x+2
+            genchildrenschlagen(y,x,position,playerq)
+            boardcopy = copy.deepcopy(position)
+        else:
+            pass
+    elif playerq=='O':
+        if y+ 2<8 and x-2>-1 and  boardcopy[y+ 1][x-1]=='X' and boardcopy[y+2][x-2]==' ':
+            boardcopy[y+1][x-1]=' '
+            boardcopy[y+2][x-2]='O'
+            boardcopy[y][x]=' '
+            children.append(boardcopy)
+            y=y+2
+            x=x-2
+            genchildrenschlagen(y,x,position,playerq)
+            boardcopy = copy.deepcopy(position)
+        if y+ 2<8 and x+ 2<8 and boardcopy[y+ 1][x+ 1]=='X' and boardcopy[y+2][x+2]==' ':
+            boardcopy[y+1][x+1]=' '
+            boardcopy[y+2][x+2]='O'
+            boardcopy[y][x]=' '
+            children.append(boardcopy)
+            y=y+2
+            x=x+2
+            genchildrenschlagen(y,x,position,playerq)
+            boardcopy = copy.deepcopy(position)
+        else:
+            pass
+    return children
+
 def genchildren(position, playerq):
     children = []
     boardcopy = copy.deepcopy(position)
@@ -142,20 +200,10 @@ def genchildren(position, playerq):
                         boardcopy[y][x]=' '
                         children.append(boardcopy)
                         boardcopy = copy.deepcopy(position)
-                    if y-2>-1 and x-2>-1 and boardcopy[y-1][x-1]=='O' and boardcopy[y-2][x-2]==' ':
-                        boardcopy[y-1][x-1]=' '
-                        boardcopy[y-2][x-2]='X'
-                        boardcopy[y][x]=' '
-                        children.append(boardcopy)
-                        boardcopy = copy.deepcopy(position)
-                    if y-2>-1 and x+ 2<8 and boardcopy[y-1][x+ 1]=='O' and boardcopy[y-2][x+2]==' ':
-                        boardcopy[y-1][x+1]=' '
-                        boardcopy[y-2][x+2]='X'
-                        boardcopy[y][x]=' '
-                        children.append(boardcopy)
-                        boardcopy = copy.deepcopy(position)
                     else:
                         pass
+                    for g in genchildrenschlagen(y,x,boardcopy,'X'):
+                        children.append(g)
                 elif playerq=='O':
                     if y+ 1<8 and x-1>-1 and  boardcopy[y+ 1][x-1]==' ':
                         boardcopy[y+1][x-1]='O'
@@ -167,20 +215,10 @@ def genchildren(position, playerq):
                         boardcopy[y][x]=' '
                         children.append(boardcopy)
                         boardcopy = copy.deepcopy(position)
-                    if y+ 2<8 and x-2>-1 and  boardcopy[y+ 1][x-1]=='X' and boardcopy[y+2][x-2]==' ':
-                        boardcopy[y+1][x-1]=' '
-                        boardcopy[y+2][x-2]='O'
-                        boardcopy[y][x]=' '
-                        children.append(boardcopy)
-                        boardcopy = copy.deepcopy(position)
-                    if y+ 2<8 and x+ 2<8 and boardcopy[y+ 1][x+ 1]=='X' and boardcopy[y+2][x+2]==' ':
-                        boardcopy[y+1][x+1]=' '
-                        boardcopy[y+2][x+2]='O'
-                        boardcopy[y][x]=' '
-                        children.append(boardcopy)
-                        boardcopy = copy.deepcopy(position)
                     else:
                         pass
+                    for h in genchildrenschlagen(y,x,boardcopy,'O'):
+                        children.append(h)
                 else:
                     pass
             x = x + 1
@@ -327,7 +365,7 @@ def play():
         print(':l UNENTSCHIEDEN')
 
 
-play()
+#play()
 
 
 
@@ -336,6 +374,6 @@ play()
 #printboard(player('X',board))
 ############
 #printboard(board)
-#for t in genchildren(board,'O'):
-    #printboard(t)
-#print(gewonnen('O',board))
+for t in genchildren(board2,'X'):
+    printboard(t)
+print(gewonnen(board,'X'))

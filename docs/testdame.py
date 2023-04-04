@@ -376,4 +376,4 @@ def play():
 #printboard(board)
 for t in genchildren(board2,'X'):
     printboard(t)
-print(gewonnen('O',board))
+print(gewonnen(board,'X'))
