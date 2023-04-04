@@ -4,12 +4,12 @@ import random
 
 board = [
     [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
+    ['O', ' ', 'O', ' ', 'O', ' ', 'O',' '],
+    [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
+    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
+    [' ', 'X', ' ', 'X', ' ', 'X', ' ','X'],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
@@ -124,8 +124,79 @@ def player(playerk, boardk):
         print('EINGABE NICHT KORREKT')
         player(playerk, boardk)
 
-print(schlagenmoeglichX(5,2,board))
+def genchildren(position, playerq):
+    children = []
+    boardcopy = copy.deepcopy(position)
+    y = 0
+    for i in range(8):
+        x = 0
+        for j in range(8):
+            if boardcopy[y][x] == playerq:
+                if playerq=='X':
+                    if y-1>-1 and x-1>-1 and boardcopy[y-1][x-1]==' ':
+                        boardcopy[y-1][x-1]='X'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    if y-1>-1 and x+ 1<8 and boardcopy[y-1][x+ 1]==' ':
+                        boardcopy[y-1][x+ 1]='X'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    if y-2>-1 and x-2>-1 and boardcopy[y-1][x-1]=='O' and boardcopy[y-2][x-2]==' ':
+                        boardcopy[y-1][x-1]=' '
+                        boardcopy[y-2][x-2]='X'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    if y-21>-1 and x+ 2<8 and boardcopy[y-1][x+ 1]=='O' and boardcopy[y-2][x+2]==' ':
+                        boardcopy[y-1][x+1]=' '
+                        boardcopy[y-2][x+2]='X'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    else:
+                        pass
+                elif playerq=='O':
+                    if y+ 1<8 and x-1>-1 and  boardcopy[y+ 1][x-1]==' ':
+                        boardcopy[y+1][x-1]='O'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    if y+ 1<8 and x+ 1<8 and boardcopy[y+ 1][x+ 1]==' ':
+                        boardcopy[y+ 1][x+ 1]='O'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    if y+ 2<8 and x-2>-1 and  boardcopy[y+ 1][x-1]=='X' and boardcopy[y+2][x-2]==' ':
+                        boardcopy[y+1][x-1]=' '
+                        boardcopy[y+2][x-2]='O'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    if y+ 2<8 and x+ 2<8 and boardcopy[y+ 1][x+ 1]=='X' and boardcopy[y+2][x+2]==' ':
+                        boardcopy[y+1][x+1]=' '
+                        boardcopy[y+2][x+2]='O'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    else:
+                        pass
+                else:
+                    pass
+            x = x + 1
+        y = y + 1
+    #
+    global minimaxc
+    minimaxc = minimaxc + 1
+    #
+    return children
+
+#print(schlagenmoeglichX(5,2,board))
+#printboard(board)
+#printboard(player('X',board))
 
 printboard(board)
-printboard(player('X',board))
+for t in genchildren(board,'O'):
+    printboard(t)
 
