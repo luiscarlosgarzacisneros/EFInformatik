@@ -51,43 +51,32 @@ def schlagenmoeglichX(y,x,boar):
     return r
 
 def schlagenplayer(vy,vx,zy,zx,boardcopy):
-    while True:
+    while schlagenmoeglichX(vy,vx,boardcopy):
         try:
-            if not schlagenmoeglichX(vy,vx,boardcopy):
-                break
-            if zy==vy- 2:
+            if zy==vy- 2 and zx==vx +2 and boardcopy[vy-1][vx+1]=='O':
+                boardcopy[zy][zx]='X'
+                boardcopy[vy][vx]=' '
+                boardcopy[vy-1][vx+1]=' '
+                printboard(boardcopy)
+                vx = zx
+                vy = zy
                 if not schlagenmoeglichX(vy,vx,boardcopy):
                     break
-                elif zx==vx +2 and boardcopy[vy-1][vx+1]=='O':
-                    boardcopy[zy][zx]='X'
-                    boardcopy[vy][vx]=' '
-                    boardcopy[vy-1][vx+1]=' '
-                    printboard(boardcopy)
-                    vx = zx
-                    vy = zy
-                    if not schlagenmoeglichX(vy,vx,boardcopy):
-                        break
-                    zx = int(input('zu x: ')) - 1
-                    zy = int(input('zu y: ')) - 1
+                zx = int(input('zu x: ')) - 1
+                zy = int(input('zu y: ')) - 1
                                     
-                elif zx==vx-2 and boardcopy[vy-1][vx-1]=='O':
-                    boardcopy[zy][zx]='X'
-                    boardcopy[vy][vx]=' '
-                    boardcopy[vy-1][vx-1]=' '
-                    printboard(boardcopy)
-                    vx = zx
-                    vy = zy
-                    if not schlagenmoeglichX(vy,vx,boardcopy):
-                        break
-                    zx = int(input('zu x: ')) - 1
-                    zy = int(input('zu y: ')) - 1
-                else:
-                    print('EINGABE NICHT KORREKT')
-                    zx = int(input('zu x: ')) - 1
-                    zy = int(input('zu y: ')) - 1
-                    schlagenplayer(vy,vx,zy,zx,boardcopy)
+            elif zy==vy- 2 and zx==vx-2 and boardcopy[vy-1][vx-1]=='O':
+                boardcopy[zy][zx]='X'
+                boardcopy[vy][vx]=' '
+                boardcopy[vy-1][vx-1]=' '
+                printboard(boardcopy)
+                vx = zx
+                vy = zy
+                if not schlagenmoeglichX(vy,vx,boardcopy):
+                    break
+                zx = int(input('zu x: ')) - 1
+                zy = int(input('zu y: ')) - 1
             else:
-                print('EINGABE NICHT KORREKT')
                 zx = int(input('zu x: ')) - 1
                 zy = int(input('zu y: ')) - 1
                 schlagenplayer(vy,vx,zy,zx,boardcopy)
@@ -139,6 +128,5 @@ print(schlagenmoeglichX(5,2,board))
 
 printboard(board)
 printboard(player('X',board))
-print(schlagenmoeglichX(5,2,board))
 
-#eingabe nicht korrekt schlagenplayer unktioniert nicht
+
