@@ -6,22 +6,11 @@ board = [
     [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
     ['O', ' ', 'O', ' ', 'O', ' ', 'O',' '],
     [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
-    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
     [' ', 'X', ' ', 'X', ' ', 'X', ' ','X'],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
-]
-#
-board2 = [
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
 ]
 #
 minimaxc = 0
@@ -33,6 +22,7 @@ moves=[]
 bestscores=[]
 maxtime = 20
 turn=0
+w=[]
 #
 
 
@@ -226,7 +216,7 @@ def gameover(pos):
     else:
         return False
 
-def gewonnen(otherplayer,pos):
+def gewonnen(pos,otherplayer):
     eval=0
     for sl in range(len(pos)):
         for o in range(pos[sl].count(otherplayer)):
@@ -309,12 +299,44 @@ def minimaxer(boa):
     move.extend(copy.deepcopy(random.choice(moves)))
 
 
+def play():
+    global turn
+    while not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+        turn =turn+1
+        print(turn)
+        printboard(board)
+        w.clear()
+        w=copy.deepcopy(player('X',board))
+        board.clear()
+        board.extend(w)
+        if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+            start = time.time()
+            minimaxer(board)
+            end = time.time()
+            board.clear()
+            board.extend(copy.deepcopy(move))
+            print(end - start)
+            print(minimaxc)
+    print(turn)
+    printboard(board)
+    print('GAME OVER')
+    if gewonnen(board, 'X'):
+        print(':( VERLOREN')
+    elif gewonnen(board, 'O'):
+        print(':) GEWONNEN')
+    else:
+        print(':l UNENTSCHIEDEN')
+
+
+play()
+
+
+
 #print(schlagenmoeglichX(5,2,board))
 #printboard(board)
 #printboard(player('X',board))
-
-
-printboard(board)
-for t in genchildren(board,'O'):
-    printboard(t)
-print(gewonnen('O',board2))
+############
+#printboard(board)
+#for t in genchildren(board,'O'):
+    #printboard(t)
+#print(gewonnen('O',board))
