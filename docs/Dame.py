@@ -33,9 +33,7 @@ moves=[]
 bestscores=[]
 maxtime = 20
 turn=0
-w=[]
 childrens=[]
-yesschlagen=False
 #
 
 def printboard(board):
@@ -184,8 +182,6 @@ def gewonnen(pos,otherplayer):
     else:
         return False
     
-
-
 def minimax(position, depth, maxplayer, alpha, beta):
     # X:maxplayer,spieler O:minplayer,computer
     # Spieler
@@ -233,7 +229,6 @@ def minimax(position, depth, maxplayer, alpha, beta):
                 break
         return minvalue
 
-
 def minimaxer(boa):
     global minimaxc
     minimaxc = 0
@@ -258,8 +253,6 @@ def minimaxer(boa):
 
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, gewonnen, gameover
 #no: player, playerschlagen, play, damewerden, damegenchildren, evaluateposdame, playerdame, playerschlagendame
-
-
 
 
 #########
