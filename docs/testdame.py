@@ -34,6 +34,7 @@ bestscores=[]
 maxtime = 20
 turn=0
 w=[]
+childrens=[]
 #
 
 
@@ -136,22 +137,19 @@ def player(playerk, boardk):
 
 def genchildrenschlagen(y,x,position,playerq):
     boardcopy = copy.deepcopy(position)
-    children=[]
     if playerq=='X':
         if y-2>-1 and x-2>-1 and boardcopy[y-1][x-1]=='O' and boardcopy[y-2][x-2]==' ':
             boardcopy[y-1][x-1]=' '
             boardcopy[y-2][x-2]='X'
             boardcopy[y][x]=' '
-            children.append(copy.deepcopy(boardcopy))
+            childrens.append(copy.deepcopy(boardcopy))
             genchildrenschlagen(y-2,x-2,boardcopy,playerq)
             boardcopy = copy.deepcopy(position)
         if y-2>-1 and x+ 2<8 and boardcopy[y-1][x+ 1]=='O' and boardcopy[y-2][x+2]==' ':
             boardcopy[y-1][x+1]=' '
             boardcopy[y-2][x+2]='X'
             boardcopy[y][x]=' '
-            children.append(copy.deepcopy(boardcopy))
-            y=y-2
-            x=x+2
+            childrens.append(copy.deepcopy(boardcopy))
             genchildrenschlagen(y-2,x+2,boardcopy,playerq)
             boardcopy = copy.deepcopy(position)
         else:
@@ -161,23 +159,19 @@ def genchildrenschlagen(y,x,position,playerq):
             boardcopy[y+1][x-1]=' '
             boardcopy[y+2][x-2]='O'
             boardcopy[y][x]=' '
-            children.append(copy.deepcopy(boardcopy))
-            y=y+2
-            x=x-2
+            childrens.append(copy.deepcopy(boardcopy))
             genchildrenschlagen(y+2,x-2,boardcopy,playerq)
             boardcopy = copy.deepcopy(position)
         if y+ 2<8 and x+ 2<8 and boardcopy[y+ 1][x+ 1]=='X' and boardcopy[y+2][x+2]==' ':
             boardcopy[y+1][x+1]=' '
             boardcopy[y+2][x+2]='O'
             boardcopy[y][x]=' '
-            children.append(copy.deepcopy(boardcopy))
-            y=y+2
-            x=x+2
+            childrens.append(copy.deepcopy(boardcopy))
             genchildrenschlagen(y+2,x+2,boardcopy,playerq)
             boardcopy = copy.deepcopy(position)
         else:
             pass
-    return children
+    return childrens
 
 def genchildren(position, playerq):
     children = []
@@ -200,6 +194,7 @@ def genchildren(position, playerq):
                         boardcopy = copy.deepcopy(position)
                     else:
                         pass
+                    childrens.clear()
                     for g in genchildrenschlagen(y,x,boardcopy,'X'):
                         children.append(g)
                 elif playerq=='O':
@@ -215,6 +210,7 @@ def genchildren(position, playerq):
                         boardcopy = copy.deepcopy(position)
                     else:
                         pass
+                    childrens.clear()
                     for h in genchildrenschlagen(y,x,boardcopy,'O'):
                         children.append(h)
                 else:
