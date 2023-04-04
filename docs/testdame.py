@@ -192,11 +192,21 @@ def genchildren(position, playerq):
     #
     return children
 
+def evaluatepos(pos):
+    eval=0
+    for sl in range(len(board)):
+        for o in range(pos[sl].count('X')):
+            eval=eval+1
+        for o in range(pos[sl].count('O')):
+            eval=eval-1
+    return eval
+
 #print(schlagenmoeglichX(5,2,board))
 #printboard(board)
 #printboard(player('X',board))
 
+
 printboard(board)
 for t in genchildren(board,'O'):
     printboard(t)
-
+print(evaluatepos(board))
