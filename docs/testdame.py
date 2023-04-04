@@ -13,6 +13,17 @@ board = [
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
+board2 = [
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+]
+#
 minimaxc = 0
 d = 5
 nextmoves = []
@@ -194,12 +205,38 @@ def genchildren(position, playerq):
 
 def evaluatepos(pos):
     eval=0
-    for sl in range(len(board)):
+    for sl in range(len(pos)):
         for o in range(pos[sl].count('X')):
             eval=eval+1
         for o in range(pos[sl].count('O')):
             eval=eval-1
     return eval
+
+def gameover(pos):
+    evalX=0
+    evalO=0
+    for sl in range(len(pos)):
+        for o in range(pos[sl].count('X')):
+            evalX=evalX+1
+    for sl in range(len(pos)):
+        for o in range(pos[sl].count('O')):
+            evalO=evalO+1
+    if evalO==0:
+        return True
+    if evalX==0:
+        return True
+    else:
+        return False
+
+def gewonnen(otherplayer,pos):
+    eval=0
+    for sl in range(len(pos)):
+        for o in range(pos[sl].count(otherplayer)):
+            eval=eval+1
+    if eval==0:
+        return True
+    else:
+        return False
 
 #print(schlagenmoeglichX(5,2,board))
 #printboard(board)
@@ -209,4 +246,4 @@ def evaluatepos(pos):
 printboard(board)
 for t in genchildren(board,'O'):
     printboard(t)
-print(evaluatepos(board))
+print(gewonnen('O',board2))
