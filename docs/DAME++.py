@@ -354,9 +354,9 @@ def play():
         printboard(board)
         bo=copy.deepcopy(board)
         while True:
-            w=copy.deepcopy(player('X',board))
-            board.clear()
             try:
+                w=copy.deepcopy(player('X',board))
+                board.clear()
                 board.extend(w)
                 break
             except:

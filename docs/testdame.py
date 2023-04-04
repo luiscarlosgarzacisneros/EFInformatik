@@ -36,6 +36,7 @@ turn=0
 w=[]
 childrens=[]
 yesschlagen=False
+playerok=False
 #
 
 
@@ -105,6 +106,7 @@ def schlagenplayer(vy,vx,zy,zx,boardcopy):
     return boardcopy
 
 def player(playerk, boardk):
+    global playerok
     global yesschlagen
     boardcopy=copy.deepcopy(boardk)
     try:
@@ -122,10 +124,12 @@ def player(playerk, boardk):
                     if zx==vx +1:
                         boardcopy[zy][zx]='X'
                         boardcopy[vy][vx]=' '
+                        playerok=True
                         return boardcopy
                     elif zx==vx-1:
                         boardcopy[zy][zx]='X'
                         boardcopy[vy][vx]=' '
+                        playerok=True
                         return boardcopy
                     else:
                         print('EINGABE NICHT KORREKT')
@@ -135,6 +139,7 @@ def player(playerk, boardk):
                     if not yesschlagen:
                         print('EINGABE NICHT KORREKT')
                         player(playerk, boardk)
+                    playerok=True
                     return f
                     
                 else:
@@ -350,16 +355,9 @@ def play():
         turn =turn+1
         print(turn)
         printboard(board)
-        bo=copy.deepcopy(board)
-        while True:
-            w=copy.deepcopy(player('X',board))
-            board.clear()
-            try:
-                board.extend(w)
-                break
-            except:
-                board.extend(bo)
-                continue
+        w=copy.deepcopy(player('X',board))
+        board.clear()
+        board.extend(w)
         if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
             start = time.time()
             minimaxer(board)
