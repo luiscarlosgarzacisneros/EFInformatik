@@ -192,50 +192,6 @@ def schlagen(pos, playert,r):
 
 
 
-def genchildren(position, playerq):
-    children = []
-    boardcopy = copy.deepcopy(position)
-    y = 0
-    for i in range(8):
-        x = 0
-        for j in range(8):
-            if boardcopy[y][x] == playerq:
-                if playerq=='X':
-                    if y-1>-1 and x-1>-1 and boardcopy[y-1][x-1]==' ':
-                        boardcopy[y-1][x-1]='X'
-                        boardcopy[y][x]=' '
-                        children.append(boardcopy)
-                        boardcopy = copy.deepcopy(position)
-                    if y-1>-1 and x+ 1<8 and boardcopy[y-1][x+ 1]==' ':
-                        boardcopy[y-1][x+ 1]='X'
-                        boardcopy[y][x]=' '
-                        children.append(boardcopy)
-                        boardcopy = copy.deepcopy(position)
-                    else:
-                        pass
-                elif playerq=='O':
-                    if y+ 1<8 and x-1>-1 and  boardcopy[y+ 1][x-1]==' ':
-                        boardcopy[y+1][x-1]='O'
-                        boardcopy[y][x]=' '
-                        children.append(boardcopy)
-                        boardcopy = copy.deepcopy(position)
-                    if y+ 1<8 and x+ 1<8 and boardcopy[y+ 1][x+ 1]==' ':
-                        boardcopy[y+ 1][x+ 1]='O'
-                        boardcopy[y][x]=' '
-                        children.append(boardcopy)
-                        boardcopy = copy.deepcopy(position)
-                    else:
-                        pass
-                else:
-                    pass
-            x = x + 1
-        y = y + 1
-    #
-    global minimaxc
-    minimaxc = minimaxc + 1
-    #
-    return children
-
 #printboard(board)
 #for t in genchildren(board,'O'):
     #printboard(t)
@@ -243,17 +199,6 @@ def genchildren(position, playerq):
 #printboard(board)
 
 
-printboard(board)
-
-printboard(xy())
-
-#for t in range(len(rets)):
-    #printboard(rets[t])
-    #print(rs[t])
 
 
 
-########################
-# genchildren mit schlagen, falls schlagen, keine anderen children.
-#clear rs and ret
-#schlagenmoeglich geht nicht
