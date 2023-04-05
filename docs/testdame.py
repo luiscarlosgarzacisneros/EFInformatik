@@ -81,3 +81,30 @@ def eingabe(pos):
         print('EINGABE NICHT KORREKT')
         return False
 
+def player(pos):
+    while True:
+        if eingabe(pos)==True:
+            break
+        else:
+            continue
+    #
+    vy = e[0]
+    vx = e[1]
+    zy = e[2]
+    zx = e[3]
+    #
+    if zy==vy-1 and zx==vx-1 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
+        pos[vy][vx]=' '
+        pos[zy][zx]='X'
+    if zy==vy-1 and zx==vx+1 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
+        pos[vy][vx]=' '
+        pos[zy][zx]='X'
+    #schlagen
+    if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
+        pos[vy][vx]=' '
+        pos[zy][zx]='X'
+        pos[vy-1][vx-1]=' '
+    if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
+        pos[vy][vx]=' '
+        pos[zy][zx]='X'
+        pos[vy-1][vx+1]=' '
