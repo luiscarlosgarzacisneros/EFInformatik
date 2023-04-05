@@ -16,9 +16,9 @@ board = [
 board2 = [
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
@@ -47,7 +47,6 @@ def printboard(board):
             print(' I ', end='')
         print(i + 1)
         print('---------------------------------')
-
 
 def eingabe(pos):
     e.clear()
@@ -81,7 +80,6 @@ def eingabe(pos):
         print('EINGABE NICHT KORREKT')
         return False
 
-
 def schlagenmoeglichX(y,x,boar):
     r=False
     if y-2>-1 and x-2>-1:
@@ -94,15 +92,19 @@ def schlagenmoeglichX(y,x,boar):
         r=False
     return r
 
-
 def playerschlagen(vy,vx,zy,zx,pos):
     while schlagenmoeglichX(vy,vx,pos):
         if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
             pos[vy][vx]=' '
             pos[zy][zx]='X'
             pos[vy-1][vx-1]=' '
+            printboard(pos)
             #
-            eingabe(pos)
+            while True:
+                if eingabe(pos)==True:
+                    break
+                else:
+                    continue
             vy = e[0]
             vx = e[1]
             zy = e[2]
@@ -112,7 +114,13 @@ def playerschlagen(vy,vx,zy,zx,pos):
             pos[vy][vx]=' '
             pos[zy][zx]='X'
             pos[vy-1][vx+1]=' '
+            printboard(pos)
             #
+            while True:
+                if eingabe(pos)==True:
+                    break
+                else:
+                    continue
             eingabe(pos)
             vy = e[0]
             vx = e[1]
@@ -144,3 +152,6 @@ def player(pos):
     if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
         playerschlagen(vy,vx,zy,zx,pos)
 
+printboard(board2)
+player(board2)
+printboard(board2)
