@@ -117,7 +117,7 @@ def player(playerk, boardk):
         print('EINGABE NICHT KORREKT')
         player(playerk, boardk)
     try:
-        if zy<9 and zy>0 and zx>0 and zx<9 and boardcopy[vy][vx] == playerk and boardcopy[zy][zx]==' ':
+        if zy<8 and zy>-1 and zx>-1 and zx<8 and boardcopy[vy][vx] == playerk and boardcopy[zy][zx]==' ':
             if playerk=='X':
                 if zy==vy- 1:
                     if zx==vx +1:
