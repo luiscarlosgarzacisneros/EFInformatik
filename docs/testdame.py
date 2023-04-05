@@ -81,6 +81,45 @@ def eingabe(pos):
         print('EINGABE NICHT KORREKT')
         return False
 
+
+def schlagenmoeglichX(y,x,boar):
+    r=False
+    if y-2>-1 and x-2>-1:
+        if boar[y-2][x-2]==' 'and boar[y-1][x-1]=='O':
+            r=True
+    if y-2>-1 and x+2<8:
+        if boar[y-2][x+2]==' ' and boar[y-1][x+1]=='O':
+            r=True
+    else:
+        r=False
+    return r
+
+
+def playerschlagen(vy,vx,zy,zx,pos):
+    while schlagenmoeglichX(vy,vx,pos):
+        if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
+            pos[vy][vx]=' '
+            pos[zy][zx]='X'
+            pos[vy-1][vx-1]=' '
+            #
+            eingabe(pos)
+            vy = e[0]
+            vx = e[1]
+            zy = e[2]
+            zx = e[3]
+            playerschlagen(vy,vx,zy,zx,pos)
+        elif zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
+            pos[vy][vx]=' '
+            pos[zy][zx]='X'
+            pos[vy-1][vx+1]=' '
+            #
+            eingabe(pos)
+            vy = e[0]
+            vx = e[1]
+            zy = e[2]
+            zx = e[3]
+            playerschlagen(vy,vx,zy,zx,pos)
+
 def player(pos):
     while True:
         if eingabe(pos)==True:
@@ -101,10 +140,6 @@ def player(pos):
         pos[zy][zx]='X'
     #schlagen
     if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
-        pos[vy][vx]=' '
-        pos[zy][zx]='X'
-        pos[vy-1][vx-1]=' '
+    
     if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
-        pos[vy][vx]=' '
-        pos[zy][zx]='X'
-        pos[vy-1][vx+1]=' '
+        
