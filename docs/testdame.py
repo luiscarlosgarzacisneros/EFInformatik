@@ -7,7 +7,7 @@ board = [
     ['O', ' ', 'O', ' ', 'O', ' ', 'O',' '],
     [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', 'O', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
     [' ', 'X', ' ', 'X', ' ', 'X', ' ','X'],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
@@ -34,6 +34,7 @@ bestscores=[]
 maxtime = 20
 turn=0
 childrens=[]
+e=[]
 #
 
 def printboard(board):
@@ -49,6 +50,7 @@ def printboard(board):
 
 
 def eingabe(pos):
+    e.clear()
     korrekt=False
     try:
         vx = int(input('von x: ')) - 1
@@ -70,9 +72,12 @@ def eingabe(pos):
         if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
             korrekt=True
     if korrekt:
+        e.append(vy)
+        e.append(vx)
+        e.append(zy)
+        e.append(zx)
         return True
     else:
         print('EINGABE NICHT KORREKT')
         return False
-
 

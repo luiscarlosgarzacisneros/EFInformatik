@@ -34,6 +34,7 @@ bestscores=[]
 maxtime = 20
 turn=0
 childrens=[]
+e=[]
 #
 
 def printboard(board):
@@ -251,6 +252,7 @@ def minimaxer(boa):
     move.extend(copy.deepcopy(random.choice(moves)))
 
 def eingabe(pos):
+    e.clear()
     korrekt=False
     try:
         vx = int(input('von x: ')) - 1
@@ -272,10 +274,15 @@ def eingabe(pos):
         if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
             korrekt=True
     if korrekt:
+        e.append(vy)
+        e.append(vx)
+        e.append(zy)
+        e.append(zx)
         return True
     else:
         print('EINGABE NICHT KORREKT')
         return False
+
 
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, gewonnen, gameover
 #no: player, playerschlagen, play, damewerden, damegenchildren, evaluateposdame, playerdame, playerschlagendame
