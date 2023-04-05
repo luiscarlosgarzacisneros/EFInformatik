@@ -140,6 +140,7 @@ def player(pos):
         pos[zy][zx]='X'
     #schlagen
     if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
-    
+        playerschlagen(vy,vx,zy,zx,pos)
     if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
-        
+        playerschlagen(vy,vx,zy,zx,pos)
+
