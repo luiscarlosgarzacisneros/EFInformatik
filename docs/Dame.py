@@ -250,18 +250,36 @@ def minimaxer(boa):
             moves.append(copy.deepcopy(nextmoves[y]))
     move.extend(copy.deepcopy(random.choice(moves)))
 
+def eingabe(pos):
+    korrekt=False
+    try:
+        vx = int(input('von x: ')) - 1
+        vy = int(input('von y: ')) - 1
+        zx = int(input('zu x: ')) - 1
+        zy = int(input('zu y: ')) - 1
+    except:
+        print('EINGABE NICHT KORREKT')
+        return False
+    #
+    if vy<8 and vy>-1 and vx<8 and vx>-1 and zy<8 and zy>-1 and zx<8 and zx>-1:
+        if zy==vy-1 and zx==vx-1 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
+            korrekt=True
+        if zy==vy-1 and zx==vx+1 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
+            korrekt=True
+        #
+        if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
+            korrekt=True
+        if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
+            korrekt=True
+    if korrekt:
+        return True
+    else:
+        print('EINGABE NICHT KORREKT')
+        return False
 
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, gewonnen, gameover
 #no: player, playerschlagen, play, damewerden, damegenchildren, evaluateposdame, playerdame, playerschlagendame
 
 
-#########
-#print(schlagenmoeglichX(5,2,board))
-#printboard(board)
-############
-#printboard(board2)
-#for t in genchildren(board2,'X'):
-    #printboard(t)
-#print(gewonnen(board2,'X'))
-#print(evaluatepos(board2))
+
 
