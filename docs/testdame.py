@@ -99,10 +99,8 @@ def eingabeschlagen(pos, vy,vx):
         if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
             korrekt=True
     if korrekt:
-        e.append(vy)
-        e.append(vx)
-        e.append(zy)
-        e.append(zx)
+        es.append(zy)
+        es.append(zx)
         return True
     else:
         print('EINGABE NICHT KORREKT')
@@ -145,16 +143,16 @@ def playerschlagen(vy,vx,zy,zx,pos):
             pos[vy-1][vx+1]=' '
             printboard(pos)
             #
-            if schlagenmoeglichX(zy,zx,pos):
+            vy = zy
+            vx = zx
+            if schlagenmoeglichX(vy,vx,pos):
                 while True:
-                    if eingabe(pos)==True:
+                    if eingabeschlagen(pos,vy,vx)==True:
                         break
                     else:
                         continue
-                vy = e[0]
-                vx = e[1]
-                zy = e[2]
-                zx = e[3]
+                zy = es[0]
+                zx = es[1]
                 playerschlagen(vy,vx,zy,zx,pos)
 
 def player(pos):
