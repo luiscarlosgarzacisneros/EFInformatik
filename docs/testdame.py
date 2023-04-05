@@ -100,33 +100,34 @@ def playerschlagen(vy,vx,zy,zx,pos):
             pos[vy-1][vx-1]=' '
             printboard(pos)
             #
-            while True:
-                if eingabe(pos)==True:
-                    break
-                else:
-                    continue
-            vy = e[0]
-            vx = e[1]
-            zy = e[2]
-            zx = e[3]
-            playerschlagen(vy,vx,zy,zx,pos)
+            if schlagenmoeglichX(zy,zx,pos):
+                while True:
+                    if eingabe(pos)==True:
+                        break
+                    else:
+                        continue
+                vy = e[0]
+                vx = e[1]
+                zy = e[2]
+                zx = e[3]
+                playerschlagen(vy,vx,zy,zx,pos)
         elif zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
             pos[vy][vx]=' '
             pos[zy][zx]='X'
             pos[vy-1][vx+1]=' '
             printboard(pos)
             #
-            while True:
-                if eingabe(pos)==True:
-                    break
-                else:
-                    continue
-            eingabe(pos)
-            vy = e[0]
-            vx = e[1]
-            zy = e[2]
-            zx = e[3]
-            playerschlagen(vy,vx,zy,zx,pos)
+            if schlagenmoeglichX(zy,zx,pos):
+                while True:
+                    if eingabe(pos)==True:
+                        break
+                    else:
+                        continue
+                vy = e[0]
+                vx = e[1]
+                zy = e[2]
+                zx = e[3]
+                playerschlagen(vy,vx,zy,zx,pos)
 
 def player(pos):
     while True:
