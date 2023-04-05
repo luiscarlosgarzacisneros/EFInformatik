@@ -83,7 +83,7 @@ def eingabe(pos):
     
 
 def eingabeschlagen(pos, vy,vx):
-    e.clear()
+    es.clear()
     korrekt=False
     try:
         zx = int(input('zu x: ')) - 1
