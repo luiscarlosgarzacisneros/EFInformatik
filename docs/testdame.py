@@ -81,7 +81,6 @@ def eingabe(pos):
         print('EINGABE NICHT KORREKT')
         return False
     
-
 def eingabeschlagen(pos, vy,vx):
     es.clear()
     korrekt=False
