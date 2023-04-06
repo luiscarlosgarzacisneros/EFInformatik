@@ -278,7 +278,7 @@ def gameover(pos):
     else:
         return False
 
-def gewonnen(pos,otherplayer):
+def verloren(pos,otherplayer):
     eval=0
     for sl in range(len(pos)):
         for o in range(pos[sl].count(otherplayer)):
@@ -300,9 +300,9 @@ def minimax(position, depth, maxplayer, alpha, beta):
     # return
     pos =copy.deepcopy(position)
     f=evaluatepos(pos)
-    if gewonnen(position, 'O') == True:
+    if verloren(position, 'O') == True:
         return f
-    elif gewonnen(position, 'X') == True:
+    elif verloren(position, 'X') == True:
         return f
     elif depth == d:
         return f
@@ -358,13 +358,13 @@ def minimaxer(boa):
 
 def play():
     global turn
-    while not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+    while not gameover(board) and not verloren(board, 'O') and not verloren(board, 'X'):
         turn =turn+1
         print(turn)
         printboard(board)
         player(board)
         printboard(board)
-        if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+        if not gameover(board) and not verloren(board, 'O') and not verloren(board, 'X'):
             start = time.time()
             minimaxer(board)
             end = time.time()
@@ -375,15 +375,16 @@ def play():
     print(turn)
     printboard(board)
     print('GAME OVER')
-    if gewonnen(board, 'X'):
+    if verloren(board, 'X'):
         print(':( VERLOREN')
-    elif gewonnen(board, 'O'):
+    elif verloren(board, 'O'):
         print(':) GEWONNEN')
     else:
         print(':l UNENTSCHIEDEN')
 
 
 play()
-#yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, gewonnen, gameovereingabe, eingabeschlagen, player, playerschlagen,
+#yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, verloren, gameovereingabe, eingabeschlagen, player, playerschlagen,
 #no: damewerden, damegenchildren, genchildrenschlagendame, evaluateposdame, playerdame, playerschlagendame
+
 
