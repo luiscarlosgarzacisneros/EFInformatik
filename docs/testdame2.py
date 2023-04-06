@@ -54,12 +54,11 @@ def schlagenmoeglichX(y,x,boar):
     if y-2>-1 and x-2>-1:
         if boar[y-2][x-2]==' 'and boar[y-1][x-1]=='O':
             r=True
-    elif y-2>-1 and x+2<8:
+    if y-2>-1 and x+2<8:
         if boar[y-2][x+2]==' ' and boar[y-1][x+1]=='O':
             r=True
-    else:
-        r=False
     return r
+
 def eingabe(pos):
     e.clear()
     korrekt=False
@@ -177,8 +176,6 @@ def player(pos):
     if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
         playerschlagen(vy,vx,zy,zx,pos)
 
-######
-
 def genchildrenschlagen(y,x,position,playerq):
     boardcopy = copy.deepcopy(position)
     if playerq=='X':
@@ -269,3 +266,5 @@ def genchildren(position, playerq):
 
 #for i in genchildren(board2,'O'):
     #printboard(i)
+
+    
