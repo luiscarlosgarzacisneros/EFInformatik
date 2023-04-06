@@ -34,7 +34,6 @@ def printboard(board):
         print('')
         print('-----------------------------')
 
-
 def fall(board, y, x, player):
     if y <= 4:
         if board[y + 1][x] == ' ':
@@ -44,7 +43,6 @@ def fall(board, y, x, player):
             fall(board, y, x, player)
         else:
             pass
-
 
 def player():
     try:
@@ -58,7 +56,6 @@ def player():
     except:
         print('EINGABE NICHT KORREKT')
         player()
-
 
 def gewonnen(board, player):
     gew = False
@@ -280,7 +277,6 @@ def inarow(board, player, otherplayer):
                     score=score-3
     return score
 
-
 def genchildren(position, playerk):
     children = []
     boardcopy = copy.deepcopy(position)
@@ -295,7 +291,6 @@ def genchildren(position, playerk):
     minimaxc = minimaxc + 1
     #
     return children
-
 
 def minimax(position, depth, maxplayer, alpha, beta):
     # X:maxplayer,spieler O:minplayer,computer
@@ -345,7 +340,6 @@ def minimax(position, depth, maxplayer, alpha, beta):
                 break
         return minvalue
 
-
 def minimaxer(boa):
     global minimaxc
     minimaxc = 0
@@ -367,14 +361,12 @@ def minimaxer(boa):
             moves.append(copy.deepcopy(nextmoves[y]))
     move.extend(copy.deepcopy(random.choice(moves)))
 
-
 def gameover(boar):
     isover = True
     for q in range(6):
         if boar[q].count(' ') > 0:
             isover = False
     return isover
-
 
 def play():
     global turn
