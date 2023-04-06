@@ -54,13 +54,12 @@ def schlagenmoeglichX(y,x,boar):
     if y-2>-1 and x-2>-1:
         if boar[y-2][x-2]==' 'and boar[y-1][x-1]=='O':
             r=True
-    if y-2>-1 and x+2<8:
+    elif y-2>-1 and x+2<8:
         if boar[y-2][x+2]==' ' and boar[y-1][x+1]=='O':
             r=True
     else:
         r=False
     return r
-
 def eingabe(pos):
     e.clear()
     korrekt=False
