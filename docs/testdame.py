@@ -13,17 +13,6 @@ board = [
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
-board2 = [
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', 'O', ' ',' '],
-    [' ', ' ', ' ', ' ', 'X', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', 'O',' '],
-    [' ', ' ', 'X', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', 'O',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ','X'],
-]
-#
 minimaxc = 0
 d = 5
 nextmoves = []
@@ -117,7 +106,6 @@ def eingabeschlagen(pos, vy,vx):
 
 def playerschlagen(vy,vx,zy,zx,pos):
     while schlagenmoeglichX(vy,vx,pos):
-        print('ok')
         if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
             pos[vy][vx]=' '
             pos[zy][zx]='X'
@@ -394,9 +382,8 @@ def play():
     else:
         print(':l UNENTSCHIEDEN')
 
-play()
 
+play()
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, gewonnen, gameovereingabe, eingabeschlagen, player, playerschlagen,
 #no: damewerden, damegenchildren, evaluateposdame, playerdame, playerschlagendame
-
 

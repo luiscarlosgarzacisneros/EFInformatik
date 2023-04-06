@@ -387,7 +387,7 @@ play()
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, gewonnen, gameovereingabe, eingabeschlagen, player, playerschlagen,
 #no: damewerden, damegenchildren, evaluateposdame, playerdame, playerschlagendame
 
-#schlagenplayer&children gehen nicht
+
 
 
 

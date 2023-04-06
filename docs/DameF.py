@@ -13,17 +13,6 @@ board = [
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
-board2 = [
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', 'O', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
-    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
-]
-#
 minimaxc = 0
 d = 5
 nextmoves = []
@@ -175,4 +164,226 @@ def player(pos):
         playerschlagen(vy,vx,zy,zx,pos)
     if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
         playerschlagen(vy,vx,zy,zx,pos)
+
+def genchildrenschlagen(y,x,position,playerq):
+    boardcopy = copy.deepcopy(position)
+    if playerq=='X':
+        if y-2>-1 and x-2>-1 and boardcopy[y-1][x-1]=='O' and boardcopy[y-2][x-2]==' ':
+            boardcopy[y-1][x-1]=' '
+            boardcopy[y-2][x-2]='X'
+            boardcopy[y][x]=' '
+            childrens.append(copy.deepcopy(boardcopy))
+            genchildrenschlagen(y-2,x-2,boardcopy,playerq)
+            boardcopy = copy.deepcopy(position)
+        if y-2>-1 and x+ 2<8 and boardcopy[y-1][x+ 1]=='O' and boardcopy[y-2][x+2]==' ':
+            boardcopy[y-1][x+1]=' '
+            boardcopy[y-2][x+2]='X'
+            boardcopy[y][x]=' '
+            childrens.append(copy.deepcopy(boardcopy))
+            genchildrenschlagen(y-2,x+2,boardcopy,playerq)
+            boardcopy = copy.deepcopy(position)
+        else:
+            pass
+    elif playerq=='O':
+        if y+ 2<8 and x-2>-1 and  boardcopy[y+ 1][x-1]=='X' and boardcopy[y+2][x-2]==' ':
+            boardcopy[y+1][x-1]=' '
+            boardcopy[y+2][x-2]='O'
+            boardcopy[y][x]=' '
+            childrens.append(copy.deepcopy(boardcopy))
+            genchildrenschlagen(y+2,x-2,boardcopy,playerq)
+            boardcopy = copy.deepcopy(position)
+        if y+ 2<8 and x+ 2<8 and boardcopy[y+ 1][x+ 1]=='X' and boardcopy[y+2][x+2]==' ':
+            boardcopy[y+1][x+1]=' '
+            boardcopy[y+2][x+2]='O'
+            boardcopy[y][x]=' '
+            childrens.append(copy.deepcopy(boardcopy))
+            genchildrenschlagen(y+2,x+2,boardcopy,playerq)
+            boardcopy = copy.deepcopy(position)
+        else:
+            pass
+    return childrens
+
+def genchildren(position, playerq):
+    children = []
+    boardcopy = copy.deepcopy(position)
+    y = 0
+    for i in range(8):
+        x = 0
+        for j in range(8):
+            if boardcopy[y][x] == playerq:
+                if playerq=='X':
+                    if y-1>-1 and x-1>-1 and boardcopy[y-1][x-1]==' ':
+                        boardcopy[y-1][x-1]='X'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    if y-1>-1 and x+ 1<8 and boardcopy[y-1][x+ 1]==' ':
+                        boardcopy[y-1][x+ 1]='X'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    else:
+                        pass
+                    childrens.clear()
+                    for g in genchildrenschlagen(y,x,boardcopy,'X'):
+                        children.append(g)
+                elif playerq=='O':
+                    if y+ 1<8 and x-1>-1 and  boardcopy[y+ 1][x-1]==' ':
+                        boardcopy[y+1][x-1]='O'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    if y+ 1<8 and x+ 1<8 and boardcopy[y+ 1][x+ 1]==' ':
+                        boardcopy[y+ 1][x+ 1]='O'
+                        boardcopy[y][x]=' '
+                        children.append(boardcopy)
+                        boardcopy = copy.deepcopy(position)
+                    else:
+                        pass
+                    childrens.clear()
+                    for h in genchildrenschlagen(y,x,boardcopy,'O'):
+                        children.append(h)
+                else:
+                    pass
+            x = x + 1
+        y = y + 1
+    #
+    global minimaxc
+    minimaxc = minimaxc + 1
+    #
+    return children
+
+def evaluatepos(pos):
+    eval=0
+    for sl in range(len(pos)):
+        for o in range(pos[sl].count('X')):
+            eval=eval+1
+        for o in range(pos[sl].count('O')):
+            eval=eval-1
+    return eval
+
+def gameover(pos):
+    evalX=0
+    evalO=0
+    for sl in range(len(pos)):
+        for o in range(pos[sl].count('X')):
+            evalX=evalX+1
+    for sl in range(len(pos)):
+        for o in range(pos[sl].count('O')):
+            evalO=evalO+1
+    if evalO==0:
+        return True
+    if evalX==0:
+        return True
+    else:
+        return False
+
+def gewonnen(pos,otherplayer):
+    eval=0
+    for sl in range(len(pos)):
+        for o in range(pos[sl].count(otherplayer)):
+            eval=eval+1
+    if eval==0:
+        return True
+    else:
+        return False
+    
+def minimax(position, depth, maxplayer, alpha, beta):
+    # X:maxplayer,spieler O:minplayer,computer
+    # Spieler
+    # alpha: best maxpl, beta: best minpl
+    if maxplayer:
+        playerj = 'X'
+    else:
+        playerj = 'O'
+
+    # return
+    pos =copy.deepcopy(position)
+    f=evaluatepos(pos)
+    if gewonnen(position, 'O') == True:
+        return f
+    elif gewonnen(position, 'X') == True:
+        return f
+    elif depth == d:
+        return f
+    elif genchildren(position, playerj) == []:
+        return f
+    #
+    if maxplayer:
+        maxvalue = -100000000000
+        for child in genchildren(position, playerj):
+            value = minimax(child, depth + 1, False, alpha, beta)
+            if value > maxvalue:
+                maxvalue = value
+            # pruning
+            if value > alpha:
+                alpha = value
+            if beta <= alpha:
+                break
+        return maxvalue
+    #
+    if not maxplayer:
+        minvalue = 1000000000000
+        for child in genchildren(position, playerj):
+            value = minimax(child, depth + 1, True, alpha, beta)
+            if value < minvalue:
+                minvalue = value
+            # pruning
+            if value < beta:
+                beta = value
+            if beta <= alpha:
+                break
+        return minvalue
+
+def minimaxer(boa):
+    global minimaxc
+    minimaxc = 0
+    nextmoves.clear()
+    scores.clear()
+    move.clear()
+    moves.clear()
+    start = time.time()
+    for firstgenchild in genchildren(boa, 'O'):
+        nextmoves.append(copy.deepcopy(firstgenchild))
+        scores.append(minimax(firstgenchild, 1, True, -1000000000000, 100000000000000))
+        if (time.time() - start) > maxtime:
+            break
+    #
+    print(scores)
+    #
+    for y in range(len(scores)):
+        if scores[y]==(min(scores)):
+            moves.append(copy.deepcopy(nextmoves[y]))
+    move.extend(copy.deepcopy(random.choice(moves)))
+
+def play():
+    global turn
+    while not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+        turn =turn+1
+        print(turn)
+        printboard(board)
+        player(board)
+        printboard(board)
+        if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+            start = time.time()
+            minimaxer(board)
+            end = time.time()
+            board.clear()
+            board.extend(copy.deepcopy(move))
+            print(end - start)
+            print(minimaxc)
+    print(turn)
+    printboard(board)
+    print('GAME OVER')
+    if gewonnen(board, 'X'):
+        print(':( VERLOREN')
+    elif gewonnen(board, 'O'):
+        print(':) GEWONNEN')
+    else:
+        print(':l UNENTSCHIEDEN')
+
+
+play()
+#yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, gewonnen, gameovereingabe, eingabeschlagen, player, playerschlagen,
+#no: damewerden, damegenchildren, evaluateposdame, playerdame, playerschlagendame
 
