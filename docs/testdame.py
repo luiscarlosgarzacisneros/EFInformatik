@@ -13,6 +13,17 @@ board = [
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
+board2 = [
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'O', ' ', 'O', ' ',' '],
+    [' ', ' ', ' ', ' ', 'X', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', 'O',' '],
+    [' ', ' ', 'X', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', 'O',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ','X'],
+]
+#
 minimaxc = 0
 d = 5
 nextmoves = []
@@ -43,7 +54,7 @@ def schlagenmoeglichX(y,x,boar):
     if y-2>-1 and x-2>-1:
         if boar[y-2][x-2]==' 'and boar[y-1][x-1]=='O':
             r=True
-    if y-2>-1 and x+2<8:
+    elif y-2>-1 and x+2<8:
         if boar[y-2][x+2]==' ' and boar[y-1][x+1]=='O':
             r=True
     else:
@@ -108,6 +119,7 @@ def eingabeschlagen(pos, vy,vx):
 
 def playerschlagen(vy,vx,zy,zx,pos):
     while schlagenmoeglichX(vy,vx,pos):
+        print('ok')
         if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
             pos[vy][vx]=' '
             pos[zy][zx]='X'
@@ -362,38 +374,6 @@ def minimaxer(boa):
             moves.append(copy.deepcopy(nextmoves[y]))
     move.extend(copy.deepcopy(random.choice(moves)))
 
-def eingabe(pos):
-    e.clear()
-    korrekt=False
-    try:
-        vx = int(input('von x: ')) - 1
-        vy = int(input('von y: ')) - 1
-        zx = int(input('zu x: ')) - 1
-        zy = int(input('zu y: ')) - 1
-    except:
-        print('EINGABE NICHT KORREKT')
-        return False
-    #
-    if vy<8 and vy>-1 and vx<8 and vx>-1 and zy<8 and zy>-1 and zx<8 and zx>-1:
-        if zy==vy-1 and zx==vx-1 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
-            korrekt=True
-        if zy==vy-1 and zx==vx+1 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
-            korrekt=True
-        #
-        if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
-            korrekt=True
-        if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
-            korrekt=True
-    if korrekt:
-        e.append(vy)
-        e.append(vx)
-        e.append(zy)
-        e.append(zx)
-        return True
-    else:
-        print('EINGABE NICHT KORREKT')
-        return False
-
 def play():
     global turn
     while not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
@@ -420,8 +400,10 @@ def play():
     else:
         print(':l UNENTSCHIEDEN')
 
-
-play()
+printboard(board2)
+player(board2)
+printboard(board2)
+player(board2)
 
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, gewonnen, gameovereingabe, eingabeschlagen, player, playerschlagen,
 #no: damewerden, damegenchildren, evaluateposdame, playerdame, playerschlagendame
