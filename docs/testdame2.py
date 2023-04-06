@@ -13,6 +13,17 @@ board = [
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
+board2 = [
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'O', ' ', 'O', ' ',' '],
+    [' ', ' ', ' ', ' ', 'X', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', 'X', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+]
+#
 minimaxc = 0
 d = 5
 nextmoves = []
@@ -167,7 +178,7 @@ def player(pos):
     if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
         playerschlagen(vy,vx,zy,zx,pos)
 
-#######
+######
 
 def genchildrenschlagen(y,x,position,playerq):
     boardcopy = copy.deepcopy(position)
@@ -257,173 +268,5 @@ def genchildren(position, playerq):
     #
     return children
 
-#######
-
-def evaluatepos(pos):
-    eval=0
-    for sl in range(len(pos)):
-        for o in range(pos[sl].count('X')):
-            eval=eval+1
-        for o in range(pos[sl].count('O')):
-            eval=eval-1
-    return eval
-
-def gameover(pos):
-    evalX=0
-    evalO=0
-    for sl in range(len(pos)):
-        for o in range(pos[sl].count('X')):
-            evalX=evalX+1
-    for sl in range(len(pos)):
-        for o in range(pos[sl].count('O')):
-            evalO=evalO+1
-    if evalO==0:
-        return True
-    if evalX==0:
-        return True
-    else:
-        return False
-
-def gewonnen(pos,otherplayer):
-    eval=0
-    for sl in range(len(pos)):
-        for o in range(pos[sl].count(otherplayer)):
-            eval=eval+1
-    if eval==0:
-        return True
-    else:
-        return False
-    
-def minimax(position, depth, maxplayer, alpha, beta):
-    # X:maxplayer,spieler O:minplayer,computer
-    # Spieler
-    # alpha: best maxpl, beta: best minpl
-    if maxplayer:
-        playerj = 'X'
-    else:
-        playerj = 'O'
-
-    # return
-    pos =copy.deepcopy(position)
-    f=evaluatepos(pos)
-    if gewonnen(position, 'O') == True:
-        return f
-    elif gewonnen(position, 'X') == True:
-        return f
-    elif depth == d:
-        return f
-    elif genchildren(position, playerj) == []:
-        return f
-    #
-    if maxplayer:
-        maxvalue = -100000000000
-        for child in genchildren(position, playerj):
-            value = minimax(child, depth + 1, False, alpha, beta)
-            if value > maxvalue:
-                maxvalue = value
-            # pruning
-            if value > alpha:
-                alpha = value
-            if beta <= alpha:
-                break
-        return maxvalue
-    #
-    if not maxplayer:
-        minvalue = 1000000000000
-        for child in genchildren(position, playerj):
-            value = minimax(child, depth + 1, True, alpha, beta)
-            if value < minvalue:
-                minvalue = value
-            # pruning
-            if value < beta:
-                beta = value
-            if beta <= alpha:
-                break
-        return minvalue
-
-def minimaxer(boa):
-    global minimaxc
-    minimaxc = 0
-    nextmoves.clear()
-    scores.clear()
-    move.clear()
-    moves.clear()
-    start = time.time()
-    for firstgenchild in genchildren(boa, 'O'):
-        nextmoves.append(copy.deepcopy(firstgenchild))
-        scores.append(minimax(firstgenchild, 1, True, -1000000000000, 100000000000000))
-        if (time.time() - start) > maxtime:
-            break
-    #
-    print(scores)
-    #
-    for y in range(len(scores)):
-        if scores[y]==(min(scores)):
-            moves.append(copy.deepcopy(nextmoves[y]))
-    move.extend(copy.deepcopy(random.choice(moves)))
-
-def eingabe(pos):
-    e.clear()
-    korrekt=False
-    try:
-        vx = int(input('von x: ')) - 1
-        vy = int(input('von y: ')) - 1
-        zx = int(input('zu x: ')) - 1
-        zy = int(input('zu y: ')) - 1
-    except:
-        print('EINGABE NICHT KORREKT')
-        return False
-    #
-    if vy<8 and vy>-1 and vx<8 and vx>-1 and zy<8 and zy>-1 and zx<8 and zx>-1:
-        if zy==vy-1 and zx==vx-1 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
-            korrekt=True
-        if zy==vy-1 and zx==vx+1 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
-            korrekt=True
-        #
-        if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
-            korrekt=True
-        if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
-            korrekt=True
-    if korrekt:
-        e.append(vy)
-        e.append(vx)
-        e.append(zy)
-        e.append(zx)
-        return True
-    else:
-        print('EINGABE NICHT KORREKT')
-        return False
-
-def play():
-    global turn
-    while not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
-        turn =turn+1
-        print(turn)
-        printboard(board)
-        player(board)
-        printboard(board)
-        if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
-            start = time.time()
-            minimaxer(board)
-            end = time.time()
-            board.clear()
-            board.extend(copy.deepcopy(move))
-            print(end - start)
-            print(minimaxc)
-    print(turn)
-    printboard(board)
-    print('GAME OVER')
-    if gewonnen(board, 'X'):
-        print(':( VERLOREN')
-    elif gewonnen(board, 'O'):
-        print(':) GEWONNEN')
-    else:
-        print(':l UNENTSCHIEDEN')
-
-
-play()
-
-#yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, gewonnen, gameovereingabe, eingabeschlagen, player, playerschlagen,
-#no: damewerden, damegenchildren, evaluateposdame, playerdame, playerschlagendame
-
-
+#for i in genchildren(board2,'O'):
+    #printboard(i)
