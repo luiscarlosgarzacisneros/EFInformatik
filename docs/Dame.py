@@ -13,17 +13,6 @@ board = [
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
-board2 = [
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
-    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
-]
-#
 minimaxc = 0
 d = 5
 nextmoves = []
@@ -401,9 +390,37 @@ def eingabe(pos):
         print('EINGABE NICHT KORREKT')
         return False
 
+def play():
+    global turn
+    while not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+        turn =turn+1
+        print(turn)
+        printboard(board)
+        player(board)
+        if not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
+            start = time.time()
+            minimaxer(board)
+            end = time.time()
+            board.clear()
+            board.extend(copy.deepcopy(move))
+            print(end - start)
+            print(minimaxc)
+    print(turn)
+    printboard(board)
+    print('GAME OVER')
+    if gewonnen(board, 'X'):
+        print(':( VERLOREN')
+    elif gewonnen(board, 'O'):
+        print(':) GEWONNEN')
+    else:
+        print(':l UNENTSCHIEDEN')
 
+
+play()
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, gewonnen, gameovereingabe, eingabeschlagen, player, playerschlagen,
 #no: damewerden, damegenchildren, evaluateposdame, playerdame, playerschlagendame
+
+#schlagenplayer&children gehen nicht
 
 
 
