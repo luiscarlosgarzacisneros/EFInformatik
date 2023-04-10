@@ -382,6 +382,15 @@ def play():
     else:
         print(':l UNENTSCHIEDEN')
 
+def damewerden(player,pos):
+    if player=='O':
+        for i in range(len(pos[0])):
+            if pos[7][i]=='O':
+                pos[7][i]='M'
+    if player=='X':
+        for i in range(len(pos[0])):
+            if pos[0][i]=='X':
+                pos[0][i]='W'
 
 play()
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, verloren, gameovereingabe, eingabeschlagen, player, playerschlagen,
