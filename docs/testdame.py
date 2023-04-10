@@ -13,17 +13,6 @@ board = [
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
-board2 = [
-    ['X', ' ', 'X', ' ', ' ', 'O', ' ','X'],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    ['O', ' ', ' ', ' ', ' ', ' ', ' ','O'],
-    ['X', ' ', ' ', ' ', ' ', ' ', ' ','X'],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    ['O', ' ', ' ', 'O', ' ', 'X', ' ','O'],
-]
-#
 minimaxc = 0
 d = 5
 nextmoves = []
@@ -403,9 +392,7 @@ def damewerden(player,pos):
             if pos[0][i]=='X':
                 pos[0][i]='W'
 
-
-
-
+play()
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, verloren, gameovereingabe, eingabeschlagen, player, playerschlagen,
 #no: damewerden, damegenchildren, genchildrenschlagendame, evaluateposdame, playerdame, playerschlagendame
 

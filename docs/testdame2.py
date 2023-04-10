@@ -392,7 +392,6 @@ def damewerden(player,pos):
             if pos[0][i]=='X':
                 pos[0][i]='W'
 
-
 play()
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, verloren, gameovereingabe, eingabeschlagen, player, playerschlagen,
 #no: damewerden, damegenchildren, genchildrenschlagendame, evaluateposdame, playerdame, playerschlagendame
