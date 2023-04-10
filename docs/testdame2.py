@@ -260,6 +260,10 @@ def evaluatepos(pos):
             eval=eval+1
         for o in range(pos[sl].count('O')):
             eval=eval-1
+        for o in range(pos[sl].count('W')):
+            eval=eval+5
+        for o in range(pos[sl].count('M')):
+            eval=eval-5
     return eval
 
 def gameover(pos):
@@ -392,7 +396,8 @@ def damewerden(player,pos):
             if pos[0][i]=='X':
                 pos[0][i]='W'
 
+
 play()
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, verloren, gameovereingabe, eingabeschlagen, player, playerschlagen,
-#no: damewerden, damegenchildren, genchildrenschlagendame, evaluateposdame, playerdame, playerschlagendame
+#no: damewerden, damegenchildren, genchildrenschlagendame, playerdame, playerschlagendame
 

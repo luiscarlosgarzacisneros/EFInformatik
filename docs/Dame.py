@@ -399,5 +399,5 @@ def damewerden(player,pos):
 
 play()
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, verloren, gameovereingabe, eingabeschlagen, player, playerschlagen,
-#no: damewerden, damegenchildren, genchildrenschlagendame, playerdame, playerschlagendame
+#no: damewerden, damegenchildren, genchildrenschlagendame, playerdame, playerschlagendame, end:keine zugmoegl O&X 
 
