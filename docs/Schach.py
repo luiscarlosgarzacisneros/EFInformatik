@@ -2,17 +2,17 @@ import copy
 import time
 import random
 
-sfb=['T','L','X','Q','K','B']
-sfs=['t','l','x','q','k','b']
+sfb=['T','L','X','Q','K','B',' ']
+sfs=['t','l','x','q','k','b',' ']
 
 
 board = [
     ['T', 'L', 'X', 'Q', 'K', 'X', 'L','T'],
     ['B', 'B', 'B', 'B', 'B', 'B', 'B','B'],
+    [' ', ' ', 'k', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'Q', ' ', 'q', ' ',' '],
+    [' ', ' ', ' ', 'k', ' ', ' ', ' ',' '],
+    [' ', 'k', ' ', ' ', ' ', ' ', ' ',' '],
     ['b', 'b', 'b', 'b', 'b', 'b', 'b','b'],
     ['t', 'l', 'x', 'q', 'k', 'x', 'l','t'],
 ]
@@ -44,7 +44,7 @@ def eingabe(pos):
         return False
     #
     if vy<8 and vy>-1 and vx<8 and vx>-1 and zy<8 and zy>-1 and zx<8 and zx>-1:
-        #bB
+        #b
         if pos[vy][vx]=='b':
             #2nachv
             if vy==6 and pos[zy][zx]==' ' and pos[vy-1][vx]==' ' and vx==zx and zy==vy-2:
@@ -56,6 +56,27 @@ def eingabe(pos):
             if pos[zy][zx] in sfb and zy==vy-1 and vx-1==zx:
                 korrekt=True
             if pos[zy][zx] in sfb and zy==vy-1 and vx+1==zx:
+                korrekt=True
+        #k
+        if pos[vy][vx]=='k':
+            #vertikal
+            if pos[zy][zx] in sfb and vx-1==zx and zy==vy:
+                korrekt=True
+            if pos[zy][zx] in sfb and vx+1==zx and zy==vy:
+                korrekt=True
+            #horizontal
+            if pos[zy][zx] in sfb and vx==zx and zy==vy-1:
+                korrekt=True
+            if pos[zy][zx] in sfb and vx==zx and zy==vy+1:
+                korrekt=True
+            #diagonal
+            if pos[zy][zx] in sfb and vx-1==zx and zy==vy-1:
+                korrekt=True
+            if pos[zy][zx] in sfb and vx+1==zx and zy==vy-1:
+                korrekt=True
+            if pos[zy][zx] in sfb and vx+1==zx and zy==vy+1:
+                korrekt=True
+            if pos[zy][zx] in sfb and vx-1==zx and zy==vy+1:
                 korrekt=True
             
     if korrekt:
@@ -80,6 +101,7 @@ def player(pos):
     zy = e[2]
     zx = e[3]
     #
+    #b
     if pos[vy][vx]=='b':
         #2nachv
         if vy==6 and pos[zy][zx]==' ' and pos[vy-1][vx]==' ' and vx==zx and zy==vy-2:
@@ -96,8 +118,10 @@ def player(pos):
         if pos[zy][zx] in sfb and zy==vy-1 and vx+1==zx:
             pos[zy][zx]='b'
             pos[vy][vx]=' '
-
-
+    #k
+    if pos[vy][vx]=='k':
+        pos[zy][zx]='k'
+        pos[vy][vx]=' '
 
 printboard(board)
 player(board)
