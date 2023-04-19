@@ -12,7 +12,7 @@ board = [
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'Q', ' ', 'q', ' ',' '],
     ['b', 'b', 'b', 'b', 'b', 'b', 'b','b'],
     ['t', 'l', 'x', 'q', 'k', 'x', 'l','t'],
 ]
@@ -47,7 +47,7 @@ def eingabe(pos):
         #bB
         if pos[vy][vx]=='b':
             #2nachv
-            if vy==6 and pos[zy][zx]==' ' and vx==zx and zy==vy-2:
+            if vy==6 and pos[zy][zx]==' ' and pos[vy-1][vx]==' ' and vx==zx and zy==vy-2:
                 korrekt=True
             #1nachv normal bew
             if pos[zy][zx]==' ' and vx==zx and zy==vy-1:
@@ -82,7 +82,7 @@ def player(pos):
     #
     if pos[vy][vx]=='b':
         #2nachv
-        if vy==6 and pos[zy][zx]==' ' and vx==zx and zy==vy-2:
+        if vy==6 and pos[zy][zx]==' ' and pos[vy-1][vx]==' ' and vx==zx and zy==vy-2:
             pos[zy][zx]='b'
             pos[vy][vx]=' '
         #1nachv normal bew
@@ -100,5 +100,7 @@ def player(pos):
 
 
 printboard(board)
-
-
+player(board)
+printboard(board)
+player(board)
+printboard(board)
