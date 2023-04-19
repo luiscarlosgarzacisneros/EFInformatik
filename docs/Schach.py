@@ -11,8 +11,8 @@ board = [
     ['T', 'L', 'X', 'Q', 'K', 'X', 'L','T'],
     ['B', 'B', 'B', 'B', 'B', 'B', 'B','B'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 't', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', 'k', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'x', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     ['b', 'b', 'b', 'b', 'b', 'b', 'b','b'],
     ['t', 'l', 'x', 'q', 'k', 'x', 'l','t'],
@@ -81,11 +81,24 @@ def eingabe(pos):
                 korrekt=True
         #t
         if pos[vy][vx]=='t':
+            #horizontal
             if pos[zy][zx] in sfb and vx==zx:
                 korrekt=True
+            #vertikal
             if pos[zy][zx] in sfb and vy==zy:
                 korrekt=True
-            
+        #x
+        if pos[vy][vx]=='x':
+            for u in range(8):
+                if pos[zy][zx] in sfb and vx+u==zx and vy+u==zy:
+                    korrekt=True
+                if pos[zy][zx] in sfb and vx-u==zx and vy-u==zy:
+                    korrekt=True
+                if pos[zy][zx] in sfb and vx-u==zx and vy+u==zy:
+                    korrekt=True
+                if pos[zy][zx] in sfb and vx+u==zx and vy-u==zy:
+                    korrekt=True
+                
     if korrekt:
         e.append(vy)
         e.append(vx)
