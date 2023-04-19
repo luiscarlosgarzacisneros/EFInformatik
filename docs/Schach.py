@@ -3,16 +3,17 @@ import time
 import random
 
 sfb=['T','L','X','Q','K','B',' ']
+sfbnls=['T','L','X','Q','K','B']
 sfs=['t','l','x','q','k','b',' ']
 
 
 board = [
     ['T', 'L', 'X', 'Q', 'K', 'X', 'L','T'],
     ['B', 'B', 'B', 'B', 'B', 'B', 'B','B'],
-    [' ', ' ', 'k', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'k', ' ', ' ', ' ',' '],
-    [' ', 'k', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 't', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', 'k', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     ['b', 'b', 'b', 'b', 'b', 'b', 'b','b'],
     ['t', 'l', 'x', 'q', 'k', 'x', 'l','t'],
 ]
@@ -53,9 +54,9 @@ def eingabe(pos):
             if pos[zy][zx]==' ' and vx==zx and zy==vy-1:
                 korrekt=True
             #schlagen
-            if pos[zy][zx] in sfb and zy==vy-1 and vx-1==zx:
+            if pos[zy][zx] in sfbnls and zy==vy-1 and vx-1==zx:
                 korrekt=True
-            if pos[zy][zx] in sfb and zy==vy-1 and vx+1==zx:
+            if pos[zy][zx] in sfbnls and zy==vy-1 and vx+1==zx:
                 korrekt=True
         #k
         if pos[vy][vx]=='k':
@@ -78,6 +79,9 @@ def eingabe(pos):
                 korrekt=True
             if pos[zy][zx] in sfb and vx-1==zx and zy==vy+1:
                 korrekt=True
+        #t
+        if pos[vy][vx]=='t':
+            pass
             
     if korrekt:
         e.append(vy)
@@ -101,30 +105,11 @@ def player(pos):
     zy = e[2]
     zx = e[3]
     #
-    #b
-    if pos[vy][vx]=='b':
-        #2nachv
-        if vy==6 and pos[zy][zx]==' ' and pos[vy-1][vx]==' ' and vx==zx and zy==vy-2:
-            pos[zy][zx]='b'
-            pos[vy][vx]=' '
-        #1nachv normal bew
-        if pos[zy][zx]==' ' and vx==zx and zy==vy-1:
-            pos[zy][zx]='b'
-            pos[vy][vx]=' '
-        #schlagen
-        if pos[zy][zx] in sfb and zy==vy-1 and vx-1==zx:
-            pos[zy][zx]='b'
-            pos[vy][vx]=' '
-        if pos[zy][zx] in sfb and zy==vy-1 and vx+1==zx:
-            pos[zy][zx]='b'
-            pos[vy][vx]=' '
-    #k
-    if pos[vy][vx]=='k':
-        pos[zy][zx]='k'
-        pos[vy][vx]=' '
+    pos[zy][zx]=pos[vy][vx]
+    pos[vy][vx]=' '
 
-printboard(board)
-player(board)
-printboard(board)
-player(board)
+for i in range(9):
+    printboard(board)
+    player(board)
+
 printboard(board)
