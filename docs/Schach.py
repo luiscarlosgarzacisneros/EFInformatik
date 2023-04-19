@@ -81,7 +81,10 @@ def eingabe(pos):
                 korrekt=True
         #t
         if pos[vy][vx]=='t':
-            pass
+            if pos[zy][zx] in sfb and vx==zx:
+                korrekt=True
+            if pos[zy][zx] in sfb and vy==zy:
+                korrekt=True
             
     if korrekt:
         e.append(vy)
