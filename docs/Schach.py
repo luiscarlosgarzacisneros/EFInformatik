@@ -5,7 +5,7 @@ import random
 sfb=['T','L','X','Q','K','B',' ']
 sfbnls=['T','L','X','Q','K','B']
 sfs=['t','l','x','q','k','b',' ']
-
+sfsnls=['t','l','x','q','k','b']
 
 board = [
     ['T', 'L', 'X', 'Q', 'K', 'X', 'L','T'],
@@ -19,6 +19,7 @@ board = [
 ]
 #
 e=[]
+minimaxc = 0
 #
 
 def printboard(board):
