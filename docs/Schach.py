@@ -11,10 +11,10 @@ board = [
     ['T', 'L', 'X', 'Q', 'K', 'X', 'L','T'],
     ['B', 'B', 'B', 'B', 'B', 'B', 'B','B'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'b', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 't', 'b', ' ', ' ',' '],
-    [' ', ' ', ' ', 'B', ' ', ' ', ' ',' '],
-    ['b', 'b', 'b', ' ', 'b', 'b', 'b','b'],
+    [' ', ' ', ' ', 'x', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    ['b', 'b', 'b', 'b', 'b', 'b', 'b','b'],
     ['t', 'l', 'x', 'q', 'k', 'x', 'l','t'],
 ]
 #
@@ -109,7 +109,6 @@ def eingabe(pos):
                         f=f+1
                     if pathclear:
                         korrekt=True
-
             #horizontal
             if pos[zy][zx] in sfb and vy==zy:
                 #nach rechts
@@ -139,18 +138,36 @@ def eingabe(pos):
                     if pathclear:
                         korrekt=True
 
-        #x geht noch nicht!!!!!!!
-        if pos[vy][vx]=='x':
+        #x
+        if pos[vy][vx]=='x' and pos[zy][zx] in sfb:
+            pathclear=False
             for u in range(8):
-                if pos[zy][zx] in sfb and vx+u==zx and vy+u==zy:
-                    korrekt=True
-                if pos[zy][zx] in sfb and vx-u==zx and vy-u==zy:
-                    korrekt=True
-                if pos[zy][zx] in sfb and vx-u==zx and vy+u==zy:
-                    korrekt=True
-                if pos[zy][zx] in sfb and vx+u==zx and vy-u==zy:
-                    korrekt=True
-                
+                if zy>vy and zx>vx:
+                    if vx+u+1==zx and vy+u+1==zy:
+                        pathclear=True
+                        break
+                    if pos[vy+u+1][vx+u+1]!=' ':
+                        break
+                if zy<vy and zx>vx:
+                    if vx+u+1==zx and vy-u-1==zy:
+                        pathclear=True
+                        break
+                    if pos[vy-u-1][vx+u+1]!=' ':
+                        break
+                if zy>vy and zx<vx:
+                    if vx-u-1==zx and vy+u+1==zy:
+                        pathclear=True
+                        break
+                    if pos[vy+u+1][vx-1-u]!=' ':
+                        break
+                if zy<vy and zx<vx:
+                    if vx-1-u==zx and vy-u-1==zy:
+                        pathclear=True
+                        break
+                    if pos[vy-u-1][vx-u-1]!=' ':
+                        break
+            if pathclear:
+                korrekt=True
     if korrekt:
         e.append(vy)
         e.append(vx)
@@ -183,5 +200,3 @@ for i in range(9):
 printboard(board)
 
 
-#laeufer ueberspringt figuren!!!!!!!
-#turm geht nicht!!!!!!!!!
