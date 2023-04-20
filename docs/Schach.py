@@ -11,10 +11,10 @@ board = [
     ['T', 'L', 'X', 'Q', 'K', 'X', 'L','T'],
     ['B', 'B', 'B', 'B', 'B', 'B', 'B','B'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'x', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    ['b', 'b', 'b', 'b', 'b', 'b', 'b','b'],
+    [' ', ' ', ' ', 'b', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 't', 'b', ' ', ' ',' '],
+    [' ', ' ', ' ', 'B', ' ', ' ', ' ',' '],
+    ['b', 'b', 'b', ' ', 'b', 'b', 'b','b'],
     ['t', 'l', 'x', 'q', 'k', 'x', 'l','t'],
 ]
 #
@@ -79,15 +79,67 @@ def eingabe(pos):
                 korrekt=True
             if pos[zy][zx] in sfb and vx-1==zx and zy==vy+1:
                 korrekt=True
-        #t
+        #t 
         if pos[vy][vx]=='t':
-            #horizontal
-            if pos[zy][zx] in sfb and vx==zx:
-                korrekt=True
             #vertikal
+            if pos[zy][zx] in sfb and vx==zx:
+                #nach unten
+                if vy<zy:
+                    pathclear=True
+                    f=1
+                    while True:
+                        if vy+f==zy:
+                            break
+                        if pos[vy+f][vx]!=' ':
+                            pathclear=False
+                            break
+                        f=f+1
+                    if pathclear:
+                        korrekt=True
+                #nach oben
+                if vy>zy:
+                    pathclear=True
+                    f=1
+                    while True:
+                        if vy-f==zy:
+                            break
+                        if pos[vy-f][vx]!=' ':
+                            pathclear=False
+                            break
+                        f=f+1
+                    if pathclear:
+                        korrekt=True
+
+            #horizontal
             if pos[zy][zx] in sfb and vy==zy:
-                korrekt=True
-        #x
+                #nach rechts
+                if vx<zx:
+                    pathclear=True
+                    f=1
+                    while True:
+                        if vx+f==zx:
+                            break
+                        if pos[vy][vx+f]!=' ':
+                            pathclear=False
+                            break
+                        f=f+1
+                    if pathclear:
+                        korrekt=True
+                #nach links
+                if vx>zx:
+                    pathclear=True
+                    f=1
+                    while True:
+                        if vx-f==zx:
+                            break
+                        if pos[vy][vx-f]!=' ':
+                            pathclear=False
+                            break
+                        f=f+1
+                    if pathclear:
+                        korrekt=True
+
+        #x geht noch nicht!!!!!!!
         if pos[vy][vx]=='x':
             for u in range(8):
                 if pos[zy][zx] in sfb and vx+u==zx and vy+u==zy:
@@ -129,3 +181,7 @@ for i in range(9):
     player(board)
 
 printboard(board)
+
+
+#laeufer ueberspringt figuren!!!!!!!
+#turm geht nicht!!!!!!!!!
