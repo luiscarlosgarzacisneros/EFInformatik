@@ -11,7 +11,7 @@ board = [
     ['T', 'L', 'X', 'Q', 'K', 'X', 'L','T'],
     ['B', 'B', 'B', 'B', 'B', 'B', 'B','B'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'x', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     ['b', 'b', 'b', 'b', 'b', 'b', 'b','b'],
@@ -137,7 +137,6 @@ def eingabe(pos):
                         f=f+1
                     if pathclear:
                         korrekt=True
-
         #x
         if pos[vy][vx]=='x' and pos[zy][zx] in sfb:
             pathclear=False
@@ -168,6 +167,94 @@ def eingabe(pos):
                         break
             if pathclear:
                 korrekt=True
+        #q
+        if pos[vy][vx]=='q' and pos[zy][zx] in sfb:
+            pathcleart=False
+            for u in range(8):
+                if zy>vy and zx>vx:
+                    if vx+u+1==zx and vy+u+1==zy:
+                        pathcleart=True
+                        break
+                    if pos[vy+u+1][vx+u+1]!=' ':
+                        break
+                if zy<vy and zx>vx:
+                    if vx+u+1==zx and vy-u-1==zy:
+                        pathcleart=True
+                        break
+                    if pos[vy-u-1][vx+u+1]!=' ':
+                        break
+                if zy>vy and zx<vx:
+                    if vx-u-1==zx and vy+u+1==zy:
+                        pathcleart=True
+                        break
+                    if pos[vy+u+1][vx-1-u]!=' ':
+                        break
+                if zy<vy and zx<vx:
+                    if vx-1-u==zx and vy-u-1==zy:
+                        pathcleart=True
+                        break
+                    if pos[vy-u-1][vx-u-1]!=' ':
+                        break
+            if pathcleart:
+                korrekt=True
+            #vertikal
+            if pos[zy][zx] in sfb and vx==zx:
+                #nach unten
+                if vy<zy:
+                    pathclearl=True
+                    f=1
+                    while True:
+                        if vy+f==zy:
+                            break
+                        if pos[vy+f][vx]!=' ':
+                            pathclearl=False
+                            break
+                        f=f+1
+                    if pathclearl:
+                        korrekt=True
+                #nach oben
+                if vy>zy:
+                    pathclearl=True
+                    f=1
+                    while True:
+                        if vy-f==zy:
+                            break
+                        if pos[vy-f][vx]!=' ':
+                            pathclearl=False
+                            break
+                        f=f+1
+                    if pathclearl:
+                        korrekt=True
+            #horizontal
+            if pos[zy][zx] in sfb and vy==zy:
+                #nach rechts
+                if vx<zx:
+                    pathclearl=True
+                    f=1
+                    while True:
+                        if vx+f==zx:
+                            break
+                        if pos[vy][vx+f]!=' ':
+                            pathclearl=False
+                            break
+                        f=f+1
+                    if pathclearl:
+                        korrekt=True
+                #nach links
+                if vx>zx:
+                    pathclearl=True
+                    f=1
+                    while True:
+                        if vx-f==zx:
+                            break
+                        if pos[vy][vx-f]!=' ':
+                            pathclearl=False
+                            break
+                        f=f+1
+                    if pathclearl:
+                        korrekt=True
+
+        
     if korrekt:
         e.append(vy)
         e.append(vx)
