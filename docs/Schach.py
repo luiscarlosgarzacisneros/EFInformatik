@@ -11,7 +11,7 @@ board = [
     ['T', 'L', 'X', 'Q', 'K', 'X', 'L','T'],
     ['B', 'B', 'B', 'B', 'B', 'B', 'B','B'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'l', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     ['b', 'b', 'b', 'b', 'b', 'b', 'b','b'],
@@ -253,8 +253,25 @@ def eingabe(pos):
                         f=f+1
                     if pathclearl:
                         korrekt=True
+        #l
+        if pos[vy][vx]=='l' and pos[zy][zx] in sfb:
+            if zy==vy-2 and zx==vx+1:
+                korrekt=True
+            if zy==vy-2 and zx==vx-1:
+                korrekt=True
+            if zy==vy+2 and zx==vx+1:
+                korrekt=True
+            if zy==vy+2 and zx==vx-1:
+                korrekt=True
+            if zy==vy+1 and zx==vx+2:
+                korrekt=True
+            if zy==vy-1 and zx==vx+2:
+                korrekt=True
+            if zy==vy+1 and zx==vx-2:
+                korrekt=True
+            if zy==vy-1 and zx==vx-2:
+                korrekt=True
 
-        
     if korrekt:
         e.append(vy)
         e.append(vx)
