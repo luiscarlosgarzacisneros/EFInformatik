@@ -453,6 +453,110 @@ def gcKk(y,x,pos,player):
                 boardc=copy.deepcopy(pos)
     return childrenK
 
+def gcLl(y,x,pos,player):
+    boardc=copy.deepcopy(pos)
+    childrenL= []
+    if player=='L':
+        if y-2>-1 and x+1<8:
+            if boardc[y-2][x+1] in sfs:
+                boardc[y][x]=' '
+                boardc[y-2][x+1]='L'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y-2>-1 and x-1>-1:
+            if boardc[y-2][x-1] in sfs:
+                boardc[y][x]=' '
+                boardc[y-2][x-1]='L'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y+2<8 and x+1<8:
+            if boardc[y+2][x+1] in sfs:
+                boardc[y][x]=' '
+                boardc[y+2][x+1]='L'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y+2<8 and x-1>-1:
+            if boardc[y+2][x-1] in sfs:
+                boardc[y][x]=' '
+                boardc[y+2][x-1]='L'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y+1<8 and x+2<8:
+            if boardc[y+1][x+2] in sfs:
+                boardc[y][x]=' '
+                boardc[y+1][x+2]='L'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y-1>-1 and x+2<8:
+            if boardc[y-1][x+2] in sfs:
+                boardc[y][x]=' '
+                boardc[y-1][x+2]='L'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y+1<8 and x-2>-1:
+            if boardc[y+1][x-2] in sfs:
+                boardc[y][x]=' '
+                boardc[y+1][x-2]='L'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y-1>-1 and x-2>-1:
+            if boardc[y-1][x-2] in sfs:
+                boardc[y][x]=' '
+                boardc[y-1][x-2]='L'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+    if player=='l':
+        if y-2>-1 and x+1<8:
+            if boardc[y-2][x+1] in sfb:
+                boardc[y][x]=' '
+                boardc[y-2][x+1]='l'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y-2>-1 and x-1>-1:
+            if boardc[y-2][x-1] in sfb:
+                boardc[y][x]=' '
+                boardc[y-2][x-1]='l'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y+2<8 and x+1<8:
+            if boardc[y+2][x+1] in sfb:
+                boardc[y][x]=' '
+                boardc[y+2][x+1]='l'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y+2<8 and x-1>-1:
+            if boardc[y+2][x-1] in sfb:
+                boardc[y][x]=' '
+                boardc[y+2][x-1]='l'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y+1<8 and x+2<8:
+            if boardc[y+1][x+2] in sfb:
+                boardc[y][x]=' '
+                boardc[y+1][x+2]='l'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y-1>-1 and x+2<8:
+            if boardc[y-1][x+2] in sfb:
+                boardc[y][x]=' '
+                boardc[y-1][x+2]='l'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y+1<8 and x-2>-1:
+            if boardc[y+1][x-2] in sfb:
+                boardc[y][x]=' '
+                boardc[y+1][x-2]='l'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y-1>-1 and x-2>-1:
+            if boardc[y-1][x-2] in sfb:
+                boardc[y][x]=' '
+                boardc[y-1][x-2]='l'
+                childrenL.append(boardc)
+                boardc=copy.deepcopy(pos)
+
+    return childrenL
+
 
 for t in genchildren(board,'K'):
     printboard(t)
