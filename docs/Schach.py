@@ -298,10 +298,168 @@ def player(pos):
     pos[zy][zx]=pos[vy][vx]
     pos[vy][vx]=' '
 
-for i in range(9):
-    printboard(board)
-    player(board)
+def genchildren(position, playerk):
+    children = []
+    boardcopy = copy.deepcopy(position)
+    #
+    if playerk=='k':
+        y = 0
+        for i in range(8):
+            x = 0
+            for j in range(8):
+                if boardcopy[y][x]=='b':
+                    pass
+                if boardcopy[y][x]=='k':
+                    for h in gcKk(y,x,boardcopy,'k'):
+                        children.append(h)
+                if boardcopy[y][x]=='t':
+                    pass
+                if boardcopy[y][x]=='x':
+                    pass
+                if boardcopy[y][x]=='q':
+                    pass
+                if boardcopy[y][x]=='l':
+                    pass
 
-printboard(board)
+                x = x + 1
+            y = y + 1
+    if playerk=='K':
+        y = 0
+        for i in range(8):
+            x = 0
+            for j in range(8):
+                if boardcopy[y][x]=='B':
+                    pass
+                if boardcopy[y][x]=='K':
+                    for h in gcKk(y,x,boardcopy,'K'):
+                        children.append(h)
+                if boardcopy[y][x]=='T':
+                    pass
+                if boardcopy[y][x]=='X':
+                    pass
+                if boardcopy[y][x]=='Q':
+                    pass
+                if boardcopy[y][x]=='L':
+                    pass
+
+                x = x + 1
+            y = y + 1
+    #
+    global minimaxc
+    minimaxc = minimaxc + 1
+    #
+    return children
+
+def gcKk(y,x,pos,player):
+    boardc=copy.deepcopy(pos)
+    childrenK= []
+    if player=='K':
+        if y+1<8 and x+1<8:
+            if boardc[y+1][x+1] in sfs:
+                boardc[y][x]=' '
+                boardc[y+1][x+1]='K'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y+1<8 and x-1>-1:
+            if boardc[y+1][x-1] in sfs:
+                boardc[y][x]=' '
+                boardc[y+1][x-1]='K'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y-1>-1 and x+1<8:
+            if boardc[y-1][x+1] in sfs:
+                boardc[y][x]=' '
+                boardc[y-1][x+1]='K'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y-1>-1 and x+1<8:
+            if boardc[y-1][x-1] in sfs:
+                boardc[y][x]=' '
+                boardc[y-1][x-1]='K'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if x+1<8:
+            if boardc[y][x+1] in sfs:
+                boardc[y][x]=' '
+                boardc[y][x+1]='K'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if x-1>-1:
+            if boardc[y][x-1] in sfs:
+                boardc[y][x]=' '
+                boardc[y][x-1]='K'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y+1<8:
+            if boardc[y+1][x] in sfs:
+                boardc[y][x]=' '
+                boardc[y+1][x]='K'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y-1>-1:
+            if boardc[y-1][x] in sfs:
+                boardc[y][x]=' '
+                boardc[y-1][x]='K'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+    if player=='k':
+        if y+1<8 and x+1<8:
+            if boardc[y+1][x+1] in sfb:
+                boardc[y][x]=' '
+                boardc[y+1][x+1]='k'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y+1<8 and x-1>-1:
+            if boardc[y+1][x-1] in sfb:
+                boardc[y][x]=' '
+                boardc[y+1][x-1]='k'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y-1>-1 and x+1<8:
+            if boardc[y-1][x+1] in sfb:
+                boardc[y][x]=' '
+                boardc[y-1][x+1]='k'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y-1>-1 and x+1<8:
+            if boardc[y-1][x-1] in sfb:
+                boardc[y][x]=' '
+                boardc[y-1][x-1]='k'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if x+1<8:
+            if boardc[y][x+1] in sfb:
+                boardc[y][x]=' '
+                boardc[y][x+1]='k'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if x-1>-1:
+            if boardc[y][x-1] in sfb:
+                boardc[y][x]=' '
+                boardc[y][x-1]='k'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y+1<8:
+            if boardc[y+1][x] in sfb:
+                boardc[y][x]=' '
+                boardc[y+1][x]='k'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if y-1>-1:
+            if boardc[y-1][x] in sfb:
+                boardc[y][x]=' '
+                boardc[y-1][x]='k'
+                childrenK.append(boardc)
+                boardc=copy.deepcopy(pos)
+    return childrenK
+
+
+for t in genchildren(board,'K'):
+    printboard(t)
+
+
+#genchildren k,q,b,t,x,l: genchildrenk(y,x,pos,playert): return childrenk
+#for h in genchildrenk(y,x,boardcopy,'K'):
+#   children.append(h)
 
 
