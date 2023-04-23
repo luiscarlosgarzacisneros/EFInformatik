@@ -11,7 +11,7 @@ board = [
     ['T', 'L', 'X', 'Q', 'K', 'X', 'L','T'],
     ['B', 'B', 'B', 'B', 'B', 'B', 'B','B'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'l', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'K', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     ['b', 'b', 'b', 'b', 'b', 'b', 'b','b'],
@@ -319,7 +319,9 @@ def genchildren(position, playerk):
                 if boardcopy[y][x]=='q':
                     pass
                 if boardcopy[y][x]=='l':
-                    pass
+                    for h in gcLl(y,x,boardcopy,'l'):
+                        children.append(h)
+
 
                 x = x + 1
             y = y + 1
@@ -340,7 +342,9 @@ def genchildren(position, playerk):
                 if boardcopy[y][x]=='Q':
                     pass
                 if boardcopy[y][x]=='L':
-                    pass
+                    for h in gcLl(y,x,boardcopy,'L'):
+                        children.append(h)
+
 
                 x = x + 1
             y = y + 1
