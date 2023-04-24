@@ -15,8 +15,8 @@ board = [
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    ['b', 'b', 'b', 'b', 'b', 'b', 'b','b'],
-    ['t', 'l', 'x', 'q', 'k', 'x', 'l','t'],
+    ['b', 'b', 'b', 'B', 'b', 'b', 'b','b'],
+    ['t', 'l', 'x', ' ', 'k', 'x', 'l','t'],
 ]
 #
 e=[]
@@ -1052,18 +1052,24 @@ def gcBb(y,x,pos,player):
             if boardc[y+1][x]==' ':
                 boardc[y][x]=' '
                 boardc[y+1][x]='B'
+                if y+1==7:
+                    boardc[y+1][x]='Q'
                 childrenB.append(boardc)
                 boardc=copy.deepcopy(pos)
         if x-1>-1 and y+1<8:
             if boardc[y+1][x-1] in sfsnls:
                 boardc[y][x]=' '
                 boardc[y+1][x-1]='B'
+                if y+1==7:
+                    boardc[y+1][x-1]='Q'
                 childrenB.append(boardc)
                 boardc=copy.deepcopy(pos)
         if x+1<8 and y+1<8:
             if boardc[y+1][x+1] in sfsnls:
                 boardc[y][x]=' '
                 boardc[y+1][x+1]='B'
+                if y+1==7:
+                    boardc[y+1][x+1]='Q'
                 childrenB.append(boardc)
                 boardc=copy.deepcopy(pos)
     if player=="b":
@@ -1076,18 +1082,24 @@ def gcBb(y,x,pos,player):
             if boardc[y-1][x]==' ':
                 boardc[y][x]=' '
                 boardc[y-1][x]='b'
+                if y-1==0:
+                    boardc[y-1][x]='q'
                 childrenB.append(boardc)
                 boardc=copy.deepcopy(pos)
         if x-1>-1 and y-1>-1:
             if boardc[y-1][x-1] in sfbnls:
                 boardc[y][x]=' '
                 boardc[y-1][x-1]='b'
+                if y-1==0:
+                    boardc[y-1][x-1]='q'
                 childrenB.append(boardc)
                 boardc=copy.deepcopy(pos)
         if x+1<8 and y-1>-1:
             if boardc[y-1][x+1] in sfbnls:
                 boardc[y][x]=' '
                 boardc[y-1][x+1]='b'
+                if y-1==0:
+                    boardc[y-1][x+1]='q'
                 childrenB.append(boardc)
                 boardc=copy.deepcopy(pos)
     return childrenB
