@@ -314,7 +314,8 @@ def genchildren(position, playerk):
                     for h in gcKk(y,x,boardcopy,'k'):
                         children.append(h)
                 if boardcopy[y][x]=='t':
-                    pass
+                    for h in gcTt(y,x,boardcopy,"t"):
+                        children.append(h)
                 if boardcopy[y][x]=='x':
                     pass
                 if boardcopy[y][x]=='q':
@@ -336,7 +337,8 @@ def genchildren(position, playerk):
                     for h in gcKk(y,x,boardcopy,'K'):
                         children.append(h)
                 if boardcopy[y][x]=='T':
-                    pass
+                    for h in gcTt(y,x,boardcopy,'T'):
+                        children.append(h)
                 if boardcopy[y][x]=='X':
                     pass
                 if boardcopy[y][x]=='Q':
@@ -677,7 +679,7 @@ def gcTt(y,x,pos,player):
                     break
             else:
                 break
-
+    return childrenT
 
 for t in genchildren(board,'K'):
     printboard(t)
