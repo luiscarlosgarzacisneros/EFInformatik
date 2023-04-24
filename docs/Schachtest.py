@@ -569,11 +569,11 @@ def gcTt(y,x,pos,player):
         for i in range(7):
             if x+i+1<8:
                 if boardc[y][x+i+1] in sfs:
+                    boardcc=copy.deepcopy(boardc)
                     boardc=copy.deepcopy(pos)
                     boardc[y][x]=' '
                     boardc[y][x+i+1]='T'
                     childrenT.append(boardc)
-                    boardcc=copy.deepcopy(boardc)
                     if boardcc[y][x+i+1]!=' ':
                         break
                 else:
