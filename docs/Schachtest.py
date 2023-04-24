@@ -12,7 +12,7 @@ board = [
     ['T', 'L', 'X', 'Q', 'K', 'X', 'L','T'],
     ['B', 'B', 'B', 'B', 'B', 'B', 'B','B'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'X', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     ['b', 'b', 'b', 'b', 'b', 'b', 'b','b'],
@@ -716,7 +716,7 @@ def gcXx(y,x,pos,player):
             else:
                 break
         for i in range(7):
-            if y+i+1>-1 and x-i-1>-1:
+            if y+i+1<8 and x-i-1>-1:
                 if boardc[y+i+1][x-i-1] in sfs:
                     boardcc=copy.deepcopy(boardc)
                     boardc[y][x]=' '
@@ -730,7 +730,7 @@ def gcXx(y,x,pos,player):
             else:
                 break
         for i in range(7):
-            if y-i-1>-1 and x+i+1>-1:
+            if y-i-1>-1 and x+i+1<8:
                 if boardc[y-i-1][x+i+1] in sfs:
                     boardcc=copy.deepcopy(boardc)
                     boardc[y][x]=' '
@@ -773,7 +773,7 @@ def gcXx(y,x,pos,player):
             else:
                 break
         for i in range(7):
-            if y+i+1>-1 and x-i-1>-1:
+            if y+i+1<8 and x-i-1>-1:
                 if boardc[y+i+1][x-i-1] in sfb:
                     boardcc=copy.deepcopy(boardc)
                     boardc[y][x]=' '
@@ -787,7 +787,7 @@ def gcXx(y,x,pos,player):
             else:
                 break
         for i in range(7):
-            if y-i-1>-1 and x+i+1>-1:
+            if y-i-1>-1 and x+i+1<8:
                 if boardc[y-i-1][x+i+1] in sfb:
                     boardcc=copy.deepcopy(boardc)
                     boardc[y][x]=' '
@@ -804,7 +804,7 @@ def gcXx(y,x,pos,player):
 
 
 
-for t in genchildren(board,'K'):
+for t in genchildren(board,'k'):
     printboard(t)
 
 
