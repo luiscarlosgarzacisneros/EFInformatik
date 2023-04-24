@@ -317,7 +317,8 @@ def genchildren(position, playerk):
                     for h in gcTt(y,x,boardcopy,"t"):
                         children.append(h)
                 if boardcopy[y][x]=='x':
-                    pass
+                    for h in gcXx(y,x,boardcopy,"x"):
+                        children.append(h)
                 if boardcopy[y][x]=='q':
                     pass
                 if boardcopy[y][x]=='l':
@@ -340,7 +341,8 @@ def genchildren(position, playerk):
                     for h in gcTt(y,x,boardcopy,'T'):
                         children.append(h)
                 if boardcopy[y][x]=='X':
-                    pass
+                    for h in gcXx(y,x,boardcopy,"X"):
+                        children.append(h)
                 if boardcopy[y][x]=='Q':
                     pass
                 if boardcopy[y][x]=='L':
@@ -681,7 +683,128 @@ def gcTt(y,x,pos,player):
                 break
     return childrenT
 
-for t in genchildren(board,'K'):
+def gcXx(y,x,pos,player):
+    boardc=copy.deepcopy(pos)
+    childrenX= []
+    if player=="X":
+        for i in range(7):
+            if x+i+1<8 and y+i+1<8:
+                if boardc[y+i+1][x+i+1] in sfs:
+                    boardcc=copy.deepcopy(boardc)
+                    boardc[y][x]=' '
+                    boardc[y+i+1][x+i+1]='X'
+                    childrenX.append(boardc)
+                    boardc=copy.deepcopy(pos)
+                    if boardcc[y+i+1][x+i+1]!=' ':
+                        break
+                else:
+                    break
+            else:
+                break
+        for i in range(7):
+            if y-i-1>-1 and x-i-1>-1:
+                if boardc[y-i-1][x-i-1] in sfs:
+                    boardcc=copy.deepcopy(boardc)
+                    boardc[y][x]=' '
+                    boardc[y-i-1][x-i-1]='X'
+                    childrenX.append(boardc)
+                    boardc=copy.deepcopy(pos)
+                    if boardcc[y-i-1][x-i-1]!=' ':
+                        break
+                else:
+                    break
+            else:
+                break
+        for i in range(7):
+            if y+i+1<8 and x-i-1>-1:
+                if boardc[y+i+1][x-i-1] in sfs:
+                    boardcc=copy.deepcopy(boardc)
+                    boardc[y][x]=' '
+                    boardc[y+i+1][x-i-1]='X'
+                    childrenX.append(boardc)
+                    boardc=copy.deepcopy(pos)
+                    if boardcc[y+i+1][x-i-1]!=' ':
+                        break
+                else:
+                    break
+            else:
+                break
+        for i in range(7):
+            if y-i-1>-1 and x+i+1<8:
+                if boardc[y-i-1][x+i+1] in sfs:
+                    boardcc=copy.deepcopy(boardc)
+                    boardc[y][x]=' '
+                    boardc[y-i-1][x+i+1]='X'
+                    childrenX.append(boardc)
+                    boardc=copy.deepcopy(pos)
+                    if boardcc[y-i-1][x+i+1]!=' ':
+                        break
+                else:
+                    break
+            else:
+                break
+    if player=="x":
+        for i in range(7):
+            if x+i+1<8 and y+i+1<8:
+                if boardc[y+i+1][x+i+1] in sfb:
+                    boardcc=copy.deepcopy(boardc)
+                    boardc[y][x]=' '
+                    boardc[y+i+1][x+i+1]='x'
+                    childrenX.append(boardc)
+                    boardc=copy.deepcopy(pos)
+                    if boardcc[y+i+1][x+i+1]!=' ':
+                        break
+                else:
+                    break
+            else:
+                break
+        for i in range(7):
+            if y-i-1>-1 and x-i-1>-1:
+                if boardc[y-i-1][x-i-1] in sfb:
+                    boardcc=copy.deepcopy(boardc)
+                    boardc[y][x]=' '
+                    boardc[y-i-1][x-i-1]='x'
+                    childrenX.append(boardc)
+                    boardc=copy.deepcopy(pos)
+                    if boardcc[y-i-1][x-i-1]!=' ':
+                        break
+                else:
+                    break
+            else:
+                break
+        for i in range(7):
+            if y+i+1<8 and x-i-1>-1:
+                if boardc[y+i+1][x-i-1] in sfb:
+                    boardcc=copy.deepcopy(boardc)
+                    boardc[y][x]=' '
+                    boardc[y+i+1][x-i-1]='x'
+                    childrenX.append(boardc)
+                    boardc=copy.deepcopy(pos)
+                    if boardcc[y+i+1][x-i-1]!=' ':
+                        break
+                else:
+                    break
+            else:
+                break
+        for i in range(7):
+            if y-i-1>-1 and x+i+1<8:
+                if boardc[y-i-1][x+i+1] in sfb:
+                    boardcc=copy.deepcopy(boardc)
+                    boardc[y][x]=' '
+                    boardc[y-i-1][x+i+1]='x'
+                    childrenX.append(boardc)
+                    boardc=copy.deepcopy(pos)
+                    if boardcc[y-i-1][x+i+1]!=' ':
+                        break
+                else:
+                    break
+            else:
+                break
+    return childrenX
+
+
+
+for t in genchildren(board,'k'):
     printboard(t)
 
 
