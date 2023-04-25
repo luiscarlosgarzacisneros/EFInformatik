@@ -1104,16 +1104,22 @@ def gcBb(y,x,pos,player):
                 boardc=copy.deepcopy(pos)
     return childrenB
 
-for t in genchildren(board,'K'):
-    printboard(t)
+def verloren(pos,player):
+    eval=False
+    for p in range(8):
+        for o in range(8):
+            if pos[p][o]==player:
+                eval=True
+    if eval:
+        return False
+    else:
+        return True
 
 
-def test():
-    for i in range(9):
-        printboard(board)
-        player(board)
 
-    printboard(board)
+
+
+print(verloren(board,'K'))
 
 
 #genchildren k,q,b,t,x,l: genchildrenk(y,x,pos,playert): return childrenk
