@@ -21,6 +21,14 @@ board = [
 #
 e=[]
 minimaxc = 0
+d = 4
+nextmoves = []
+scores = []
+move = []
+moves=[]
+bestscores=[]
+maxtime = 20
+turn=0
 #
 
 def printboard(board):
@@ -1146,12 +1154,101 @@ def evaluatepos(pos):
                 val=val+1
     return val
 
-print(evaluatepos(board))
+def minimax(position, depth, maxplayer, alpha, beta):
+    # X:maxplayer,spieler O:minplayer,computer
+    # Spieler
+    # alpha: best maxpl, beta: best minpl
+    if maxplayer:
+        playerj = 'k'
+    else:
+        playerj = 'K'
+
+    # return
+    pos =copy.deepcopy(position)
+    f=evaluatepos(pos)
+    if verloren(position, 'K') == True:
+        return f
+    elif verloren(position, 'k') == True:
+        return f
+    elif depth == d:
+        return f
+    elif genchildren(position, playerj) == []:
+        return f
+    #
+    if maxplayer:
+        maxvalue = -100000000000
+        for child in genchildren(position, playerj):
+            value = minimax(child, depth + 1, False, alpha, beta)
+            if value > maxvalue:
+                maxvalue = value
+            # pruning
+            if value > alpha:
+                alpha = value
+            if beta <= alpha:
+                break
+        return maxvalue
+    #
+    if not maxplayer:
+        minvalue = 1000000000000
+        for child in genchildren(position, playerj):
+            value = minimax(child, depth + 1, True, alpha, beta)
+            if value < minvalue:
+                minvalue = value
+            # pruning
+            if value < beta:
+                beta = value
+            if beta <= alpha:
+                break
+        return minvalue
+
+def minimaxer(boa):
+    global minimaxc
+    minimaxc = 0
+    nextmoves.clear()
+    scores.clear()
+    move.clear()
+    moves.clear()
+    start = time.time()
+    for firstgenchild in genchildren(boa, 'K'):
+        nextmoves.append(copy.deepcopy(firstgenchild))
+        scores.append(minimax(firstgenchild, 1, True, -1000000000000, 100000000000000))
+        if (time.time() - start) > maxtime:
+            break
+    #
+    print(scores)
+    #
+    for y in range(len(scores)):
+        if scores[y]==(min(scores)):
+            moves.append(copy.deepcopy(nextmoves[y]))
+    move.extend(copy.deepcopy(random.choice(moves)))
+
+def play():
+    global turn
+    while not verloren(board, 'K') and not verloren(board, 'k'):
+        turn =turn+1
+        print(turn)
+        printboard(board)
+        player(board)
+        printboard(board)
+        if not verloren(board, 'K') and not verloren(board, 'k'):
+            start = time.time()
+            minimaxer(board)
+            end = time.time()
+            board.clear()
+            board.extend(copy.deepcopy(move))
+            print(end - start)
+            print(minimaxc)
+            print(evaluatepos(board))
+    print(turn)
+    printboard(board)
+    print('GAME OVER')
+    if verloren(board, 'k'):
+        print(':( VERLOREN')
+    elif verloren(board, 'K'):
+        print(':) GEWONNEN')
 
 
-print(verloren(board,'K'))
+play()
 
 
-#genchildren k,q,b,t,x,l: genchildrenk(y,x,pos,playert): return childrenk
-#for h in genchildrenk(y,x,boardcopy,'K'):
-#   children.append(h)
+#wenn evalpos hoeher wird: minimax stoppen
