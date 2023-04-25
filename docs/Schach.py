@@ -1115,6 +1115,36 @@ def verloren(pos,player):
     else:
         return True
 
+def evaluatepos(pos):
+    val=0
+    for p in range(8):
+        for o in range(8):
+            if pos[p][o]=='K':
+                val=val-1000
+            if pos[p][o]=='Q':
+                val=val-9
+            if pos[p][o]=='T':
+                val=val-5
+            if pos[p][o]=='L':
+                val=val-3
+            if pos[p][o]=='X':
+                val=val-3
+            if pos[p][o]=='B':
+                val=val-1
+            #
+            if pos[p][o]=='k':
+                val=val+1000
+            if pos[p][o]=='q':
+                val=val+9
+            if pos[p][o]=='t':
+                val=val+5
+            if pos[p][o]=='l':
+                val=val+3
+            if pos[p][o]=='x':
+                val=val+3
+            if pos[p][o]=='b':
+                val=val+1
+    return val
 
 
 for t in genchildren(board,'K'):
