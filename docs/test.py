@@ -6,7 +6,8 @@ sfb=['T','L','X','Q','K','B',' ']
 sfbnls=['T','L','X','Q','K','B']
 sfs=['t','l','x','q','k','b',' ']
 sfsnls=['t','l','x','q','k','b']
-#
+
+
 board = [
     ['T', 'L', 'X', 'Q', 'K', 'X', 'L','T'],
     ['B', 'B', 'B', 'B', 'B', 'B', 'B','B'],
@@ -18,40 +19,9 @@ board = [
     ['t', 'l', 'x', 'q', 'k', 'x', 'l','t'],
 ]
 #
-ek=[
-    [-3, -4, -4, -5, -5, -4, -4,-3],
-    [-3, -4, -4, -5, -5, -4, -4,-3],
-    [-3, -4, -4, -5, -5, -4, -4,-3],
-    [-3, -4, -4, -5, -5, -4, -4,-3],
-    [-2, -3, -3, -4, -4, -3, -3,-2],
-    [-1, -2, -2, -2, -2, -2, -2,-1],
-    [2, 2, 0, 0, 0, 0, 2,2],
-    [2, 3, 1, 0, 0, 1, 3,2],
-]
-eK=[
-    [2, 3, 1, 0, 0, 1, 3,2],
-    [2, 2, 0, 0, 0, 0, 2,2],
-    [-1, -2, -2, -2, -2, -2, -2,-1],
-    [-2, -3, -3, -4, -4, -3, -3,-2],
-    [-3, -4, -4, -5, -5, -4, -4,-3],
-    [-3, -4, -4, -5, -5, -4, -4,-3],
-    [-3, -4, -4, -5, -5, -4, -4,-3],
-    [-3, -4, -4, -5, -5, -4, -4,-3],
-]
-eq=[
-    
-]
-eQ=[]
-eb=[]
-eB=[]
-ex=[]
-eX=[]
-et=[]
-eT=[]
-#
 e=[]
 minimaxc = 0
-d = 4
+d = 5
 nextmoves = []
 scores = []
 move = []
@@ -1173,15 +1143,15 @@ def evaluatepos(pos):
             if pos[p][o]=='k':
                 val=val+1000
             if pos[p][o]=='q':
-                val=val+90
+                val=val+9
             if pos[p][o]=='t':
-                val=val+50
+                val=val+5
             if pos[p][o]=='l':
-                val=val+30
+                val=val+3
             if pos[p][o]=='x':
-                val=val+30
+                val=val+3
             if pos[p][o]=='b':
-                val=val+10
+                val=val+1
     return val
 
 def minimax(position, depth, maxplayer, alpha, beta):
@@ -1277,8 +1247,29 @@ def play():
     elif verloren(board, 'K'):
         print(':) GEWONNEN')
 
+countr=0
+def test(b,pl,d):
+    global countr
+    if d==5:
+        return 0
+    if pl=='K':
+        p='k'
+    if pl=='k':
+        p='K'
+    #
+    t=[]
+    t.extend(genchildren(b,p))
+    for i in t:
+        test(i,p,d+1)
+        countr=countr+1
+    
 
-play()
+start=time.time()
+test(board,'k',0)
+end=time.time()
+print(end-start)
+print(countr)
+
 
 
 #wenn evalpos hoeher wird: minimax stoppen
