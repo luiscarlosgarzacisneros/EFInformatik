@@ -4,10 +4,10 @@ import random
 
 board = [
     [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
-    ['O', ' ', 'O', ' ', ' ', ' ', 'O',' '],
+    ['O', ' ', 'O', ' ', 'O', ' ', 'O',' '],
     [' ', ' ', ' ', 'O', ' ', 'O', ' ','O'],
+    [' ', ' ', 'O', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
     [' ', 'X', ' ', 'X', ' ', 'X', ' ','X'],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
@@ -70,7 +70,22 @@ def eingabe(pos):
             korrekt=True
         if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
             korrekt=True
+        #
+        if pos[vy][vx]=='W':
+            schlagen=False
+            for i in range(7):
+                if pos[vy+1+i][vx+1+i]=='X':
+                    break
+                if  pos[vy+1+i][vx+1+i]==' ' and vy+1+i==zy and vx+1+i==zx:
+                    korrekt==True
+                if pos[vy+1+i][vx+1+i]=='O':
+                    schlagen=True
+                if schlagen:
+                    if pos[vy+2+i][vx+2+i]==' ':
+                        if vy+2+i==zy and vx+2+i==zx:
+                            korrekt=True
     if korrekt:
+        print('lsfkdjeli')
         e.append(vy)
         e.append(vx)
         e.append(zy)
@@ -426,6 +441,8 @@ def damewerden(player,pos):
         for i in range(len(pos[0])):
             if pos[0][i]=='X':
                 pos[0][i]='W'
+
+
 
 
 play()
