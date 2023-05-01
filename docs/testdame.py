@@ -4,10 +4,10 @@ import random
 
 board = [
     [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
-    ['O', ' ', 'O', ' ', 'O', ' ', 'O',' '],
-    [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
+    ['O', ' ', 'O', ' ', ' ', ' ', 'O',' '],
+    [' ', ' ', ' ', 'O', ' ', 'O', ' ','O'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'O', ' ', ' ', ' ',' '],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
     [' ', 'X', ' ', 'X', ' ', 'X', ' ','X'],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
@@ -90,6 +90,9 @@ def eingabeschlagen(pos, vy,vx):
         print('EINGABE NICHT KORREKT')
         return False
     #
+    if zx==vx and zy==vy:
+        korrekt=True
+    #
     if zy<8 and zy>-1 and zx<8 and zx>-1:
         #
         if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
@@ -105,7 +108,9 @@ def eingabeschlagen(pos, vy,vx):
         return False
 
 def playerschlagen(vy,vx,zy,zx,pos):
-    while schlagenmoeglichX(vy,vx,pos):
+    if schlagenmoeglichX(vy,vx,pos):
+        if zx==vx and vy==zy:
+            pass
         if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
             pos[vy][vx]=' '
             pos[zy][zx]='X'
@@ -123,7 +128,8 @@ def playerschlagen(vy,vx,zy,zx,pos):
                 zy = es[0]
                 zx = es[1]
                 playerschlagen(vy,vx,zy,zx,pos)
-        elif zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
+
+        if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
             pos[vy][vx]=' '
             pos[zy][zx]='X'
             pos[vy-1][vx+1]=' '
@@ -140,7 +146,7 @@ def playerschlagen(vy,vx,zy,zx,pos):
                 zy = es[0]
                 zx = es[1]
                 playerschlagen(vy,vx,zy,zx,pos)
-
+        
 def player(pos):
     while True:
         if eingabe(pos)==True:
