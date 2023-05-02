@@ -4,11 +4,11 @@ import random
 
 board = [
     [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
-    [' ', ' ', 'O', ' ', 'O', ' ', 'O',' '],
-    [' ', ' ', ' ', 'O', ' ', 'O', ' ','O'],
-    [' ', ' ', 'O', ' ', ' ', ' ', ' ',' '],
+    ['O', ' ', 'O', ' ', 'O', ' ', 'O',' '],
+    [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    ['X', ' ', 'X', ' ', 'W', ' ', 'X',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
     [' ', 'X', ' ', 'X', ' ', 'X', ' ','X'],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
@@ -85,6 +85,57 @@ def eingabe(pos):
                     break
                 if schlagen:
                     if vy-2-i==zy and vx-2-i==zx and pos[vy-2-i][vx-2-i]==' ':
+                        korrekt=True
+                        break
+                    break
+        if pos[vy][vx]=='W':
+            schlagen=False
+            for i in range(7):
+                if vy+1+i>7 or vx+1+i>7:
+                    break
+                if pos[vy+1+i][vx+1+i]=='X':
+                    break
+                if pos[vy+1+i][vx+1+i]=='O':
+                    schlagen=True
+                if pos[vy+1+i][vx+1+i]==' ' and vy+1+i==zy and vx+1+i==zx:
+                    korrekt=True
+                    break
+                if schlagen:
+                    if vy+2+i==zy and vx+2+i==zx and pos[vy+2+i][vx+2+i]==' ':
+                        korrekt=True
+                        break
+                    break
+        if pos[vy][vx]=='W':
+            schlagen=False
+            for i in range(7):
+                if vy+1+i>7 or vx-1-i<0:
+                    break
+                if pos[vy+1+i][vx-1-i]=='X':
+                    break
+                if pos[vy+1+i][vx-1-i]=='O':
+                    schlagen=True
+                if pos[vy+1+i][vx-1-i]==' ' and vy+1+i==zy and vx-1-i==zx:
+                    korrekt=True
+                    break
+                if schlagen:
+                    if vy+2+i==zy and vx-2-i==zx and pos[vy+2+i][vx-2-i]==' ':
+                        korrekt=True
+                        break
+                    break
+        if pos[vy][vx]=='W':
+            schlagen=False
+            for i in range(7):
+                if vy-1-i<0 or vx+1+i>7:
+                    break
+                if pos[vy-1-i][vx+1+i]=='X':
+                    break
+                if pos[vy-1-i][vx+1+i]=='O':
+                    schlagen=True
+                if pos[vy-1-i][vx+1+i]==' ' and vy-1-i==zy and vx+1+i==zx:
+                    korrekt=True
+                    break
+                if schlagen:
+                    if vy-2-i==zy and vx+2+i==zx and pos[vy-2-i][vx+2+i]==' ':
                         korrekt=True
                         break
                     break
@@ -323,8 +374,12 @@ def gameover(pos):
     for sl in range(len(pos)):
         for o in range(pos[sl].count('X')):
             evalX=evalX+1
+        for o in range(pos[sl].count('W')):
+            evalX=evalX+1
     for sl in range(len(pos)):
         for o in range(pos[sl].count('O')):
+            evalO=evalO+1
+        for o in range(pos[sl].count('M')):
             evalO=evalO+1
     if evalO==0:
         return True
@@ -333,10 +388,12 @@ def gameover(pos):
     else:
         return False
 
-def verloren(pos,otherplayer):
+def verloren(pos,otherplayer1, otherplayer2):
     eval=0
     for sl in range(len(pos)):
-        for o in range(pos[sl].count(otherplayer)):
+        for o in range(pos[sl].count(otherplayer1)):
+            eval=eval+1
+        for p in range(pos[sl].count(otherplayer2)):
             eval=eval+1
     if eval==0:
         return True
@@ -355,9 +412,9 @@ def minimax(position, depth, maxplayer, alpha, beta):
     # return
     pos =copy.deepcopy(position)
     f=evaluatepos(pos)
-    if verloren(position, 'O') == True:
+    if verloren(position, 'O','M') == True:
         return f
-    elif verloren(position, 'X') == True:
+    elif verloren(position, 'X','W') == True:
         return f
     elif depth == d:
         return f
@@ -413,13 +470,13 @@ def minimaxer(boa):
 
 def play():
     global turn
-    while not gameover(board) and not verloren(board, 'O') and not verloren(board, 'X'):
+    while not gameover(board) and not verloren(board, 'O','M') and not verloren(board, 'X','W'):
         turn =turn+1
         print(turn)
         printboard(board)
         player(board)
         printboard(board)
-        if not gameover(board) and not verloren(board, 'O') and not verloren(board, 'X'):
+        if not gameover(board) and not verloren(board, 'O','M') and not verloren(board, 'X','W'):
             start = time.time()
             minimaxer(board)
             end = time.time()
@@ -430,9 +487,9 @@ def play():
     print(turn)
     printboard(board)
     print('GAME OVER')
-    if verloren(board, 'X'):
+    if verloren(board, 'X','W'):
         print(':( VERLOREN')
-    elif verloren(board, 'O'):
+    elif verloren(board, 'O','M'):
         print(':) GEWONNEN')
     else:
         print(':l UNENTSCHIEDEN')
