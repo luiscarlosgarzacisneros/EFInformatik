@@ -4,11 +4,11 @@ import random
 
 board = [
     [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
-    ['O', ' ', 'O', ' ', 'O', ' ', 'O',' '],
+    [' ', ' ', 'O', ' ', 'O', ' ', 'O',' '],
     [' ', ' ', ' ', 'O', ' ', 'O', ' ','O'],
     [' ', ' ', 'O', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
+    ['X', ' ', 'X', ' ', 'W', ' ', 'X',' '],
     [' ', 'X', ' ', 'X', ' ', 'X', ' ','X'],
     ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
@@ -74,18 +74,23 @@ def eingabe(pos):
         if pos[vy][vx]=='W':
             schlagen=False
             for i in range(7):
-                if pos[vy+1+i][vx+1+i]=='X':
+                if vy-1-i<0 or vx-1-i<0:
                     break
-                if  pos[vy+1+i][vx+1+i]==' ' and vy+1+i==zy and vx+1+i==zx:
-                    korrekt==True
-                if pos[vy+1+i][vx+1+i]=='O':
+                if pos[vy-1-i][vx-1-i]=='X':
+                    break
+                if pos[vy-1-i][vx-1-i]=='O':
                     schlagen=True
+                if pos[vy-1-i][vx-1-i]==' ' and vy-1-i==zy and vx-1-i==zx:
+                    korrekt=True
+                    break
                 if schlagen:
-                    if pos[vy+2+i][vx+2+i]==' ':
-                        if vy+2+i==zy and vx+2+i==zx:
-                            korrekt=True
+                    if vy-2-i==zy and vx-2-i==zx and pos[vy-2-i][vx-2-i]==' ':
+                        korrekt=True
+                        break
+                    break
+            #
+                
     if korrekt:
-        print('lsfkdjeli')
         e.append(vy)
         e.append(vx)
         e.append(zy)
