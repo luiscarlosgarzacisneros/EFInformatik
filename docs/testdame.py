@@ -25,6 +25,7 @@ turn=0
 childrens=[]
 e=[]
 es=[]
+esw=[]
 ds=[]
 #
 
@@ -292,13 +293,16 @@ def player(pos):
                 pos[zy][zx]='W'
     #W
     if pos[vy][vx]=='W':
-        pos[vy][vx]=' '
-        pos[zy][zx]='W'
         try:
             if pos[ds[0]][ds[1]]=='O' or pos[ds[0]][ds[1]]=='M':
+                pos[vy][vx]=' '
+                pos[zy][zx]='W'
                 pos[ds[0]][ds[1]]=' '
+                if schlagenmoeglichW(zy,zx,pos):
+                    playerschlagenW(zy,zx,pos)
         except:
-            pass
+            pos[vy][vx]=' '
+            pos[zy][zx]='W'
 
 def genchildrenschlagen(y,x,position,playerq):
     boardcopy = copy.deepcopy(position)
@@ -609,8 +613,101 @@ def schlagenmoeglichW(y,x,boar):
                     break
     return moeglich
 
+def eingabeschlagenW(vy,vx,pos):
+    esw.clear()
+    korrekt=False
+    try:
+        zx = int(input('zu x: ')) - 1
+        zy = int(input('zu y: ')) - 1
+    except:
+        print('EINGABE NICHT KORREKT')
+        return False
+    #
+    if zx==vx and zy==vy:
+        korrekt=True
+    #
+    if zy<8 and zy>-1 and zx<8 and zx>-1:
+        #
+        for i in range(7):
+            if vy+2+i>7 or vx+2+i>7:
+                break
+            if pos[vy+1+i][vx+1+i]=='X' or pos[vy+1+i][vx+1+i]=='W':
+                break
+            if pos[vy+1+i][vx+1+i]=='O' or pos[vy+1+i][vx+1+i]=='M':
+                if pos[vy+2+i][vx+2+i]==' ' and vy+2+i==zy and vx+2+i==zx:
+                    oy=vy+1+i
+                    ox=vx+1+i
+                    korrekt=True
+                    break
+        if not korrekt:
+            for i in range(7):
+                if vy+2+i>7 or vx-2-i<0:
+                    break
+                if pos[vy+1+i][vx-1-i]=='X' or pos[vy+1+i][vx-1-i]=='W':
+                    break
+                if pos[vy+1+i][vx-1-i]=='O' or pos[vy+1+i][vx-1-i]=='M':
+                    if pos[vy+2+i][vx-2-i]==' ' and vy+2+i==zy and vx-2-i==zx:
+                        oy=vy+1+i
+                        ox=vx-1-i
+                        korrekt=True
+                        break
+        if not korrekt:
+            for i in range(7):
+                if vy-2-i<0 or vx-2-i<0:
+                    break
+                if pos[vy-1-i][vx-1-i]=='X' or pos[vy-1-i][vx-1-i]=='W':
+                    break
+                if pos[vy-1-i][vx-1-i]=='O' or pos[vy-1-i][vx-1-i]=='M':
+                    if pos[vy-2-i][vx-2-i]==' ' and vy-2-i==zy and vx-2-i==zx:
+                        oy=vy-1-i
+                        ox=vx-1-i
+                        korrekt=True
+                        break
+        if not korrekt:
+            for i in range(7):
+                if vy-2-i<0 or vx+2+i>7:
+                    break
+                if pos[vy-1-i][vx+1+i]=='X' or pos[vy-1-i][vx+1+i]=='W':
+                    break
+                if pos[vy-1-i][vx+1+i]=='O' or pos[vy-1-i][vx+1+i]=='M':
+                    if pos[vy-2-i][vx+2+i]==' ' and vy-2-i==zy and vx+2+i==zx:
+                        oy=vy-1-i
+                        ox=vx+1+i
+                        korrekt=True
+                        break
+        #
+    if korrekt:
+        esw.append(zy)
+        esw.append(zx)
+        esw.append(oy)
+        esw.append(ox)
+        return True
+    else:
+        print('EINGABE NICHT KORREKT')
+        return False
+
+def playerschlagenW(vy,vx,pos):
+    if schlagenmoeglichW(vy,vx,pos):
+        printboard(pos)
+        while True:
+            if eingabeschlagenW(vy,vx,pos)==True:
+                break
+            else:
+                continue
+        if vx==esw[1] and esw[0]==vy:
+            pass
+        else:
+            zy=esw[0]
+            zx=esw[1]
+            oy=esw[2]
+            ox=esw[3]
+            pos[zy][zx]='W'
+            pos[vy][vx]=' '
+            pos[oy][ox]=' '
+            playerschlagenW(zy,zx,pos)
+
 
 play()
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, verloren, gameovereingabe, eingabeschlagen, player, playerschlagen,
-#no: damegenchildren, genchildrenschlagendame, positionsmatrix, damespieler bewegen(player)
+#no: damegenchildren, genchildrenschlagendame, positionsmatrix, 
 
