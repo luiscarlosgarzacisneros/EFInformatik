@@ -3,14 +3,14 @@ import time
 import random
 
 board = [
-    [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
-    ['O', ' ', 'O', ' ', 'O', ' ', 'O',' '],
-    [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
-    [' ', 'X', ' ', 'X', ' ', 'X', ' ','X'],
-    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', 'W', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
 ]
 #
 minimaxc = 0
@@ -297,6 +297,8 @@ def player(pos):
         try:
             if pos[ds[0]][ds[1]]=='O' or pos[ds[0]][ds[1]]=='M':
                 pos[ds[0]][ds[1]]=' '
+                if schlagenmoeglichW(zy,zx,pos):
+                    pass
         except:
             pass
 
@@ -558,9 +560,60 @@ def damewerden(player,pos):
             if pos[0][i]=='X':
                 pos[0][i]='W'
 
+def schlagenmoeglichW(y,x,boar):
+    moeglich=False
+    for i in range(7):
+        if y+2+i>7 or x+2+i>7:
+            break
+        if boar[y+1+i][x+1+i]=='X' or boar[y+1+i][x+1+i]=='W':
+            break
+        if boar[y+1+i][x+1+i]=='O' or boar[y+1+i][x+1+i]=='M':
+            if boar[y+2+i][x+2+i]==' ':
+                moeglich=True
+                break
+            else:
+                break
+    if not moeglich:
+        for i in range(7):
+            if y-2-i<0 or x+2+i>7:
+                break
+            if boar[y-1-i][x+1+i]=='X' or boar[y-1-i][x+1+i]=='W':
+                break
+            if boar[y-1-i][x+1+i]=='O' or boar[y-1-i][x+1+i]=='M':
+                if boar[y-2-i][x+2+i]==' ':
+                    moeglich=True
+                    break
+                else:
+                    break
+    if not moeglich:
+        for i in range(7):
+            if y-2-i<0 or x-2-i<0:
+                break
+            if boar[y-1-i][x-1-i]=='X' or boar[y-1-i][x-1-i]=='W':
+                break
+            if boar[y-1-i][x-1-i]=='O' or boar[y-1-i][x-1-i]=='M':
+                if boar[y-2-i][x-2-i]==' ':
+                    moeglich=True
+                    break
+                else:
+                    break
+    if not moeglich:
+        for i in range(7):
+            if y+2+i>7 or x-2-i<0:
+                break
+            if boar[y+1+i][x-1-i]=='X' or boar[y+1+i][x-1-i]=='W':
+                break
+            if boar[y+1+i][x-1-i]=='O' or boar[y+1+i][x-1-i]=='M':
+                if boar[y+2+i][x-2-i]==' ':
+                    moeglich=True
+                    break
+                else:
+                    break
+    return moeglich
+
+print(schlagenmoeglichW(4,4,board))
 
 
-play()
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, verloren, gameovereingabe, eingabeschlagen, player, playerschlagen,
 #no: damegenchildren, genchildrenschlagendame, positionsmatrix, damespieler bewegen(player)
 
