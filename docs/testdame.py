@@ -4,12 +4,12 @@ import random
 
 board = [
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', 'O', ' ', 'O',' '],
+    [' ', 'O', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', 'M', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', 'O', ' ', ' ', ' ', 'O', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', 'W', ' ', ' ', ' ',' '],
     [' ', ' ', 'M', ' ', 'M', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', 'X', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
 ]
 #
@@ -67,10 +67,12 @@ def eingabe(pos):
         if zy==vy-1 and zx==vx+1 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
             korrekt=True
         #
-        if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
-            korrekt=True
-        if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
-            korrekt=True
+        if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
+            if pos[vy-1][vx-1]=='O' or pos[vy-1][vx-1]=='M':
+                korrekt=True
+        if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
+            if pos[vy-1][vx+1]=='O' or pos[vy-1][vx+1]=='M':
+                korrekt=True
         #
         ds.clear()
         if pos[vy][vx]=='W':
@@ -193,10 +195,12 @@ def eingabeschlagen(pos, vy,vx):
     #
     if zy<8 and zy>-1 and zx<8 and zx>-1:
         #
-        if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
-            korrekt=True
-        if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
-            korrekt=True
+        if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
+            if pos[vy-1][vx-1]=='O' or pos[vy-1][vx-1]=='M':
+                korrekt=True
+        if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
+            if pos[vy-1][vx+1]=='O' or pos[vy-1][vx+1]=='M':
+                korrekt=True
     if korrekt:
         es.append(zy)
         es.append(zx)
