@@ -3,14 +3,14 @@ import time
 import random
 
 board = [
-    [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
-    ['O', ' ', 'O', ' ', 'O', ' ', 'O',' '],
-    [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
-    [' ', 'X', ' ', 'X', ' ', 'X', ' ','X'],
-    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
+    [' ', 'O', ' ', ' ', ' ', 'O', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', 'W', ' ', ' ', ' ',' '],
+    [' ', ' ', 'O', ' ', 'O', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
 ]
 #
 minimaxc = 0
@@ -107,7 +107,7 @@ def eingabe(pos):
                 if schlagen:
                     if vy+2+i==zy and vx+2+i==zx and pos[vy+2+i][vx+2+i]==' ':
                         korrekt=True
-                        ds.append(v+1+i)
+                        ds.append(vy+1+i)
                         ds.append(vx+1+i)
                         break
                     break
@@ -251,12 +251,12 @@ def player(pos):
         if zy==0:
             pos[zy][zx]='W'
     #schlagen.
-    elif zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' 
+    elif zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
         if pos[vy-1][vx-1]=='O'or pos[vy-1][vx-1]=='M':
             playerschlagen(vy,vx,zy,zx,pos)
             if zy==0:
                 pos[zy][zx]='W'
-    elif zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' 
+    elif zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
         if pos[vy-1][vx+1]=='O'or pos[vy-1][vx+1]=='M':
             playerschlagen(vy,vx,zy,zx,pos)
             if zy==0:
