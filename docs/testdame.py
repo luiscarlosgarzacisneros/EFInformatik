@@ -219,6 +219,8 @@ def playerschlagen(vy,vx,zy,zx,pos):
             if pos[vy-1][vx-1]=='O' or pos[vy-1][vx-1]=='M':
                 pos[vy][vx]=' '
                 pos[zy][zx]='X'
+                if zy==0:
+                    pos[zy][zx]='W'
                 pos[vy-1][vx-1]=' '
                 printboard(pos)
                 #
@@ -238,6 +240,8 @@ def playerschlagen(vy,vx,zy,zx,pos):
             if pos[vy-1][vx+1]=='O' or pos[vy-1][vx+1]=='M':
                 pos[vy][vx]=' '
                 pos[zy][zx]='X'
+                if zy==0:
+                    pos[zy][zx]='W'
                 pos[vy-1][vx+1]=' '
                 printboard(pos)
                 #
