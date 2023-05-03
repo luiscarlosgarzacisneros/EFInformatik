@@ -42,11 +42,13 @@ def printboard(board):
 def schlagenmoeglichX(y,x,boar):
     r=False
     if y-2>-1 and x-2>-1:
-        if boar[y-2][x-2]==' 'and boar[y-1][x-1]=='O':
-            r=True
+        if boar[y-2][x-2]==' ':
+            if boar[y-1][x-1]=='O' or boar[y-1][x-1]=='M':
+                r=True
     if y-2>-1 and x+2<8:
-        if boar[y-2][x+2]==' ' and boar[y-1][x+1]=='O':
-            r=True
+        if boar[y-2][x+2]==' ':
+            if boar[y-1][x+1]=='O' or boar[y-1][x+1]=='M':
+                r=True
     return r
 
 def eingabe(pos):
