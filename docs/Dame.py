@@ -357,8 +357,8 @@ def genchildren(position, playerq):
     for i in range(8):
         x = 0
         for j in range(8):
-            if boardcopy[y][x] == playerq:
-                if playerq=='X':
+            if playerq=='X':
+                if boardcopy[y][x] == 'X':
                     if y-1>-1 and x-1>-1 and boardcopy[y-1][x-1]==' ':
                         boardcopy[y-1][x-1]='X'
                         boardcopy[y][x]=' '
@@ -378,7 +378,8 @@ def genchildren(position, playerq):
                     childrens.clear()
                     for h in genchildrenschlagen(y,x,boardcopy,'X'):
                         children.append(h)
-                elif playerq=='O':
+            elif playerq=='O':
+                if boardcopy[y][x] == 'O':
                     if y+ 1<8 and x-1>-1 and  boardcopy[y+ 1][x-1]==' ':
                         boardcopy[y+1][x-1]='O'
                         boardcopy[y][x]=' '
@@ -398,7 +399,6 @@ def genchildren(position, playerq):
                     childrens.clear()
                     for h in genchildrenschlagen(y,x,boardcopy,'O'):
                         children.append(h)
-
                 else:
                     pass
             x = x + 1
