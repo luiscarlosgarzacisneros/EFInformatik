@@ -8,7 +8,7 @@ board = [
     [' ', 'O', ' ', ' ', ' ', 'O', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', 'W', ' ', ' ', ' ',' '],
-    [' ', ' ', 'O', ' ', 'O', ' ', ' ',' '],
+    [' ', ' ', 'M', ' ', 'M', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
 ]
@@ -80,7 +80,11 @@ def eingabe(pos):
                     break
                 if pos[vy-1-i][vx-1-i]=='X':
                     break
+                elif pos[vy-1-i][vx-1-i]=='W':
+                    break
                 if pos[vy-1-i][vx-1-i]=='O':
+                    schlagen=True
+                elif pos[vy-1-i][vx-1-i]=='M':
                     schlagen=True
                 if pos[vy-1-i][vx-1-i]==' ' and vy-1-i==zy and vx-1-i==zx:
                     korrekt=True
@@ -99,7 +103,11 @@ def eingabe(pos):
                     break
                 if pos[vy+1+i][vx+1+i]=='X':
                     break
+                elif pos[vy+1+i][vx+1+i]=='W':
+                    break
                 if pos[vy+1+i][vx+1+i]=='O':
+                    schlagen=True
+                elif pos[vy+1+i][vx+1+i]=='M':
                     schlagen=True
                 if pos[vy+1+i][vx+1+i]==' ' and vy+1+i==zy and vx+1+i==zx:
                     korrekt=True
@@ -118,7 +126,11 @@ def eingabe(pos):
                     break
                 if pos[vy+1+i][vx-1-i]=='X':
                     break
+                elif pos[vy+1+i][vx-1-i]=='W':
+                    break
                 if pos[vy+1+i][vx-1-i]=='O':
+                    schlagen=True
+                elif pos[vy+1+i][vx-1-i]=='M':
                     schlagen=True
                 if pos[vy+1+i][vx-1-i]==' ' and vy+1+i==zy and vx-1-i==zx:
                     korrekt=True
@@ -137,7 +149,11 @@ def eingabe(pos):
                     break
                 if pos[vy-1-i][vx+1+i]=='X':
                     break
+                elif pos[vy-1-i][vx+1+i]=='W':
+                    break
                 if pos[vy-1-i][vx+1+i]=='O':
+                    schlagen=True
+                elif pos[vy-1-i][vx+1+i]=='M':
                     schlagen=True
                 if pos[vy-1-i][vx+1+i]==' ' and vy-1-i==zy and vx+1+i==zx:
                     korrekt=True
@@ -149,6 +165,7 @@ def eingabe(pos):
                         ds.append(vx+1+i)
                         break
                     break
+                
             #
                 
     if korrekt:
@@ -265,8 +282,11 @@ def player(pos):
     if pos[vy][vx]=='W':
         pos[vy][vx]=' '
         pos[zy][zx]='W'
-        if pos[ds[0]][ds[1]]=='O' or pos[ds[0]][ds[1]]=='M':
-            pos[ds[0]][ds[1]]=' '
+        try:
+            if pos[ds[0]][ds[1]]=='O' or pos[ds[0]][ds[1]]=='M':
+                pos[ds[0]][ds[1]]=' '
+        except:
+            pass
 
 def genchildrenschlagen(y,x,position,playerq):
     boardcopy = copy.deepcopy(position)
