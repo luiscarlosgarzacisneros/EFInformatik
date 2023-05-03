@@ -3,14 +3,14 @@ import time
 import random
 
 board = [
+    [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
+    ['O', ' ', 'O', ' ', 'O', ' ', 'O',' '],
+    [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', 'M', ' ', ' ',' '],
-    ['O', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', 'M', ' ', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', 'M', ' ', ' ',' '],
-    [' ', ' ', ' ', 'W', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
+    [' ', 'X', ' ', 'X', ' ', 'X', ' ','X'],
+    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
 minimaxc = 0
@@ -709,5 +709,5 @@ def playerschlagenW(vy,vx,pos):
 
 play()
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, verloren, gameovereingabe, eingabeschlagen, player, playerschlagen,
-#no: damegenchildren, genchildrenschlagendame, positionsmatrix, damespieler bewegen(player)
+#no: damegenchildren, genchildrenschlagendame, positionsmatrix, 
 
