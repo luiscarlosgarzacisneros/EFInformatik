@@ -39,7 +39,7 @@ eK=[
     [-3, -4, -4, -5, -5, -4, -4,-3],
 ]
 eq=[
-    
+
 ]
 eQ=[]
 eb=[]
@@ -1160,15 +1160,15 @@ def evaluatepos(pos):
             if pos[p][o]=='K':
                 val=val-1000
             if pos[p][o]=='Q':
-                val=val-9
+                val=val-90
             if pos[p][o]=='T':
-                val=val-5
+                val=val-50
             if pos[p][o]=='L':
-                val=val-3
+                val=val-30
             if pos[p][o]=='X':
-                val=val-3
+                val=val-30
             if pos[p][o]=='B':
-                val=val-1
+                val=val-10
             #
             if pos[p][o]=='k':
                 val=val+1000
