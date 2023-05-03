@@ -209,41 +209,43 @@ def playerschlagen(vy,vx,zy,zx,pos):
     if schlagenmoeglichX(vy,vx,pos):
         if zx==vx and vy==zy:
             pass
-        if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx-1]=='O':
-            pos[vy][vx]=' '
-            pos[zy][zx]='X'
-            pos[vy-1][vx-1]=' '
-            printboard(pos)
-            #
-            vy = zy
-            vx = zx
-            if schlagenmoeglichX(vy,vx,pos):
-                while True:
-                    if eingabeschlagen(pos,vy,vx)==True:
-                        break
-                    else:
-                        continue
-                zy = es[0]
-                zx = es[1]
-                playerschlagen(vy,vx,zy,zx,pos)
+        if zy==vy-2 and zx==vx-2 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
+            if pos[vy-1][vx-1]=='O' or pos[vy-1][vx-1]=='M':
+                pos[vy][vx]=' '
+                pos[zy][zx]='X'
+                pos[vy-1][vx-1]=' '
+                printboard(pos)
+                #
+                vy = zy
+                vx = zx
+                if schlagenmoeglichX(vy,vx,pos):
+                    while True:
+                        if eingabeschlagen(pos,vy,vx)==True:
+                            break
+                        else:
+                            continue
+                    zy = es[0]
+                    zx = es[1]
+                    playerschlagen(vy,vx,zy,zx,pos)
 
-        if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ' and pos[vy-1][vx+1]=='O':
-            pos[vy][vx]=' '
-            pos[zy][zx]='X'
-            pos[vy-1][vx+1]=' '
-            printboard(pos)
-            #
-            vy = zy
-            vx = zx
-            if schlagenmoeglichX(vy,vx,pos):
-                while True:
-                    if eingabeschlagen(pos,vy,vx)==True:
-                        break
-                    else:
-                        continue
-                zy = es[0]
-                zx = es[1]
-                playerschlagen(vy,vx,zy,zx,pos)
+        if zy==vy-2 and zx==vx+2 and pos[vy][vx]=='X' and pos[zy][zx]==' ':
+            if pos[vy-1][vx+1]=='O' or pos[vy-1][vx+1]=='M':
+                pos[vy][vx]=' '
+                pos[zy][zx]='X'
+                pos[vy-1][vx+1]=' '
+                printboard(pos)
+                #
+                vy = zy
+                vx = zx
+                if schlagenmoeglichX(vy,vx,pos):
+                    while True:
+                        if eingabeschlagen(pos,vy,vx)==True:
+                            break
+                        else:
+                            continue
+                    zy = es[0]
+                    zx = es[1]
+                    playerschlagen(vy,vx,zy,zx,pos)
         
 def player(pos):
     while True:
