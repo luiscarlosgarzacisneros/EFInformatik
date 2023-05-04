@@ -899,7 +899,7 @@ def genchildrenschlagenWM(y,x,pos,player):
     boardcopy=copy.deepcopy(pos)
     if player=='M':
         for o in range(7):
-            if y+1+o>7 or x+1+o>7:
+            if y+2+o>7 or x+2+o>7:
                 break
             if boardcopy[y+1+o][x+1+o]=='O' or boardcopy[y+1+o][x+1+o]=='M':
                 break
@@ -913,7 +913,7 @@ def genchildrenschlagenWM(y,x,pos,player):
                     boardcopy=copy.deepcopy(pos)
                     break
         for o in range(7):
-            if y-1-o<0 or x+1+o>7:
+            if y-2-o<0 or x+2+o>7:
                 break
             if boardcopy[y-1-o][x+1+o]=='O' or boardcopy[y-1-o][x+1+o]=='M':
                 break
@@ -927,7 +927,7 @@ def genchildrenschlagenWM(y,x,pos,player):
                     boardcopy=copy.deepcopy(pos)
                     break
         for o in range(7):
-            if y-1-o<0 or x-1-o<0:
+            if y-2-o<0 or x-2-o<0:
                 break
             if boardcopy[y-1-o][x-1-o]=='O' or boardcopy[y-1-o][x-1-o]=='M':
                 break
@@ -941,7 +941,7 @@ def genchildrenschlagenWM(y,x,pos,player):
                     boardcopy=copy.deepcopy(pos)
                     break
         for o in range(7):
-            if y+1+o>8 or x-1-o<0:
+            if y+2+o>8 or x-2-o<0:
                 break
             if boardcopy[y+1+o][x-1-o]=='O' or boardcopy[y+1+o][x-1-o]=='M':
                 break
@@ -956,7 +956,7 @@ def genchildrenschlagenWM(y,x,pos,player):
                     break
     if player=='W':
         for o in range(7):
-            if y+1+o>7 or x+1+o>7:
+            if y+2+o>7 or x+2+o>7:
                 break
             if boardcopy[y+1+o][x+1+o]=='X' or boardcopy[y+1+o][x+1+o]=='W':
                 break
@@ -970,7 +970,7 @@ def genchildrenschlagenWM(y,x,pos,player):
                     boardcopy=copy.deepcopy(pos)
                     break
         for o in range(7):
-            if y-1-o<0 or x+1+o>7:
+            if y-2-o<0 or x+2+o>7:
                 break
             if boardcopy[y-1-o][x+1+o]=='X' or boardcopy[y-1-o][x+1+o]=='W':
                 break
@@ -984,7 +984,7 @@ def genchildrenschlagenWM(y,x,pos,player):
                     boardcopy=copy.deepcopy(pos)
                     break
         for o in range(7):
-            if y-1-o<0 or x-1-o<0:
+            if y-2-o<0 or x-2-o<0:
                 break
             if boardcopy[y-1-o][x-1-o]=='X' or boardcopy[y-1-o][x-1-o]=='W':
                 break
@@ -998,7 +998,7 @@ def genchildrenschlagenWM(y,x,pos,player):
                     boardcopy=copy.deepcopy(pos)
                     break
         for o in range(7):
-            if y+1+o>8 or x-1-o<0:
+            if y+2+o>8 or x-2-o<0:
                 break
             if boardcopy[y+1+o][x-1-o]=='X' or boardcopy[y+1+o][x-1-o]=='W':
                 break
@@ -1013,7 +1013,7 @@ def genchildrenschlagenWM(y,x,pos,player):
                     break
     return childrensWM
 
-for i in genchildrenWM(3,3,board,'W'):
+for i in genchildrenWM(1,5,board,'W'):
     printboard(i)
 
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, verloren, gameovereingabe, eingabeschlagen, player, playerschlagen,
