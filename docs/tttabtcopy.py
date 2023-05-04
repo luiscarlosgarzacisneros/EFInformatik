@@ -29,7 +29,6 @@ def player():
         print('EINGABE NICHT KORREKT')
         player()
 
-
 def printboard():
     print('  1   2   3')
     print('-------------')
@@ -40,7 +39,6 @@ def printboard():
             print(' I ', end='')
         print(i + 1)
         print('-------------')
-
 
 def gewonnen(board, xoro):
     # horizontal
@@ -65,7 +63,6 @@ def gewonnen(board, xoro):
     else:
         return False
 
-
 def genchildren(position, playerk):
     children = []
     boardcopy = copy.deepcopy(position)
@@ -84,7 +81,6 @@ def genchildren(position, playerk):
     minimaxc = minimaxc + 1
     #
     return children
-
 
 def minimax(position, depth, maxplayer, alpha, beta):
     # X:maxplayer,spieler O:minplayer,computer
@@ -132,7 +128,6 @@ def minimax(position, depth, maxplayer, alpha, beta):
                 break
         return minvalue
 
-
 def minimaxer(boa):
     global minimaxc
     minimaxc = 0
@@ -148,14 +143,12 @@ def minimaxer(boa):
     #
     move.extend(copy.deepcopy(nextmoves[scores.index(min(scores))]))
 
-
 def gameover(boar):
     isover = True
     for q in range(3):
         if boar[q].count(' ') > 0:
             isover = False
     return isover
-
 
 def play():
     while not gameover(board) and not gewonnen(board, 'O') and not gewonnen(board, 'X'):
@@ -181,4 +174,4 @@ def play():
 
 play()
 
-# funktioniert nicht!
+
