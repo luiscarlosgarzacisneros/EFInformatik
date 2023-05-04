@@ -3,14 +3,14 @@ import time
 import random
 
 board = [
+    [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
+    ['O', ' ', 'O', ' ', 'O', ' ', 'O',' '],
+    [' ', 'O', ' ', 'O', ' ', 'O', ' ','O'],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', 'M', ' ',' '],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', 'X', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', 'X', ' ', ' ', ' ', ' ',' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ',' '],
+    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
+    [' ', 'X', ' ', 'X', ' ', 'X', ' ','X'],
+    ['X', ' ', 'X', ' ', 'X', ' ', 'X',' '],
 ]
 #
 minimaxc = 0
@@ -1069,12 +1069,8 @@ def genchildrenschlagenWM(y,x,pos,player):
                     break
     return childrensWM
 
-for i in genchildrenWM(1,5,board,'M'):
-    printboard(i)
-
-#genchildrenschlagenWM geht nicht
+play()
 
 
-#yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, verloren, gameovereingabe, eingabeschlagen, player, playerschlagen,
-#no: damegenchildren, genchildrenschlagendame, positionsmatrix, 
+#positionsmatrix?
 
