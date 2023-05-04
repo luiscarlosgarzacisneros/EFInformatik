@@ -428,6 +428,10 @@ def evaluatepos(pos):
             eval=eval+5
         for o in range(pos[sl].count('M')):
             eval=eval-5
+    if verloren(pos,'X','W'):
+        eval=eval-8888
+    if verloren(pos,'O','M'):
+        eval=eval+8888
     return eval
 
 def gameover(pos):
@@ -716,6 +720,7 @@ def genchildrenWM(y,x,pos,player):
     schlagen=False
     if player=='M':
         for o in range(7):
+            schlagen=False
             if y+1+o>7 or x+1+o>7:
                 break
             if boardcopy[y+1+o][x+1+o]=='O' or boardcopy[y+1+o][x+1+o]=='M':
@@ -743,6 +748,7 @@ def genchildrenWM(y,x,pos,player):
                 else:
                     break
         for o in range(7):
+            schlagen=False
             if y+1+o>7 or x-1-o<0:
                 break
             if boardcopy[y+1+o][x-1-o]=='O' or boardcopy[y+1+o][x-1-o]=='M':
@@ -770,6 +776,7 @@ def genchildrenWM(y,x,pos,player):
                 else:
                     break
         for o in range(7):
+            schlagen=False
             if y-1-o<0 or x-1-o<0:
                 break
             if boardcopy[y-1-o][x-1-o]=='O' or boardcopy[y-1-o][x-1-o]=='M':
@@ -797,17 +804,18 @@ def genchildrenWM(y,x,pos,player):
                 else:
                     break
         for o in range(7):
+            schlagen=False
             if y-1-o<0 or x+1+o>7:
                 break
             if boardcopy[y-1-o][x+1+o]=='O' or boardcopy[y-1-o][x+1+o]=='M':
                 break
             if boardcopy[y-1-o][x+1+o]=='X' or boardcopy[y-1-o][x+1+o]=='W':
                 if y-2-o>-1:
-                    if x+2+o<8:
+                    if not x+2+o>7:               #????????
                         schlagen=True
             if boardcopy[y-1-o][x+1+o]==' ':
                 boardcopy[y-1-o][x+1+o]='M'
-                boardcopy[y][x]=' '
+                boardcopy[y][x]=' '               #????????
                 childrenWM.append(boardcopy)
                 boardcopy=copy.deepcopy(pos)
             if schlagen:
@@ -824,6 +832,7 @@ def genchildrenWM(y,x,pos,player):
                 else:
                     break
     elif player=='W':
+        schlagen=False
         for o in range(7):
             if y+1+o>7 or x+1+o>7:
                 break
@@ -852,6 +861,7 @@ def genchildrenWM(y,x,pos,player):
                 else:
                     break
         for o in range(7):
+            schlagen=False
             if y+1+o>7 or x-1-o<0:
                 break
             if boardcopy[y+1+o][x-1-o]=='X' or boardcopy[y+1+o][x-1-o]=='W':
@@ -879,6 +889,7 @@ def genchildrenWM(y,x,pos,player):
                 else:
                     break
         for o in range(7):
+            schlagen=False
             if y-1-o<0 or x-1-o<0:
                 break
             if boardcopy[y-1-o][x-1-o]=='X' or boardcopy[y-1-o][x-1-o]=='W':
@@ -906,6 +917,7 @@ def genchildrenWM(y,x,pos,player):
                 else:
                     break
         for o in range(7):
+            schlagen=False
             if y-1-o<0 or x+1+o>7:
                 break
             if boardcopy[y-1-o][x+1+o]=='X' or boardcopy[y-1-o][x+1+o]=='W':
@@ -1072,5 +1084,4 @@ def genchildrenschlagenWM(y,x,pos,player):
 play()
 
 
-#positionsmatrix?
-
+#positionsmatrix, genchildrenWM zuerst, depth mit value, endgame verbessern, verloren mehr punkte eval, crash???
