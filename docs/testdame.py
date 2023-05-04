@@ -707,6 +707,9 @@ def playerschlagenW(vy,vx,pos):
             playerschlagenW(zy,zx,pos)
 
 
+
+
+
 play()
 #yes: minimaxer,minimax,printboard,schlagenmoeglichX, genchildren, genchildrenschlagen, evaluatepos, verloren, gameovereingabe, eingabeschlagen, player, playerschlagen,
 #no: damegenchildren, genchildrenschlagendame, positionsmatrix, 
