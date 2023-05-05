@@ -425,7 +425,7 @@ def evaluatepos(pos):
         for o in range(pos[sl].count('O')):
             eval=eval-1
         for o in range(pos[sl].count('W')):
-            eval=eval+5
+            eval=eval+15
         for o in range(pos[sl].count('M')):
             eval=eval-5
     if verloren(pos,'X','W'):
