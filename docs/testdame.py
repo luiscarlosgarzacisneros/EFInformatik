@@ -463,6 +463,8 @@ def verloren(pos,otherplayer1, otherplayer2):
             eval=eval+1
     if eval==0:
         return True
+    elif keinezugmoeglichkeiten(pos,otherplayer1):
+        return True
     else:
         return False
     
