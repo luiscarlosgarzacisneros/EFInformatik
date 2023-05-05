@@ -536,13 +536,13 @@ def minimaxer(boa):
 
 def play():
     global turn
-    while not gameover(board) and not verloren(board, 'O','M') and not verloren(board, 'X','W'):
+    while not gameover(board) and not verloren(board, 'O','M') and not verloren(board, 'X','W') and not keinezugmoeglichkeiten(board,'X') and not keinezugmoeglichkeiten(board,'O'):
         turn =turn+1
         print(turn)
         printboard(board)
         player(board)
         printboard(board)
-        if not gameover(board) and not verloren(board, 'O','M') and not verloren(board, 'X','W'):
+        if not gameover(board) and not verloren(board, 'O','M') and not verloren(board, 'X','W') and not keinezugmoeglichkeiten(board,'X') and not keinezugmoeglichkeiten(board,'O'):
             start = time.time()
             minimaxer(board)
             end = time.time()
@@ -557,8 +557,10 @@ def play():
         print(':( VERLOREN')
     elif verloren(board, 'O','M'):
         print(':) GEWONNEN')
-    else:
-        print(':l UNENTSCHIEDEN')
+    elif keinezugmoeglichkeiten(board,'X'):
+        print(':( VERLOREN')
+    elif keinezugmoeglichkeiten(board,'O'):
+        print(':) GEWONNEN')
 
 def damewerden(player,pos):
     if player=='O':
@@ -1081,7 +1083,16 @@ def genchildrenschlagenWM(y,x,pos,player):
                     break
     return childrensWM
 
+def keinezugmoeglichkeiten(pos,player):
+    if genchildren(pos,player)==[]:
+        return True
+    else:
+        return False
+
+
+
 play()
 
 
-#positionsmatrix, genchildrenWM zuerst, depth mit value, endgame verbessern, verloren mehr punkte eval, crash???
+
+#positionsmatrix, genchildrenWM zuerst, depth mit value, endgame verbessern, verloren mehr punkte eval, crash???, keine zugmoeglichkeiten
