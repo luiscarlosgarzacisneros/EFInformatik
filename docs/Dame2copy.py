@@ -352,6 +352,7 @@ def genchildrenschlagen(y,x,position,playerq):
                 boardcopy = copy.deepcopy(position)
         else:
             pass
+    childrens.reverse()
     return childrens
 
 def genchildren(position, playerq):
