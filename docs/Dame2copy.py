@@ -1093,6 +1093,7 @@ def genchildrenschlagenWM(y,x,pos,player):
                     break
                 else:
                     break
+    childrensWM.reverse()
     return childrensWM
 
 def keinezugmoeglichkeiten(pos,player):
