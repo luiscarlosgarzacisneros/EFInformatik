@@ -371,6 +371,7 @@ def genchildren(position, playerq):
                         boardcopy[y][x]=' '
                         if y-1==0:
                             boardcopy[y-1][x-1]='W'
+                            children1.append(boardcopy)
                         children2.append(boardcopy)
                         boardcopy = copy.deepcopy(position)
                     if y-1>-1 and x+ 1<8 and boardcopy[y-1][x+ 1]==' ':
@@ -378,6 +379,7 @@ def genchildren(position, playerq):
                         boardcopy[y][x]=' '
                         if y-1==0:
                             boardcopy[y-1][x+1]='W'
+                            children1.append(boardcopy)
                         children2.append(boardcopy)
                         boardcopy = copy.deepcopy(position)
                     else:
@@ -397,6 +399,7 @@ def genchildren(position, playerq):
                         boardcopy[y][x]=' '
                         if y+1==7:
                             boardcopy[y+1][x-1]='M'
+                            children1.append(boardcopy)
                         children2.append(boardcopy)
                         boardcopy = copy.deepcopy(position)
                     if y+ 1<8 and x+ 1<8 and boardcopy[y+ 1][x+ 1]==' ':
@@ -404,6 +407,7 @@ def genchildren(position, playerq):
                         boardcopy[y][x]=' '
                         if y+1==7:
                             boardcopy[y+1][x+1]='M'
+                            children1.append(boardcopy)
                         children2.append(boardcopy)
                         boardcopy = copy.deepcopy(position)
                     else:
