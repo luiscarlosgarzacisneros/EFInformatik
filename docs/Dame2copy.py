@@ -728,6 +728,7 @@ def playerschlagenW(vy,vx,pos):
 
 def genchildrenWM(y,x,pos,player):
     childrenWM=[]
+    childrenWM2=[]
     boardcopy=copy.deepcopy(pos)
     schlagen=False
     if player=='M':
@@ -744,7 +745,7 @@ def genchildrenWM(y,x,pos,player):
             if boardcopy[y+1+o][x+1+o]==' ':
                 boardcopy[y+1+o][x+1+o]='M'
                 boardcopy[y][x]=' '
-                childrenWM.append(boardcopy)
+                childrenWM2.append(boardcopy)
                 boardcopy=copy.deepcopy(pos)
             if schlagen:
                 if boardcopy[y+2+o][x+2+o]==' ':
@@ -772,7 +773,7 @@ def genchildrenWM(y,x,pos,player):
             if boardcopy[y+1+o][x-1-o]==' ':
                 boardcopy[y+1+o][x-1-o]='M'
                 boardcopy[y][x]=' '
-                childrenWM.append(boardcopy)
+                childrenWM2.append(boardcopy)
                 boardcopy=copy.deepcopy(pos)
             if schlagen:
                 if boardcopy[y+2+o][x-2-o]==' ':
@@ -800,7 +801,7 @@ def genchildrenWM(y,x,pos,player):
             if boardcopy[y-1-o][x-1-o]==' ':
                 boardcopy[y-1-o][x-1-o]='M'
                 boardcopy[y][x]=' '
-                childrenWM.append(boardcopy)
+                childrenWM2.append(boardcopy)
                 boardcopy=copy.deepcopy(pos)
             if schlagen:
                 if boardcopy[y-2-o][x-2-o]==' ':
@@ -828,7 +829,7 @@ def genchildrenWM(y,x,pos,player):
             if boardcopy[y-1-o][x+1+o]==' ':
                 boardcopy[y-1-o][x+1+o]='M'
                 boardcopy[y][x]=' '               #????????
-                childrenWM.append(boardcopy)
+                childrenWM2.append(boardcopy)
                 boardcopy=copy.deepcopy(pos)
             if schlagen:
                 if boardcopy[y-2-o][x+2+o]==' ':
@@ -857,7 +858,7 @@ def genchildrenWM(y,x,pos,player):
             if boardcopy[y+1+o][x+1+o]==' ':
                 boardcopy[y+1+o][x+1+o]='W'
                 boardcopy[y][x]=' '
-                childrenWM.append(boardcopy)
+                childrenWM2.append(boardcopy)
                 boardcopy=copy.deepcopy(pos)
             if schlagen:
                 if boardcopy[y+2+o][x+2+o]==' ':
@@ -885,7 +886,7 @@ def genchildrenWM(y,x,pos,player):
             if boardcopy[y+1+o][x-1-o]==' ':
                 boardcopy[y+1+o][x-1-o]='W'
                 boardcopy[y][x]=' '
-                childrenWM.append(boardcopy)
+                childrenWM2.append(boardcopy)
                 boardcopy=copy.deepcopy(pos)
             if schlagen:
                 if boardcopy[y+2+o][x-2-o]==' ':
@@ -913,7 +914,7 @@ def genchildrenWM(y,x,pos,player):
             if boardcopy[y-1-o][x-1-o]==' ':
                 boardcopy[y-1-o][x-1-o]='W'
                 boardcopy[y][x]=' '
-                childrenWM.append(boardcopy)
+                childrenWM2.append(boardcopy)
                 boardcopy=copy.deepcopy(pos)
             if schlagen:
                 if boardcopy[y-2-o][x-2-o]==' ':
@@ -941,7 +942,7 @@ def genchildrenWM(y,x,pos,player):
             if boardcopy[y-1-o][x+1+o]==' ':
                 boardcopy[y-1-o][x+1+o]='W'
                 boardcopy[y][x]=' '
-                childrenWM.append(boardcopy)
+                childrenWM2.append(boardcopy)
                 boardcopy=copy.deepcopy(pos)
             if schlagen:
                 if boardcopy[y-2-o][x+2+o]==' ':
@@ -956,6 +957,7 @@ def genchildrenWM(y,x,pos,player):
                     break
                 else:
                     break
+    childrenWM.extend(childrenWM2)
     return childrenWM
 
 def genchildrenschlagenWM(y,x,pos,player):
