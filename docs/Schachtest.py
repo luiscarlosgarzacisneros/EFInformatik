@@ -337,6 +337,8 @@ def player(pos):
     pos[zy][zx]=pos[vy][vx]
     pos[vy][vx]=' '
 
+##
+
 def genchildren(position, playerk):
     children = []
     boardcopy = copy.deepcopy(position)
