@@ -1253,3 +1253,5 @@ play()
 
 
 #wenn evalpos hoeher wird: minimax stoppen
+
+#bitboard

@@ -297,19 +297,19 @@ def eingabe(pos):
         if pos[vy][vx]=='l' and pos[zy][zx] in sfb:
             if zy==vy-2 and zx==vx+1:
                 korrekt=True
-            if zy==vy-2 and zx==vx-1:
+            elif zy==vy-2 and zx==vx-1:
                 korrekt=True
-            if zy==vy+2 and zx==vx+1:
+            elif zy==vy+2 and zx==vx+1:
                 korrekt=True
-            if zy==vy+2 and zx==vx-1:
+            elif zy==vy+2 and zx==vx-1:
                 korrekt=True
-            if zy==vy+1 and zx==vx+2:
+            elif zy==vy+1 and zx==vx+2:
                 korrekt=True
-            if zy==vy-1 and zx==vx+2:
+            elif zy==vy-1 and zx==vx+2:
                 korrekt=True
-            if zy==vy+1 and zx==vx-2:
+            elif zy==vy+1 and zx==vx-2:
                 korrekt=True
-            if zy==vy-1 and zx==vx-2:
+            elif zy==vy-1 and zx==vx-2:
                 korrekt=True
 
     if korrekt:
@@ -1282,3 +1282,4 @@ play()
 
 
 #wenn evalpos hoeher wird: minimax stoppen
+#bitboard
