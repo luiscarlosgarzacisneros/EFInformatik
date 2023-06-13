@@ -187,19 +187,19 @@ def eingabe(pos):
                         break
                     if pos[vy+u+1][vx+u+1]!=' ':
                         break
-                if zy<vy and zx>vx:
+                elif zy<vy and zx>vx:
                     if vx+u+1==zx and vy-u-1==zy:
                         pathclear=True
                         break
                     if pos[vy-u-1][vx+u+1]!=' ':
                         break
-                if zy>vy and zx<vx:
+                elif zy>vy and zx<vx:
                     if vx-u-1==zx and vy+u+1==zy:
                         pathclear=True
                         break
                     if pos[vy+u+1][vx-1-u]!=' ':
                         break
-                if zy<vy and zx<vx:
+                elif zy<vy and zx<vx:
                     if vx-1-u==zx and vy-u-1==zy:
                         pathclear=True
                         break

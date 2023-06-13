@@ -7,9 +7,9 @@ std::vector<std::vector<int>> board =
     {-4, -2, -3, -5, -6, -3, -2, -4},
     {-1, -1, -1, -1, -1, -1, -1, -1},
     {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, -1, -1, 0, 0, 0, 0},
+    {0, 0, 0, 0, 6, 5, 0, 0},
+    {0, -1, 0, 0, 0, 0, 0, 0},
     {1, 1, 1, 1, 1, 1, 1, 1},
     {4, 2, 3, 5, 6, 3, 2, 4}
 };
@@ -68,8 +68,115 @@ bool eingabeueberpruefung(std::vector<std::vector<int>> pos)
         else if (zy==vy+1 && zx==vx-2){korrekt=true;}
         else if (zy==vy-1 && zx==vx-2){korrekt=true;}
     }
+    //x und q
+    else if ((pos[vy][vx]==3||pos[vy][vx]==5) && pos[zy][zx]<=0){
+        if (zy>vy&&zx>vx){
+            for (int i=1;i<8;i++){
+                if (vy+i==zy && vx+i==zx){
+                    korrekt=true;
+                    break;
+                }
+                else if (pos[vy+i][vx+i]!=0){
+                    break;
+                }
+            }
+        }
+        else if (zy<vy&&zx>vx){
+            for (int i=1;i<8;i++){
+                if (vy-i==zy && vx+i==zx){
+                    korrekt=true;
+                    break;
+                }
+                else if (pos[vy-i][vx+i]!=0){
+                    break;
+                }
+            }
+        }
+        else if (zy>vy&&zx<vx){
+            for (int i=1;i<8;i++){
+                if (vy+i==zy && vx-i==zx){
+                    korrekt=true;
+                    break;
+                }
+                else if (pos[vy+i][vx-i]!=0){
+                    break;
+                }
+            }
+        }
+        else if (zy<vy&&zx<vx){
+            for (int i=1;i<8;i++){
+                if (vy-i==zy && vx-i==zx){
+                    korrekt=true;
+                    break;
+                }
+                else if (pos[vy-i][vx-i]!=0){
+                    break;
+                }
+            }
+        }
+    }
+    //t und q
+    else if ((pos[vy][vx]==4||pos[vy][vx]==5) && pos[zy][zx]<=0){
+        if (zy>vy&&zx==vx){
+            for (int i=1;i<8;i++){
+                if (vy+i==zy){
+                    korrekt=true;
+                    break;
+                }
+                else if (pos[vy+i][vx]!=0){
+                    break;
+                }
+            }
+        }
+        else if (zy<vy&&zx==vx){
+            for (int i=1;i<8;i++){
+                if (vy-i==zy){
+                    korrekt=true;
+                    break;
+                }
+                else if (pos[vy-i][vx]!=0){
+                    break;
+                }
+            }
+        }
+        else if (zy==vy&&zx<vx){
+            for (int i=1;i<8;i++){
+                if (vx-i==zx){
+                    korrekt=true;
+                    break;
+                }
+                else if (pos[vy][vx-i]!=0){
+                    break;
+                }
+            }
+        }
+        else if (zy==vy&&zx>vx){
+            for (int i=1;i<8;i++){
+                if (vx+i==zx){
+                    korrekt=true;
+                    break;
+                }
+                else if (pos[vy][vx+i]!=0){
+                    break;
+                }
+            }
+        }
+    }
+    //k
+    else if (pos[vy][vx]==6 && pos[zy][zx]<=0){
+        if (vx+1==zx&&vy==zx){korrekt=true;}
+        else if (vx==zx&&vy+1==zx){korrekt=true;}
+        else if (vx-1==zx&&vy==zx){korrekt=true;}
+        else if (vx==zx&&vy-1==zx){korrekt=true;}
+        //
+        else if (vx+1==zx&&vy+1==zx){korrekt=true;}
+        else if (vx+1==zx&&vy-1==zx){korrekt=true;}
+        else if (vx-1==zx&&vy+1==zx){korrekt=true;}
+        else if (vx-1==zx&&vy-1==zx){korrekt=true;}
+    }
+    //
+    if (korrekt){pos[zy][zx]=pos[vy][vx]; pos[vy][vx]=0;}
     return korrekt;
-
 }
 
 
@@ -119,7 +226,7 @@ void printboard(std::vector<std::vector<int>> pos)
 int main()
 {
     printboard(board);
-    std::cout << "Result: " << std::boolalpha << eingabeueberpruefung(board) << std::endl;
-
+    std::cout<<std::boolalpha << eingabeueberpruefung(board) << std::endl;
+    printboard(board);
     return 0;
 }
