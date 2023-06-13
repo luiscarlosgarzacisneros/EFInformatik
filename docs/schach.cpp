@@ -15,7 +15,7 @@ std::vector<std::vector<int>> board =
 };
 
 
-bool eingabeueberpruefung(std::vector<std::vector<int>> pos)
+bool spieler(std::vector<std::vector<int>> pos)
 {
     int eingabevy;
     int eingabevx;
@@ -33,7 +33,7 @@ bool eingabeueberpruefung(std::vector<std::vector<int>> pos)
     int vx = eingabevx-1;
     int zy = eingabezy-1;
     int zx = eingabezx-1;
-
+    //
     if (vy > 7 || vy < 0 || vx > 7 || vx < 0 || zy > 7 || zy < 0 || zx > 7 || zx < 0) {
         std::cout << "\nEingabe ist nicht korrekt" << std::endl;
         return false;
@@ -175,10 +175,9 @@ bool eingabeueberpruefung(std::vector<std::vector<int>> pos)
         else if (vx-1==zx&&vy-1==zx){korrekt=true;}
     }
     //
-    if (korrekt){pos[zy][zx]=pos[vy][vx]; pos[vy][vx]=0;}
+    if (korrekt){pos[zy][zx]=pos[vy][vx]; pos[vy][vx]=0; board=pos;}
     return korrekt;
 }
-
 
 void printboard(std::vector<std::vector<int>> pos)
 {
@@ -226,7 +225,7 @@ void printboard(std::vector<std::vector<int>> pos)
 int main()
 {
     printboard(board);
-    std::cout<<std::boolalpha << eingabeueberpruefung(board) << std::endl;
+    std::cout<<std::boolalpha << spieler(board) << std::endl;
     printboard(board);
     return 0;
 }
