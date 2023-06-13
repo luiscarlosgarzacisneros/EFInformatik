@@ -1,19 +1,20 @@
 #include <iostream>
 #include <vector>
-
+#include <list>
+#include <algorithm>
 
 std::vector<std::vector<int>> board =
 {
-    {-4, -2, -3, -5, -6, -3, -2, -4},
+    {-4, -2, -3, 0, -6, -3, -2, -4},
     {-1, -1, -1, -1, -1, -1, -1, -1},
     {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, -1, -1, 0, 0, 0, 0},
+    {0, 0, -1, -1, 0, 0, 0, -5},
     {0, 0, 0, 0, 6, 5, 0, 0},
     {0, -1, 0, 0, 0, 0, 0, 0},
     {1, 1, 1, 1, 1, 1, 1, 1},
-    {4, 2, 3, 5, 6, 3, 2, 4}
+    {4, 2, 3, 0, 6, 3, 2, 4}
 };
-
+//
 
 bool spieler(std::vector<std::vector<int>> pos)
 {
@@ -72,6 +73,7 @@ bool spieler(std::vector<std::vector<int>> pos)
     else if ((pos[vy][vx]==3||pos[vy][vx]==5) && pos[zy][zx]<=0){
         if (zy>vy&&zx>vx){
             for (int i=1;i<8;i++){
+                if (vy+i>7||vx+i>7){break;}
                 if (vy+i==zy && vx+i==zx){
                     korrekt=true;
                     break;
@@ -83,6 +85,7 @@ bool spieler(std::vector<std::vector<int>> pos)
         }
         else if (zy<vy&&zx>vx){
             for (int i=1;i<8;i++){
+                if (vy-i<0||vx+i>7){break;}
                 if (vy-i==zy && vx+i==zx){
                     korrekt=true;
                     break;
@@ -94,6 +97,7 @@ bool spieler(std::vector<std::vector<int>> pos)
         }
         else if (zy>vy&&zx<vx){
             for (int i=1;i<8;i++){
+                if (vy+i>7||vx-i<0){break;}
                 if (vy+i==zy && vx-i==zx){
                     korrekt=true;
                     break;
@@ -105,6 +109,7 @@ bool spieler(std::vector<std::vector<int>> pos)
         }
         else if (zy<vy&&zx<vx){
             for (int i=1;i<8;i++){
+                if (vy-i<0||vx+i<0){break;}
                 if (vy-i==zy && vx-i==zx){
                     korrekt=true;
                     break;
@@ -119,6 +124,7 @@ bool spieler(std::vector<std::vector<int>> pos)
     else if ((pos[vy][vx]==4||pos[vy][vx]==5) && pos[zy][zx]<=0){
         if (zy>vy&&zx==vx){
             for (int i=1;i<8;i++){
+                if (vy+i>7){break;}
                 if (vy+i==zy){
                     korrekt=true;
                     break;
@@ -130,6 +136,7 @@ bool spieler(std::vector<std::vector<int>> pos)
         }
         else if (zy<vy&&zx==vx){
             for (int i=1;i<8;i++){
+                if (vy-i<0){break;}
                 if (vy-i==zy){
                     korrekt=true;
                     break;
@@ -141,6 +148,7 @@ bool spieler(std::vector<std::vector<int>> pos)
         }
         else if (zy==vy&&zx<vx){
             for (int i=1;i<8;i++){
+                if (vx-i<0){break;}
                 if (vx-i==zx){
                     korrekt=true;
                     break;
@@ -152,6 +160,7 @@ bool spieler(std::vector<std::vector<int>> pos)
         }
         else if (zy==vy&&zx>vx){
             for (int i=1;i<8;i++){
+                if (vx+i>7){break;}
                 if (vx+i==zx){
                     korrekt=true;
                     break;
@@ -222,10 +231,15 @@ void printboard(std::vector<std::vector<int>> pos)
     std::cout << "  +---+---+---+---+---+---+---+---+" << "\n";
 }
 
+
+
+
 int main()
 {
     printboard(board);
-    std::cout<<std::boolalpha << spieler(board) << std::endl;
+    spieler(board);
+    printboard(board);
+    spieler(board);
     printboard(board);
     return 0;
 }
