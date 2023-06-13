@@ -185,6 +185,7 @@ bool spieler(std::vector<std::vector<int>> pos)
     }
     //
     if (korrekt){pos[zy][zx]=pos[vy][vx]; pos[vy][vx]=0; board=pos;}
+    else {std::cout << "\nEingabe ist nicht korrekt" << std::endl;}
     return korrekt;
 }
 
