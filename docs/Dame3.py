@@ -310,7 +310,7 @@ def genchildrenschlagen(y,x,position,playerq):
             if boardcopy[y-1][x-1]<0:
                 boardcopy[y-1][x-1]=0
                 boardcopy[y-2][x-2]=1
-                boardcopy[y][x]=' '
+                boardcopy[y][x]=0
                 if y-2==0:
                     boardcopy[y-2][x-2]=2
                 childrens.append(copy.deepcopy(boardcopy))
