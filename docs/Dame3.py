@@ -1107,4 +1107,4 @@ def keinezugmoeglichkeiten(pos,player):
 
 play()
 
-#positionsmatrix, genchildrenWM zuerst, depth mit value, endgame verbessern, verloren mehr punkte eval, crash???, keine zugmoeglichkeiten
+#wenn klar gewonnen dann d -2 odr so
