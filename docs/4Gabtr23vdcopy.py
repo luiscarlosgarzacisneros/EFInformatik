@@ -305,9 +305,7 @@ def minimax(position, depth, maxplayer, alpha, beta):
     pos =copy.deepcopy(position)
 
     f=inarow(pos,'X','O')
-    if gewonnen(position, 'O') == True:
-        return f
-    elif gewonnen(position, 'X') == True:
+    if gewonnen(position, 'O') == True or gewonnen(position, 'X') == True:
         return f
     elif depth == d:
         return f
@@ -350,7 +348,7 @@ def minimaxer(boa):
     start = time.time()
     for firstgenchild in genchildren(boa, 'O'):
         nextmoves.append(copy.deepcopy(firstgenchild))
-        scores.append(minimax(firstgenchild, 1, True, -1000000000000, 100000000000000))
+        scores.append(minimax(firstgenchild, 1, True, -10000000000000000000, 1000000000000000000000))
         if (time.time() - start) > maxtime:
             break
     #
