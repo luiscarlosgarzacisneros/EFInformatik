@@ -489,8 +489,7 @@ def minimax(position, depth, maxplayer, alpha, beta):
         playerj = -1
 
     # return
-    pos =copy.deepcopy(position)
-    f=evaluatepos(pos)
+    f=evaluatepos(position)
     if verloren(position, -1,-2) == True:
         return f
     elif verloren(position, 1,2) == True:
