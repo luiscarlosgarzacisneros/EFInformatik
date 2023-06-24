@@ -4,19 +4,19 @@ import random
 
 
 board = [
-    [-4, -2, -3, -5, -6, -3, -2, -4],
+    [-4, -2, -3, -5, -6, 0, -2, -4],
     [-1, -1, -1, -1, -1, -1, -1, -1],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [1, 1, 1, 1, 1, 1, 1, 1],
+    [0,-3,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,1],
+    [1, 1, 1, 0, 1, 1, 1, 1],
     [4, 2, 3, 5, 6, 3, 2, 4]
 ]
 #
 e=[]
 minimaxc = 0
-d = 2
+d = 3
 nextmoves = []
 scores = []
 move = []
@@ -1185,8 +1185,7 @@ def minimax(position, depth, maxplayer, alpha, beta):
         playerj = -6
 
     # return
-    pos =copy.deepcopy(position)
-    f=evaluatepos(pos)
+    f=evaluatepos(position)
     if verloren(position, -6) == True:
         return f
     elif verloren(position, 6) == True:
@@ -1269,4 +1268,11 @@ def play():
         print(':) GEWONNEN')
 
 
+#for t in genchildren(board,-6):
+    #printboard(t)
+    #print(evaluatepos(t))
+
+
+
 play()
+
