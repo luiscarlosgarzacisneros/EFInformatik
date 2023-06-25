@@ -56,7 +56,7 @@ def player():
     except:
         print('EINGABE NICHT KORREKT')
         player()
-
+#
 def gewonnen(board, player):
     gew = False
     # horizontal
@@ -276,7 +276,7 @@ def inarow(board, player, otherplayer):
                 if other==2:
                     score=score-3
     return score
-
+#
 def genchildren(position, playerk):
     children = []
     boardcopy = copy.deepcopy(position)
@@ -291,7 +291,7 @@ def genchildren(position, playerk):
     minimaxc = minimaxc + 1
     #
     return children
-
+#
 def minimax(position, depth, maxplayer, alpha, beta):
     # X:maxplayer,spieler O:minplayer,computer
     # Spieler
@@ -337,7 +337,7 @@ def minimax(position, depth, maxplayer, alpha, beta):
             if beta <= alpha:
                 break
         return minvalue
-
+#
 def minimaxer(boa):
     global minimaxc
     minimaxc = 0
@@ -358,7 +358,7 @@ def minimaxer(boa):
         if scores[y]==(min(scores)):
             moves.append(copy.deepcopy(nextmoves[y]))
     move.extend(copy.deepcopy(random.choice(moves)))
-
+#
 def gameover(boar):
     isover = True
     for q in range(6):

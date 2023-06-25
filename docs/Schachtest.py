@@ -24,6 +24,7 @@ moves=[]
 bestscores=[]
 maxtime = 20
 turn=0
+firstchildren=[]
 #
 
 
