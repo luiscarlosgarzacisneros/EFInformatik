@@ -2,6 +2,7 @@ import copy
 import random
 
 
+
 class VierGewinnt():
     def __init__(self):
         self.board = [
@@ -330,15 +331,14 @@ class ComputerPlayer(Player):
         return children
     #
     def minimax(self,position, depth, maxplayer, alpha, beta):
-        # X:maxplayer,spieler O:minplayer,computer
         # Spieler
         # alpha: best maxpl, beta: best minpl
+
+        # return
         if maxplayer:
             playerj = 'X'
         else:
             playerj = 'O'
-
-        # return
 
         f=self.inarow(position,'X','O')
         if self.gewonnen(position, 'O') == True or self.gewonnen(position, 'X') == True:
@@ -381,12 +381,12 @@ class ComputerPlayer(Player):
         self.move.clear()
         self.moves.clear()
         if self.token=='O':
-            othertoken='X'
+            maxplother=True
         else:
-            othertoken='O'
+            maxplother=False
         for firstgenchild in self.genchildren(boa, self.token):
             self.nextmoves.append(copy.deepcopy(firstgenchild))
-            self.scores.append(self.minimax(firstgenchild, 1, othertoken, -10000000000000000000, 1000000000000000000000))
+            self.scores.append(self.minimax(firstgenchild, 1, maxplother, -10000000000000000000, 1000000000000000000000))
         #
         print(self.scores)
         #
@@ -394,7 +394,8 @@ class ComputerPlayer(Player):
             minormax=min
         else:
             minormax=max
-        print('Best score: ',minormax(self.scores))
+        #
+        print('Best score: ',min(self.scores))
         for y in range(len(self.scores)):
             if self.scores[y]==(minormax(self.scores)):
                 self.moves.append(copy.deepcopy(self.nextmoves[y]))
