@@ -72,9 +72,10 @@ class VierGewinnt():
         self.turn=0
         #
         # Spieler:innen vorbereiten
+        # X muss immer zuerst spielen
         self.players.clear()
         self.players.append(ComputerPlayer('X'))
-        self.players.append(ComputerPlayer('O'))
+        self.players.append(HumanPlayer('O'))
         #
         current=0
         while True:
@@ -379,9 +380,13 @@ class ComputerPlayer(Player):
         self.scores.clear()
         self.move.clear()
         self.moves.clear()
+        if self.token=='O':
+            othertoken='X'
+        else:
+            othertoken='O'
         for firstgenchild in self.genchildren(boa, self.token):
             self.nextmoves.append(copy.deepcopy(firstgenchild))
-            self.scores.append(self.minimax(firstgenchild, 1, True, -10000000000000000000, 1000000000000000000000))
+            self.scores.append(self.minimax(firstgenchild, 1, othertoken, -10000000000000000000, 1000000000000000000000))
         #
         print(self.scores)
         #
