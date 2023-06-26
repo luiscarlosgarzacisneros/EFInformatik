@@ -15,6 +15,7 @@ class VierGewinnt():
         #
         self.turn=0
         #
+        self.players=[]
     
     def printboard(self, board):
         print('  1   2   3   4   5   6   7')
@@ -76,8 +77,8 @@ class VierGewinnt():
             try:
                 x = int(input('x: ')) - 1
                 if board[0][x] == ' ':
-                    board[0][x] = 'X'
-                    self.fall(board, 0, x, 'X')
+                    board[0][x] = self.token
+                    self.fall(board, 0, x, self.token)
                 else:
                     print('FELD BESETZT')
                     self.player()
@@ -89,7 +90,6 @@ class VierGewinnt():
             nextmove=copy.deepcopy(board)
             self.player(board)
             return board
-
 
     class ComputerPlayer(VierGewinnt):
         def __init__(self, token):
@@ -366,7 +366,7 @@ class VierGewinnt():
             self.scores.clear()
             self.move.clear()
             self.moves.clear()
-            for firstgenchild in self.genchildren(boa, 'O'):
+            for firstgenchild in self.genchildren(boa, self.token):
                 self.nextmoves.append(copy.deepcopy(firstgenchild))
                 self.scores.append(self.minimax(firstgenchild, 1, True, -10000000000000000000, 1000000000000000000000))
             #
@@ -377,3 +377,32 @@ class VierGewinnt():
                     self.moves.append(copy.deepcopy(self.nextmoves[y]))
             self.move.extend(copy.deepcopy(random.choice(self.moves)))
         #         
+        def get_move(self, board):
+            self.minimaxer(board)
+            return self.move
+
+    def play(self,):
+        self.board = [
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        ]
+        #
+        self.turn=0
+        #
+        # Spieler:innen vorbereiten
+        self.players.clear()
+        self.players.append(self.ComputerPlayer('X'))
+        self.players.append(self.ComputerPlayer('O'))
+        #
+        current=0
+        while not self.gameover(self.board):
+            self.printboard(self.board)
+            player = self.players[current]
+            print(player.token, ' ist am Zug')
+            board=player.get_move(copy.deepcopy(self.board))
+            current = (current + 1) % 2
+
