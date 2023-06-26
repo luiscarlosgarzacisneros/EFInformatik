@@ -81,7 +81,7 @@ class VierGewinnt():
             self.printboard(self.board)
             player = self.players[current]
             print(player.token, ' ist am Zug')
-            self.board=player.get_move(copy.deepcopy(self.board))
+            self.board=player.get_move(self.board)
             current = (current + 1) % 2
 
 class Player(VierGewinnt):
@@ -383,10 +383,10 @@ class ComputerPlayer(Player):
         for y in range(len(self.scores)):
             if self.scores[y]==(min(self.scores)):
                 self.moves.append(copy.deepcopy(self.nextmoves[y]))
-        self.move.extend(copy.deepcopy(random.choice(self.moves)))
+        self.move = copy.deepcopy(random.choice(self.moves))
     #         
     def get_move(self, board):
-        self.minimaxer(board)
+        self.minimaxer(copy.deepcopy(board))
         return self.move
 
 class HumanPlayer(Player):
@@ -413,3 +413,6 @@ class HumanPlayer(Player):
 
 
 VierGewinnt().play()
+
+#geht nur mit CH, CC,HC und HH gehen nicht
+# gameover geht nicht, spiel geht immer weiter
