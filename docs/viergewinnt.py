@@ -73,7 +73,7 @@ class VierGewinnt():
         #
         # Spieler:innen vorbereiten
         self.players.clear()
-        self.players.append(ComputerPlayer('X'))
+        self.players.append(HumanPlayer('X'))
         self.players.append(ComputerPlayer('O'))
         #
         current=0
@@ -333,9 +333,8 @@ class ComputerPlayer(Player):
             playerj = 'O'
 
         # return
-        pos =copy.deepcopy(position)
 
-        f=self.inarow(pos,'X','O')
+        f=self.inarow(position,'X','O')
         if self.gewonnen(position, 'O') == True or self.gewonnen(position, 'X') == True:
             return f
         elif depth == self.d:
