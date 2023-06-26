@@ -2,7 +2,6 @@ import copy
 import random
 
 
-
 class VierGewinnt():
     def __init__(self):
         self.board = [
@@ -96,7 +95,6 @@ class VierGewinnt():
             print('X HAT GEWONNEN')
         else:
             print('UNENTSCHIEDEN')
-
 
 class Player(VierGewinnt):
     def __init__(self, token):
@@ -437,4 +435,4 @@ class HumanPlayer(Player):
 
 VierGewinnt().play()
 
-#geht nur mit CH, CC,HC und HH gehen nicht
+#Wins zaehlen
