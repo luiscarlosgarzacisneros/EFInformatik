@@ -78,11 +78,13 @@ class VierGewinnt():
         #
         current=0
         while True:
+            print(self.turn)
             self.printboard(self.board)
             player = self.players[current]
             print(player.token, ' ist am Zug')
             self.board=player.get_move(copy.deepcopy(self.board))
             current = (current + 1) % 2
+            self.turn+=1
             if self.gameover(self.board) or self.gewonnen(self.board,'O')or self.gewonnen(self.board,'X'):
                 break
         self.printboard(self.board)
