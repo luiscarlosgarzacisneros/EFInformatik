@@ -73,16 +73,19 @@ class VierGewinnt():
         #
         # Spieler:innen vorbereiten
         self.players.clear()
-        self.players.append(HumanPlayer('X'))
+        self.players.append(ComputerPlayer('X'))
         self.players.append(ComputerPlayer('O'))
         #
         current=0
-        while not self.gameover(self.board):
+        while True:
             self.printboard(self.board)
             player = self.players[current]
             print(player.token, ' ist am Zug')
-            self.board=player.get_move(self.board)
+            self.board=player.get_move(copy.deepcopy(self.board))
             current = (current + 1) % 2
+            if self.gameover(self.board) or self.gewonnen(self.board,'O')or self.gewonnen(self.board,'X'):
+                break
+        self.printboard(self.board)
 
 class Player(VierGewinnt):
     def __init__(self, token):
@@ -386,7 +389,7 @@ class ComputerPlayer(Player):
         self.move = copy.deepcopy(random.choice(self.moves))
     #         
     def get_move(self, board):
-        self.minimaxer(copy.deepcopy(board))
+        self.minimaxer(board)
         return self.move
 
 class HumanPlayer(Player):
