@@ -73,7 +73,7 @@ class VierGewinnt():
         #
         # Spieler:innen vorbereiten
         self.players.clear()
-        self.players.append(ComputerPlayer('X'))
+        self.players.append(HumanPlayer('X'))
         self.players.append(ComputerPlayer('O'))
         #
         current=0
@@ -81,7 +81,7 @@ class VierGewinnt():
             self.printboard(self.board)
             player = self.players[current]
             print(player.token, ' ist am Zug')
-            board=player.get_move(copy.deepcopy(self.board))
+            self.board=player.get_move(copy.deepcopy(self.board))
             current = (current + 1) % 2
 
 class Player(VierGewinnt):
