@@ -84,7 +84,13 @@ class VierGewinnt():
             except:
                 print('EINGABE NICHT KORREKT')
                 self.player()
-    
+
+        def get_move(self, board):
+            nextmove=copy.deepcopy(board)
+            self.player(board)
+            return board
+
+
     class ComputerPlayer(VierGewinnt):
         def __init__(self, token):
             super().__init__(token)
