@@ -1,8 +1,92 @@
 import copy
 import random
 
-class Player():
+
+class VierGewinnt():
+    def __init__(self):
+        self.board = [
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        ]
+        #
+        self.turn=0
+        #
+        self.players=[]
+    
+    def printboard(self, board):
+        print('  1   2   3   4   5   6   7')
+        print('-----------------------------')
+        for i in range(6):
+            print('I ', end='')
+            for j in range(7):
+                print(board[i][j], end='')
+                print(' I ', end='')
+            print('')
+            print('-----------------------------')
+
+    def gewonnen(self,board, player):
+        gew = False
+        # horizontal
+        for q in range(4):
+            for w in range(6):
+                if board[w][q] == player and board[w][q + 1] == player and board[w][q + 2] == player and board[w][q + 3] == player:
+                    gew = True
+        # vertikal
+        for q in range(7):
+            for w in range(3):
+                if board[w][q] == player and board[w + 1][q] == player and board[w + 2][q] == player and board[w + 3][q] == player:
+                    gew = True
+        # diagonal1
+        for q in range(4):
+            for w in range(3):
+                if board[w][q] == player and board[w + 1][q + 1] == player and board[w + 2][q + 2] == player and board[w + 3][q + 3] == player:
+                    gew = True
+        # diagonal2
+        for q in range(4):
+            for w in range(3):
+                if board[w][q + 3] == player and board[w + 1][q + 2] == player and board[w + 2][q + 1] == player and board[w + 3][q] == player:
+                    gew = True
+        return gew
+
+    def gameover(self,boar):
+        isover = True
+        for q in range(6):
+            if boar[q].count(' ') > 0:
+                isover = False
+        return isover
+
+    def play(self):
+        self.board = [
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        ]
+        #
+        self.turn=0
+        #
+        # Spieler:innen vorbereiten
+        self.players.clear()
+        self.players.append(ComputerPlayer('X'))
+        self.players.append(ComputerPlayer('O'))
+        #
+        current=0
+        while not self.gameover(self.board):
+            self.printboard(self.board)
+            player = self.players[current]
+            print(player.token, ' ist am Zug')
+            board=player.get_move(copy.deepcopy(self.board))
+            current = (current + 1) % 2
+
+class Player(VierGewinnt):
     def __init__(self, token):
+        super().__init__()
         self.token = token
 
     def fall(self, board, y, x, player):
@@ -17,28 +101,6 @@ class Player():
 
     def get_move(self, board):
         raise NotImplementedError('Not implemented')
-
-class HumanPlayer(Player):
-    def __init__(self, token):
-        super().__init__(token)
-
-    def player(self, board):
-        try:
-            x = int(input('x: ')) - 1
-            if board[0][x] == ' ':
-                board[0][x] = self.token
-                self.fall(board, 0, x, self.token)
-            else:
-                print('FELD BESETZT')
-                self.player(board)
-        except:
-            print('EINGABE NICHT KORREKT')
-            self.player(board)
-
-    def get_move(self, board):
-        nextmove=copy.deepcopy(board)
-        self.player(board)
-        return board
 
 class ComputerPlayer(Player):
     def __init__(self, token):
@@ -328,90 +390,27 @@ class ComputerPlayer(Player):
         self.minimaxer(board)
         return self.move
 
-class VierGewinnt():
-    def __init__(self):
-        self.board = [
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        ]
-        #
-        self.turn=0
-        #
-        self.players=[]
-    
-    def printboard(self, board):
-        print('  1   2   3   4   5   6   7')
-        print('-----------------------------')
-        for i in range(6):
-            print('I ', end='')
-            for j in range(7):
-                print(board[i][j], end='')
-                print(' I ', end='')
-            print('')
-            print('-----------------------------')
+class HumanPlayer(Player):
+    def __init__(self, token):
+        super().__init__(token)
 
-    def gewonnen(self,board, player):
-        gew = False
-        # horizontal
-        for q in range(4):
-            for w in range(6):
-                if board[w][q] == player and board[w][q + 1] == player and board[w][q + 2] == player and board[w][q + 3] == player:
-                    gew = True
-        # vertikal
-        for q in range(7):
-            for w in range(3):
-                if board[w][q] == player and board[w + 1][q] == player and board[w + 2][q] == player and board[w + 3][q] == player:
-                    gew = True
-        # diagonal1
-        for q in range(4):
-            for w in range(3):
-                if board[w][q] == player and board[w + 1][q + 1] == player and board[w + 2][q + 2] == player and board[w + 3][q + 3] == player:
-                    gew = True
-        # diagonal2
-        for q in range(4):
-            for w in range(3):
-                if board[w][q + 3] == player and board[w + 1][q + 2] == player and board[w + 2][q + 1] == player and board[w + 3][q] == player:
-                    gew = True
-        return gew
+    def player(self, board):
+        try:
+            x = int(input('x: ')) - 1
+            if board[0][x] == ' ':
+                board[0][x] = self.token
+                self.fall(board, 0, x, self.token)
+            else:
+                print('FELD BESETZT')
+                self.player(board)
+        except:
+            print('EINGABE NICHT KORREKT')
+            self.player(board)
 
-    def gameover(self,boar):
-        isover = True
-        for q in range(6):
-            if boar[q].count(' ') > 0:
-                isover = False
-        return isover
-
-    def play(self):
-        self.board = [
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        ]
-        #
-        self.turn=0
-        #
-        # Spieler:innen vorbereiten
-        self.players.clear()
-        self.players.append(ComputerPlayer('X'))
-        self.players.append(ComputerPlayer('O'))
-        #
-        current=0
-        while not self.gameover(self.board):
-            self.printboard(self.board)
-            player = self.players[current]
-            print(player.token, ' ist am Zug')
-            board=player.get_move(copy.deepcopy(self.board))
-            current = (current + 1) % 2
-
-
-
+    def get_move(self, board):
+        nextmove=copy.deepcopy(board)
+        self.player(board)
+        return board
 
 
 VierGewinnt().play()
