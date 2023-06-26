@@ -76,7 +76,7 @@ class VierGewinnt():
         # X muss immer zuerst spielen
         self.players.clear()
         self.players.append(ComputerPlayer('X'))
-        self.players.append(HumanPlayer('O'))
+        self.players.append(ComputerPlayer('O'))
         #
         current=0
         while True:
@@ -90,6 +90,13 @@ class VierGewinnt():
             if self.gameover(self.board) or self.gewonnen(self.board,'O')or self.gewonnen(self.board,'X'):
                 break
         self.printboard(self.board)
+        if self.gewonnen(self.board,'O'):
+            print('O HAT GEWONNEN')
+        elif self.gewonnen(self.board,'X'):
+            print('X HAT GEWONNEN')
+        else:
+            print('UNENTSCHIEDEN')
+
 
 class Player(VierGewinnt):
     def __init__(self, token):
