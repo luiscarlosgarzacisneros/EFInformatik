@@ -383,8 +383,13 @@ class ComputerPlayer(Player):
         #
         print(self.scores)
         #
+        if self.token=='O':
+            minormax=min
+        else:
+            minormax=max
+        print('Best score: ',minormax(self.scores))
         for y in range(len(self.scores)):
-            if self.scores[y]==(min(self.scores)):
+            if self.scores[y]==(minormax(self.scores)):
                 self.moves.append(copy.deepcopy(self.nextmoves[y]))
         self.move = copy.deepcopy(random.choice(self.moves))
     #         
@@ -418,4 +423,3 @@ class HumanPlayer(Player):
 VierGewinnt().play()
 
 #geht nur mit CH, CC,HC und HH gehen nicht
-# gameover geht nicht, spiel geht immer weiter
