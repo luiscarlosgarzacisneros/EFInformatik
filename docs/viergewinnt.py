@@ -73,7 +73,7 @@ class VierGewinnt():
         #
         # Spieler:innen vorbereiten
         self.players.clear()
-        self.players.append(HumanPlayer('X'))
+        self.players.append(ComputerPlayer('X'))
         self.players.append(ComputerPlayer('O'))
         #
         current=0
