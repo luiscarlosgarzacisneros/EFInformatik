@@ -433,6 +433,7 @@ class HumanPlayer(Player):
         return board
 
 
+
 VierGewinnt().play()
 
 #Wins zaehlen
