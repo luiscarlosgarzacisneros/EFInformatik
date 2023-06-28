@@ -444,6 +444,7 @@ class MCTSPlayer(ComputerPlayer):
         self.c=math.sqrt(2)
         self.numberofiterations=0
         self.token
+        self.depth
 
     def root(self):
         rootnode=MCTSNode(self.numberofiterations)
@@ -481,6 +482,8 @@ class MCTSNode(MCTSPlayer):
             instance.parent=self
             instance.score=0
             instance.visits=0
+            
+
             
 
     
