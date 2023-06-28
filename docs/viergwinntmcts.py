@@ -73,7 +73,7 @@ class VierGewinnt():
         self.turn=0
         #
         # Spieler:innen vorbereiten
-        # X muss immer zuerst spielen
+        # X spielt immer zuerst
         self.players.clear()
         self.players.append(MinimaxPlayer('X'))
         self.players.append(MinimaxPlayer('O'))
