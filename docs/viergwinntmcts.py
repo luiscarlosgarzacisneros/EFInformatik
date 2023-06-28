@@ -441,18 +441,50 @@ class HumanPlayer(Player):
 class MCTSPlayer(ComputerPlayer):
     def __init__(self, token):
         super().__init__(token)
-    
+        self.c=math.sqrt(2)
+        self.numberofiterations=0
+        self.token
+
+    def root(self):
+        rootnode=MCTSNode(self.numberofiterations)
+        rootnode.position=self.board
+        rootnode.playeramzug=self.token
+        rootnode.score=0
+        rootnode.visits=0
+
 class MCTSNode(MCTSPlayer):
     def __init__(self, token):
         super().__init__(token)
         self.position=[]
+        self.playeramzug=' '
         self.parent=[]
         self.children=[]
         self.score=0
         self.visits=0
     
-    def calculateubc(self,node):
-        ubc=(node.score)
+    def calculateubc(self):
+        par=self.parent
+        ubc=(self.score/self.visits)+self.c*(math.log(par.visits/self.visits))
+        return ubc
+    
+    def expand(self):
+        children=self.genchildren(self.position,self.playeramzug)
+        for i in range(len(children)):
+            self.numberofiterations+=1
+            instance = MCTSNode(self.numberofiterations)
+            #
+            instance.position=children[i]
+            if self.playeramzug=='O':
+                instance.playeramzug='X'
+            else:
+                instance.playeramzug='O'
+            instance.parent=self
+            instance.score=0
+            instance.visits=0
+            
+
+    
+
 
 
 
