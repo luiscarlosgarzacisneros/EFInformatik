@@ -434,13 +434,13 @@ def evaluatepos(pos):
     eval=0
     for sl in range(len(pos)):
         for o in range(pos[sl].count(1)):
-            eval=eval+1
+            eval=eval+9
         for o in range(pos[sl].count(-1)):
-            eval=eval-1
+            eval=eval-11
         for o in range(pos[sl].count(2)):
-            eval=eval+15
+            eval=eval+49
         for o in range(pos[sl].count(-2)):
-            eval=eval-5
+            eval=eval-51
     if verloren(pos,1,2):
         eval=eval-8888
     if verloren(pos,-1,-2):
