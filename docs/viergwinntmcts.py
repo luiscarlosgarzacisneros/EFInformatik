@@ -443,8 +443,9 @@ class MCTSPlayer(ComputerPlayer):
         super().__init__(token)
         self.c=math.sqrt(2)
         self.numberofiterations=0
-        self.token
-        self.depth
+        self.token=' '
+        self.depth=4
+        self.numberofsimulations=3
 
     def root(self):
         rootnode=MCTSNode(self.numberofiterations)
@@ -483,10 +484,42 @@ class MCTSNode(MCTSPlayer):
             instance.score=0
             instance.visits=0
             
-
+    def simulateaverage(self):
+        value=0
+        values=[]
+        for j in range(self.numberofsimulations):
+            pos=self.position
+            player=self.playeramzug
+            for i in range(self.depth):
+                nextpos=random.choice(self.genchildren(pos,player))
+                pos=nextpos
+                if player=='O':
+                    player='X'
+                else:
+                    player='O'
+            values.append(self.inarow(pos,'O','X'))
+        value=sum(values)/len(values)
+        return value
+    
+    def simulateaddition(self):
+        value=0
+        values=[]
+        for j in range(self.numberofsimulations):
+            pos=self.position
+            player=self.playeramzug
+            for i in range(self.depth):
+                nextpos=random.choice(self.genchildren(pos,player))
+                pos=nextpos
+                if player=='O':
+                    player='X'
+                else:
+                    player='O'
+            values.append(self.inarow(pos,'O','X'))
+        value=sum(values)
+        return value
+            
             
 
-    
 
 
 
@@ -494,3 +527,5 @@ class MCTSNode(MCTSPlayer):
 VierGewinnt().play()
 
 #Wins zaehlen
+
+#bei MCTS simulate: wert von pos addieren oder durchschnitt
