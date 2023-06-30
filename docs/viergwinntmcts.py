@@ -446,13 +446,13 @@ class MCTSPlayer(ComputerPlayer):
         self.token=' '
         self.depth=4
         self.numberofsimulations=3
-
-    def root(self):
-        rootnode=MCTSNode(self.numberofiterations)
+        #ist das nötig???
+        rootnode=MCTSNode(0)
         rootnode.position=self.board
         rootnode.playeramzug=self.token
         rootnode.score=0
         rootnode.visits=0
+        rootnode.children=[]
 
 class MCTSNode(MCTSPlayer):
     def __init__(self, token):
@@ -474,6 +474,7 @@ class MCTSNode(MCTSPlayer):
         for i in range(len(children)):
             self.numberofiterations+=1
             instance = MCTSNode(self.numberofiterations)
+            self.children.append(instance)
             #
             instance.position=children[i]
             if self.playeramzug=='O':
@@ -518,7 +519,15 @@ class MCTSNode(MCTSPlayer):
         value=sum(values)
         return value
             
+    def selectleafnode():
+        rootnode=MCTSPlayer(0)
+        children=rootnode.children
+        bestvalue=-11111
+        for child in children:
+            pass
+        #nich fertig!!!!!!!!
             
+
 
 
 
