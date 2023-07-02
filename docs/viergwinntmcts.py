@@ -468,9 +468,9 @@ class MCTSNode(MCTSPlayer):
         self.visits=0
         
     
-    def calculateubc(self):
-        par=self.parent
-        ubc=(self.score/self.visits)+self.c*(math.log(par.visits/self.visits))
+    def calculateubc(self, node):
+        par=node.parent
+        ubc=(node.score/node.visits)+self.c*(math.log(par.visits/node.visits))
         return ubc
     
     def expand(self, node):
@@ -489,12 +489,12 @@ class MCTSNode(MCTSPlayer):
             instance.score=0
             instance.visits=0
             
-    def simulate(self):
+    def simulate(self, node):
         value=0
         values=[]
         for j in range(self.numberofsimulations):
-            pos=self.position
-            player=self.playeramzug
+            pos=node.position
+            player=node.playeramzug
             for i in range(self.depth):
                 nextpos=random.choice(self.genchildren(pos,player))
                 pos=nextpos
@@ -506,8 +506,8 @@ class MCTSNode(MCTSPlayer):
         value=sum(values)/len(values)
         return value
     
-    def is_it_a_new_node(self):
-        if self.children==[]:
+    def is_it_a_new_node(self, node):
+        if node.children==[]:
             return True
         else:
             return False
