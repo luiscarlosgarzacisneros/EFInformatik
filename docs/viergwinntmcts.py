@@ -445,14 +445,18 @@ class MCTSPlayer(ComputerPlayer):
         self.numberofiterations=0
         self.token=' '
         self.depth=4
-        self.numberofsimulations=3
-        #ist das nötig???
+        self.numberofsimulations=4
+        #?
         rootnode=MCTSNode(0)
         rootnode.position=self.board
         rootnode.playeramzug=self.token
         rootnode.score=0
         rootnode.visits=0
         rootnode.children=[]
+        #?
+
+    def get_move(self, board):
+        pass
 
 class MCTSNode(MCTSPlayer):
     def __init__(self, token):
@@ -463,6 +467,7 @@ class MCTSNode(MCTSPlayer):
         self.children=[]
         self.score=0
         self.visits=0
+        
     
     def calculateubc(self):
         par=self.parent
@@ -485,7 +490,7 @@ class MCTSNode(MCTSPlayer):
             instance.score=0
             instance.visits=0
             
-    def simulateaverage(self):
+    def simulate(self):
         value=0
         values=[]
         for j in range(self.numberofsimulations):
@@ -502,34 +507,34 @@ class MCTSNode(MCTSPlayer):
         value=sum(values)/len(values)
         return value
     
-    def simulateaddition(self):
-        value=0
-        values=[]
-        for j in range(self.numberofsimulations):
-            pos=self.position
-            player=self.playeramzug
-            for i in range(self.depth):
-                nextpos=random.choice(self.genchildren(pos,player))
-                pos=nextpos
-                if player=='O':
-                    player='X'
-                else:
-                    player='O'
-            values.append(self.inarow(pos,'O','X'))
-        value=sum(values)
-        return value
+    def is_it_a_new_node(self):
+        if self.children==[]:
+            return True
+        else:
+            return False
             
-    def selectleafnode():
-        rootnode=MCTSPlayer(0)
-        children=rootnode.children
+    def selectleafnode(self, node):
+        #node is an instance of the class node
+        children=node.children
         bestvalue=-11111
         for child in children:
+            ucbofchild=self.calculateubc(child)
+            if ucbofchild>bestvalue:
+                bestvalue=ucbofchild
+                selectednode=child
+        if selectednode.children==[]:
+            return selectednode
+        else:
+            self.selectleafnode(selectednode)
+
+    def backpropagate(self, node, newscore, numberofsimulations):
+        parentnode=node.parent
+        if node==self.rootnode:
             pass
-        #nich fertig!!!!!!!!
-            
-
-
-
+        else:
+            parentnode.score+=newscore
+            parentnode.visits+=numberofsimulations
+            self.backpropagate(parentnode,newscore,numberofsimulations)
 
 
 
