@@ -445,14 +445,14 @@ class MCTSPlayer(ComputerPlayer):
         self.numberofiterations=0
         self.depth=4
         self.numberofsimulations=4
-        #?
+        #
         self.rootnode=MCTSNode(0)
         self.rootnode.position=self.board
         self.rootnode.playeramzug=self.token
         self.rootnode.score=0
         self.rootnode.visits=0
         self.rootnode.children=[]
-        #?
+        #
 
     def get_move(self, board):
         pass
@@ -466,7 +466,6 @@ class MCTSNode(MCTSPlayer):
         self.children=[]
         self.score=0
         self.visits=0
-        
     
     def calculateubc(self):
         par=self.parent
@@ -531,7 +530,6 @@ class MCTSNode(MCTSPlayer):
 
         if self.parent is not None:
             self.parent.backpropagate(newscore, numberofsimulations)
-
 
 
 VierGewinnt().play()
