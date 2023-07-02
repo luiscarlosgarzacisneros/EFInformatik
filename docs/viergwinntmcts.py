@@ -447,12 +447,12 @@ class MCTSPlayer(ComputerPlayer):
         self.depth=4
         self.numberofsimulations=4
         #?
-        rootnode=MCTSNode(0)
-        rootnode.position=self.board
-        rootnode.playeramzug=self.token
-        rootnode.score=0
-        rootnode.visits=0
-        rootnode.children=[]
+        self.rootnode=MCTSNode(0)
+        self.rootnode.position=self.board
+        self.rootnode.playeramzug=self.token
+        self.rootnode.score=0
+        self.rootnode.visits=0
+        self.rootnode.children=[]
         #?
 
     def get_move(self, board):
