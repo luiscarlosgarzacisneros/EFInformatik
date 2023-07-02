@@ -456,7 +456,6 @@ class MCTSPlayer(ComputerPlayer):
         #?
 
     def get_move(self, board):
-        pass
 
 class MCTSNode(MCTSPlayer):
     def __init__(self, token):
@@ -474,12 +473,12 @@ class MCTSNode(MCTSPlayer):
         ubc=(self.score/self.visits)+self.c*(math.log(par.visits/self.visits))
         return ubc
     
-    def expand(self):
-        children=self.genchildren(self.position,self.playeramzug)
+    def expand(self, node):
+        children=self.genchildren(node.position,node.playeramzug)
         for i in range(len(children)):
             self.numberofiterations+=1
             instance = MCTSNode(self.numberofiterations)
-            self.children.append(instance)
+            node.children.append(instance)
             #
             instance.position=children[i]
             if self.playeramzug=='O':
