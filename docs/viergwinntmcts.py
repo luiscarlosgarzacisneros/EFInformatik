@@ -443,7 +443,6 @@ class MCTSPlayer(ComputerPlayer):
         super().__init__(token)
         self.c=math.sqrt(2)
         self.numberofiterations=0
-        self.token=' '
         self.depth=4
         self.numberofsimulations=4
         #?
@@ -456,6 +455,7 @@ class MCTSPlayer(ComputerPlayer):
         #?
 
     def get_move(self, board):
+        pass
 
 class MCTSNode(MCTSPlayer):
     def __init__(self, token):
@@ -468,17 +468,17 @@ class MCTSNode(MCTSPlayer):
         self.visits=0
         
     
-    def calculateubc(self, node):
-        par=node.parent
-        ubc=(node.score/node.visits)+self.c*(math.log(par.visits/node.visits))
+    def calculateubc(self):
+        par=self.parent
+        ubc=(self.score/self.visits)+self.c*(math.log(par.visits/self.visits))
         return ubc
     
-    def expand(self, node):
-        children=self.genchildren(node.position,node.playeramzug)
+    def expand(self):
+        children=self.genchildren(self.position,self.playeramzug)
         for i in range(len(children)):
             self.numberofiterations+=1
             instance = MCTSNode(self.numberofiterations)
-            node.children.append(instance)
+            self.children.append(instance)
             #
             instance.position=children[i]
             if self.playeramzug=='O':
@@ -489,12 +489,12 @@ class MCTSNode(MCTSPlayer):
             instance.score=0
             instance.visits=0
             
-    def simulate(self, node):
+    def simulate(self):
         value=0
         values=[]
         for j in range(self.numberofsimulations):
-            pos=node.position
-            player=node.playeramzug
+            pos=self.position
+            player=self.playeramzug
             for i in range(self.depth):
                 nextpos=random.choice(self.genchildren(pos,player))
                 pos=nextpos
@@ -506,18 +506,17 @@ class MCTSNode(MCTSPlayer):
         value=sum(values)/len(values)
         return value
     
-    def is_it_a_new_node(self, node):
-        if node.children==[]:
+    def is_it_a_new_node(self):
+        if self.children==[]:
             return True
         else:
             return False
             
-    def selectleafnode(self, node):
-        #node is an instance of the class node
-        children=node.children
-        bestvalue=-11111
+    def selectleafnode(self):
+        children=self.children
+        bestvalue=-1111111111111
         for child in children:
-            ucbofchild=self.calculateubc(child)
+            ucbofchild=child.calculateubc()
             if ucbofchild>bestvalue:
                 bestvalue=ucbofchild
                 selectednode=child
@@ -526,14 +525,12 @@ class MCTSNode(MCTSPlayer):
         else:
             self.selectleafnode(selectednode)
 
-    def backpropagate(self, node, newscore, numberofsimulations):
-        parentnode=node.parent
-        if node==self.rootnode:
-            pass
-        else:
-            parentnode.score+=newscore
-            parentnode.visits+=numberofsimulations
-            self.backpropagate(parentnode,newscore,numberofsimulations)
+    def backpropagate(self, newscore, numberofsimulations):
+        self.score += newscore
+        self.visits += numberofsimulations
+
+        if self.parent is not None:
+            self.parent.backpropagate(newscore, numberofsimulations)
 
 
 
