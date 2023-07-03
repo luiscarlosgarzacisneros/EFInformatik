@@ -578,13 +578,12 @@ class Minimax2Player(ComputerPlayer):
         super().__init__(token)
         self.minimaxc = 0
         self.d = 0
-        self.maxdepth=5 #NUR BIS ZEITLIMIT IMPLENTIERT WIRD!!!!!
+        self.maxtime=10
         #
         self.rootnode=Minimax2Node(0)
         self.rootnode.children=[]
         self.rootnode.parent=None
         self.rootnode.value=0
-        self.rootnode.position=[]
         self.rootnode.depth=0
         self.rootnode.playeramzug=self.token
         #
@@ -653,7 +652,10 @@ class Minimax2Player(ComputerPlayer):
         return bestmove
     
     def get_move(self, board):
-        move=self.minimaxer()
+        self.rootnode.position=board
+        start=time.time()
+        while (time.time() - start) < self.maxtime:
+            move=self.minimaxer()
         return move.position
         
 class Minimax2Layer(Minimax2Player):
