@@ -441,10 +441,13 @@ class MCTSPlayer(ComputerPlayer):
         super().__init__(token)
         self.c=math.sqrt(2)
         self.numberofiterations=0
+        self.counter=0
+        #-----
         self.depth=4
         self.numberofsimulations=4
         self.maxtime=6
-        self.counter=0
+        #-----
+        
 
     def mcts(self,board):
         self.rootnode=MCTSNode(0)
