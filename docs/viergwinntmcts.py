@@ -93,10 +93,13 @@ class VierGewinnt():
         self.printboard(self.board)
         if self.gewonnen(self.board,'O'):
             print('O HAT GEWONNEN')
+            return 'O'
         elif self.gewonnen(self.board,'X'):
             print('X HAT GEWONNEN')
+            return 'X'
         else:
             print('UNENTSCHIEDEN')
+            return ' '
 
 class Player(VierGewinnt):
     def __init__(self, token):
@@ -444,8 +447,8 @@ class MCTSPlayer(ComputerPlayer):
         self.counter=0
         #-----
         self.depth=4
-        self.numberofsimulations=4
-        self.maxtime=6
+        self.numberofsimulations=50
+        self.maxtime=10
         #-----
         
 
@@ -460,7 +463,7 @@ class MCTSPlayer(ComputerPlayer):
         self.rootnode.expand()
         start = time.time()
         while True:
-            self.counter=+1
+            self.counter+=1
             selectednode=self.rootnode.selectleafnode()
             if selectednode.is_it_a_new_node():
                 selectednode.backpropagate(selectednode.simulate(),self.numberofsimulations)
@@ -561,8 +564,23 @@ class MCTSNode(MCTSPlayer):
             parent.backpropagate(newscore, numberofsimulations)
 
 
-VierGewinnt().play()
+#VierGewinnt().play()
 
 #Wins zaehlen
+game =VierGewinnt()
+x_wins = 0
+o_wins=0
+unentschieden=0
+for i in range(100):
+    r=game.play() 
+    if r== 'X':
+        x_wins += 1
+    elif r=='O':
+        o_wins+=1
+    else:
+        unentschieden+=1
+    print('X:',x_wins)
+    print('O:',o_wins)
+    print('unentschieden',unentschieden)
 
-#bei MCTS simulate: wert von pos addieren oder durchschnitt
+
