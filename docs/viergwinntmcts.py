@@ -336,7 +336,7 @@ class MinimaxPlayer(ComputerPlayer):
     def __init__(self, token):
         super().__init__(token)
         self.minimaxc = 0
-        self.d = 5
+        self.d = 6
         self.nextmoves = []
         self.scores = []
         self.move = []
@@ -448,7 +448,7 @@ class MCTSPlayer(ComputerPlayer):
         #-----
         self.depth=4
         self.numberofsimulations=50
-        self.maxtime=10
+        self.maxtime=5
         #-----
         
     def mcts(self,board):
