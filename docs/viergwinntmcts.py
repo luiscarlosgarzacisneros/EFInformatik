@@ -451,7 +451,6 @@ class MCTSPlayer(ComputerPlayer):
         self.maxtime=10
         #-----
         
-
     def mcts(self,board):
         self.rootnode=MCTSNode(0)
         self.rootnode.position=board
@@ -566,6 +565,9 @@ class MCTSNode(MCTSPlayer):
 
 #VierGewinnt().play()
 
+
+#O=MCTSPlayer
+#X=MinimaxPlayer
 #Wins zaehlen
 game =VierGewinnt()
 x_wins = 0
@@ -582,5 +584,5 @@ for i in range(100):
     print('X:',x_wins)
     print('O:',o_wins)
     print('unentschieden',unentschieden)
-
+print('fertig')
 
