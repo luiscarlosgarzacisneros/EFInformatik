@@ -77,7 +77,7 @@ class VierGewinnt():
         # X spielt immer zuerst
         self.players.clear()
         self.players.append(MinimaxPlayer('X'))
-        self.players.append(MinimaxPlayer('O'))
+        self.players.append(MCTSPlayer('O'))
         #
         current=0
         while True:
@@ -326,8 +326,6 @@ class ComputerPlayer(Player):
                 children.append(boardcopy)
                 boardcopy = copy.deepcopy(position)
         #
-        self.minimaxc = self.minimaxc + 1
-        #
         return children
     #
 
@@ -345,7 +343,7 @@ class MinimaxPlayer(ComputerPlayer):
     def minimax(self,position, depth, maxplayer, alpha, beta):
         # Spieler
         # alpha: best maxpl, beta: best minpl
-
+        self.minimaxc = self.minimaxc + 1
         # return
         if maxplayer:
             playerj = 'X'
@@ -490,7 +488,10 @@ class MCTSNode(MCTSPlayer):
     
     def calculateubc(self):
         par=self.parent
-        ubc=(self.score/self.visits)+self.c*(math.log(par.visits/self.visits))
+        if self.visits==0:
+            ubc=999999999999999999999999999
+        else:
+            ubc=(self.score/self.visits)+self.c*(math.log(par.visits/self.visits))
         return ubc
     
     def expand(self):
@@ -531,19 +532,19 @@ class MCTSNode(MCTSPlayer):
             return True
         else:
             return False
-            
+
     def selectleafnode(self):
-        children=self.children
-        bestvalue=-1111111111111
+        children = self.children
+        bestvalue = -1111111111111
         for child in children:
-            ucbofchild=child.calculateubc()
-            if ucbofchild>bestvalue:
-                bestvalue=ucbofchild
-                selectednode=child
-        if selectednode.children==[]:
+            ucbofchild = child.calculateubc()
+            if ucbofchild > bestvalue:
+                bestvalue = ucbofchild
+                selectednode = child
+        if selectednode.children == []:
             return selectednode
         else:
-            self.selectleafnode(selectednode)
+            return self.selectleafnode(selectednode)
 
     def backpropagate(self, newscore, numberofsimulations):
         self.score += newscore
