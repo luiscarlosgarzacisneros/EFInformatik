@@ -448,6 +448,8 @@ class HumanPlayer(Player):
         self.player(board)
         return board
 
+#
+
 class MCTSPlayer(ComputerPlayer):
     def __init__(self, token):
         super().__init__(token)
@@ -696,8 +698,6 @@ class Minimax2Node(Minimax2Player):
             instance.isleafnode=True
             instance.depth=self.depth+1
 
-
-    
 #VierGewinnt().play()
 
 
@@ -722,3 +722,6 @@ for i in range(100):
 print('FERTIG')
 
 #Minimax:zeit und sort
+
+#MCTS geht nur an zweiter stelle:? parameter
+#MinMax2 geht auch nicht: ?
