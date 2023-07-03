@@ -577,17 +577,66 @@ class MinimaxPlayer2(ComputerPlayer):
         self.minimaxc = 0
         self.d = 0
         self.numberofiterations=0
-
-class Minimax2Node(MinimaxPlayer2):
-    def __init__(self, token):
-        super().__init__(token)
+        #
+        self.rootnode=Minimax2Node(0)
         self.children=[]
         self.parent=None
         self.value=0
         self.isleafnode=True
         self.position=[]
         self.depth=0
-        self.playeramzug=0
+        self.playeramzug=self.token
+        #
+    def minimax(self):
+        # Spieler
+        # alpha: best maxpl, beta: best minpl
+        self.minimaxc = self.minimaxc + 1
+        # return
+        f=self.inarow(self.position,1,-1)
+        if self.gewonnen(self.position, -1) == True or self.gewonnen(self.position, 1) == True:
+            return f
+        elif self.depth == self.d:
+            return f
+        elif self.children == []:
+            return f
+        #
+        if self.playeramzug==1:
+            maxvalue = -100000000000
+            for child in self.children:
+                self.value = child.minimax()
+                if self.value > maxvalue:
+                    maxvalue = self.value
+                # pruning
+                if self.value > self.alpha:
+                    self.alpha = self.value
+                if self.beta <= self.alpha:
+                    break
+            return maxvalue
+        #
+        elif self.playeramzug==-1:
+            minvalue = 1000000000000
+            for child in self.children:
+                self.value = child.minimax()
+                if self.value < minvalue:
+                    minvalue = self.value
+                # pruning
+                if self.value < self.beta:
+                    self.beta = self.value
+                if self.beta <= self.alpha:
+                    break
+            return minvalue
+
+class Minimax2Node(MinimaxPlayer2):
+    def __init__(self, token):
+        super().__init__(token)
+        self.children=[]#
+        self.parent=None#
+        self.value=0#
+        self.position=[]#
+        self.depth=0
+        self.playeramzug=0#
+        self.alpha=-111111111111
+        self.beta=111111111111
 
     def expand(self):
         children=self.genchildren(self.position,self.playeramzug)
@@ -606,12 +655,8 @@ class Minimax2Node(MinimaxPlayer2):
             instance.isleafnode=True
             instance.depth=self.depth+1
 
-    
-        
 
     
-
-
 #VierGewinnt().play()
 
 
