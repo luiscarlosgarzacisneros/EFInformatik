@@ -443,7 +443,8 @@ class MCTSPlayer(ComputerPlayer):
         self.numberofiterations=0
         self.depth=4
         self.numberofsimulations=4
-        self.maxtime=10
+        self.maxtime=6
+        self.counter=0
 
     def mcts(self,board):
         self.rootnode=MCTSNode(0)
@@ -456,6 +457,7 @@ class MCTSPlayer(ComputerPlayer):
         self.rootnode.expand()
         start = time.time()
         while True:
+            self.counter=+1
             selectednode=self.rootnode.selectleafnode()
             if selectednode.is_it_a_new_node():
                 selectednode.backpropagate(selectednode.simulate(),self.numberofsimulations)
@@ -466,7 +468,9 @@ class MCTSPlayer(ComputerPlayer):
                 break
 
     def get_move(self,board):
+        self.counter=0
         self.mcts(board)
+        print(self.counter)
         bestmove=[]
         highestnumberofvisits=-1
         for rootnodechild in self.rootnode.children:
