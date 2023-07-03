@@ -469,6 +469,14 @@ class MCTSPlayer(ComputerPlayer):
 
     def get_move(self,board):
         self.mcts(board)
+        bestmove=[]
+        highestnumberofvisits=-1
+        for rootnodechild in self.rootnode.children:
+            if rootnodechild.visits>highestnumberofvisits:
+                bestmove=rootnodechild
+                highestnumberofvisits=rootnodechild.visits
+        return bestmove.position
+
 
 class MCTSNode(MCTSPlayer):
     def __init__(self, token):
