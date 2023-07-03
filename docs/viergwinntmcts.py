@@ -571,6 +571,8 @@ class MCTSNode(MCTSPlayer):
         if parent is not None:
             parent.backpropagate(newscore, numberofsimulations)
 
+#
+
 class Minimax2Player(ComputerPlayer):
     def __init__(self, token):
         super().__init__(token)
@@ -587,8 +589,8 @@ class Minimax2Player(ComputerPlayer):
         self.depth=0
         self.playeramzug=self.token
         #
-        self.firstlayer=Minimax2Layer(0)
-        self.firstlayer.nodes=[self.rootnode]
+        self.layerzero=Minimax2Layer(0)
+        self.layerzero.nodes=[self.rootnode]
 
     def minimax(self):
         # Spieler
@@ -629,15 +631,27 @@ class Minimax2Player(ComputerPlayer):
                     break
             return minvalue
 
+    def expandlayer(self):
+        oldlayer=Minimax2Layer(self.d)
+        self.d+=1
+        newlayer=Minimax2Layer(self.d)
+        newlayer.nodes=[]
+        for node in oldlayer.nodes:
+            node.expand()
+            for child in node.children:
+                newlayer.nodes.append(child)
+
+    def minimaxer(self):
+        self.expandlayer()
+
 class Minimax2Layer(Minimax2Player):
     def __init__(self, token):
         super().__init__(token)
         self.depth=0
         self.nodes=[]
 
-    def expandlayer(self):
-        for node in self.nodes:
-            node.expand()
+    def sort(self):
+        pass
 
 class Minimax2Node(Minimax2Player):
     def __init__(self, token):
