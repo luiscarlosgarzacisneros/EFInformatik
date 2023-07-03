@@ -7,12 +7,12 @@ import math
 class VierGewinnt():
     def __init__(self):
         self.board = [
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0]
         ]
         #
         self.turn=0
@@ -25,7 +25,12 @@ class VierGewinnt():
         for i in range(6):
             print('I ', end='')
             for j in range(7):
-                print(board[i][j], end='')
+                if board[i][j]==1:
+                    print('X', end='')
+                elif board[i][j]==-1:
+                    print('O', end='')
+                else:
+                    print(' ', end='')
                 print(' I ', end='')
             print('')
             print('-----------------------------')
@@ -57,18 +62,18 @@ class VierGewinnt():
     def gameover(self,boar):
         isover = True
         for q in range(6):
-            if boar[q].count(' ') > 0:
+            if boar[q].count(0) > 0:
                 isover = False
         return isover
 
     def play(self):
         self.board = [
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0]
         ]
         #
         self.turn=0
@@ -76,25 +81,29 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(MinimaxPlayer('X'))
-        self.players.append(MCTSPlayer('O'))
+        self.players.append(MinimaxPlayer(1))
+        self.players.append(MCTSPlayer(-1))
         #
         current=0
         while True:
             print(self.turn)
             self.printboard(self.board)
             player = self.players[current]
-            print(player.token, ' ist am Zug')
+            if player.token==1:
+                istamzug='X'
+            else:
+                istamzug='O'
+            print(istamzug, ' ist am Zug')
             self.board=player.get_move(copy.deepcopy(self.board))
             current = (current + 1) % 2
             self.turn+=1
-            if self.gameover(self.board) or self.gewonnen(self.board,'O')or self.gewonnen(self.board,'X'):
+            if self.gameover(self.board) or self.gewonnen(self.board,-1)or self.gewonnen(self.board,1):
                 break
         self.printboard(self.board)
-        if self.gewonnen(self.board,'O'):
+        if self.gewonnen(self.board,-1):
             print('O HAT GEWONNEN')
             return 'O'
-        elif self.gewonnen(self.board,'X'):
+        elif self.gewonnen(self.board,1):
             print('X HAT GEWONNEN')
             return 'X'
         else:
@@ -108,9 +117,9 @@ class Player(VierGewinnt):
 
     def fall(self, board, y, x, player):
         if y <= 4:
-            if board[y + 1][x] == ' ':
+            if board[y + 1][x] == 0:
                 board[y + 1][x] = player
-                board[y][x] = ' '
+                board[y][x] = 0
                 y = y + 1
                 self.fall(board, y, x, player)
             else:
@@ -141,13 +150,13 @@ class ComputerPlayer(Player):
                 if board[w][q + 3] == player:
                     filled=filled+ 1
                 #
-                if board[w][q] == ' ':
+                if board[w][q] == 0:
                     empty=empty+ 1
-                if board[w][q + 1] == ' ':
+                if board[w][q + 1] == 0:
                     empty=empty+ 1
-                if board[w][q + 2] == ' ':
+                if board[w][q + 2] == 0:
                     empty=empty+ 1
-                if board[w][q + 3] == ' ':
+                if board[w][q + 3] == 0:
                     empty=empty+ 1
                 #
                 if board[w][q] == otherplayer:
@@ -189,13 +198,13 @@ class ComputerPlayer(Player):
                 if board[w + 3][q] == player:
                     filled=filled+ 1
                 #
-                if board[w][q] == ' ':
+                if board[w][q] == 0:
                     empty=empty+ 1
-                if board[w + 1][q] == ' ':
+                if board[w + 1][q] == 0:
                     empty=empty+ 1
-                if board[w + 2][q] == ' ':
+                if board[w + 2][q] == 0:
                     empty=empty+ 1
-                if board[w + 3][q] == ' ':
+                if board[w + 3][q] == 0:
                     empty=empty+ 1
                 #
                 if board[w][q] == otherplayer:
@@ -237,13 +246,13 @@ class ComputerPlayer(Player):
                 if board[w + 3][q + 3] == player:
                     filled=filled+ 1
                 #
-                if board[w][q] == ' ':
+                if board[w][q] == 0:
                     empty=empty+ 1
-                if board[w + 1][q + 1] == ' ':
+                if board[w + 1][q + 1] == 0:
                     empty=empty+ 1
-                if board[w + 2][q + 2] == ' ':
+                if board[w + 2][q + 2] == 0:
                     empty=empty+ 1
-                if board[w + 3][q + 3] == ' ':
+                if board[w + 3][q + 3] == 0:
                     empty=empty+ 1
                 #
                 if board[w][q] == otherplayer:
@@ -285,13 +294,13 @@ class ComputerPlayer(Player):
                 if board[w + 3][q] == player:
                     filled=filled+ 1
                 #
-                if board[w][q + 3] == ' ':
+                if board[w][q + 3] == 0:
                     empty=empty+ 1
-                if board[w + 1][q + 2] == ' ':
+                if board[w + 1][q + 2] == 0:
                     empty=empty+ 1
-                if board[w + 2][q + 1] == ' ':
+                if board[w + 2][q + 1] == 0:
                     empty=empty+ 1
-                if board[w + 3][q] == ' ':
+                if board[w + 3][q] == 0:
                     empty=empty+ 1
                 #
                 if board[w][q + 3] == otherplayer:
@@ -323,7 +332,7 @@ class ComputerPlayer(Player):
         children = []
         boardcopy = copy.deepcopy(position)
         for x in range(7):
-            if boardcopy[0][x] == ' ':
+            if boardcopy[0][x] == 0:
                 boardcopy[0][x] = str(playerk)
                 self.fall(boardcopy, 0, x, playerk)
                 children.append(boardcopy)
@@ -349,12 +358,12 @@ class MinimaxPlayer(ComputerPlayer):
         self.minimaxc = self.minimaxc + 1
         # return
         if maxplayer:
-            playerj = 'X'
+            playerj = 1
         else:
-            playerj = 'O'
+            playerj = -1
 
-        f=self.inarow(position,'X','O')
-        if self.gewonnen(position, 'O') == True or self.gewonnen(position, 'X') == True:
+        f=self.inarow(position,1,-1)
+        if self.gewonnen(position, -1) == True or self.gewonnen(position, 1) == True:
             return f
         elif depth == self.d:
             return f
@@ -393,7 +402,7 @@ class MinimaxPlayer(ComputerPlayer):
         self.scores.clear()
         self.move.clear()
         self.moves.clear()
-        if self.token=='O':
+        if self.token==-1:
             maxplother=True
         else:
             maxplother=False
@@ -403,7 +412,7 @@ class MinimaxPlayer(ComputerPlayer):
         #
         print(self.scores)
         #
-        if self.token=='O':
+        if self.token==-1:
             minormax=min
         else:
             minormax=max
@@ -425,7 +434,7 @@ class HumanPlayer(Player):
     def player(self, board):
         try:
             x = int(input('x: ')) - 1
-            if board[0][x] == ' ':
+            if board[0][x] == 0:
                 board[0][x] = self.token
                 self.fall(board, 0, x, self.token)
             else:
@@ -488,7 +497,7 @@ class MCTSNode(MCTSPlayer):
     def __init__(self, token):
         super().__init__(token)
         self.position=[]
-        self.playeramzug=' '
+        self.playeramzug=0
         self.parent=None
         self.children=[]
         self.score=0
@@ -510,10 +519,10 @@ class MCTSNode(MCTSPlayer):
             self.children.append(instance)
             #
             instance.position=children[i]
-            if self.playeramzug=='O':
-                instance.playeramzug='X'
+            if self.playeramzug==-1:
+                instance.playeramzug=1
             else:
-                instance.playeramzug='O'
+                instance.playeramzug=-1
             instance.parent=self
             instance.score=0
             instance.visits=0
@@ -527,11 +536,11 @@ class MCTSNode(MCTSPlayer):
             for i in range(self.depth):
                 nextpos=random.choice(self.genchildren(pos,player))
                 pos=nextpos
-                if player=='O':
-                    player='X'
+                if player==-1:
+                    player=1
                 else:
-                    player='O'
-            values.append(self.inarow(pos,'O','X'))
+                    player=-1
+            values.append(self.inarow(pos,-1,1))
         value=sum(values)/len(values)
         return value
     
@@ -562,6 +571,46 @@ class MCTSNode(MCTSPlayer):
         if parent is not None:
             parent.backpropagate(newscore, numberofsimulations)
 
+class MinimaxPlayer2(ComputerPlayer):
+    def __init__(self, token):
+        super().__init__(token)
+        self.minimaxc = 0
+        self.d = 0
+        self.numberofiterations=0
+
+class Minimax2Node(MinimaxPlayer2):
+    def __init__(self, token):
+        super().__init__(token)
+        self.children=[]
+        self.parent=None
+        self.value=0
+        self.isleafnode=True
+        self.position=[]
+        self.depth=0
+        self.playeramzug=0
+
+    def expand(self):
+        children=self.genchildren(self.position,self.playeramzug)
+        for i in range(len(children)):
+            self.numberofiterations+=1
+            instance = Minimax2Node(self.numberofiterations)
+            self.children.append(instance)
+            #
+            instance.position=children[i]
+            if self.playeramzug==-1:
+                instance.playeramzug=1
+            else:
+                instance.playeramzug=-1
+            instance.parent=self
+            instance.value=0
+            instance.isleafnode=True
+            instance.depth=self.depth+1
+
+    
+        
+
+    
+
 
 #VierGewinnt().play()
 
@@ -584,5 +633,5 @@ for i in range(100):
     print('X:',x_wins)
     print('O:',o_wins)
     print('unentschieden',unentschieden)
-print('fertig')
+print('FERTIG')
 
