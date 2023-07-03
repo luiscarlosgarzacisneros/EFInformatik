@@ -578,16 +578,15 @@ class Minimax2Player(ComputerPlayer):
         super().__init__(token)
         self.minimaxc = 0
         self.d = 0
-        self.numberofiterations=0
+        self.maxdepth=5 #NUR BIS ZEITLIMIT IMPLENTIERT WIRD!!!!!
         #
         self.rootnode=Minimax2Node(0)
-        self.children=[]
-        self.parent=None
-        self.value=0
-        self.isleafnode=True
-        self.position=[]
-        self.depth=0
-        self.playeramzug=self.token
+        self.rootnode.children=[]
+        self.rootnode.parent=None
+        self.rootnode.value=0
+        self.rootnode.position=[]
+        self.rootnode.depth=0
+        self.rootnode.playeramzug=self.token
         #
         self.layerzero=Minimax2Layer(0)
         self.layerzero.nodes=[self.rootnode]
@@ -643,7 +642,20 @@ class Minimax2Player(ComputerPlayer):
 
     def minimaxer(self):
         self.expandlayer()
-
+        self.rootnode.minimax()
+        maxvalue=-111111111111111
+        bestmoves=[]
+        for child in self.rootnode.children:
+            if child.value>=maxvalue:
+                maxvalue=child.value
+                bestmoves.append(child)
+        bestmove=random.choice(bestmoves)
+        return bestmove
+    
+    def get_move(self, board):
+        move=self.minimaxer()
+        return move.position
+        
 class Minimax2Layer(Minimax2Player):
     def __init__(self, token):
         super().__init__(token)
@@ -707,3 +719,4 @@ for i in range(100):
     print('unentschieden',unentschieden)
 print('FERTIG')
 
+#Minimax:zeit und sort
