@@ -1,5 +1,6 @@
 import copy
 import random
+import time
 import math
 
 
@@ -434,7 +435,6 @@ class HumanPlayer(Player):
             self.player(board)
 
     def get_move(self, board):
-        nextmove=copy.deepcopy(board)
         self.player(board)
         return board
 
@@ -445,17 +445,30 @@ class MCTSPlayer(ComputerPlayer):
         self.numberofiterations=0
         self.depth=4
         self.numberofsimulations=4
-        #
+        self.maxtime=10
+
+    def mcts(self,board):
         self.rootnode=MCTSNode(0)
-        self.rootnode.position=self.board
+        self.rootnode.position=board
         self.rootnode.playeramzug=self.token
         self.rootnode.score=0
         self.rootnode.visits=0
         self.rootnode.children=[]
         #
+        self.rootnode.expand()
+        start = time.time()
+        while True:
+            selectednode=self.rootnode.selectleafnode()
+            if selectednode.is_it_a_new_node():
+                selectednode.backpropagate(selectednode.simulate(),self.numberofsimulations)
+            else:
+                selectednode.expand()
+            #
+            if (time.time() - start) > self.maxtime:
+                break
 
-    def get_move(self, board):
-        pass
+    def get_move(self,board):
+        self.mcts(board)
 
 class MCTSNode(MCTSPlayer):
     def __init__(self, token):
