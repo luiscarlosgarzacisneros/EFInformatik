@@ -475,13 +475,12 @@ class MCTSPlayer(ComputerPlayer):
                 highestnumberofvisits=rootnodechild.visits
         return bestmove.position
 
-
 class MCTSNode(MCTSPlayer):
     def __init__(self, token):
         super().__init__(token)
         self.position=[]
         self.playeramzug=' '
-        self.parent=[]
+        self.parent=None
         self.children=[]
         self.score=0
         self.visits=0
@@ -549,9 +548,10 @@ class MCTSNode(MCTSPlayer):
     def backpropagate(self, newscore, numberofsimulations):
         self.score += newscore
         self.visits += numberofsimulations
+        parent=self.parent
 
-        if self.parent is not None:
-            self.parent.backpropagate(newscore, numberofsimulations)
+        if parent is not None:
+            parent.backpropagate(newscore, numberofsimulations)
 
 
 VierGewinnt().play()
