@@ -110,18 +110,17 @@ class VierGewinnt():
             print('UNENTSCHIEDEN')
             return ' '
 
-class Player(VierGewinnt):
+class Player():
     def __init__(self, token):
-        super().__init__()
         self.token = token
 
-    def fall(self, board, y, x, player):
+    def fall(self, board, y, x):
         if y <= 4:
             if board[y + 1][x] == 0:
-                board[y + 1][x] = player
+                board[y + 1][x] = self.token
                 board[y][x] = 0
                 y = y + 1
-                self.fall(board, y, x, player)
+                self.fall(board, y, x)
             else:
                 pass
 
@@ -132,8 +131,12 @@ class ComputerPlayer(Player):
     def __init__(self, token):
         super().__init__(token)
 
-    def inarow(self,board, player, otherplayer):
+    def inarow(self,board):
         score=0
+        if self.token==1:
+            otherplayer=-1
+        else:
+            otherplayer=1
         # horizontal
         for q in range(4):
             for w in range(6):
@@ -141,13 +144,13 @@ class ComputerPlayer(Player):
                 other=0
                 filled=0
                 #
-                if board[w][q] == player:
+                if board[w][q] == self.token:
                     filled=filled+ 1
-                if board[w][q + 1] == player:
+                if board[w][q + 1] == self.token:
                     filled=filled+ 1
-                if board[w][q + 2] == player:
+                if board[w][q + 2] == self.token:
                     filled=filled+ 1
-                if board[w][q + 3] == player:
+                if board[w][q + 3] == self.token:
                     filled=filled+ 1
                 #
                 if board[w][q] == 0:
@@ -189,13 +192,13 @@ class ComputerPlayer(Player):
                 other=0
                 filled=0
                 #
-                if board[w][q] == player:
+                if board[w][q] == self.token:
                     filled=filled+ 1
-                if board[w + 1][q] == player:
+                if board[w + 1][q] == self.token:
                     filled=filled+ 1
-                if board[w + 2][q] == player:
+                if board[w + 2][q] == self.token:
                     filled=filled+ 1
-                if board[w + 3][q] == player:
+                if board[w + 3][q] == self.token:
                     filled=filled+ 1
                 #
                 if board[w][q] == 0:
@@ -237,13 +240,13 @@ class ComputerPlayer(Player):
                 other=0
                 filled=0
                 #
-                if board[w][q] == player:
+                if board[w][q] == self.token:
                     filled=filled+ 1
-                if board[w + 1][q + 1] == player:
+                if board[w + 1][q + 1] == self.token:
                     filled=filled+ 1
-                if board[w + 2][q + 2] == player:
+                if board[w + 2][q + 2] == self.token:
                     filled=filled+ 1
-                if board[w + 3][q + 3] == player:
+                if board[w + 3][q + 3] == self.token:
                     filled=filled+ 1
                 #
                 if board[w][q] == 0:
@@ -285,13 +288,13 @@ class ComputerPlayer(Player):
                 other=0
                 filled=0
                 #
-                if board[w][q + 3] == player:
+                if board[w][q + 3] == self.token:
                     filled=filled+ 1
-                if board[w + 1][q + 2] == player:
+                if board[w + 1][q + 2] == self.token:
                     filled=filled+ 1
-                if board[w + 2][q + 1] == player:
+                if board[w + 2][q + 1] == self.token:
                     filled=filled+ 1
-                if board[w + 3][q] == player:
+                if board[w + 3][q] == self.token:
                     filled=filled+ 1
                 #
                 if board[w][q + 3] == 0:
@@ -334,7 +337,7 @@ class ComputerPlayer(Player):
         for x in range(7):
             if boardcopy[0][x] == 0:
                 boardcopy[0][x] = str(playerk)
-                self.fall(boardcopy, 0, x, playerk)
+                self.fall(boardcopy, 0, x)
                 children.append(boardcopy)
                 boardcopy = copy.deepcopy(position)
         #
@@ -362,7 +365,7 @@ class MinimaxPlayer(ComputerPlayer):
         else:
             playerj = -1
 
-        f=self.inarow(position,1,-1)
+        f=self.inarow(position)
         if self.gewonnen(position, -1) == True or self.gewonnen(position, 1) == True:
             return f
         elif depth == self.d:
@@ -371,7 +374,7 @@ class MinimaxPlayer(ComputerPlayer):
             return f
         #
         if maxplayer:
-            maxvalue = -100000000000
+            maxvalue = -math.inf
             for child in self.genchildren(position, playerj):
                 value = self.minimax(child, depth + 1, False, alpha, beta)
                 if value > maxvalue:
@@ -384,7 +387,7 @@ class MinimaxPlayer(ComputerPlayer):
             return maxvalue
         #
         if not maxplayer:
-            minvalue = 1000000000000
+            minvalue = math.inf
             for child in self.genchildren(position, playerj):
                 value = self.minimax(child, depth + 1, True, alpha, beta)
                 if value < minvalue:
@@ -408,7 +411,7 @@ class MinimaxPlayer(ComputerPlayer):
             maxplother=False
         for firstgenchild in self.genchildren(boa, self.token):
             self.nextmoves.append(copy.deepcopy(firstgenchild))
-            self.scores.append(self.minimax(firstgenchild, 1, maxplother, -10000000000000000000, 1000000000000000000000))
+            self.scores.append(self.minimax(firstgenchild, 1, maxplother, -math.inf, math.inf))
         #
         print(self.scores)
         #
@@ -508,7 +511,7 @@ class MCTSNode(MCTSPlayer):
     def calculateubc(self):
         par=self.parent
         if self.visits==0:
-            ubc=999999999999999999999999999
+            ubc=math.inf
         else:
             ubc=(self.score/self.visits)+self.c*(math.log(par.visits/self.visits))
         return ubc
@@ -542,7 +545,7 @@ class MCTSNode(MCTSPlayer):
                     player=1
                 else:
                     player=-1
-            values.append(self.inarow(pos,-1,1))
+            values.append(self.inarow(pos))
         value=sum(values)/len(values)
         return value
     
@@ -554,7 +557,7 @@ class MCTSNode(MCTSPlayer):
 
     def selectleafnode(self):
         children = self.children
-        bestvalue = -1111111111111
+        bestvalue = -math.inf
         for child in children:
             ucbofchild = child.calculateubc()
             if ucbofchild > bestvalue:
@@ -597,7 +600,7 @@ class Minimax2Player(ComputerPlayer):
         # alpha: best maxpl, beta: best minpl
         self.minimaxc = self.minimaxc + 1
         # return
-        f=self.inarow(self.position,1,-1)
+        f=self.inarow(self.position)
         if self.gewonnen(self.position, -1) == True or self.gewonnen(self.position, 1) == True:
             return f
         elif self.depth == self.d:
@@ -606,7 +609,7 @@ class Minimax2Player(ComputerPlayer):
             return f
         #
         if self.playeramzug==1:
-            maxvalue = -100000000000
+            maxvalue = -math.inf
             for child in self.children:
                 self.value = child.minimax()
                 if self.value > maxvalue:
@@ -619,7 +622,7 @@ class Minimax2Player(ComputerPlayer):
             return maxvalue
         #
         elif self.playeramzug==-1:
-            minvalue = 1000000000000
+            minvalue = math.inf
             for child in self.children:
                 self.value = child.minimax()
                 if self.value < minvalue:
@@ -644,7 +647,7 @@ class Minimax2Player(ComputerPlayer):
     def minimaxer(self):
         self.expandlayer()
         self.rootnode.minimax()
-        maxvalue=-111111111111111
+        maxvalue=-math.inf
         bestmoves=[]
         for child in self.rootnode.children:
             if child.value>=maxvalue:
@@ -678,8 +681,8 @@ class Minimax2Node(Minimax2Player):
         self.position=[]#
         self.depth=0
         self.playeramzug=0#
-        self.alpha=-111111111111
-        self.beta=111111111111
+        self.alpha=-math.inf
+        self.beta=math.inf
 
     def expand(self):
         children=self.genchildren(self.position,self.playeramzug)
