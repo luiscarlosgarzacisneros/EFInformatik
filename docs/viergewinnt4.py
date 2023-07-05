@@ -3,6 +3,255 @@ import random
 import time
 import math
 
+def gewonnen(board, player):
+    gew = False
+    # horizontal
+    for q in range(4):
+        for w in range(6):
+            if board[w][q] == player and board[w][q + 1] == player and board[w][q + 2] == player and board[w][q + 3] == player:
+                gew = True
+    # vertikal
+    for q in range(7):
+        for w in range(3):
+            if board[w][q] == player and board[w + 1][q] == player and board[w + 2][q] == player and board[w + 3][q] == player:
+                gew = True
+    # diagonal1
+    for q in range(4):
+        for w in range(3):
+            if board[w][q] == player and board[w + 1][q + 1] == player and board[w + 2][q + 2] == player and board[w + 3][q + 3] == player:
+                gew = True
+    # diagonal2
+    for q in range(4):
+        for w in range(3):
+            if board[w][q + 3] == player and board[w + 1][q + 2] == player and board[w + 2][q + 1] == player and board[w + 3][q] == player:
+                gew = True
+    return gew
+
+def gameover(boar):
+    isover = True
+    for q in range(6):
+        if boar[q].count(0) > 0:
+            isover = False
+    return isover
+
+def fall( board, y, x, player):
+    if y <= 4:
+        if board[y + 1][x] == 0:
+            board[y + 1][x] = player
+            board[y][x] = 0
+            y = y + 1
+            fall(board, y, x, player)
+        else:
+            pass
+
+def inarow(board, player, otherplayer):
+    score=0
+    # horizontal
+    for q in range(4):
+        for w in range(6):
+            empty=0
+            other=0
+            filled=0
+            #
+            if board[w][q] == player:
+                filled=filled+ 1
+            if board[w][q + 1] == player:
+                filled=filled+ 1
+            if board[w][q + 2] == player:
+                filled=filled+ 1
+            if board[w][q + 3] == player:
+                filled=filled+ 1
+            #
+            if board[w][q] == 0:
+                empty=empty+ 1
+            if board[w][q + 1] == 0:
+                empty=empty+ 1
+            if board[w][q + 2] == 0:
+                empty=empty+ 1
+            if board[w][q + 3] == 0:
+                empty=empty+ 1
+            #
+            if board[w][q] == otherplayer:
+                other=other+ 1
+            if board[w][q + 1] == otherplayer:
+                other=other+ 1
+            if board[w][q + 2] == otherplayer:
+                other=other+ 1
+            if board[w][q + 3] == otherplayer:
+                other=other+ 1
+            #
+            if other==0:
+                if filled==4:
+                    score=score+10000
+                if filled==3:
+                    score=score+100
+                if filled==2:
+                    score=score+3
+            elif filled==0:
+                if other==4:
+                    score=score-10000
+                if other==3:
+                    score=score-100
+                if other==2:
+                    score=score-3
+    # vertikal
+    for q in range(7):
+        for w in range(3):
+            empty=0
+            other=0
+            filled=0
+            #
+            if board[w][q] == player:
+                filled=filled+ 1
+            if board[w + 1][q] == player:
+                filled=filled+ 1
+            if board[w + 2][q] == player:
+                filled=filled+ 1
+            if board[w + 3][q] == player:
+                filled=filled+ 1
+            #
+            if board[w][q] == 0:
+                empty=empty+ 1
+            if board[w + 1][q] == 0:
+                empty=empty+ 1
+            if board[w + 2][q] == 0:
+                empty=empty+ 1
+            if board[w + 3][q] == 0:
+                empty=empty+ 1
+            #
+            if board[w][q] == otherplayer:
+                other=other+ 1
+            if board[w + 1][q] == otherplayer:
+                other=other+ 1
+            if board[w + 2][q] == otherplayer:
+                other=other+ 1
+            if board[w + 3][q] == otherplayer:
+                other=other+ 1
+            #
+            if other==0:
+                if filled==4:
+                    score=score+10000
+                if filled==3:
+                    score=score+50
+                if filled==2:
+                    score=score+1
+            elif filled==0:
+                if other==4:
+                    score=score-10000
+                if other==3:
+                    score=score-50
+                if other==2:
+                    score=score-1
+    # diagonal1
+    for q in range(4):
+        for w in range(3):
+            empty=0
+            other=0
+            filled=0
+            #
+            if board[w][q] == player:
+                filled=filled+ 1
+            if board[w + 1][q + 1] == player:
+                filled=filled+ 1
+            if board[w + 2][q + 2] == player:
+                filled=filled+ 1
+            if board[w + 3][q + 3] == player:
+                filled=filled+ 1
+            #
+            if board[w][q] == 0:
+                empty=empty+ 1
+            if board[w + 1][q + 1] == 0:
+                empty=empty+ 1
+            if board[w + 2][q + 2] == 0:
+                empty=empty+ 1
+            if board[w + 3][q + 3] == 0:
+                empty=empty+ 1
+            #
+            if board[w][q] == otherplayer:
+                other=other+ 1
+            if board[w + 1][q + 1] == otherplayer:
+                other=other+ 1
+            if board[w + 2][q + 2] == otherplayer:
+                other=other+ 1
+            if board[w + 3][q + 3] == otherplayer:
+                other=other+ 1
+            #
+            if other==0:
+                if filled==4:
+                    score=score+10000
+                if filled==3:
+                    score=score+100
+                if filled==2:
+                    score=score+3
+            elif filled==0:
+                if other==4:
+                    score=score-10000
+                if other==3:
+                    score=score-100
+                if other==2:
+                    score=score-3
+    # diagonal2
+    for q in range(4):
+        for w in range(3):
+            empty=0
+            other=0
+            filled=0
+            #
+            if board[w][q + 3] == player:
+                filled=filled+ 1
+            if board[w + 1][q + 2] == player:
+                filled=filled+ 1
+            if board[w + 2][q + 1] == player:
+                filled=filled+ 1
+            if board[w + 3][q] == player:
+                filled=filled+ 1
+            #
+            if board[w][q + 3] == 0:
+                empty=empty+ 1
+            if board[w + 1][q + 2] == 0:
+                empty=empty+ 1
+            if board[w + 2][q + 1] == 0:
+                empty=empty+ 1
+            if board[w + 3][q] == 0:
+                empty=empty+ 1
+            #
+            if board[w][q + 3] == otherplayer:
+                other=other+ 1
+            if board[w + 1][q + 2] == otherplayer:
+                other=other+ 1
+            if board[w + 2][q + 1] == otherplayer:
+                other=other+ 1
+            if board[w + 3][q] == otherplayer:
+                other=other+ 1
+            #
+            if other==0:
+                if filled==4:
+                    score=score+10000
+                if filled==3:
+                    score=score+100
+                if filled==2:
+                    score=score+3
+            elif filled==0:
+                if other==4:
+                    score=score-10000
+                if other==3:
+                    score=score-100
+                if other==2:
+                    score=score-3
+    return score
+    
+def genchildren(position, playerk):
+    children = []
+    boardcopy = copy.deepcopy(position)
+    for x in range(7):
+        if boardcopy[0][x] == 0:
+            boardcopy[0][x] = str(playerk)
+            fall(boardcopy, 0, x, playerk)
+            children.append(boardcopy)
+            boardcopy = copy.deepcopy(position)
+    #
+    return children
+
 
 class VierGewinnt():
     def __init__(self):
@@ -35,37 +284,6 @@ class VierGewinnt():
             print('')
             print('-----------------------------')
 
-    def gewonnen(self,board, player):
-        gew = False
-        # horizontal
-        for q in range(4):
-            for w in range(6):
-                if board[w][q] == player and board[w][q + 1] == player and board[w][q + 2] == player and board[w][q + 3] == player:
-                    gew = True
-        # vertikal
-        for q in range(7):
-            for w in range(3):
-                if board[w][q] == player and board[w + 1][q] == player and board[w + 2][q] == player and board[w + 3][q] == player:
-                    gew = True
-        # diagonal1
-        for q in range(4):
-            for w in range(3):
-                if board[w][q] == player and board[w + 1][q + 1] == player and board[w + 2][q + 2] == player and board[w + 3][q + 3] == player:
-                    gew = True
-        # diagonal2
-        for q in range(4):
-            for w in range(3):
-                if board[w][q + 3] == player and board[w + 1][q + 2] == player and board[w + 2][q + 1] == player and board[w + 3][q] == player:
-                    gew = True
-        return gew
-
-    def gameover(self,boar):
-        isover = True
-        for q in range(6):
-            if boar[q].count(0) > 0:
-                isover = False
-        return isover
-
     def play(self):
         self.board = [
         [0, 0, 0, 0, 0, 0, 0],
@@ -97,257 +315,30 @@ class VierGewinnt():
             self.board=player.get_move(copy.deepcopy(self.board))
             current = (current + 1) % 2
             self.turn+=1
-            if self.gameover(self.board) or self.gewonnen(self.board,-1)or self.gewonnen(self.board,1):
+            if gameover(self.board) or gewonnen(self.board,-1)or gewonnen(self.board,1):
                 break
         self.printboard(self.board)
-        if self.gewonnen(self.board,-1):
+        if gewonnen(self.board,-1):
             print('O HAT GEWONNEN')
             return 'O'
-        elif self.gewonnen(self.board,1):
+        elif gewonnen(self.board,1):
             print('X HAT GEWONNEN')
             return 'X'
         else:
             print('UNENTSCHIEDEN')
             return ' '
 
-class Player(VierGewinnt):
+class Player():
     def __init__(self, token):
-        super().__init__()
         self.token = token
-
-    def fall(self, board, y, x):
-        if y <= 4:
-            if board[y + 1][x] == 0:
-                board[y + 1][x] = self.token
-                board[y][x] = 0
-                y = y + 1
-                self.fall(board, y, x)
-            else:
-                pass
 
     def get_move(self, board):
         raise NotImplementedError('Not implemented')
 
-class ComputerPlayer(Player):
+class MinimaxPlayer(Player):
     def __init__(self, token):
         super().__init__(token)
-
-    def inarow(self,board):
-        score=0
-        if self.token==1:
-            otherplayer=-1
-        else:
-            otherplayer=1
-        # horizontal
-        for q in range(4):
-            for w in range(6):
-                empty=0
-                other=0
-                filled=0
-                #
-                if board[w][q] == self.token:
-                    filled=filled+ 1
-                if board[w][q + 1] == self.token:
-                    filled=filled+ 1
-                if board[w][q + 2] == self.token:
-                    filled=filled+ 1
-                if board[w][q + 3] == self.token:
-                    filled=filled+ 1
-                #
-                if board[w][q] == 0:
-                    empty=empty+ 1
-                if board[w][q + 1] == 0:
-                    empty=empty+ 1
-                if board[w][q + 2] == 0:
-                    empty=empty+ 1
-                if board[w][q + 3] == 0:
-                    empty=empty+ 1
-                #
-                if board[w][q] == otherplayer:
-                    other=other+ 1
-                if board[w][q + 1] == otherplayer:
-                    other=other+ 1
-                if board[w][q + 2] == otherplayer:
-                    other=other+ 1
-                if board[w][q + 3] == otherplayer:
-                    other=other+ 1
-                #
-                if other==0:
-                    if filled==4:
-                        score=score+10000
-                    if filled==3:
-                        score=score+100
-                    if filled==2:
-                        score=score+3
-                elif filled==0:
-                    if other==4:
-                        score=score-10000
-                    if other==3:
-                        score=score-100
-                    if other==2:
-                        score=score-3
-        # vertikal
-        for q in range(7):
-            for w in range(3):
-                empty=0
-                other=0
-                filled=0
-                #
-                if board[w][q] == self.token:
-                    filled=filled+ 1
-                if board[w + 1][q] == self.token:
-                    filled=filled+ 1
-                if board[w + 2][q] == self.token:
-                    filled=filled+ 1
-                if board[w + 3][q] == self.token:
-                    filled=filled+ 1
-                #
-                if board[w][q] == 0:
-                    empty=empty+ 1
-                if board[w + 1][q] == 0:
-                    empty=empty+ 1
-                if board[w + 2][q] == 0:
-                    empty=empty+ 1
-                if board[w + 3][q] == 0:
-                    empty=empty+ 1
-                #
-                if board[w][q] == otherplayer:
-                    other=other+ 1
-                if board[w + 1][q] == otherplayer:
-                    other=other+ 1
-                if board[w + 2][q] == otherplayer:
-                    other=other+ 1
-                if board[w + 3][q] == otherplayer:
-                    other=other+ 1
-                #
-                if other==0:
-                    if filled==4:
-                        score=score+10000
-                    if filled==3:
-                        score=score+50
-                    if filled==2:
-                        score=score+1
-                elif filled==0:
-                    if other==4:
-                        score=score-10000
-                    if other==3:
-                        score=score-50
-                    if other==2:
-                        score=score-1
-        # diagonal1
-        for q in range(4):
-            for w in range(3):
-                empty=0
-                other=0
-                filled=0
-                #
-                if board[w][q] == self.token:
-                    filled=filled+ 1
-                if board[w + 1][q + 1] == self.token:
-                    filled=filled+ 1
-                if board[w + 2][q + 2] == self.token:
-                    filled=filled+ 1
-                if board[w + 3][q + 3] == self.token:
-                    filled=filled+ 1
-                #
-                if board[w][q] == 0:
-                    empty=empty+ 1
-                if board[w + 1][q + 1] == 0:
-                    empty=empty+ 1
-                if board[w + 2][q + 2] == 0:
-                    empty=empty+ 1
-                if board[w + 3][q + 3] == 0:
-                    empty=empty+ 1
-                #
-                if board[w][q] == otherplayer:
-                    other=other+ 1
-                if board[w + 1][q + 1] == otherplayer:
-                    other=other+ 1
-                if board[w + 2][q + 2] == otherplayer:
-                    other=other+ 1
-                if board[w + 3][q + 3] == otherplayer:
-                    other=other+ 1
-                #
-                if other==0:
-                    if filled==4:
-                        score=score+10000
-                    if filled==3:
-                        score=score+100
-                    if filled==2:
-                        score=score+3
-                elif filled==0:
-                    if other==4:
-                        score=score-10000
-                    if other==3:
-                        score=score-100
-                    if other==2:
-                        score=score-3
-        # diagonal2
-        for q in range(4):
-            for w in range(3):
-                empty=0
-                other=0
-                filled=0
-                #
-                if board[w][q + 3] == self.token:
-                    filled=filled+ 1
-                if board[w + 1][q + 2] == self.token:
-                    filled=filled+ 1
-                if board[w + 2][q + 1] == self.token:
-                    filled=filled+ 1
-                if board[w + 3][q] == self.token:
-                    filled=filled+ 1
-                #
-                if board[w][q + 3] == 0:
-                    empty=empty+ 1
-                if board[w + 1][q + 2] == 0:
-                    empty=empty+ 1
-                if board[w + 2][q + 1] == 0:
-                    empty=empty+ 1
-                if board[w + 3][q] == 0:
-                    empty=empty+ 1
-                #
-                if board[w][q + 3] == otherplayer:
-                    other=other+ 1
-                if board[w + 1][q + 2] == otherplayer:
-                    other=other+ 1
-                if board[w + 2][q + 1] == otherplayer:
-                    other=other+ 1
-                if board[w + 3][q] == otherplayer:
-                    other=other+ 1
-                #
-                if other==0:
-                    if filled==4:
-                        score=score+10000
-                    if filled==3:
-                        score=score+100
-                    if filled==2:
-                        score=score+3
-                elif filled==0:
-                    if other==4:
-                        score=score-10000
-                    if other==3:
-                        score=score-100
-                    if other==2:
-                        score=score-3
-        return score
-    #
-    def genchildren(self,position, playerk):
-        children = []
-        boardcopy = copy.deepcopy(position)
-        for x in range(7):
-            if boardcopy[0][x] == 0:
-                boardcopy[0][x] = str(playerk)
-                self.fall(boardcopy, 0, x)
-                children.append(boardcopy)
-                boardcopy = copy.deepcopy(position)
-        #
-        return children
-    #
-
-class MinimaxPlayer(ComputerPlayer):
-    def __init__(self, token):
-        super().__init__(token)
+        self.token=token
         self.minimaxc = 0
         self.d = 5
         self.nextmoves = []
@@ -366,17 +357,17 @@ class MinimaxPlayer(ComputerPlayer):
         else:
             playerj = -1
 
-        f=self.inarow(position)
-        if self.gewonnen(position, -1) == True or self.gewonnen(position, 1) == True:
+        f=inarow(position,1,-1)
+        if gewonnen(position, -1) == True or gewonnen(position, 1) == True:
             return f
         elif depth == self.d:
             return f
-        elif self.genchildren(position, playerj) == []:
+        elif genchildren(position, playerj) == []:
             return f
         #
         if maxplayer:
             maxvalue = -math.inf
-            for child in self.genchildren(position, playerj):
+            for child in genchildren(position, playerj):
                 value = self.minimax(child, depth + 1, False, alpha, beta)
                 if value > maxvalue:
                     maxvalue = value
@@ -389,7 +380,7 @@ class MinimaxPlayer(ComputerPlayer):
         #
         if not maxplayer:
             minvalue = math.inf
-            for child in self.genchildren(position, playerj):
+            for child in genchildren(position, playerj):
                 value = self.minimax(child, depth + 1, True, alpha, beta)
                 if value < minvalue:
                     minvalue = value
@@ -410,7 +401,7 @@ class MinimaxPlayer(ComputerPlayer):
             maxplother=True
         else:
             maxplother=False
-        for firstgenchild in self.genchildren(boa, self.token):
+        for firstgenchild in genchildren(boa, self.token):
             self.nextmoves.append(copy.deepcopy(firstgenchild))
             self.scores.append(self.minimax(firstgenchild, 1, maxplother, -math.inf, math.inf))
         #
@@ -454,7 +445,7 @@ class HumanPlayer(Player):
 
 #
 
-class MCTSPlayer(ComputerPlayer):
+class MCTSPlayer(Player):
     def __init__(self, token):
         super().__init__(token)
         self.c=math.sqrt(2)
@@ -463,11 +454,11 @@ class MCTSPlayer(ComputerPlayer):
         #-----
         self.depth=4
         self.numberofsimulations=50
-        self.maxtime=5
+        self.maxtime=4
         #-----
         
     def mcts(self,board):
-        self.rootnode=MCTSNode(0)
+        self.rootnode=MCTSNode()
         self.rootnode.position=board
         self.rootnode.playeramzug=self.token
         self.rootnode.score=0
@@ -491,7 +482,7 @@ class MCTSPlayer(ComputerPlayer):
         self.counter=0
         self.mcts(board)
         print(self.counter)
-        bestmove=None
+        bestmove=[]
         highestnumberofvisits=-1
         for rootnodechild in self.rootnode.children:
             if rootnodechild.visits>highestnumberofvisits:
@@ -500,8 +491,8 @@ class MCTSPlayer(ComputerPlayer):
         return bestmove.position
 
 class MCTSNode(MCTSPlayer):
-    def __init__(self, token):
-        super().__init__(token)
+    def __init__(self):
+        super().__init__()
         self.position=[]
         self.playeramzug=0
         self.parent=None
@@ -518,14 +509,17 @@ class MCTSNode(MCTSPlayer):
         return ubc
     
     def expand(self):
-        children=self.genchildren(self.position,self.playeramzug)
+        children=genchildren(self.position,self.playeramzug)
         for i in range(len(children)):
             self.numberofiterations+=1
-            instance = MCTSNode(self.numberofiterations)
+            instance = MCTSNode()
             self.children.append(instance)
             #
             instance.position=children[i]
-            instance.playeramzug = -self.playeramzug
+            if self.playeramzug==-1:
+                instance.playeramzug=1
+            else:
+                instance.playeramzug=-1
             instance.parent=self
             instance.score=0
             instance.visits=0
@@ -537,13 +531,13 @@ class MCTSNode(MCTSPlayer):
             pos=self.position
             player=self.playeramzug
             for i in range(self.depth):
-                nextpos=random.choice(self.genchildren(pos,player))
+                nextpos=random.choice(genchildren(pos,player))
                 pos=nextpos
                 if player==-1:
                     player=1
                 else:
                     player=-1
-            values.append(self.inarow(pos))
+            values.append(inarow(pos,-1,1))
         value=sum(values)/len(values)
         return value
     
@@ -576,7 +570,7 @@ class MCTSNode(MCTSPlayer):
 
 #
 
-class Minimax2Player(ComputerPlayer):
+class Minimax2Player(Player):
     def __init__(self, token):
         super().__init__(token)
         self.minimaxc = 0
@@ -598,7 +592,7 @@ class Minimax2Player(ComputerPlayer):
         # alpha: best maxpl, beta: best minpl
         self.minimaxc = self.minimaxc + 1
         # return
-        f=self.inarow(self.position)
+        f=self.inarow(self.position,1,-1)
         if self.gewonnen(self.position, -1) == True or self.gewonnen(self.position, 1) == True:
             return f
         elif self.depth == self.d:
