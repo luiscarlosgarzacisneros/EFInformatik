@@ -44,7 +44,7 @@ def fall( board, y, x, player):
         else:
             pass
 
-def inarow(board, player, otherplayer):
+def inarow(board,player,otherplayer):
     score=0
     # horizontal
     for q in range(4):
