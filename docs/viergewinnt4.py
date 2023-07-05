@@ -723,6 +723,3 @@ for i in range(100):
 print('FERTIG')
 
 #Minimax:zeit und sort
-
-#MCTS geht nur an zweiter stelle:? parameter
-#MinMax2 geht auch nicht: ?
