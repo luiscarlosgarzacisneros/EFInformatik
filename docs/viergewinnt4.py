@@ -435,7 +435,7 @@ class HumanPlayer(Player):
             x = int(input('x: ')) - 1
             if board[0][x] == 0:
                 board[0][x] = self.token
-                self.fall(board, 0, x, self.token)
+                fall(board, 0, x, self.token)
             else:
                 print('FELD BESETZT')
                 self.player(board)
