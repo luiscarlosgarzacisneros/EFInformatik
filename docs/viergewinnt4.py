@@ -44,11 +44,13 @@ def fall( board, y, x, player):
         else:
             pass
 
-def inarow(board):
+def inarow(board,player):
     score=0
+    if player==1:
+        otherplayer=-1
+    elif player==-1:
+        otherplayer=1
     # horizontal
-    player=1
-    otherplayer=-1
     for q in range(4):
         for w in range(6):
             empty=0
@@ -301,8 +303,8 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(MinimaxPlayer(1))
-        self.players.append(MinimaxPlayer(-1))
+        self.players.append(MCTSPlayer(1))
+        self.players.append(MCTSPlayer(-1))
         #
         current=0
         while True:
@@ -359,7 +361,7 @@ class MinimaxPlayer(Player):
         else:
             playerj = -1
 
-        f=inarow(position)
+        f=inarow(position,1)
         if gewonnen(position, -1) == True or gewonnen(position, 1) == True:
             return f
         elif depth == self.d:
@@ -450,17 +452,13 @@ class HumanPlayer(Player):
 class MCTSPlayer(Player):
     def __init__(self, token):
         super().__init__(token)
-        self.c=math.sqrt(2)
-        self.numberofiterations=0
         self.counter=0
         #-----
-        self.depth=4
-        self.numberofsimulations=50
-        self.maxtime=4
+        self.maxtime=10
         #-----
         
     def mcts(self,board):
-        self.rootnode=MCTSNode()
+        self.rootnode=MCTSNode(self.token)
         self.rootnode.position=board
         self.rootnode.playeramzug=self.token
         self.rootnode.score=0
@@ -473,7 +471,7 @@ class MCTSPlayer(Player):
             self.counter+=1
             selectednode=self.rootnode.selectleafnode()
             if selectednode.is_it_a_new_node():
-                selectednode.backpropagate(selectednode.simulate(),self.numberofsimulations)
+                selectednode.backpropagate(selectednode.simulate(),selectednode.numberofsimulations)
             else:
                 selectednode.expand()
             #
@@ -493,8 +491,14 @@ class MCTSPlayer(Player):
         return bestmove.position
 
 class MCTSNode(MCTSPlayer):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,token):
+        super().__init__(token)
+        #
+        self.c=math.sqrt(2)
+        self.numberofiterations=0
+        self.depth=4
+        self.numberofsimulations=50
+        #
         self.position=[]
         self.playeramzug=0
         self.parent=None
@@ -507,20 +511,20 @@ class MCTSNode(MCTSPlayer):
         if self.visits==0:
             ubc=math.inf
         else:
-            ubc=(self.score/self.visits)+self.c*(math.log(par.visits/self.visits))
+            ubc=(self.score/self.visits)+self.c*(math.sqrt(math.log(par.visits/self.visits)))
         return ubc
     
     def expand(self):
         children=genchildren(self.position,self.playeramzug)
         for i in range(len(children)):
             self.numberofiterations+=1
-            instance = MCTSNode()
+            instance = MCTSNode(self.token)
             self.children.append(instance)
             #
             instance.position=children[i]
             if self.playeramzug==-1:
                 instance.playeramzug=1
-            else:
+            elif self.playeramzug==1:
                 instance.playeramzug=-1
             instance.parent=self
             instance.score=0
@@ -537,9 +541,9 @@ class MCTSNode(MCTSPlayer):
                 pos=nextpos
                 if player==-1:
                     player=1
-                else:
+                elif player==1:
                     player=-1
-            values.append(inarow(pos))
+            values.append(inarow(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
         value=sum(values)/len(values)
         return value
     
