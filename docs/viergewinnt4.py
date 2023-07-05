@@ -44,9 +44,11 @@ def fall( board, y, x, player):
         else:
             pass
 
-def inarow(board,player,otherplayer):
+def inarow(board):
     score=0
     # horizontal
+    player=1
+    otherplayer=-1
     for q in range(4):
         for w in range(6):
             empty=0
@@ -357,7 +359,7 @@ class MinimaxPlayer(Player):
         else:
             playerj = -1
 
-        f=inarow(position,1,-1)
+        f=inarow(position)
         if gewonnen(position, -1) == True or gewonnen(position, 1) == True:
             return f
         elif depth == self.d:
@@ -537,7 +539,7 @@ class MCTSNode(MCTSPlayer):
                     player=1
                 else:
                     player=-1
-            values.append(inarow(pos,-1,1))
+            values.append(inarow(pos))
         value=sum(values)/len(values)
         return value
     
@@ -592,7 +594,7 @@ class Minimax2Player(Player):
         # alpha: best maxpl, beta: best minpl
         self.minimaxc = self.minimaxc + 1
         # return
-        f=self.inarow(self.position,1,-1)
+        f=self.inarow(self.position)
         if self.gewonnen(self.position, -1) == True or self.gewonnen(self.position, 1) == True:
             return f
         elif self.depth == self.d:
