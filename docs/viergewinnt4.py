@@ -305,7 +305,7 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(MCTSPlayer(1))
+        self.players.append(MinimaxPlayer(1))
         self.players.append(MinimaxPlayer(-1))
         #
         current=0
@@ -743,7 +743,7 @@ game =VierGewinnt()
 x_wins = 0
 o_wins=0
 unentschieden=0
-for i in range(100):
+for i in range(10):
     r=game.play() 
     if r== 'X':
         x_wins += 1
