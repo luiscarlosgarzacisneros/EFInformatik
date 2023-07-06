@@ -578,7 +578,7 @@ class Minimax2Player(Player):
     def __init__(self, token):
         super().__init__(token)
         #
-        self.maxtime=3
+        self.maxtime=5
         #
         self.rootnode=Minimax2Node()
         self.rootnode.parent=None
@@ -610,11 +610,11 @@ class Minimax2Player(Player):
                     maxvalue=child.value
                     bestmoves.append(child)
             bestmove=random.choice(bestmoves)
+            print((time.time() - start))
         return bestmove
     
     def get_move(self, board):
         self.rootnode.position=board
-        print(self.rootnode.position)
         move=self.minimaxer(board)
         return move.position
 
@@ -732,3 +732,6 @@ for i in range(100):
 print('FERTIG')
 
 #Minimax:zeit und sort
+
+#time funktioniert nicht richtig bei minmax2
+#minmax2 funktioniert nicht
