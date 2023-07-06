@@ -454,7 +454,11 @@ class MCTSPlayer(Player):
         super().__init__(token)
         self.counter=0
         #-----
-        self.maxtime=10
+        self.maxtime=5
+        self.c=math.sqrt(2)
+        self.numberofiterations=0
+        self.depth=4
+        self.numberofsimulations=50
         #-----
         
     def mcts(self,board):
@@ -493,11 +497,6 @@ class MCTSPlayer(Player):
 class MCTSNode(MCTSPlayer):
     def __init__(self,token):
         super().__init__(token)
-        #
-        self.c=math.sqrt(2)
-        self.numberofiterations=0
-        self.depth=4
-        self.numberofsimulations=50
         #
         self.position=[]
         self.playeramzug=0
