@@ -303,7 +303,7 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(MCTSPlayer(1))
+        self.players.append(Minimax2Player(1))
         self.players.append(MCTSPlayer(-1))
         #
         current=0
@@ -582,14 +582,14 @@ class Minimax2Player(Player):
         self.d = 0
         self.maxtime=10
         #
-        self.rootnode=Minimax2Node(0)
+        self.rootnode=Minimax2Node()
         self.rootnode.children=[]
         self.rootnode.parent=None
         self.rootnode.value=0
         self.rootnode.depth=0
         self.rootnode.playeramzug=self.token
         #
-        self.layerzero=Minimax2Layer(0)
+        self.layerzero=Minimax2Layer()
         self.layerzero.nodes=[self.rootnode]
 
     def minimax(self):
@@ -597,8 +597,8 @@ class Minimax2Player(Player):
         # alpha: best maxpl, beta: best minpl
         self.minimaxc = self.minimaxc + 1
         # return
-        f=self.inarow(self.position)
-        if self.gewonnen(self.position, -1) == True or self.gewonnen(self.position, 1) == True:
+        f=inarow(self.position)
+        if gewonnen(self.position, -1) == True or gewonnen(self.position, 1) == True:
             return f
         elif self.depth == self.d:
             return f
@@ -631,18 +631,9 @@ class Minimax2Player(Player):
                     break
             return minvalue
 
-    def expandlayer(self):
-        oldlayer=Minimax2Layer(self.d)
-        self.d+=1
-        newlayer=Minimax2Layer(self.d)
-        newlayer.nodes=[]
-        for node in oldlayer.nodes:
-            node.expand()
-            for child in node.children:
-                newlayer.nodes.append(child)
-
     def minimaxer(self):
-        self.expandlayer()
+        #
+        self.layerzero.expandlayer()
         self.rootnode.minimax()
         maxvalue=-math.inf
         bestmoves=[]
@@ -657,35 +648,42 @@ class Minimax2Player(Player):
         self.rootnode.position=board
         start=time.time()
         while (time.time() - start) < self.maxtime:
-            move=self.minimaxer()
+            move=self.rootnode.minimaxer()
         return move.position
         
-class Minimax2Layer(Minimax2Player):
-    def __init__(self, token):
-        super().__init__(token)
+class Minimax2Layer():
+    def __init__(self):
         self.depth=0
         self.nodes=[]
+
+    def expandlayer(self):
+        oldlayer=Minimax2Layer()
+        self.d+=1
+        newlayer=Minimax2Layer()
+        newlayer.nodes=[]
+        for node in oldlayer.nodes:
+            node.expand()
+            for child in node.children:
+                newlayer.nodes.append(child)
 
     def sort(self):
         pass
 
-class Minimax2Node(Minimax2Player):
-    def __init__(self, token):
-        super().__init__(token)
-        self.children=[]#
-        self.parent=None#
-        self.value=0#
-        self.position=[]#
+class Minimax2Node():
+    def __init__(self):
+        self.children=[]
+        self.parent=None
+        self.value=0
+        self.position=[]
         self.depth=0
-        self.playeramzug=0#
+        self.playeramzug=0
         self.alpha=-math.inf
         self.beta=math.inf
 
     def expand(self):
-        children=self.genchildren(self.position,self.playeramzug)
+        children=genchildren(self.position,self.playeramzug)
         for i in range(len(children)):
-            self.numberofiterations+=1
-            instance = Minimax2Node(self.numberofiterations)
+            instance = Minimax2Node()
             self.children.append(instance)
             #
             instance.position=children[i]
@@ -695,7 +693,6 @@ class Minimax2Node(Minimax2Player):
                 instance.playeramzug=-1
             instance.parent=self
             instance.value=0
-            instance.isleafnode=True
             instance.depth=self.depth+1
 
 #VierGewinnt().play()
