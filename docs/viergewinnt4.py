@@ -257,6 +257,7 @@ def genchildren(position, playerk):
     #
     return children
 
+#
 
 class VierGewinnt():
     def __init__(self):
@@ -304,7 +305,7 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(Minimax2Player(1))
+        self.players.append(MCTSPlayer(1))
         self.players.append(MinimaxPlayer(-1))
         #
         current=0
@@ -333,6 +334,8 @@ class VierGewinnt():
             print('UNENTSCHIEDEN')
             return ' '
 
+#
+
 class Player():
     def __init__(self, token):
         self.token = token
@@ -345,7 +348,7 @@ class MinimaxPlayer(Player):
         super().__init__(token)
         self.token=token
         self.minimaxc = 0
-        self.d = 5
+        self.d = 4
         self.nextmoves = []
         self.scores = []
         self.move = []
@@ -454,7 +457,7 @@ class MCTSPlayer(Player):
         super().__init__(token)
         self.counter=0
         #-----
-        self.maxtime=5
+        self.maxtime=4
         self.c=math.sqrt(2)
         self.numberofiterations=0
         self.depth=4
