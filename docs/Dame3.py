@@ -489,15 +489,14 @@ def minimax(position, depth, maxplayer, alpha, beta):
         playerj = -1
 
     # return
-    f=evaluatepos(position)
     if verloren(position, -1,-2) == True:
-        return f
+        return evaluatepos(position)
     elif verloren(position, 1,2) == True:
-        return f
+        return evaluatepos(position)
     elif depth == d:
-        return f
+        return evaluatepos(position)
     elif genchildren(position, playerj) == []:
-        return f
+        return evaluatepos(position)
     #
     if maxplayer:
         maxvalue = -100000000000
