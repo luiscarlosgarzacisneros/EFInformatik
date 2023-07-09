@@ -305,7 +305,7 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(MinimaxPlayer(1))
+        self.players.append(Minimax2Player(1))
         self.players.append(MinimaxPlayer(-1))
         #
         current=0
@@ -581,7 +581,7 @@ class MCTSNode(MCTSPlayer):
 class Minimax2Player(Player):
     def __init__(self, token):
         super().__init__(token)
-        self.numberoflayers=5
+        self.numberoflayers=4
 
     def minimaxer(self,board):
         #rootnode
@@ -597,11 +597,24 @@ class Minimax2Player(Player):
         #
         layer=self.layerzero
         for i in range(self.numberoflayers):
-            layer.expandlayer()
-
+            newlayer=layer.expandlayer()
+            layer=newlayer
+        self.rootnode.minimax(-math.inf, math.inf)
 
     def get_move(self, board):
-        pass
+        self.minimaxer(board)
+        values=[]
+        bestmoves=[]
+        for child in self.rootnode.children:
+            values.append(child.value)
+        bestvalue=max(values)
+        print(values)
+        for child in self.rootnode.children:
+            if child.value==bestvalue:
+                bestmoves.append(child)
+        print(bestvalue)
+        bestmove=random.choice(bestmoves)
+        return bestmove.position
 
 class Minimax2Layer():
     def __init__(self):
@@ -610,7 +623,7 @@ class Minimax2Layer():
     def expandlayer(self):
         newlayer= Minimax2Layer()
         for node in self.nodes:
-            node.expand()
+            node.expandnode()
             newlayer.nodes.append(node)
         return newlayer
 
@@ -684,7 +697,7 @@ game =VierGewinnt()
 x_wins = 0
 o_wins=0
 unentschieden=0
-for i in range(10):
+for i in range(1):
     r=game.play() 
     if r== 'X':
         x_wins += 1
@@ -699,3 +712,5 @@ print('FERTIG')
 
 #Minimax:zeit und sort
 #minmax2 funktioniert nicht
+
+#layer0 is being expanded over and over again instead of layers 1 2 & 3
