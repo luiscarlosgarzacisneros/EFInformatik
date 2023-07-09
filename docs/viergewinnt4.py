@@ -581,7 +581,7 @@ class MCTSNode(MCTSPlayer):
 class Minimax2Player(Player):
     def __init__(self, token):
         super().__init__(token)
-        self.numberoflayers=4
+        self.numberoflayers=3
 
     def minimaxer(self,board):
         #rootnode
@@ -710,7 +710,5 @@ for i in range(1):
     print('unentschieden',unentschieden)
 print('FERTIG')
 
-#Minimax:zeit und sort
-#minmax2 funktioniert nicht
-
-#layer0 is being expanded over and over again instead of layers 1 2 & 3 -> muss minimaxer() anpassen
+#Minimax2: layer0 is being expanded over and over again instead of layers 1 2 & 3 -> muss minimaxer() anpassen
+#Minimax2: sort und zeit noch nicht implementiert
