@@ -713,4 +713,4 @@ print('FERTIG')
 #Minimax:zeit und sort
 #minmax2 funktioniert nicht
 
-#layer0 is being expanded over and over again instead of layers 1 2 & 3
+#layer0 is being expanded over and over again instead of layers 1 2 & 3 -> muss minimaxer() anpassen
