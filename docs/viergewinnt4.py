@@ -3,6 +3,7 @@ import random
 import time
 import math
 
+#
 
 def gewonnen(board, player):
     gew = False
@@ -622,9 +623,10 @@ class Minimax2Layer():
 
     def expandlayer(self):
         newlayer= Minimax2Layer()
+        newlayer.nodes=[]
         for node in self.nodes:
-            node.expandnode()
-            newlayer.nodes.append(node)
+            newnodes=node.expandnode()
+            newlayer.nodes.extend(newnodes)
         return newlayer
 
     def sort(self):
@@ -653,6 +655,7 @@ class Minimax2Node():
             instance.value=None
             instance.token=self.token
             self.children.append(instance)
+        return self.children
 
     def minimax(self,alpha,beta):
         #
@@ -687,6 +690,7 @@ class Minimax2Node():
             self.value=minvalue
             return minvalue
 
+#
 
 #VierGewinnt().play()
 
@@ -697,7 +701,7 @@ game =VierGewinnt()
 x_wins = 0
 o_wins=0
 unentschieden=0
-for i in range(1):
+for i in range(10):
     r=game.play() 
     if r== 'X':
         x_wins += 1
@@ -710,5 +714,4 @@ for i in range(1):
     print('unentschieden',unentschieden)
 print('FERTIG')
 
-#Minimax2: layer0 is being expanded over and over again instead of layers 1 2 & 3 -> muss minimaxer() anpassen
-#Minimax2: sort und zeit noch nicht implementiert
+#Minimax2: sort, depth erhöhen und zeit noch nicht implementiert
