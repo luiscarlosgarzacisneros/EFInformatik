@@ -582,7 +582,7 @@ class MCTSNode(MCTSPlayer):
 class Minimax2Player(Player):
     def __init__(self, token):
         super().__init__(token)
-        self.numberoflayers=5
+        self.numberoflayers=4
 
     def minimaxer(self,board):
         #rootnode
@@ -661,7 +661,6 @@ class Minimax2Node():
 
     def minimax(self,alpha,beta,maxplayer):
         #
-
         if gewonnen(self.position,1) or gewonnen(self.position, -1):
             self.value=inarow(self.position,self.token)
             return self.value
@@ -704,7 +703,7 @@ game =VierGewinnt()
 x_wins = 0
 o_wins=0
 unentschieden=0
-for i in range(6):
+for i in range(20):
     r=game.play() 
     if r== 'X':
         x_wins += 1
