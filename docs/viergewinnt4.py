@@ -582,7 +582,7 @@ class MCTSNode(MCTSPlayer):
 class Minimax2Player(Player):
     def __init__(self, token):
         super().__init__(token)
-        self.numberoflayers=3
+        self.numberoflayers=5
 
     def minimaxer(self,board):
         #rootnode
@@ -600,7 +600,7 @@ class Minimax2Player(Player):
         for i in range(self.numberoflayers):
             newlayer=layer.expandlayer()
             layer=newlayer
-        self.rootnode.minimax(-math.inf, math.inf)
+        self.rootnode.minimax(-math.inf, math.inf,True)
 
     def get_move(self, board):
         self.minimaxer(board)
@@ -627,6 +627,8 @@ class Minimax2Layer():
         for node in self.nodes:
             newnodes=node.expandnode()
             newlayer.nodes.extend(newnodes)
+        #print(newlayer.nodes)
+        print('NEWLAYER: ',len(newlayer.nodes))
         return newlayer
 
     def sort(self):
@@ -657,8 +659,9 @@ class Minimax2Node():
             self.children.append(instance)
         return self.children
 
-    def minimax(self,alpha,beta):
+    def minimax(self,alpha,beta,maxplayer):
         #
+
         if gewonnen(self.position,1) or gewonnen(self.position, -1):
             self.value=inarow(self.position,self.token)
             return self.value
@@ -666,27 +669,27 @@ class Minimax2Node():
             self.value=inarow(self.position,self.token)
             return self.value
         #
-        if self.playeramzug==1:
+        if maxplayer:
             maxvalue=-math.inf
             for child in self.children:
-                eval=child.minimax(alpha,beta)
+                eval=child.minimax(alpha,beta,False)
                 maxvalue = max(maxvalue, eval)
                 #pruning
-                alpha = max(alpha, eval)
-                if alpha >= beta:
-                    break
+                #alpha = max(alpha, eval)
+                #if alpha >= beta:
+                    #break
             self.value=maxvalue
             return maxvalue
         #
-        elif self.playeramzug==-1:
+        elif maxplayer==False:
             minvalue=math.inf
             for child in self.children:
-                eval=child.minimax(alpha,beta)
+                eval=child.minimax(alpha,beta,True)
                 minvalue = min(minvalue, eval)
                 #pruning
-                beta = min(beta, eval)
-                if alpha >= beta:
-                    break
+                #beta = min(beta, eval)
+                #if alpha >= beta:
+                    #break
             self.value=minvalue
             return minvalue
 
@@ -701,7 +704,7 @@ game =VierGewinnt()
 x_wins = 0
 o_wins=0
 unentschieden=0
-for i in range(10):
+for i in range(6):
     r=game.play() 
     if r== 'X':
         x_wins += 1
@@ -715,3 +718,4 @@ for i in range(10):
 print('FERTIG')
 
 #Minimax2: sort, depth erhöhen und zeit noch nicht implementiert
+#Minimax2 funktioniert nur ohne pruning
