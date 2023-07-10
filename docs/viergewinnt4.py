@@ -751,4 +751,3 @@ for i in range(30):
 print('FERTIG')
 
 #Minimax2: sort, depth erhöhen und zeit noch nicht implementiert
-#Minimax2 funktioniert nur ohne pruning
