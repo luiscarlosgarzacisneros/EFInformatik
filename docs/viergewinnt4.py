@@ -600,7 +600,13 @@ class Minimax2Player(Player):
         for i in range(self.numberoflayers):
             newlayer=layer.expandlayer()
             layer=newlayer
-        self.rootnode.minimax(-math.inf, math.inf,True)
+        #
+        for child in self.rootnode.children:
+            child.minimax(-math.inf,math.inf,False)
+            w=[]
+            for childofchild in child.children:
+                w.append(childofchild.value)
+            print(w)
 
     def get_move(self, board):
         self.minimaxer(board)
@@ -650,49 +656,77 @@ class Minimax2Node():
         for i in range(len(children)):
             instance=Minimax2Node()
             instance.position=children[i]
-            if self.playeramzug==1:
-                instance.playeramzug=-1
-            elif self.playeramzug==-1:
-                instance.playeramzug=1
+            instance.playeramzug = -self.playeramzug
             instance.value=None
             instance.token=self.token
             self.children.append(instance)
         return self.children
 
-    def minimax(self,alpha,beta,maxplayer):
-        #
-        if gewonnen(self.position,1) or gewonnen(self.position, -1):
-            self.value=inarow(self.position,self.token)
+    def minimax(self, alpha, beta, maxplayer):
+        if gewonnen(self.position, 1) or gewonnen(self.position, -1):
+            self.value = inarow(self.position, self.token)
             return self.value
-        elif self.children==[]:
-            self.value=inarow(self.position,self.token)
+        elif self.children == []:
+            self.value = inarow(self.position, self.token)
             return self.value
-        #
         if maxplayer:
-            maxvalue=-math.inf
+            maxvalue = -math.inf
             for child in self.children:
-                eval=child.minimax(alpha,beta,False)
-                maxvalue = max(maxvalue, eval)
-                #pruning
-                #alpha = max(alpha, eval)
-                #if alpha >= beta:
-                    #break
+                eval = child.minimax(alpha, beta, False)
+                if eval>maxvalue:
+                    maxvalue=eval
+                # pruning
+                if eval > alpha:
+                    alpha = eval
+                if beta <= alpha:
+                    break
             self.value=maxvalue
             return maxvalue
-        #
-        elif maxplayer==False:
-            minvalue=math.inf
+
+        else:
+            minvalue = math.inf
             for child in self.children:
-                eval=child.minimax(alpha,beta,True)
-                minvalue = min(minvalue, eval)
-                #pruning
-                #beta = min(beta, eval)
-                #if alpha >= beta:
-                    #break
+                eval = child.minimax(alpha, beta, True)
+                if eval<minvalue:
+                    minvalue=eval
+                # pruning
+                if eval < beta:
+                    beta = eval
+                if beta <= alpha:
+                    break
             self.value=minvalue
             return minvalue
+        
 
 #
+def minimax(self,alpha,beta,maxplayer):
+    #
+    if gewonnen(self.position,1) or gewonnen(self.position, -1):
+        self.value=inarow(self.position,self.token)
+        return self.value
+    elif self.children==[]:
+        self.value=inarow(self.position,self.token)
+        return self.value
+    #
+    if maxplayer:
+        maxvalue=-math.inf
+        for child in self.children:
+            eval=child.minimax(alpha,beta,False)
+            maxvalue = max(maxvalue, eval)
+            #pruning
+        self.value=maxvalue
+        return maxvalue
+    #
+    elif maxplayer==False:
+        minvalue=math.inf
+        for child in self.children:
+            eval=child.minimax(alpha,beta,True)
+            minvalue = min(minvalue, eval)
+            #pruning
+        self.value=minvalue
+        return minvalue
+
+
 
 #VierGewinnt().play()
 
@@ -703,7 +737,7 @@ game =VierGewinnt()
 x_wins = 0
 o_wins=0
 unentschieden=0
-for i in range(20):
+for i in range(50):
     r=game.play() 
     if r== 'X':
         x_wins += 1
