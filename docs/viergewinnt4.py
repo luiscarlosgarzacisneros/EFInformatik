@@ -349,7 +349,7 @@ class MinimaxPlayer(Player):
         super().__init__(token)
         self.token=token
         self.minimaxc = 0
-        self.d = 4
+        self.d = 5
         self.nextmoves = []
         self.scores = []
         self.move = []
@@ -582,7 +582,7 @@ class MCTSNode(MCTSPlayer):
 class Minimax2Player(Player):
     def __init__(self, token):
         super().__init__(token)
-        self.numberoflayers=4
+        self.numberoflayers=5
 
     def minimaxer(self,board):
         #rootnode
@@ -615,7 +615,7 @@ class Minimax2Player(Player):
         for child in self.rootnode.children:
             values.append(child.value)
         bestvalue=max(values)
-        print(values)
+        print("---",values)
         for child in self.rootnode.children:
             if child.value==bestvalue:
                 bestmoves.append(child)
@@ -698,7 +698,7 @@ class Minimax2Node():
             return minvalue
         
 
-#
+#-------------
 def minimax(self,alpha,beta,maxplayer):
     #
     if gewonnen(self.position,1) or gewonnen(self.position, -1):
@@ -725,7 +725,7 @@ def minimax(self,alpha,beta,maxplayer):
             #pruning
         self.value=minvalue
         return minvalue
-
+#-------------
 
 
 #VierGewinnt().play()
@@ -737,7 +737,7 @@ game =VierGewinnt()
 x_wins = 0
 o_wins=0
 unentschieden=0
-for i in range(50):
+for i in range(30):
     r=game.play() 
     if r== 'X':
         x_wins += 1
