@@ -251,7 +251,7 @@ def genchildren(position, playerk):
     boardcopy = copy.deepcopy(position)
     for x in range(7):
         if boardcopy[0][x] == 0:
-            boardcopy[0][x] = str(playerk)
+            boardcopy[0][x] = playerk
             fall(boardcopy, 0, x, playerk)
             children.append(boardcopy)
             boardcopy = copy.deepcopy(position)
@@ -306,8 +306,8 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(Minimax2Player(1))
-        self.players.append(MinimaxPlayer(-1))
+        self.players.append(HumanPlayer(1))
+        self.players.append(Minimax2Player(-1))
         #
         current=0
         while True:
@@ -799,22 +799,28 @@ def minimax(self,alpha,beta,maxplayer):
 #-------------
 
 
+def spielen():
+    game =VierGewinnt()
+    x_wins = 0
+    o_wins=0
+    unentschieden=0
+    for i in range(3):
+        r=game.play() 
+        if r== 'X':
+            x_wins += 1
+        elif r=='O':
+            o_wins+=1
+        else:
+            unentschieden+=1
+        print('X:',x_wins)
+        print('O:',o_wins)
+        print('-',unentschieden)
+    print('FERTIG')
 
-game =VierGewinnt()
-x_wins = 0
-o_wins=0
-unentschieden=0
-for i in range(3):
-    r=game.play() 
-    if r== 'X':
-        x_wins += 1
-    elif r=='O':
-        o_wins+=1
-    else:
-        unentschieden+=1
-    print('X:',x_wins)
-    print('O:',o_wins)
-    print('-',unentschieden)
-print('FERTIG')
+#spielen()
+VierGewinnt().printboard(VierGewinnt().board)
+for child in genchildren(VierGewinnt().board,-1):
+    VierGewinnt().printboard(child)
+
 
 #Minimax2: move sorting noch nicht implementiert
