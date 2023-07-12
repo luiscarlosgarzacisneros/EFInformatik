@@ -817,10 +817,8 @@ def spielen():
         print('-',unentschieden)
     print('FERTIG')
 
-#spielen()
-VierGewinnt().printboard(VierGewinnt().board)
-for child in genchildren(VierGewinnt().board,-1):
-    VierGewinnt().printboard(child)
+spielen()
+
 
 
 #Minimax2: move sorting noch nicht implementiert
