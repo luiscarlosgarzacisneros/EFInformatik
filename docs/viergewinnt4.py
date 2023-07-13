@@ -603,7 +603,7 @@ class Minimax2Player(Player):
         #
         layer=self.layerzero
         for i in range(self.numberoflayers):
-            newlayer=layer.expandlayer()
+            newlayer=layer.expandlayer(0,math.inf)
             layer=newlayer
         #
         for child in self.rootnode.children:
@@ -638,8 +638,11 @@ class Minimax2Player(Player):
         for child in self.rootnode.children:
             if ((time.time()+vergangene_zeit) - start) < self.maxtime:#zeit sparen
                 child.minimax(-math.inf,math.inf,False)
+                print("k ",end='') 
             else:
                 suche_fertig=False
+                break
+        print("")
         #
         values=[]
         bestmoves=[]
@@ -658,6 +661,7 @@ class Minimax2Player(Player):
         return bestmove.position
 
     def get_move2(self,board):
+        start=time.time()
         #rootnode
         self.rootnode=Minimax2Node()
         self.rootnode.position=board
@@ -671,18 +675,19 @@ class Minimax2Player(Player):
         #
         layer=self.layerzero
         for i in range(self.startinglayer):
-            newlayer=layer.expandlayer()
+            newlayer=layer.expandlayer((time.time() - start),self.maxtime)
             layer=newlayer
         #
-        start=time.time()
         counter=self.startinglayer
         bestmove=None
         while (time.time() - start) < self.maxtime:
             counter+=1
             print("DEPTH: ",counter)
-            newlayer=layer.expandlayer()
-            layer=newlayer
-            move=self.minimaxer2((time.time() - start))
+            newlayer=layer.expandlayer((time.time() - start),self.maxtime)
+            if not newlayer==["nicht fertig"]:
+                print("layer has been expanded")
+                layer=newlayer
+                move=self.minimaxer2((time.time() - start))
             if  (time.time() - start) < self.maxtime:
                 bestmove=move
                 #sort moves!!!!!!!!!
@@ -698,14 +703,22 @@ class Minimax2Layer():
     def __init__(self):
         self.nodes=[]
 
-    def expandlayer(self):
+    def expandlayer(self,vergangene_zeit,maxtime):
+        start=time.time()
         newlayer= Minimax2Layer()
         newlayer.nodes=[]
+        fertig=True
         for node in self.nodes:
             newnodes=node.expandnode()
             newlayer.nodes.extend(newnodes)
+            if ((time.time()+vergangene_zeit) - start) > maxtime:
+                fertig=False
+                break
         #print('NEWLAYER: ',len(newlayer.nodes))
-        return newlayer
+        if fertig:
+            return newlayer
+        else:
+            return ["nicht fertig"]
 
     def sort(self):
         pass #notimplementedyet
@@ -768,35 +781,6 @@ class Minimax2Node():
             return minvalue
         
 #
-
-#-------------ohne pruning
-def minimax(self,alpha,beta,maxplayer):
-    #
-    if gewonnen(self.position,1) or gewonnen(self.position, -1):
-        self.value=inarow(self.position,self.token)
-        return self.value
-    elif self.children==[]:
-        self.value=inarow(self.position,self.token)
-        return self.value
-    #
-    if maxplayer:
-        maxvalue=-math.inf
-        for child in self.children:
-            eval=child.minimax(alpha,beta,False)
-            maxvalue = max(maxvalue, eval)
-            #pruning
-        self.value=maxvalue
-        return maxvalue
-    #
-    elif maxplayer==False:
-        minvalue=math.inf
-        for child in self.children:
-            eval=child.minimax(alpha,beta,True)
-            minvalue = min(minvalue, eval)
-            #pruning
-        self.value=minvalue
-        return minvalue
-#-------------
 
 
 def spielen():
