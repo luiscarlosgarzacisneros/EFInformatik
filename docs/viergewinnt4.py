@@ -378,7 +378,7 @@ class MCTSPlayer(Player):
         super().__init__(token)
         self.counter=0
         #-----
-        self.maxtime=4
+        self.maxtime=5
         self.c=math.sqrt(2)
         self.numberofiterations=0
         self.depth=4
@@ -875,7 +875,7 @@ class Minimax4Player(Player):
             move=self.minimaxer(depth,(time.time() - start))
             if  (time.time() - start) < self.maxtime:
                 bestmove=move
-                self.rootnode.sort()
+                self.rootnode.sort(True)
                 depth+=1
             else:
                 print("NICHT FERTIG")
@@ -949,7 +949,7 @@ class Minimax4Node():
             self.value=minvalue
             return minvalue
         
-    def sort(self):
+    def sort(self, maxplayer):
         not_none_children=[]
         none_children=[]
         for child in self.children:
@@ -958,14 +958,23 @@ class Minimax4Node():
             else:
                 not_none_children.append(child)
         #
-        sorted_children = sorted(not_none_children, key=lambda x: x.value, reverse=True)
-        sorted_children.extend(none_children)
+        if maxplayer:
+            sorted_children = sorted(not_none_children, key=lambda x: x.value, reverse=True)
+            sorted_children.extend(none_children)
+            self.children=sorted_children
+            #
+            for child in not_none_children:
+                child.sort(False)
         #
-        self.children=sorted_children
-        #
-        for child in not_none_children:
-            child.sort()
-
+        else:
+            sorted_children = sorted(not_none_children, key=lambda x: x.value, reverse=False)
+            sorted_children.extend(none_children)
+            self.children=sorted_children
+            #
+            for child in not_none_children:
+                child.sort(True)
+        
+#
 
 
 

@@ -16,7 +16,7 @@ board = [
 #
 e=[]
 minimaxc = 0
-d = 3
+d = 4
 nextmoves = []
 scores = []
 move = []
@@ -1186,19 +1186,19 @@ def minimax(position, depth, maxplayer, alpha, beta):
         playerj = -6
 
     # return
-    f=evaluatepos(position)
     if verloren(position, -6) == True:
-        return f
+        return evaluatepos(position)
     elif verloren(position, 6) == True:
-        return f
+        return evaluatepos(position)
     elif depth == d:
-        return f
-    elif genchildren(position, playerj) == []:
-        return f
+        return evaluatepos(position)
+    children=genchildren(position, playerj)
+    if children == []:
+        return evaluatepos(position)
     #
     if maxplayer:
         maxvalue = -100000000000
-        for child in genchildren(position, playerj):
+        for child in children:
             value = minimax(child, depth + 1, False, alpha, beta)
             if value > maxvalue:
                 maxvalue = value
@@ -1211,7 +1211,7 @@ def minimax(position, depth, maxplayer, alpha, beta):
     #
     if not maxplayer:
         minvalue = 1000000000000
-        for child in genchildren(position, playerj):
+        for child in children:
             value = minimax(child, depth + 1, True, alpha, beta)
             if value < minvalue:
                 minvalue = value
