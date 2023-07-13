@@ -521,12 +521,13 @@ class Minimax1Player(Player):
             return inarow(position,1)
         elif depth == self.d:
             return inarow(position,1)
-        elif genchildren(position, playerj) == []:
+        children=genchildren(position, playerj)
+        if children == []:
             return inarow(position,1)
         #
         if maxplayer:
             maxvalue = -math.inf
-            for child in genchildren(position, playerj):
+            for child in children:
                 value = self.minimax(child, depth + 1, False, alpha, beta)
                 if value > maxvalue:
                     maxvalue = value
@@ -539,7 +540,7 @@ class Minimax1Player(Player):
         #
         if not maxplayer:
             minvalue = math.inf
-            for child in genchildren(position, playerj):
+            for child in children:
                 value = self.minimax(child, depth + 1, True, alpha, beta)
                 if value < minvalue:
                     minvalue = value
@@ -603,7 +604,7 @@ class Minimax2Player(Player):
             child.minimax(-math.inf,math.inf,False,self.maxdepth)
     
     def get_move(self, board):
-        self.minimaxer1(board)
+        self.minimaxer(board)
         values=[]
         bestmoves=[]
         for child in self.rootnode.children:
