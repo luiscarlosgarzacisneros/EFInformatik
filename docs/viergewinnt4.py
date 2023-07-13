@@ -978,6 +978,7 @@ class Minimax4Node():
 
 
 
+
 def spielen(z):
     game =VierGewinnt()
     x_wins = 0
@@ -997,7 +998,3 @@ def spielen(z):
     print('FERTIG')
 
 spielen(20)
-
-
-
-#Minimax3: move sorting noch nicht implementiert
