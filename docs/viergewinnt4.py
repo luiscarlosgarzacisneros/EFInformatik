@@ -259,6 +259,9 @@ def genchildren(position, playerk):
     return children
 
 #
+minimax_counter4=0
+minimax_counter3=0
+#
 
 class VierGewinnt():
     def __init__(self):
@@ -306,8 +309,8 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(Minimax2Player(1))
-        self.players.append(Minimax3Player(-1))
+        self.players.append(Minimax3Player(1))
+        self.players.append(Minimax4Player(-1))
         #
         current=0
         while True:
@@ -370,6 +373,7 @@ class HumanPlayer(Player):
 #
 
 class MCTSPlayer(Player):
+
     def __init__(self, token):
         super().__init__(token)
         self.counter=0
@@ -639,7 +643,7 @@ class Minimax2Node():
             self.children.append(instance)
         return self.children
 
-    def minimax(self, alpha, beta, maxplayer,maxdepth):
+    def minimax(self, alpha, beta, maxplayer, maxdepth):
         #
         if self.depth==maxdepth:
             self.value = inarow(self.position, self.token)
@@ -688,8 +692,8 @@ class Minimax3Player(Player):
     #sucht bis max zeit erreicht ist, depth =+1
     def __init__(self, token):
         super().__init__(token)
-        self.maxtime=3
-        self.starting_depth=3 #wenn suche bei layer1 nicht fertig wird: crash
+        self.maxtime=5
+        self.starting_depth=1 #wenn suche bei layer1 nicht fertig wird: crash
 
     def minimaxer(self, depth, vergangene_zeit):
         start=time.time()
@@ -724,6 +728,8 @@ class Minimax3Player(Player):
     
     def get_move(self, board):
         start=time.time()
+        global minimax_counter3
+        minimax_counter3=0
         #rootnode
         self.rootnode=Minimax3Node()
         self.rootnode.position=board
@@ -739,10 +745,10 @@ class Minimax3Player(Player):
             move=self.minimaxer(depth,(time.time() - start))
             if  (time.time() - start) < self.maxtime:
                 bestmove=move
-                #sort moves!!!
                 depth+=1
             else:
                 print("NICHT FERTIG")
+        print("---",minimax_counter3)
         return bestmove
 
 class Minimax3Node():
@@ -766,7 +772,141 @@ class Minimax3Node():
             self.children.append(instance)
         return self.children
 
-    def minimax(self, alpha, beta, maxplayer,maxdepth):
+    def minimax(self, alpha, beta, maxplayer, maxdepth):
+        global minimax_counter3
+        minimax_counter3+=1
+        #
+        if self.depth==maxdepth:
+            self.value = inarow(self.position, self.token)
+            return self.value
+        elif gewonnen(self.position, 1) or gewonnen(self.position, -1):
+            self.value = inarow(self.position, self.token)
+            return self.value
+        #
+        children=self.expandnode()
+        #
+        if children == []:
+            self.value = inarow(self.position, self.token)
+            return self.value
+        #
+        if maxplayer:
+            maxvalue = -math.inf
+            for child in children:
+                eval = child.minimax(alpha, beta, False, maxdepth)
+                if eval>maxvalue:
+                    maxvalue=eval
+                # pruning
+                if eval > alpha:
+                    alpha = eval
+                if beta <= alpha:
+                    break
+            self.value=maxvalue
+            return maxvalue
+        #
+        else:
+            minvalue = math.inf
+            for child in children:
+                eval = child.minimax(alpha, beta, True, maxdepth)
+                if eval<minvalue:
+                    minvalue=eval
+                # pruning
+                if eval < beta:
+                    beta = eval
+                if beta <= alpha:
+                    break
+            self.value=minvalue
+            return minvalue
+#
+
+class Minimax4Player(Player):
+    #sucht bis max zeit erreicht ist, depth =+1, move sorting
+    def __init__(self, token):
+        super().__init__(token)
+        self.maxtime=5
+        self.starting_depth=1 #wenn suche bei layer1 nicht fertig wird: crash
+
+    def minimaxer(self, depth, vergangene_zeit):
+        start=time.time()
+        suche_fertig=True
+        for child in self.rootnode.children:
+            child.minimax(-math.inf,math.inf,False, depth)
+            if ((time.time()+vergangene_zeit) - start) > self.maxtime:
+                suche_fertig=False
+                break
+            print("k ",end="") # child wurde fertig berechnet
+        
+        #
+        if suche_fertig:
+            values=[]
+            for child in self.rootnode.children:
+                values.append(child.value)
+            #
+            bestmoves=[]
+            bestvalue=max(values)
+            for child in self.rootnode.children:
+                if child.value==bestvalue:
+                    bestmoves.append(child)
+            #output---------
+            print("")
+            print(values)
+            print(bestvalue)
+            #---------------
+            bestmove=random.choice(bestmoves)
+            return bestmove.position
+        else:
+            return []
+    
+    def get_move(self, board):
+        start=time.time()
+        global minimax_counter4
+        minimax_counter4=0
+        #rootnode
+        self.rootnode=Minimax4Node()
+        self.rootnode.position=board
+        self.rootnode.playeramzug=self.token
+        self.rootnode.value=None
+        self.rootnode.token=self.token
+        self.rootnode.depth=0
+        self.rootnode.children=self.rootnode.expandnode()
+        #
+        depth=self.starting_depth
+        while (time.time() - start) < self.maxtime:
+            print("DEPTH: ",depth)
+            move=self.minimaxer(depth,(time.time() - start))
+            if  (time.time() - start) < self.maxtime:
+                bestmove=move
+                self.rootnode.sort()
+                depth+=1
+            else:
+                print("NICHT FERTIG")
+        print("---",minimax_counter4)
+        return bestmove
+
+class Minimax4Node():
+    def __init__(self):
+        self.value=None
+        self.children=[]
+        self.position=[]
+        self.playeramzug=None
+        self.token=None
+        self.depth=None
+
+    def expandnode(self):
+        children=genchildren(self.position,self.playeramzug)
+        for i in range(len(children)):
+            instance=Minimax4Node()
+            instance.position=children[i]
+            instance.playeramzug = -self.playeramzug
+            instance.value=None
+            instance.token=self.token
+            instance.depth=self.depth+1
+            self.children.append(instance)
+        return self.children
+
+    def minimax(self, alpha, beta, maxplayer, maxdepth):
+        #
+        global minimax_counter4
+        minimax_counter4+=1
         #
         if self.depth==maxdepth:
             self.value = inarow(self.position, self.token)
@@ -809,14 +949,32 @@ class Minimax3Node():
             self.value=minvalue
             return minvalue
         
-#
+    def sort(self):
+        not_none_children=[]
+        none_children=[]
+        for child in self.children:
+            if child.value==None:
+                none_children.append(child)
+            else:
+                not_none_children.append(child)
+        #
+        sorted_children = sorted(not_none_children, key=lambda x: x.value, reverse=True)
+        sorted_children.extend(none_children)
+        #
+        self.children=sorted_children
+        #
+        for child in not_none_children:
+            child.sort()
 
-def spielen():
+
+
+
+def spielen(z):
     game =VierGewinnt()
     x_wins = 0
     o_wins=0
     unentschieden=0
-    for i in range(10):
+    for i in range(z):
         r=game.play() 
         if r== 'X':
             x_wins += 1
@@ -829,8 +987,8 @@ def spielen():
         print('-:',unentschieden)
     print('FERTIG')
 
-spielen()
+spielen(20)
 
 
 
-#Minimax2: move sorting noch nicht implementiert
+#Minimax3: move sorting noch nicht implementiert

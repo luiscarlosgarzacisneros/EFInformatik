@@ -495,12 +495,13 @@ def minimax(position, depth, maxplayer, alpha, beta):
         return evaluatepos(position)
     elif depth == d:
         return evaluatepos(position)
-    elif genchildren(position, playerj) == []:
+    children=genchildren(position, playerj)
+    if children == []:
         return evaluatepos(position)
     #
     if maxplayer:
         maxvalue = -100000000000
-        for child in genchildren(position, playerj):
+        for child in children:
             value = minimax(child, depth + 1, False, alpha, beta)
             if value > maxvalue:
                 maxvalue = value
@@ -513,7 +514,7 @@ def minimax(position, depth, maxplayer, alpha, beta):
     #
     if not maxplayer:
         minvalue = 1000000000000
-        for child in genchildren(position, playerj):
+        for child in children:
             value = minimax(child, depth + 1, True, alpha, beta)
             if value < minvalue:
                 minvalue = value
@@ -1106,4 +1107,3 @@ def keinezugmoeglichkeiten(pos,player):
 play()
 
 #wenn klar gewonnen dann d -2 odr so
-#in minimax: genchildren soll nicht bei return UND minimax(neu) berechnet werden!
