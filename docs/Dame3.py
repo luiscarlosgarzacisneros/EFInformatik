@@ -1106,3 +1106,4 @@ def keinezugmoeglichkeiten(pos,player):
 play()
 
 #wenn klar gewonnen dann d -2 odr so
+#in minimax: genchildren soll nicht bei return UND minimax(neu) berechnet werden!

@@ -307,7 +307,7 @@ class VierGewinnt():
         # X spielt immer zuerst
         self.players.clear()
         self.players.append(Minimax2Player(1))
-        self.players.append(Minimax2Player(-1))
+        self.players.append(Minimax3Player(-1))
         #
         current=0
         while True:
@@ -344,91 +344,7 @@ class Player():
     def get_move(self, board):
         raise NotImplementedError('Not implemented')
 
-class MinimaxPlayer(Player):
-    def __init__(self, token):
-        super().__init__(token)
-        self.token=token
-        self.minimaxc = 0
-        self.d = 5
-        self.nextmoves = []
-        self.scores = []
-        self.move = []
-        self.moves=[]
-        self.bestscores=[]
-
-    def minimax(self,position, depth, maxplayer, alpha, beta):
-        # Spieler
-        # alpha: best maxpl, beta: best minpl
-        self.minimaxc = self.minimaxc + 1
-        # return
-        if maxplayer:
-            playerj = 1
-        else:
-            playerj = -1
-
-        if gewonnen(position, -1) == True or gewonnen(position, 1) == True:
-            return inarow(position,1)
-        elif depth == self.d:
-            return inarow(position,1)
-        elif genchildren(position, playerj) == []:
-            return inarow(position,1)
-        #
-        if maxplayer:
-            maxvalue = -math.inf
-            for child in genchildren(position, playerj):
-                value = self.minimax(child, depth + 1, False, alpha, beta)
-                if value > maxvalue:
-                    maxvalue = value
-                # pruning
-                if value > alpha:
-                    alpha = value
-                if beta <= alpha:
-                    break
-            return maxvalue
-        #
-        if not maxplayer:
-            minvalue = math.inf
-            for child in genchildren(position, playerj):
-                value = self.minimax(child, depth + 1, True, alpha, beta)
-                if value < minvalue:
-                    minvalue = value
-                # pruning
-                if value < beta:
-                    beta = value
-                if beta <= alpha:
-                    break
-            return minvalue
-    #
-    def minimaxer(self,boa):
-        self.minimaxc = 0
-        self.nextmoves.clear()
-        self.scores.clear()
-        self.move.clear()
-        self.moves.clear()
-        if self.token==-1:
-            maxplother=True
-        else:
-            maxplother=False
-        for firstgenchild in genchildren(boa, self.token):
-            self.nextmoves.append(copy.deepcopy(firstgenchild))
-            self.scores.append(self.minimax(firstgenchild, 1, maxplother, -math.inf, math.inf))
-        #
-        print(self.scores)
-        #
-        if self.token==-1:
-            minormax=min
-        else:
-            minormax=max
-        #
-        print(min(self.scores))
-        for y in range(len(self.scores)):
-            if self.scores[y]==(minormax(self.scores)):
-                self.moves.append(copy.deepcopy(self.nextmoves[y]))
-        self.move = copy.deepcopy(random.choice(self.moves))
-    #         
-    def get_move(self, board):
-        self.minimaxer(board)
-        return self.move
+#
 
 class HumanPlayer(Player):
     def __init__(self, token):
@@ -579,17 +495,101 @@ class MCTSNode(MCTSPlayer):
 
 #
 
-class Minimax2Player(Player):
+class Minimax1Player(Player):
     def __init__(self, token):
         super().__init__(token)
-        #getmove1
-        self.numberoflayers=5
-        #getmove2
-        self.maxtime=3
-        self.startinglayer=4#wenn suche bei layer1 nicht fertig wird: crash
+        self.token=token
+        self.minimaxc = 0
+        self.d = 5
+        self.nextmoves = []
+        self.scores = []
+        self.move = []
+        self.moves=[]
+        self.bestscores=[]
 
-    #--------------sucht bis max depth erreicht ist
-    def minimaxer1(self,board):
+    def minimax(self,position, depth, maxplayer, alpha, beta):
+        # Spieler
+        # alpha: best maxpl, beta: best minpl
+        self.minimaxc = self.minimaxc + 1
+        # return
+        if maxplayer:
+            playerj = 1
+        else:
+            playerj = -1
+
+        if gewonnen(position, -1) == True or gewonnen(position, 1) == True:
+            return inarow(position,1)
+        elif depth == self.d:
+            return inarow(position,1)
+        elif genchildren(position, playerj) == []:
+            return inarow(position,1)
+        #
+        if maxplayer:
+            maxvalue = -math.inf
+            for child in genchildren(position, playerj):
+                value = self.minimax(child, depth + 1, False, alpha, beta)
+                if value > maxvalue:
+                    maxvalue = value
+                # pruning
+                if value > alpha:
+                    alpha = value
+                if beta <= alpha:
+                    break
+            return maxvalue
+        #
+        if not maxplayer:
+            minvalue = math.inf
+            for child in genchildren(position, playerj):
+                value = self.minimax(child, depth + 1, True, alpha, beta)
+                if value < minvalue:
+                    minvalue = value
+                # pruning
+                if value < beta:
+                    beta = value
+                if beta <= alpha:
+                    break
+            return minvalue
+    #
+    def minimaxer(self,boa):
+        self.minimaxc = 0
+        self.nextmoves.clear()
+        self.scores.clear()
+        self.move.clear()
+        self.moves.clear()
+        if self.token==-1:
+            maxplother=True
+        else:
+            maxplother=False
+        for firstgenchild in genchildren(boa, self.token):
+            self.nextmoves.append(copy.deepcopy(firstgenchild))
+            self.scores.append(self.minimax(firstgenchild, 1, maxplother, -math.inf, math.inf))
+        #
+        print(self.scores)
+        #
+        if self.token==-1:
+            minormax=min
+        else:
+            minormax=max
+        #
+        print(min(self.scores))
+        for y in range(len(self.scores)):
+            if self.scores[y]==(minormax(self.scores)):
+                self.moves.append(copy.deepcopy(self.nextmoves[y]))
+        self.move = copy.deepcopy(random.choice(self.moves))
+    #         
+    def get_move(self, board):
+        self.minimaxer(board)
+        return self.move
+
+#
+
+class Minimax2Player(Player):
+    #sucht bis max depth erreicht ist
+    def __init__(self, token):
+        super().__init__(token)
+        self.maxdepth=5
+    
+    def minimaxer(self,board):
         #rootnode
         self.rootnode=Minimax2Node()
         self.rootnode.position=board
@@ -597,25 +597,12 @@ class Minimax2Player(Player):
         self.rootnode.value=None
         self.rootnode.children=[]
         self.rootnode.token=self.token
-        #layerzero
-        self.layerzero=Minimax2Layer()
-        self.layerzero.nodes=[self.rootnode]
+        self.rootnode.depth=0
         #
-        layer=self.layerzero
-        for i in range(self.numberoflayers):
-            newlayer=layer.expandlayer(0,math.inf)
-            layer=newlayer
-        #
-        for child in self.rootnode.children:
-            child.minimax(-math.inf,math.inf,False)
-            #um tree besser analysieren zu können
-            #w=[]
-            #for childofchild in child.children:
-                #w.append(childofchild.value)
-            #print(w)
-        #
-
-    def get_move1(self, board):
+        for child in self.rootnode.expandnode():
+            child.minimax(-math.inf,math.inf,False,self.maxdepth)
+    
+    def get_move(self, board):
         self.minimaxer1(board)
         values=[]
         bestmoves=[]
@@ -629,110 +616,15 @@ class Minimax2Player(Player):
         print(bestvalue)
         bestmove=random.choice(bestmoves)
         return bestmove.position
-    #--------------
-
-    #--------------sucht bis max zeit erreicht ist, depth =+1
-    def minimaxer2(self,vergangene_zeit):
-        start=time.time()
-        suche_fertig=True #nur für output wichtig
-        for child in self.rootnode.children:
-            if ((time.time()+vergangene_zeit) - start) < self.maxtime:#zeit sparen
-                child.minimax(-math.inf,math.inf,False)
-                print("k ",end='') 
-            else:
-                suche_fertig=False
-                break
-        print("")
-        #
-        values=[]
-        bestmoves=[]
-        #
-        for child in self.rootnode.children:
-            values.append(child.value)
-        bestvalue=max(values)
-        if suche_fertig:
-            print(values)
-        for child in self.rootnode.children:
-            if child.value==bestvalue:
-                bestmoves.append(child)
-        if suche_fertig:
-            print(bestvalue)
-        bestmove=random.choice(bestmoves)
-        return bestmove.position
-
-    def get_move2(self,board):
-        start=time.time()
-        #rootnode
-        self.rootnode=Minimax2Node()
-        self.rootnode.position=board
-        self.rootnode.playeramzug=self.token
-        self.rootnode.value=None
-        self.rootnode.children=[]
-        self.rootnode.token=self.token
-        #layerzero
-        self.layerzero=Minimax2Layer()
-        self.layerzero.nodes=[self.rootnode]
-        #
-        layer=self.layerzero
-        for i in range(self.startinglayer):
-            newlayer=layer.expandlayer((time.time() - start),self.maxtime)
-            layer=newlayer
-        #
-        counter=self.startinglayer
-        bestmove=None
-        while (time.time() - start) < self.maxtime:
-            counter+=1
-            print("DEPTH: ",counter)
-            newlayer=layer.expandlayer((time.time() - start),self.maxtime)
-            if not newlayer==["nicht fertig"]:
-                print("layer has been expanded")
-                layer=newlayer
-                move=self.minimaxer2((time.time() - start))
-            if  (time.time() - start) < self.maxtime:
-                bestmove=move
-                #sort moves!!!!!!!!!
-            else:
-                print("NICHT FERTIG")
-        return bestmove
-    #--------------
-
-    def get_move(self, board):
-        return self.get_move1(board)
-
-class Minimax2Layer():
-    def __init__(self):
-        self.nodes=[]
-
-    def expandlayer(self,vergangene_zeit,maxtime):
-        start=time.time()
-        newlayer= Minimax2Layer()
-        newlayer.nodes=[]
-        fertig=True
-        for node in self.nodes:
-            newnodes=node.expandnode()
-            newlayer.nodes.extend(newnodes)
-            if ((time.time()+vergangene_zeit) - start) > maxtime:
-                fertig=False
-                break
-        #print('NEWLAYER: ',len(newlayer.nodes))
-        if fertig:
-            return newlayer
-        else:
-            return ["nicht fertig"]
-
-    def sort(self):
-        pass #notimplementedyet
 
 class Minimax2Node():
     def __init__(self):
-        #
-        self.maxtime=5
-        #
         self.value=None
         self.children=[]
         self.position=[]
         self.playeramzug=None
         self.token=None
+        self.depth=None
 
     def expandnode(self):
         children=genchildren(self.position,self.playeramzug)
@@ -742,20 +634,29 @@ class Minimax2Node():
             instance.playeramzug = -self.playeramzug
             instance.value=None
             instance.token=self.token
+            instance.depth=self.depth+1
             self.children.append(instance)
         return self.children
 
-    def minimax(self, alpha, beta, maxplayer):
-        if gewonnen(self.position, 1) or gewonnen(self.position, -1):
+    def minimax(self, alpha, beta, maxplayer,maxdepth):
+        #
+        if self.depth==maxdepth:
             self.value = inarow(self.position, self.token)
             return self.value
-        elif self.children == []:
+        elif gewonnen(self.position, 1) or gewonnen(self.position, -1):
             self.value = inarow(self.position, self.token)
             return self.value
+        #
+        children=self.expandnode()
+        #
+        if children == []:
+            self.value = inarow(self.position, self.token)
+            return self.value
+        #
         if maxplayer:
             maxvalue = -math.inf
-            for child in self.children:
-                eval = child.minimax(alpha, beta, False)
+            for child in children:
+                eval = child.minimax(alpha, beta, False, maxdepth)
                 if eval>maxvalue:
                     maxvalue=eval
                 # pruning
@@ -765,11 +666,138 @@ class Minimax2Node():
                     break
             self.value=maxvalue
             return maxvalue
-
+        #
         else:
             minvalue = math.inf
-            for child in self.children:
-                eval = child.minimax(alpha, beta, True)
+            for child in children:
+                eval = child.minimax(alpha, beta, True, maxdepth)
+                if eval<minvalue:
+                    minvalue=eval
+                # pruning
+                if eval < beta:
+                    beta = eval
+                if beta <= alpha:
+                    break
+            self.value=minvalue
+            return minvalue
+            
+#
+
+class Minimax3Player(Player):
+    #sucht bis max zeit erreicht ist, depth =+1
+    def __init__(self, token):
+        super().__init__(token)
+        self.maxtime=3
+        self.starting_depth=3 #wenn suche bei layer1 nicht fertig wird: crash
+
+    def minimaxer(self, depth, vergangene_zeit):
+        start=time.time()
+        suche_fertig=True
+        for child in self.rootnode.children:
+            child.minimax(-math.inf,math.inf,False, depth)
+            if ((time.time()+vergangene_zeit) - start) > self.maxtime:
+                suche_fertig=False
+                break
+            print("k ",end="") # child wurde fertig berechnet
+        
+        #
+        if suche_fertig:
+            values=[]
+            for child in self.rootnode.children:
+                values.append(child.value)
+            #
+            bestmoves=[]
+            bestvalue=max(values)
+            for child in self.rootnode.children:
+                if child.value==bestvalue:
+                    bestmoves.append(child)
+            #output---------
+            print("")
+            print(values)
+            print(bestvalue)
+            #---------------
+            bestmove=random.choice(bestmoves)
+            return bestmove.position
+        else:
+            return []
+    
+    def get_move(self, board):
+        start=time.time()
+        #rootnode
+        self.rootnode=Minimax3Node()
+        self.rootnode.position=board
+        self.rootnode.playeramzug=self.token
+        self.rootnode.value=None
+        self.rootnode.token=self.token
+        self.rootnode.depth=0
+        self.rootnode.children=self.rootnode.expandnode()
+        #
+        depth=self.starting_depth
+        while (time.time() - start) < self.maxtime:
+            print("DEPTH: ",depth)
+            move=self.minimaxer(depth,(time.time() - start))
+            if  (time.time() - start) < self.maxtime:
+                bestmove=move
+                #sort moves!!!
+                depth+=1
+            else:
+                print("NICHT FERTIG")
+        return bestmove
+
+class Minimax3Node():
+    def __init__(self):
+        self.value=None
+        self.children=[]
+        self.position=[]
+        self.playeramzug=None
+        self.token=None
+        self.depth=None
+
+    def expandnode(self):
+        children=genchildren(self.position,self.playeramzug)
+        for i in range(len(children)):
+            instance=Minimax3Node()
+            instance.position=children[i]
+            instance.playeramzug = -self.playeramzug
+            instance.value=None
+            instance.token=self.token
+            instance.depth=self.depth+1
+            self.children.append(instance)
+        return self.children
+
+    def minimax(self, alpha, beta, maxplayer,maxdepth):
+        #
+        if self.depth==maxdepth:
+            self.value = inarow(self.position, self.token)
+            return self.value
+        elif gewonnen(self.position, 1) or gewonnen(self.position, -1):
+            self.value = inarow(self.position, self.token)
+            return self.value
+        #
+        children=self.expandnode()
+        #
+        if children == []:
+            self.value = inarow(self.position, self.token)
+            return self.value
+        #
+        if maxplayer:
+            maxvalue = -math.inf
+            for child in children:
+                eval = child.minimax(alpha, beta, False, maxdepth)
+                if eval>maxvalue:
+                    maxvalue=eval
+                # pruning
+                if eval > alpha:
+                    alpha = eval
+                if beta <= alpha:
+                    break
+            self.value=maxvalue
+            return maxvalue
+        #
+        else:
+            minvalue = math.inf
+            for child in children:
+                eval = child.minimax(alpha, beta, True, maxdepth)
                 if eval<minvalue:
                     minvalue=eval
                 # pruning
@@ -781,7 +809,6 @@ class Minimax2Node():
             return minvalue
         
 #
-
 
 def spielen():
     game =VierGewinnt()
