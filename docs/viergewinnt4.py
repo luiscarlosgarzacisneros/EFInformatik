@@ -246,17 +246,27 @@ def inarow(board,player):
                     score=score-3
     return score
     
-def genchildren(position, playerk):
+def genchildren(position, player):
     children = []
     boardcopy = copy.deepcopy(position)
     for x in range(7):
         if boardcopy[0][x] == 0:
-            boardcopy[0][x] = playerk
-            fall(boardcopy, 0, x, playerk)
+            boardcopy[0][x] = player
+            fall(boardcopy, 0, x, player)
             children.append(boardcopy)
             boardcopy = copy.deepcopy(position)
     #
     return children
+
+def generate_one_random_child(position,player):#für Monte Carlo Simulation
+        boardcopy = copy.deepcopy(position)
+        while True:
+            x=random.randint(0,6)
+            if boardcopy[0][x] == 0:
+                break
+        boardcopy[0][x] = player
+        fall(boardcopy, 0, x, player)
+        return boardcopy
 
 #
 minimax_counter4=0
@@ -309,7 +319,7 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(Minimax3Player(1))
+        self.players.append(HumanPlayer(1))
         self.players.append(Minimax4Player(-1))
         #
         current=0
@@ -377,12 +387,12 @@ class MCTSPlayer(Player):
     def __init__(self, token):
         super().__init__(token)
         self.counter=0
+        self.numberofiterations=0
         #-----
         self.maxtime=5
         self.c=math.sqrt(2)
-        self.numberofiterations=0
-        self.depth=4
-        self.numberofsimulations=50
+        self.depth=1
+        self.numberofsimulations=1
         #-----
         
     def mcts(self,board):
@@ -460,7 +470,7 @@ class MCTSNode(MCTSPlayer):
             pos=self.position
             player=self.playeramzug
             for i in range(self.depth):
-                nextpos=random.choice(genchildren(pos,player))
+                nextpos=generate_one_random_child(pos,player)
                 pos=nextpos
                 if player==-1:
                     player=1
