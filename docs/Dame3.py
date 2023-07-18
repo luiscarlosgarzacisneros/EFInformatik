@@ -826,11 +826,11 @@ def genchildrenWM(y,x,pos,player):
                 break
             if boardcopy[y-1-o][x+1+o]>0:
                 if y-2-o>-1:
-                    if not x+2+o>7:               #????????
+                    if not x+2+o>7:               
                         schlagen=True
             if boardcopy[y-1-o][x+1+o]==0:
                 boardcopy[y-1-o][x+1+o]=-2
-                boardcopy[y][x]=0               #????????
+                boardcopy[y][x]=0               
                 childrenWM2.append(boardcopy)
                 boardcopy=copy.deepcopy(pos)
             if schlagen:

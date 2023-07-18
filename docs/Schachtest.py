@@ -3,18 +3,14 @@ import time
 import random
 
 
-board = [
-    [-4, -2, -3, -5, -6, -3, -2, -4],
-    [-1, -1, -1, -1, -1, -1, -1, -1],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [1, 1, 1, 1, 1, 1, 1, 1],
-    [4, 2, 3, 5, 6, 3, 2, 4]
-]
+#1:b
+#2:l
+#3:x
+#4:t
+#5:q
+#6:k
+
 #
-e=[]
 minimaxc = 0
 d = 4
 nextmoves = []
@@ -23,312 +19,9 @@ move = []
 moves=[]
 bestscores=[]
 maxtime = 20
-turn=0
 firstchildren=[]
+
 #
-
-
-
-def printboard(board):
-    print('  1   2   3   4   5   6   7   8')
-    print('---------------------------------')
-    for i in range(8):
-        print('I ', end='')
-        for j in range(8):
-            if board[i][j]==1:
-                print('b', end='')
-            elif board[i][j]==2:
-                print('l', end='')
-            elif board[i][j]==3:
-                print('x', end='')
-            elif board[i][j]==4:
-                print('t', end='')
-            elif board[i][j]==5:
-                print('q', end='')
-            elif board[i][j]==6:
-                print('k', end='')
-            elif board[i][j]==-1:
-                print('B', end='')
-            elif board[i][j]==-2:
-                print('L', end='')
-            elif board[i][j]==-3:
-                print('X', end='')
-            elif board[i][j]==-4:
-                print('T', end='')
-            elif board[i][j]==-5:
-                print('Q', end='')
-            elif board[i][j]==-6:
-                print('K', end='')
-            elif board[i][j]==0:
-                print(' ', end='')
-            print(' I ', end='')
-        print(i + 1)
-        print('---------------------------------')
-
-def eingabe(pos):
-    e.clear()
-    korrekt=False
-    try:
-        vx = int(input('von x: ')) - 1
-        vy = int(input('von y: ')) - 1
-        zx = int(input('zu x: ')) - 1
-        zy = int(input('zu y: ')) - 1
-    except:
-        print('EINGABE NICHT KORREKT')
-        return False
-    #
-    if vy<8 and vy>-1 and vx<8 and vx>-1 and zy<8 and zy>-1 and zx<8 and zx>-1:
-        #b
-        if pos[vy][vx]==1:
-            #2nachv
-            if vy==6 and pos[zy][zx]==0 and pos[vy-1][vx]==0 and vx==zx and zy==vy-2:
-                korrekt=True
-            #1nachv normal bew
-            if pos[zy][zx]==0 and vx==zx and zy==vy-1:
-                korrekt=True
-            #schlagen
-            if pos[zy][zx]<0 and zy==vy-1 and vx-1==zx:
-                korrekt=True
-            if pos[zy][zx]<0 and zy==vy-1 and vx+1==zx:
-                korrekt=True
-        #k
-        if pos[vy][vx]==6:
-            #vertikal
-            if pos[zy][zx]<=0 and vx-1==zx and zy==vy:
-                korrekt=True
-            if pos[zy][zx]<=0 and vx+1==zx and zy==vy:
-                korrekt=True
-            #horizontal
-            if pos[zy][zx]<=0 and vx==zx and zy==vy-1:
-                korrekt=True
-            if pos[zy][zx]<=0 and vx==zx and zy==vy+1:
-                korrekt=True
-            #diagonal
-            if pos[zy][zx]<=0 and vx-1==zx and zy==vy-1:
-                korrekt=True
-            if pos[zy][zx]<=0 and vx+1==zx and zy==vy-1:
-                korrekt=True
-            if pos[zy][zx]<=0 and vx+1==zx and zy==vy+1:
-                korrekt=True
-            if pos[zy][zx]<=0 and vx-1==zx and zy==vy+1:
-                korrekt=True
-        #t 
-        if pos[vy][vx]==4:
-            #vertikal
-            if pos[zy][zx]<=0 and vx==zx:
-                #nach unten
-                if vy<zy:
-                    pathclear=True
-                    f=1
-                    while True:
-                        if vy+f==zy:
-                            break
-                        if pos[vy+f][vx]!=0:
-                            pathclear=False
-                            break
-                        f=f+1
-                    if pathclear:
-                        korrekt=True
-                #nach oben
-                if vy>zy:
-                    pathclear=True
-                    f=1
-                    while True:
-                        if vy-f==zy:
-                            break
-                        if pos[vy-f][vx]!=0:
-                            pathclear=False
-                            break
-                        f=f+1
-                    if pathclear:
-                        korrekt=True
-            #horizontal
-            if pos[zy][zx]<=0 and vy==zy:
-                #nach rechts
-                if vx<zx:
-                    pathclear=True
-                    f=1
-                    while True:
-                        if vx+f==zx:
-                            break
-                        if pos[vy][vx+f]!=0:
-                            pathclear=False
-                            break
-                        f=f+1
-                    if pathclear:
-                        korrekt=True
-                #nach links
-                if vx>zx:
-                    pathclear=True
-                    f=1
-                    while True:
-                        if vx-f==zx:
-                            break
-                        if pos[vy][vx-f]!=0:
-                            pathclear=False
-                            break
-                        f=f+1
-                    if pathclear:
-                        korrekt=True
-        #x
-        if pos[vy][vx]==3 and pos[zy][zx]<=0:
-            pathclear=False
-            for u in range(8):
-                if zy>vy and zx>vx:
-                    if vx+u+1==zx and vy+u+1==zy:
-                        pathclear=True
-                        break
-                    if pos[vy+u+1][vx+u+1]!=0:
-                        break
-                if zy<vy and zx>vx:
-                    if vx+u+1==zx and vy-u-1==zy:
-                        pathclear=True
-                        break
-                    if pos[vy-u-1][vx+u+1]!=0:
-                        break
-                if zy>vy and zx<vx:
-                    if vx-u-1==zx and vy+u+1==zy:
-                        pathclear=True
-                        break
-                    if pos[vy+u+1][vx-1-u]!=0:
-                        break
-                if zy<vy and zx<vx:
-                    if vx-1-u==zx and vy-u-1==zy:
-                        pathclear=True
-                        break
-                    if pos[vy-u-1][vx-u-1]!=0:
-                        break
-            if pathclear:
-                korrekt=True
-        #q
-        if pos[vy][vx]==5 and pos[zy][zx]<=0:
-            pathcleart=False
-            for u in range(8):
-                if zy>vy and zx>vx:
-                    if vx+u+1==zx and vy+u+1==zy:
-                        pathcleart=True
-                        break
-                    if pos[vy+u+1][vx+u+1]!=0:
-                        break
-                if zy<vy and zx>vx:
-                    if vx+u+1==zx and vy-u-1==zy:
-                        pathcleart=True
-                        break
-                    if pos[vy-u-1][vx+u+1]!=0:
-                        break
-                if zy>vy and zx<vx:
-                    if vx-u-1==zx and vy+u+1==zy:
-                        pathcleart=True
-                        break
-                    if pos[vy+u+1][vx-1-u]!=0:
-                        break
-                if zy<vy and zx<vx:
-                    if vx-1-u==zx and vy-u-1==zy:
-                        pathcleart=True
-                        break
-                    if pos[vy-u-1][vx-u-1]!=0:
-                        break
-            if pathcleart:
-                korrekt=True
-            #vertikal
-            if pos[zy][zx]<=0 and vx==zx:
-                #nach unten
-                if vy<zy:
-                    pathclearl=True
-                    f=1
-                    while True:
-                        if vy+f==zy:
-                            break
-                        if pos[vy+f][vx]!=0:
-                            pathclearl=False
-                            break
-                        f=f+1
-                    if pathclearl:
-                        korrekt=True
-                #nach oben
-                if vy>zy:
-                    pathclearl=True
-                    f=1
-                    while True:
-                        if vy-f==zy:
-                            break
-                        if pos[vy-f][vx]!=0:
-                            pathclearl=False
-                            break
-                        f=f+1
-                    if pathclearl:
-                        korrekt=True
-            #horizontal
-            if pos[zy][zx]<=0 and vy==zy:
-                #nach rechts
-                if vx<zx:
-                    pathclearl=True
-                    f=1
-                    while True:
-                        if vx+f==zx:
-                            break
-                        if pos[vy][vx+f]!=0:
-                            pathclearl=False
-                            break
-                        f=f+1
-                    if pathclearl:
-                        korrekt=True
-                #nach links
-                if vx>zx:
-                    pathclearl=True
-                    f=1
-                    while True:
-                        if vx-f==zx:
-                            break
-                        if pos[vy][vx-f]!=0:
-                            pathclearl=False
-                            break
-                        f=f+1
-                    if pathclearl:
-                        korrekt=True
-        #l
-        if pos[vy][vx]==2 and pos[zy][zx]<=0:
-            if zy==vy-2 and zx==vx+1:
-                korrekt=True
-            if zy==vy-2 and zx==vx-1:
-                korrekt=True
-            if zy==vy+2 and zx==vx+1:
-                korrekt=True
-            if zy==vy+2 and zx==vx-1:
-                korrekt=True
-            if zy==vy+1 and zx==vx+2:
-                korrekt=True
-            if zy==vy-1 and zx==vx+2:
-                korrekt=True
-            if zy==vy+1 and zx==vx-2:
-                korrekt=True
-            if zy==vy-1 and zx==vx-2:
-                korrekt=True
-
-    if korrekt:
-        e.append(vy)
-        e.append(vx)
-        e.append(zy)
-        e.append(zx)
-        return True
-    else:
-        print('EINGABE NICHT KORREKT')
-        return False
-
-def player(pos):
-    while True:
-        if eingabe(pos)==True:
-            break
-        else:
-            continue
-    #
-    vy = e[0]
-    vx = e[1]
-    zy = e[2]
-    zx = e[3]
-    #
-    pos[zy][zx]=pos[vy][vx]
-    pos[vy][vx]=0
 
 def genchildren(position, playerk):
     children = []
@@ -1134,6 +827,8 @@ def gcBb(y,x,pos,player):
                 boardc=copy.deepcopy(pos)
     return childrenB
 
+#
+
 def verloren(pos,player):
     eval=False
     for p in range(8):
@@ -1145,36 +840,455 @@ def verloren(pos,player):
     else:
         return True
 
-def evaluatepos(pos):
+def evaluatepos(pos,playerk):
     val=0
-    for p in range(8):
-        for o in range(8):
-            if pos[p][o]==-6:
-                val=val-1000
-            if pos[p][o]==-5:
-                val=val-9
-            if pos[p][o]==-4:
-                val=val-5
-            if pos[p][o]==-2:
-                val=val-3
-            if pos[p][o]==-3:
-                val=val-3
-            if pos[p][o]==-1:
-                val=val-1
-            #
-            if pos[p][o]==6:
-                val=val+1000
-            if pos[p][o]==5:
-                val=val+9
-            if pos[p][o]==4:
-                val=val+5
-            if pos[p][o]==2:
-                val=val+3
-            if pos[p][o]==3:
-                val=val+3
-            if pos[p][o]==1:
-                val=val+1
+    if playerk==6:
+        for p in range(8):
+            for o in range(8):
+                if pos[p][o]==-6:
+                    val=val-1000
+                if pos[p][o]==-5:
+                    val=val-9
+                if pos[p][o]==-4:
+                    val=val-5
+                if pos[p][o]==-2:
+                    val=val-3
+                if pos[p][o]==-3:
+                    val=val-3
+                if pos[p][o]==-1:
+                    val=val-1
+                #
+                if pos[p][o]==6:
+                    val=val+1000
+                if pos[p][o]==5:
+                    val=val+9
+                if pos[p][o]==4:
+                    val=val+5
+                if pos[p][o]==2:
+                    val=val+3
+                if pos[p][o]==3:
+                    val=val+3
+                if pos[p][o]==1:
+                    val=val+1
+    elif playerk==-6:
+        for p in range(8):
+            for o in range(8):
+                if pos[p][o]==-6:
+                    val=val+1000
+                if pos[p][o]==-5:
+                    val=val+9
+                if pos[p][o]==-4:
+                    val=val+5
+                if pos[p][o]==-2:
+                    val=val+3
+                if pos[p][o]==-3:
+                    val=val+3
+                if pos[p][o]==-1:
+                    val=val+1
+                #
+                if pos[p][o]==6:
+                    val=val-1000
+                if pos[p][o]==5:
+                    val=val-9
+                if pos[p][o]==4:
+                    val=val-5
+                if pos[p][o]==2:
+                    val=val-3
+                if pos[p][o]==3:
+                    val=val-3
+                if pos[p][o]==1:
+                    val=val-1
     return val
+
+#
+
+class Schach():
+    def __init__(self):
+        self.board=[
+            [-4, -2, -3, -5, -6, -3, -2, -4],
+            [-1, -1, -1, -1, -1, -1, -1, -1],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [4, 2, 3, 5, 6, 3, 2, 4]
+        ]
+        self.turn=0
+        self.players=[]
+
+    def printboard(self,board):
+        print('  1   2   3   4   5   6   7   8')
+        print('---------------------------------')
+        for i in range(8):
+            print('I ', end='')
+            for j in range(8):
+                if board[i][j]==1:
+                    print('b', end='')
+                elif board[i][j]==2:
+                    print('l', end='')
+                elif board[i][j]==3:
+                    print('x', end='')
+                elif board[i][j]==4:
+                    print('t', end='')
+                elif board[i][j]==5:
+                    print('q', end='')
+                elif board[i][j]==6:
+                    print('k', end='')
+                elif board[i][j]==-1:
+                    print('B', end='')
+                elif board[i][j]==-2:
+                    print('L', end='')
+                elif board[i][j]==-3:
+                    print('X', end='')
+                elif board[i][j]==-4:
+                    print('T', end='')
+                elif board[i][j]==-5:
+                    print('Q', end='')
+                elif board[i][j]==-6:
+                    print('K', end='')
+                elif board[i][j]==0:
+                    print(' ', end='')
+                print(' I ', end='')
+            print(i + 1)
+            print('---------------------------------')
+
+    def play(self):
+        #
+        self.board=[
+            [-4, -2, -3, -5, -6, -3, -2, -4],
+            [-1, -1, -1, -1, -1, -1, -1, -1],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [4, 2, 3, 5, 6, 3, 2, 4]
+        ]
+        #
+        self.players.clear()
+        self.players.append()
+        self.players.append()
+        #
+        current=0
+        while True:
+            print(self.turn)
+            self.printboard(self.board)
+            player = self.players[current]
+            if player.token==1:
+                istamzug='X'
+            else:
+                istamzug='O'
+            print(istamzug, ' ist am Zug')
+            self.board=player.get_move(copy.deepcopy(self.board))
+            current = (current + 1) % 2
+            self.turn+=1
+            if verloren(self.board,-6)or verloren(self.board,6):
+                break
+        self.printboard(self.board)
+        if verloren(self.board,6):
+            print('O HAT GEWONNEN')
+            return 'O'
+        elif verloren(self.board,-6):
+            print('X HAT GEWONNEN')
+            return 'X'
+        else:
+            print('UNENTSCHIEDEN')
+            return ' '
+        
+#
+
+class Player():
+    def __init__(self, token):
+        self.token = token
+
+    def get_move(self, board):
+        raise NotImplementedError('Not implemented')
+
+#
+
+class HumanPlayer(Player):
+    def __init__(self, token):
+        super().__init__(token)
+        self.e=[]
+
+    def eingabe(self,pos):
+        self.e.clear()
+        korrekt=False
+        try:
+            vx = int(input('von x: ')) - 1
+            vy = int(input('von y: ')) - 1
+            zx = int(input('zu x: ')) - 1
+            zy = int(input('zu y: ')) - 1
+        except:
+            print('EINGABE NICHT KORREKT')
+            return False
+        #
+        if vy<8 and vy>-1 and vx<8 and vx>-1 and zy<8 and zy>-1 and zx<8 and zx>-1:
+            #b
+            if pos[vy][vx]==1:
+                #2nachv
+                if vy==6 and pos[zy][zx]==0 and pos[vy-1][vx]==0 and vx==zx and zy==vy-2:
+                    korrekt=True
+                #1nachv normal bew
+                if pos[zy][zx]==0 and vx==zx and zy==vy-1:
+                    korrekt=True
+                #schlagen
+                if pos[zy][zx]<0 and zy==vy-1 and vx-1==zx:
+                    korrekt=True
+                if pos[zy][zx]<0 and zy==vy-1 and vx+1==zx:
+                    korrekt=True
+            #B
+            if pos[vy][vx]==-1:
+                #2nachv
+                if vy==1 and pos[zy][zx]==0 and pos[vy+1][vx]==0 and vx==zx and zy==vy+2:
+                    korrekt=True
+                #1nachv normal bew
+                if pos[zy][zx]==0 and vx==zx and zy==vy+1:
+                    korrekt=True
+                #schlagen
+                if pos[zy][zx]>0 and zy==vy+1 and vx-1==zx:
+                    korrekt=True
+                if pos[zy][zx]>0 and zy==vy+1 and vx+1==zx:
+                    korrekt=True
+            #kK
+            if (pos[vy][vx]==6 and pos[zy][zx]<=0) or (pos[vy][vx]==-6 and pos[zy][zx]>=0):
+                #vertikal
+                if vx-1==zx and zy==vy:
+                    korrekt=True
+                if vx+1==zx and zy==vy:
+                    korrekt=True
+                #horizontal
+                if vx==zx and zy==vy-1:
+                    korrekt=True
+                if vx==zx and zy==vy+1:
+                    korrekt=True
+                #diagonal
+                if vx-1==zx and zy==vy-1:
+                    korrekt=True
+                if vx+1==zx and zy==vy-1:
+                    korrekt=True
+                if vx+1==zx and zy==vy+1:
+                    korrekt=True
+                if vx-1==zx and zy==vy+1:
+                    korrekt=True
+            #tT
+            if (pos[vy][vx]==4 and pos[zy][zx]<=0) or (pos[vy][vx]==-4 and pos[zy][zx]>=0):
+                #vertikal
+                if vx==zx:
+                    #nach unten
+                    if vy<zy:
+                        pathclear=True
+                        f=1
+                        while True:
+                            if vy+f==zy:
+                                break
+                            if pos[vy+f][vx]!=0:
+                                pathclear=False
+                                break
+                            f=f+1
+                        if pathclear:
+                            korrekt=True
+                    #nach oben
+                    if vy>zy:
+                        pathclear=True
+                        f=1
+                        while True:
+                            if vy-f==zy:
+                                break
+                            if pos[vy-f][vx]!=0:
+                                pathclear=False
+                                break
+                            f=f+1
+                        if pathclear:
+                            korrekt=True
+                #horizontal
+                if vy==zy:
+                    #nach rechts
+                    if vx<zx:
+                        pathclear=True
+                        f=1
+                        while True:
+                            if vx+f==zx:
+                                break
+                            if pos[vy][vx+f]!=0:
+                                pathclear=False
+                                break
+                            f=f+1
+                        if pathclear:
+                            korrekt=True
+                    #nach links
+                    if vx>zx:
+                        pathclear=True
+                        f=1
+                        while True:
+                            if vx-f==zx:
+                                break
+                            if pos[vy][vx-f]!=0:
+                                pathclear=False
+                                break
+                            f=f+1
+                        if pathclear:
+                            korrekt=True
+            #xX
+            if (pos[vy][vx]==3 and pos[zy][zx]<=0) or (pos[vy][vx]==-3 and pos[zy][zx]>=0):
+                pathclear=False
+                for u in range(8):
+                    if zy>vy and zx>vx:
+                        if vx+u+1==zx and vy+u+1==zy:
+                            pathclear=True
+                            break
+                        if pos[vy+u+1][vx+u+1]!=0:
+                            break
+                    if zy<vy and zx>vx:
+                        if vx+u+1==zx and vy-u-1==zy:
+                            pathclear=True
+                            break
+                        if pos[vy-u-1][vx+u+1]!=0:
+                            break
+                    if zy>vy and zx<vx:
+                        if vx-u-1==zx and vy+u+1==zy:
+                            pathclear=True
+                            break
+                        if pos[vy+u+1][vx-1-u]!=0:
+                            break
+                    if zy<vy and zx<vx:
+                        if vx-1-u==zx and vy-u-1==zy:
+                            pathclear=True
+                            break
+                        if pos[vy-u-1][vx-u-1]!=0:
+                            break
+                if pathclear:
+                    korrekt=True
+            #qQ
+            if (pos[vy][vx]==5 and pos[zy][zx]<=0) or (pos[vy][vx]==-5 and pos[zy][zx]>=0):
+                pathcleart=False
+                for u in range(8):
+                    if zy>vy and zx>vx:
+                        if vx+u+1==zx and vy+u+1==zy:
+                            pathcleart=True
+                            break
+                        if pos[vy+u+1][vx+u+1]!=0:
+                            break
+                    if zy<vy and zx>vx:
+                        if vx+u+1==zx and vy-u-1==zy:
+                            pathcleart=True
+                            break
+                        if pos[vy-u-1][vx+u+1]!=0:
+                            break
+                    if zy>vy and zx<vx:
+                        if vx-u-1==zx and vy+u+1==zy:
+                            pathcleart=True
+                            break
+                        if pos[vy+u+1][vx-1-u]!=0:
+                            break
+                    if zy<vy and zx<vx:
+                        if vx-1-u==zx and vy-u-1==zy:
+                            pathcleart=True
+                            break
+                        if pos[vy-u-1][vx-u-1]!=0:
+                            break
+                if pathcleart:
+                    korrekt=True
+                #vertikal
+                if vx==zx:
+                    #nach unten
+                    if vy<zy:
+                        pathclearl=True
+                        f=1
+                        while True:
+                            if vy+f==zy:
+                                break
+                            if pos[vy+f][vx]!=0:
+                                pathclearl=False
+                                break
+                            f=f+1
+                        if pathclearl:
+                            korrekt=True
+                    #nach oben
+                    if vy>zy:
+                        pathclearl=True
+                        f=1
+                        while True:
+                            if vy-f==zy:
+                                break
+                            if pos[vy-f][vx]!=0:
+                                pathclearl=False
+                                break
+                            f=f+1
+                        if pathclearl:
+                            korrekt=True
+                #horizontal
+                if vy==zy:
+                    #nach rechts
+                    if vx<zx:
+                        pathclearl=True
+                        f=1
+                        while True:
+                            if vx+f==zx:
+                                break
+                            if pos[vy][vx+f]!=0:
+                                pathclearl=False
+                                break
+                            f=f+1
+                        if pathclearl:
+                            korrekt=True
+                    #nach links
+                    if vx>zx:
+                        pathclearl=True
+                        f=1
+                        while True:
+                            if vx-f==zx:
+                                break
+                            if pos[vy][vx-f]!=0:
+                                pathclearl=False
+                                break
+                            f=f+1
+                        if pathclearl:
+                            korrekt=True
+            #lL
+            if (pos[vy][vx]==2 and pos[zy][zx]<=0) or (pos[vy][vx]==-2 and pos[zy][zx]>=0):
+                if zy==vy-2 and zx==vx+1:
+                    korrekt=True
+                if zy==vy-2 and zx==vx-1:
+                    korrekt=True
+                if zy==vy+2 and zx==vx+1:
+                    korrekt=True
+                if zy==vy+2 and zx==vx-1:
+                    korrekt=True
+                if zy==vy+1 and zx==vx+2:
+                    korrekt=True
+                if zy==vy-1 and zx==vx+2:
+                    korrekt=True
+                if zy==vy+1 and zx==vx-2:
+                    korrekt=True
+                if zy==vy-1 and zx==vx-2:
+                    korrekt=True
+
+        if korrekt:
+            self.e.append(vy)
+            self.e.append(vx)
+            self.e.append(zy)
+            self.e.append(zx)
+            return True
+        else:
+            print('EINGABE NICHT KORREKT')
+            return False
+
+    def player(pos):
+        while True:
+            if eingabe(pos)==True:
+                break
+            else:
+                continue
+        #
+        vy = e[0]
+        vx = e[1]
+        zy = e[2]
+        zx = e[3]
+        #
+        pos[zy][zx]=pos[vy][vx]
+        pos[vy][vx]=0
 
 def minimax(position, depth, maxplayer, alpha, beta):
     # X:maxplayer,spieler O:minplayer,computer
@@ -1243,37 +1357,6 @@ def minimaxer(boa):
             moves.append(copy.deepcopy(nextmoves[y]))
     move.extend(copy.deepcopy(random.choice(moves)))
 
-def play():
-    global turn
-    while not verloren(board, -6) and not verloren(board, 6):
-        turn =turn+1
-        print(turn)
-        printboard(board)
-        player(board)
-        printboard(board)
-        if not verloren(board, -6) and not verloren(board, 6):
-            start = time.time()
-            minimaxer(board)
-            end = time.time()
-            board.clear()
-            board.extend(copy.deepcopy(move))
-            print(end - start)
-            print(minimaxc)
-            print(evaluatepos(board))
-    print(turn)
-    printboard(board)
-    print('GAME OVER')
-    if verloren(board, 6):
-        print(':( VERLOREN')
-    elif verloren(board, -6):
-        print(':) GEWONNEN')
 
 
-#for t in genchildren(board,-6):
-    #printboard(t)
-    #print(evaluatepos(t))
-
-
-
-play()
 
