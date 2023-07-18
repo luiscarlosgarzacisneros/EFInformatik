@@ -90,7 +90,7 @@ def inarow(board,player):
                 if filled==4:
                     score=score+10000
                 if filled==3:
-                    score=score+100
+                    score=score+1000
                 if filled==2:
                     score=score+3
             elif filled==0:
@@ -138,14 +138,14 @@ def inarow(board,player):
                 if filled==4:
                     score=score+10000
                 if filled==3:
-                    score=score+50
+                    score=score+10
                 if filled==2:
                     score=score+1
             elif filled==0:
                 if other==4:
                     score=score-10000
                 if other==3:
-                    score=score-50
+                    score=score-30
                 if other==2:
                     score=score-1
     # diagonal1
@@ -186,7 +186,7 @@ def inarow(board,player):
                 if filled==4:
                     score=score+10000
                 if filled==3:
-                    score=score+100
+                    score=score+1000
                 if filled==2:
                     score=score+3
             elif filled==0:
@@ -234,7 +234,7 @@ def inarow(board,player):
                 if filled==4:
                     score=score+10000
                 if filled==3:
-                    score=score+100
+                    score=score+1000
                 if filled==2:
                     score=score+3
             elif filled==0:
@@ -319,8 +319,8 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(HumanPlayer(1))
-        self.players.append(Minimax4Player(-1))
+        self.players.append(Minimax4Player(1))
+        self.players.append(HumanPlayer(-1))
         #
         current=0
         while True:
@@ -985,9 +985,6 @@ class Minimax4Node():
                 child.sort(True)
         
 #
-
-
-
 
 def spielen(z):
     game =VierGewinnt()

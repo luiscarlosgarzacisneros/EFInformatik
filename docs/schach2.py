@@ -4,19 +4,19 @@ import random
 
 
 board = [
-    [-4, -2, -3, -5, -6, 0, -2, -4],
+    [-4, -2, -3, -5, -6, -3, -2, -4],
     [-1, -1, -1, -1, -1, -1, -1, -1],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [0,-3,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,1],
-    [1, 1, 1, 0, 1, 1, 1, 1],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [1, 1, 1, 1, 1, 1, 1, 1],
     [4, 2, 3, 5, 6, 3, 2, 4]
 ]
 #
 e=[]
 minimaxc = 0
-d = 3
+d = 4
 nextmoves = []
 scores = []
 move = []
@@ -24,6 +24,7 @@ moves=[]
 bestscores=[]
 maxtime = 20
 turn=0
+firstchildren=[]
 #
 
 
@@ -1185,19 +1186,19 @@ def minimax(position, depth, maxplayer, alpha, beta):
         playerj = -6
 
     # return
-    f=evaluatepos(position)
     if verloren(position, -6) == True:
-        return f
+        return evaluatepos(position)
     elif verloren(position, 6) == True:
-        return f
+        return evaluatepos(position)
     elif depth == d:
-        return f
-    elif genchildren(position, playerj) == []:
-        return f
+        return evaluatepos(position)
+    children=genchildren(position, playerj)
+    if children == []:
+        return evaluatepos(position)
     #
     if maxplayer:
         maxvalue = -100000000000
-        for child in genchildren(position, playerj):
+        for child in children:
             value = minimax(child, depth + 1, False, alpha, beta)
             if value > maxvalue:
                 maxvalue = value
@@ -1210,7 +1211,7 @@ def minimax(position, depth, maxplayer, alpha, beta):
     #
     if not maxplayer:
         minvalue = 1000000000000
-        for child in genchildren(position, playerj):
+        for child in children:
             value = minimax(child, depth + 1, True, alpha, beta)
             if value < minvalue:
                 minvalue = value
@@ -1266,11 +1267,6 @@ def play():
         print(':( VERLOREN')
     elif verloren(board, -6):
         print(':) GEWONNEN')
-
-
-#for t in genchildren(board,-6):
-    #printboard(t)
-    #print(evaluatepos(t))
 
 
 
