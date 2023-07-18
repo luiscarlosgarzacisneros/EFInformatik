@@ -11,17 +11,16 @@ import math
 #5:q
 #6:k
 
-#
-minimaxc = 0
-d = 4
-nextmoves = []
-scores = []
-move = []
-moves=[]
-bestscores=[]
-maxtime = 20
-firstchildren=[]
+#-1:B
+#-2:L
+#-3:X
+#-4:T
+#-5:Q
+#-6:K
 
+
+#
+minimaxc=0
 #
 
 def genchildren(position, playerk):
@@ -996,7 +995,7 @@ class Schach():
         #
         self.players.clear()
         self.players.append(MinimaxPlayer(6))
-        self.players.append(HumanPlayer(-6))
+        self.players.append(MinimaxPlayer(-6))
         #
         current=0
         while True:
