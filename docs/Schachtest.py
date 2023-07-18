@@ -1466,34 +1466,28 @@ class MinimaxPlayer(Player):
 
     def minimaxer(self, depth, vergangene_zeit):
         start=time.time()
-        suche_fertig=True
         for child in self.rootnode.children:
             child.minimax(-math.inf,math.inf,False, depth)
-            if ((time.time()+vergangene_zeit) - start) > self.maxtime:
-                suche_fertig=False
-                break
             print("a ",end="") # child wurde fertig berechnet
-        
+            if ((time.time()+vergangene_zeit) - start) > self.maxtime:
+                break
         #
-        if suche_fertig:
-            values=[]
-            for child in self.rootnode.children:
-                values.append(child.value)
-            #
-            bestmoves=[]
-            bestvalue=max(values)
-            for child in self.rootnode.children:
-                if child.value==bestvalue:
-                    bestmoves.append(child)
-            #output---------
-            print("")
-            print(values)
-            print(bestvalue)
-            #---------------
-            bestmove=random.choice(bestmoves)
-            return bestmove.position
-        else:
-            return []
+        values=[]
+        for child in self.rootnode.children:
+            values.append(child.value)
+        #
+        bestmoves=[]
+        bestvalue=max(values)
+        for child in self.rootnode.children:
+            if child.value==bestvalue:
+                bestmoves.append(child)
+        #output---------
+        print("")
+        print(values)
+        print(bestvalue)
+        #---------------
+        bestmove=random.choice(bestmoves)
+        return bestmove.position
     
     def get_move(self, board):
         start=time.time()
@@ -1512,12 +1506,12 @@ class MinimaxPlayer(Player):
         while (time.time() - start) < self.maxtime:
             print("DEPTH: ",depth)
             move=self.minimaxer(depth,(time.time() - start))
-            if  (time.time() - start) < self.maxtime:
-                bestmove=move
+            bestmove=move
+            if (time.time() - start) > self.maxtime:
+                print("NICHT FERTIG")
+            else:
                 self.rootnode.sort(True)
                 depth+=1
-            else:
-                print("NICHT FERTIG")
         print("---",minimax_counter4)
         return bestmove
 
