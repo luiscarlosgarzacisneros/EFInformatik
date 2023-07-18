@@ -319,7 +319,7 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(Minimax4Player(1))
+        self.players.append(MCTSPlayer(1))
         self.players.append(HumanPlayer(-1))
         #
         current=0
@@ -391,8 +391,8 @@ class MCTSPlayer(Player):
         #-----
         self.maxtime=5
         self.c=math.sqrt(2)
-        self.depth=1
-        self.numberofsimulations=1
+        self.depth=2
+        self.numberofsimulations=30
         #-----
         
     def mcts(self,board):
