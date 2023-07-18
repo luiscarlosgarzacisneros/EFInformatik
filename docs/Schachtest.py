@@ -967,31 +967,31 @@ class Schach():
         ]
         #
         self.players.clear()
-        self.players.append()
-        self.players.append()
+        self.players.append(HumanPlayer(6))
+        self.players.append(HumanPlayer(-6))
         #
         current=0
         while True:
             print(self.turn)
             self.printboard(self.board)
             player = self.players[current]
-            if player.token==1:
-                istamzug='X'
+            if player.token==6:
+                istamzug='k'
             else:
-                istamzug='O'
+                istamzug='K'
             print(istamzug, ' ist am Zug')
             self.board=player.get_move(copy.deepcopy(self.board))
             current = (current + 1) % 2
             self.turn+=1
-            if verloren(self.board,-6)or verloren(self.board,6):
+            if verloren(self.board,-6) or verloren(self.board,6):
                 break
         self.printboard(self.board)
         if verloren(self.board,6):
-            print('O HAT GEWONNEN')
-            return 'O'
+            print('K HAT GEWONNEN')
+            return 'K'
         elif verloren(self.board,-6):
-            print('X HAT GEWONNEN')
-            return 'X'
+            print('k HAT GEWONNEN')
+            return 'k'
         else:
             print('UNENTSCHIEDEN')
             return ' '
@@ -1275,20 +1275,32 @@ class HumanPlayer(Player):
             print('EINGABE NICHT KORREKT')
             return False
 
-    def player(pos):
+    def player(self,pos):
         while True:
-            if eingabe(pos)==True:
+            if self.eingabe(pos)==True:
                 break
             else:
                 continue
         #
-        vy = e[0]
-        vx = e[1]
-        zy = e[2]
-        zx = e[3]
+        vy = self.e[0]
+        vx = self.e[1]
+        zy = self.e[2]
+        zx = self.e[3]
         #
         pos[zy][zx]=pos[vy][vx]
         pos[vy][vx]=0
+        for feld in pos[0]:
+            if pos[0][feld]==1:
+                pos[0][feld]=5
+        for feld in pos[7]:
+            if pos[0][feld]==-1:
+                pos[0][feld]=-5
+
+    def get_move(self, board):
+        self.player(board)
+        return board
+
+#
 
 def minimax(position, depth, maxplayer, alpha, beta):
     # X:maxplayer,spieler O:minplayer,computer
@@ -1357,6 +1369,25 @@ def minimaxer(boa):
             moves.append(copy.deepcopy(nextmoves[y]))
     move.extend(copy.deepcopy(random.choice(moves)))
 
+#
 
+def spielen(z):
+    game =Schach()
+    K_wins = 0
+    k_wins=0
+    unentschieden=0
+    for i in range(z):
+        r=game.play() 
+        if r== 'K':
+            K_wins += 1
+        elif r=='k':
+            k_wins+=1
+        else:
+            unentschieden+=1
+        print('K:',K_wins)
+        print('k:',k_wins)
+        print('-:',unentschieden)
+    print('FERTIG')
 
+spielen(20)
 
