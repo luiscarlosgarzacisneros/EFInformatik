@@ -1,6 +1,7 @@
 import copy
 import time
 import random
+import math
 
 
 #1:b
@@ -84,6 +85,33 @@ def genchildren(position, playerk):
     minimaxc = minimaxc + 1
     #
     return children
+
+def generate_one_random_child(position, playerk):#für Monte Carlo Simulation
+    boardcopy = copy.deepcopy(position)
+    if playerk==6:
+        while True:
+            x=random.randint(0,7)
+            y=random.randint(0,7)
+            if boardcopy[y][x] > 0:
+                break
+    elif playerk==-6:
+        while True:
+            x=random.randint(0,7)
+            y=random.randint(0,7)
+            if boardcopy[y][x] < 0:
+                break
+    if boardcopy[y][x] in (1,-1):
+        pass
+    if boardcopy[y][x] in (2,-2):
+        pass
+    if boardcopy[y][x] in (3,-3):
+        pass
+    if boardcopy[y][x] in (4,-4):
+        pass
+    if boardcopy[y][x] in (5,-5):
+        pass
+    if boardcopy[y][x] in (6,-6):
+        pass
 
 def gcKk(y,x,pos,player):
     boardc=copy.deepcopy(pos)
@@ -967,7 +995,7 @@ class Schach():
         ]
         #
         self.players.clear()
-        self.players.append(HumanPlayer(6))
+        self.players.append(MinimaxPlayer(6))
         self.players.append(HumanPlayer(-6))
         #
         current=0
@@ -1302,72 +1330,288 @@ class HumanPlayer(Player):
 
 #
 
-def minimax(position, depth, maxplayer, alpha, beta):
-    # X:maxplayer,spieler O:minplayer,computer
-    # Spieler
-    # alpha: best maxpl, beta: best minpl
-    if maxplayer:
-        playerj = 6
-    else:
-        playerj = -6
+class MCTSPlayer(Player):
 
-    # return
-    if verloren(position, -6) == True:
-        return evaluatepos(position)
-    elif verloren(position, 6) == True:
-        return evaluatepos(position)
-    elif depth == d:
-        return evaluatepos(position)
-    children=genchildren(position, playerj)
-    if children == []:
-        return evaluatepos(position)
-    #
-    if maxplayer:
-        maxvalue = -100000000000
-        for child in children:
-            value = minimax(child, depth + 1, False, alpha, beta)
-            if value > maxvalue:
-                maxvalue = value
-            # pruning
-            if value > alpha:
-                alpha = value
-            if beta <= alpha:
+    def __init__(self, token):
+        super().__init__(token)
+        self.counter=0
+        self.numberofiterations=0
+        #-----
+        self.maxtime=5
+        self.c=math.sqrt(2)
+        self.depth=1
+        self.numberofsimulations=1
+        #-----
+        
+    def mcts(self,board):
+        self.rootnode=MCTSNode(self.token)
+        self.rootnode.position=board
+        self.rootnode.playeramzug=self.token
+        self.rootnode.score=0
+        self.rootnode.visits=0
+        self.rootnode.children=[]
+        #
+        self.rootnode.expand()
+        start = time.time()
+        while True:
+            self.counter+=1
+            selectednode=self.rootnode.selectleafnode()
+            if selectednode.is_it_a_new_node():
+                selectednode.backpropagate(selectednode.simulate(),selectednode.numberofsimulations)
+            else:
+                selectednode.expand()
+            #
+            if (time.time() - start) > self.maxtime:
                 break
-        return maxvalue
-    #
-    if not maxplayer:
-        minvalue = 1000000000000
-        for child in children:
-            value = minimax(child, depth + 1, True, alpha, beta)
-            if value < minvalue:
-                minvalue = value
-            # pruning
-            if value < beta:
-                beta = value
-            if beta <= alpha:
-                break
-        return minvalue
 
-def minimaxer(boa):
-    global minimaxc
-    minimaxc = 0
-    nextmoves.clear()
-    scores.clear()
-    move.clear()
-    moves.clear()
-    start = time.time()
-    for firstgenchild in genchildren(boa, -6):
-        nextmoves.append(copy.deepcopy(firstgenchild))
-        scores.append(minimax(firstgenchild, 1, True, -1000000000000, 100000000000000))
-        if (time.time() - start) > maxtime:
-            break
-    #
-    print(scores)
-    #
-    for y in range(len(scores)):
-        if scores[y]==(min(scores)):
-            moves.append(copy.deepcopy(nextmoves[y]))
-    move.extend(copy.deepcopy(random.choice(moves)))
+    def get_move(self,board):
+        self.counter=0
+        self.mcts(board)
+        print(self.counter)
+        bestmove=[]
+        highestnumberofvisits=-1
+        for rootnodechild in self.rootnode.children:
+            if rootnodechild.visits>highestnumberofvisits:
+                bestmove=rootnodechild
+                highestnumberofvisits=rootnodechild.visits
+        return bestmove.position
+
+class MCTSNode(MCTSPlayer):
+    def __init__(self,token):
+        super().__init__(token)
+        #
+        self.position=[]
+        self.playeramzug=0
+        self.parent=None
+        self.children=[]
+        self.score=0
+        self.visits=0
+    
+    def calculateubc(self):
+        par=self.parent
+        if self.visits==0:
+            ubc=math.inf
+        else:
+            ubc=(self.score/self.visits)+self.c*(math.sqrt(math.log(par.visits/self.visits)))
+        return ubc
+    
+    def expand(self):
+        children=genchildren(self.position,self.playeramzug)
+        for i in range(len(children)):
+            self.numberofiterations+=1
+            instance = MCTSNode(self.token)
+            self.children.append(instance)
+            #
+            instance.position=children[i]
+            if self.playeramzug==-6:
+                instance.playeramzug=6
+            elif self.playeramzug==6:
+                instance.playeramzug=-6
+            instance.parent=self
+            instance.score=0
+            instance.visits=0
+            
+    def simulate(self):
+        value=0
+        values=[]
+        for j in range(self.numberofsimulations):
+            pos=self.position
+            player=self.playeramzug
+            for i in range(self.depth):
+                nextpos=generate_one_random_child(pos,player)
+                pos=nextpos
+                if player==-1:
+                    player=1
+                elif player==1:
+                    player=-1
+            values.append(evaluatepos(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
+        value=sum(values)/len(values)
+        return value
+    
+    def is_it_a_new_node(self):
+        if self.children==[]:
+            return True
+        else:
+            return False
+
+    def selectleafnode(self):
+        children = self.children
+        bestvalue = -math.inf
+        for child in children:
+            ucbofchild = child.calculateubc()
+            if ucbofchild > bestvalue:
+                bestvalue = ucbofchild
+                selectednode = child
+        if selectednode.children == []:
+            return selectednode
+        else:
+            return selectednode.selectleafnode()
+
+    def backpropagate(self, newscore, numberofsimulations):
+        self.score += newscore
+        self.visits += numberofsimulations
+        parent=self.parent
+
+        if parent is not None:
+            parent.backpropagate(newscore, numberofsimulations)
+
+#
+
+class MinimaxPlayer(Player):
+    #sucht bis max zeit erreicht ist, depth =+1, move sorting
+    def __init__(self, token):
+        super().__init__(token)
+        self.maxtime=5
+        self.starting_depth=1 #wenn suche bei layer1 nicht fertig wird: crash
+
+    def minimaxer(self, depth, vergangene_zeit):
+        start=time.time()
+        suche_fertig=True
+        for child in self.rootnode.children:
+            child.minimax(-math.inf,math.inf,False, depth)
+            if ((time.time()+vergangene_zeit) - start) > self.maxtime:
+                suche_fertig=False
+                break
+            print("a ",end="") # child wurde fertig berechnet
+        
+        #
+        if suche_fertig:
+            values=[]
+            for child in self.rootnode.children:
+                values.append(child.value)
+            #
+            bestmoves=[]
+            bestvalue=max(values)
+            for child in self.rootnode.children:
+                if child.value==bestvalue:
+                    bestmoves.append(child)
+            #output---------
+            print("")
+            print(values)
+            print(bestvalue)
+            #---------------
+            bestmove=random.choice(bestmoves)
+            return bestmove.position
+        else:
+            return []
+    
+    def get_move(self, board):
+        start=time.time()
+        global minimax_counter4
+        minimax_counter4=0
+        #rootnode
+        self.rootnode=MinimaxNode()
+        self.rootnode.position=board
+        self.rootnode.playeramzug=self.token
+        self.rootnode.value=None
+        self.rootnode.token=self.token
+        self.rootnode.depth=0
+        self.rootnode.children=self.rootnode.expandnode()
+        #
+        depth=self.starting_depth
+        while (time.time() - start) < self.maxtime:
+            print("DEPTH: ",depth)
+            move=self.minimaxer(depth,(time.time() - start))
+            if  (time.time() - start) < self.maxtime:
+                bestmove=move
+                self.rootnode.sort(True)
+                depth+=1
+            else:
+                print("NICHT FERTIG")
+        print("---",minimax_counter4)
+        return bestmove
+
+class MinimaxNode():
+    def __init__(self):
+        self.value=None
+        self.children=[]
+        self.position=[]
+        self.playeramzug=None
+        self.token=None
+        self.depth=None
+
+    def expandnode(self):
+        children=genchildren(self.position,self.playeramzug)
+        for i in range(len(children)):
+            instance=MinimaxNode()
+            instance.position=children[i]
+            instance.playeramzug = -self.playeramzug
+            instance.value=None
+            instance.token=self.token
+            instance.depth=self.depth+1
+            self.children.append(instance)
+        return self.children
+
+    def minimax(self, alpha, beta, maxplayer, maxdepth):
+        #
+        global minimax_counter4
+        minimax_counter4+=1
+        #
+        if self.depth==maxdepth:
+            self.value = evaluatepos(self.position, self.token)
+            return self.value
+        elif verloren(self.position, 6) or verloren(self.position, -6):
+            self.value = evaluatepos(self.position, self.token)
+            return self.value
+        #
+        children=self.expandnode()
+        #
+        if children == []:
+            self.value = evaluatepos(self.position, self.token)
+            return self.value
+        #
+        if maxplayer:
+            maxvalue = -math.inf
+            for child in children:
+                eval = child.minimax(alpha, beta, False, maxdepth)
+                if eval>maxvalue:
+                    maxvalue=eval
+                # pruning
+                if eval > alpha:
+                    alpha = eval
+                if beta <= alpha:
+                    break
+            self.value=maxvalue
+            return maxvalue
+        #
+        else:
+            minvalue = math.inf
+            for child in children:
+                eval = child.minimax(alpha, beta, True, maxdepth)
+                if eval<minvalue:
+                    minvalue=eval
+                # pruning
+                if eval < beta:
+                    beta = eval
+                if beta <= alpha:
+                    break
+            self.value=minvalue
+            return minvalue
+        
+    def sort(self, maxplayer):
+        not_none_children=[]
+        none_children=[]
+        for child in self.children:
+            if child.value==None:
+                none_children.append(child)
+            else:
+                not_none_children.append(child)
+        #
+        if maxplayer:
+            sorted_children = sorted(not_none_children, key=lambda x: x.value, reverse=True)
+            sorted_children.extend(none_children)
+            self.children=sorted_children
+            #
+            for child in not_none_children:
+                child.sort(False)
+        #
+        else:
+            sorted_children = sorted(not_none_children, key=lambda x: x.value, reverse=False)
+            sorted_children.extend(none_children)
+            self.children=sorted_children
+            #
+            for child in not_none_children:
+                child.sort(True)
 
 #
 
@@ -1391,3 +1635,5 @@ def spielen(z):
 
 spielen(20)
 
+
+# generate one randomchild für MCTS noch nicht fertig
