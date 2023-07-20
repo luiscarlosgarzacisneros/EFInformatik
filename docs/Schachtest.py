@@ -1522,6 +1522,7 @@ class MinimaxNode():
         self.playeramzug=None
         self.token=None
         self.depth=None
+        self.expanded=False
 
     def expandnode(self):
         children=genchildren(self.position,self.playeramzug)
@@ -1532,6 +1533,7 @@ class MinimaxNode():
             instance.value=None
             instance.token=self.token
             instance.depth=self.depth+1
+            instance.expanded=False
             self.children.append(instance)
         return self.children
 
@@ -1547,7 +1549,11 @@ class MinimaxNode():
             self.value = evaluatepos(self.position, self.token)
             return self.value
         #
-        children=self.expandnode()
+        if self.expanded:
+            children=self.children
+        else:
+            children=self.expandnode()
+            self.expanded=True
         #
         if children == []:
             self.value = evaluatepos(self.position, self.token)

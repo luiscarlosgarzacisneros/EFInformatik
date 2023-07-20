@@ -319,8 +319,8 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(MCTSPlayer(1))
-        self.players.append(HumanPlayer(-1))
+        self.players.append(Minimax4Player(1))
+        self.players.append(Minimax4Player(-1))
         #
         current=0
         while True:
@@ -894,6 +894,7 @@ class Minimax4Node():
         self.playeramzug=None
         self.token=None
         self.depth=None
+        self.expanded=False
 
     def expandnode(self):
         children=genchildren(self.position,self.playeramzug)
@@ -904,6 +905,7 @@ class Minimax4Node():
             instance.value=None
             instance.token=self.token
             instance.depth=self.depth+1
+            instance.expanded=False
             self.children.append(instance)
         return self.children
 
@@ -919,7 +921,11 @@ class Minimax4Node():
             self.value = inarow(self.position, self.token)
             return self.value
         #
-        children=self.expandnode()
+        if self.expanded:
+            children=self.children
+        else:
+            children=self.expandnode()
+            self.expanded=True
         #
         if children == []:
             self.value = inarow(self.position, self.token)
