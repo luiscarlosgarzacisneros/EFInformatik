@@ -28,10 +28,8 @@ def genchildren(position, playerk):
     boardcopy = copy.deepcopy(position)
     #
     if playerk==6:
-        y = 0
-        for i in range(8):
-            x = 0
-            for j in range(8):
+        for y in range(8):
+            for x in range(8):
                 if boardcopy[y][x]==1:
                     for h in gcBb(y,x,boardcopy,1):
                         children.append(h)
@@ -50,14 +48,9 @@ def genchildren(position, playerk):
                 if boardcopy[y][x]==2:
                     for h in gcLl(y,x,boardcopy,2):
                         children.append(h)
-
-                x = x + 1
-            y = y + 1
     if playerk==-6:
-        y = 0
-        for i in range(8):
-            x = 0
-            for j in range(8):
+        for y in range(8):
+            for x in range(8):
                 if boardcopy[y][x]==-1:
                     for h in gcBb(y,x,boardcopy,-1):
                         children.append(h)
@@ -76,41 +69,11 @@ def genchildren(position, playerk):
                 if boardcopy[y][x]==-3:
                     for h in gcLl(y,x,boardcopy,-3):
                         children.append(h)
-
-                x = x + 1
-            y = y + 1
     #
     global minimaxc
     minimaxc = minimaxc + 1
     #
     return children
-
-def generate_one_random_child(position, playerk):#für Monte Carlo Simulation
-    boardcopy = copy.deepcopy(position)
-    if playerk==6:
-        while True:
-            x=random.randint(0,7)
-            y=random.randint(0,7)
-            if boardcopy[y][x] > 0:
-                break
-    elif playerk==-6:
-        while True:
-            x=random.randint(0,7)
-            y=random.randint(0,7)
-            if boardcopy[y][x] < 0:
-                break
-    if boardcopy[y][x] in (1,-1):
-        pass
-    if boardcopy[y][x] in (2,-2):
-        pass
-    if boardcopy[y][x] in (3,-3):
-        pass
-    if boardcopy[y][x] in (4,-4):
-        pass
-    if boardcopy[y][x] in (5,-5):
-        pass
-    if boardcopy[y][x] in (6,-6):
-        pass
 
 def gcKk(y,x,pos,player):
     boardc=copy.deepcopy(pos)
@@ -853,6 +816,38 @@ def gcBb(y,x,pos,player):
                 childrenB.append(boardc)
                 boardc=copy.deepcopy(pos)
     return childrenB
+
+#
+
+def generate_one_random_child(position, playerk):#für Monte Carlo Simulation
+    boardcopy = copy.deepcopy(position)
+    if playerk==6:
+        while True:
+            x=random.randint(0,7)
+            y=random.randint(0,7)
+            if boardcopy[y][x] > 0:
+                break
+    elif playerk==-6:
+        while True:
+            x=random.randint(0,7)
+            y=random.randint(0,7)
+            if boardcopy[y][x] < 0:
+                break
+    if boardcopy[y][x] in (1,-1):
+        pass
+    if boardcopy[y][x] in (2,-2):
+        pass
+    if boardcopy[y][x] in (3,-3):
+        pass
+    if boardcopy[y][x] in (4,-4):
+        pass
+    if boardcopy[y][x] in (5,-5):
+        pass
+    if boardcopy[y][x] in (6,-6):
+        pass
+
+def gorcKk(y,x,pos,player):
+    pass
 
 #
 
