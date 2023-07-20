@@ -1404,16 +1404,7 @@ def evaluatepos(pos,playerk):
 
 class Schach():
     def __init__(self):
-        self.board=[
-            [-4, -2, -3, -5, -6, -3, -2, -4],
-            [-1, -1, -1, -1, -1, -1, -1, -1],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [1, 1, 1, 1, 1, 1, 1, 1],
-            [4, 2, 3, 5, 6, 3, 2, 4]
-        ]
+        self.board=[]
         self.turn=0
         self.players=[]
 
@@ -1923,7 +1914,7 @@ class MCTSNode(MCTSPlayer):
         self.score += newscore
         self.visits += numberofsimulations
         parent=self.parent
-
+        #
         if parent is not None:
             parent.backpropagate(newscore, numberofsimulations)
 

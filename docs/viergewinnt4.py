@@ -275,17 +275,8 @@ minimax_counter3=0
 
 class VierGewinnt():
     def __init__(self):
-        self.board = [
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0]
-        ]
-        #
+        self.board = []
         self.turn=0
-        #
         self.players=[]
     
     def printboard(self, board):
