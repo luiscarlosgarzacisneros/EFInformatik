@@ -1345,59 +1345,67 @@ def evaluatepos(pos,playerk):
     if playerk==6:
         for p in range(8):
             for o in range(8):
-                if pos[p][o]==-6:
-                    val=val-1000
-                if pos[p][o]==-5:
-                    val=val-9
-                if pos[p][o]==-4:
-                    val=val-5
-                if pos[p][o]==-2:
-                    val=val-3
-                if pos[p][o]==-3:
-                    val=val-3
-                if pos[p][o]==-1:
-                    val=val-1
+                if pos[p][o]==0:
+                    pass
                 #
-                if pos[p][o]==6:
-                    val=val+1000
-                if pos[p][o]==5:
-                    val=val+9
-                if pos[p][o]==4:
-                    val=val+5
-                if pos[p][o]==2:
-                    val=val+3
-                if pos[p][o]==3:
-                    val=val+3
-                if pos[p][o]==1:
+                elif pos[p][o]==-1:
+                    val=val-1
+                elif pos[p][o]==1:
                     val=val+1
+                #
+                elif pos[p][o]==-2:
+                    val=val-3
+                elif pos[p][o]==-3:
+                    val=val-3
+                elif pos[p][o]==-4:
+                    val=val-5
+                elif pos[p][o]==2:
+                    val=val+3
+                elif pos[p][o]==3:
+                    val=val+3
+                elif pos[p][o]==4:
+                    val=val+5
+                #
+                elif pos[p][o]==-5:
+                    val=val-9
+                elif pos[p][o]==-6:
+                    val=val-1000
+                elif pos[p][o]==5:
+                    val=val+9
+                elif pos[p][o]==6:
+                    val=val+1000
     elif playerk==-6:
         for p in range(8):
             for o in range(8):
-                if pos[p][o]==-6:
-                    val=val+1000
-                if pos[p][o]==-5:
-                    val=val+9
-                if pos[p][o]==-4:
-                    val=val+5
-                if pos[p][o]==-2:
-                    val=val+3
-                if pos[p][o]==-3:
-                    val=val+3
-                if pos[p][o]==-1:
-                    val=val+1
+                if pos[p][o]==0:
+                    pass
                 #
-                if pos[p][o]==6:
-                    val=val-1000
-                if pos[p][o]==5:
-                    val=val-9
-                if pos[p][o]==4:
-                    val=val-5
-                if pos[p][o]==2:
-                    val=val-3
-                if pos[p][o]==3:
-                    val=val-3
-                if pos[p][o]==1:
+                elif pos[p][o]==-1:
+                    val=val+1
+                elif pos[p][o]==1:
                     val=val-1
+                #
+                elif pos[p][o]==-2:
+                    val=val+3
+                elif pos[p][o]==-3:
+                    val=val+3
+                elif pos[p][o]==-4:
+                    val=val+5
+                elif pos[p][o]==2:
+                    val=val-3
+                elif pos[p][o]==3:
+                    val=val-3
+                elif pos[p][o]==4:
+                    val=val-5
+                #
+                elif pos[p][o]==-5:
+                    val=val+9
+                elif pos[p][o]==-6:
+                    val=val+1000
+                elif pos[p][o]==5:
+                    val=val-9
+                elif pos[p][o]==6:
+                    val=val-1000
     return val
 
 #
