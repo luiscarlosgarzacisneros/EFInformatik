@@ -1179,24 +1179,153 @@ def gorcTt(y,x,boardc,player):
         return []
     else:
         l=random.choice(lines)
-        if player==4:
+        if player==-4:
             if l==1:
-                pass
+                for i in range(7):
+                    if x+i+1<8:
+                        if boardc[y][x+i+1]>=0:
+                            if boardc[y][x+i+1]!=0:
+                                childrenT.append(i)
+                                break
+                            else:
+                                childrenT.append(i)
+                        else:
+                            break
+                    else:
+                        break
+                #
+                n=random.choice(childrenT)
+                boardc[y][x]=0
+                boardc[y][x+n+1]=player
+                return boardc
             elif l==2:
-                pass
+                for i in range(7):
+                    if x-i-1>-1:
+                        if boardc[y][x-i-1]>=0:
+                            if boardc[y][x-i-1]!=0:
+                                childrenT.append(i)
+                                break
+                            else:
+                                childrenT.append(i)
+                        else:
+                            break
+                    else:
+                        break
+                #
+                n=random.choice(childrenT)
+                boardc[y][x]=0
+                boardc[y][x-n-1]=player
+                return boardc
             elif l==3:
-                pass
+                for i in range(7):
+                    if y+i+1<8:
+                        if boardc[y+i+1][x]>=0:
+                            if boardc[y+i+1][x]!=0:
+                                childrenT.append(i)
+                                break
+                            else:
+                                childrenT.append(i)
+                        else:
+                            break
+                    else:
+                        break
+                #
+                n=random.choice(childrenT)
+                boardc[y][x]=0
+                boardc[y+n+1][x]=player
+                return boardc
             elif l==4:
-                pass
-        elif player==-4:
+                for i in range(7):
+                    if y-i-1>-1:
+                        if boardc[y-i-1][x]>=0:
+                            if boardc[y-i-1][x]!=0:
+                                childrenT.append(i)
+                                break
+                            else:
+                                childrenT.append(i)
+                        else:
+                            break
+                    else:
+                        break
+                #
+                n=random.choice(childrenT)
+                boardc[y][x]=0
+                boardc[y-n-1][x]=player
+                return boardc
+        #
+        elif player==4:
             if l==1:
-                pass
+                for i in range(7):
+                    if x+i+1<8:
+                        if boardc[y][x+i+1]<=0:
+                            if boardc[y][x+i+1]!=0:
+                                childrenT.append(i)
+                                break
+                            else:
+                                childrenT.append(i)
+                        else:
+                            break
+                    else:
+                        break
+                #
+                n=random.choice(childrenT)
+                boardc[y][x]=0
+                boardc[y][x+n+1]=player
+                return boardc
             elif l==2:
-                pass
+                for i in range(7):
+                    if x-i-1>-1:
+                        if boardc[y][x-i-1]<=0:
+                            if boardc[y][x-i-1]!=0:
+                                childrenT.append(i)
+                                break
+                            else:
+                                childrenT.append(i)
+                        else:
+                            break
+                    else:
+                        break
+                #
+                n=random.choice(childrenT)
+                boardc[y][x]=0
+                boardc[y][x-n-1]=player
+                return boardc
             elif l==3:
-                pass
+                for i in range(7):
+                    if y+i+1<8:
+                        if boardc[y+i+1][x]<=0:
+                            if boardc[y+i+1][x]!=0:
+                                childrenT.append(i)
+                                break
+                            else:
+                                childrenT.append(i)
+                        else:
+                            break
+                    else:
+                        break
+                #
+                n=random.choice(childrenT)
+                boardc[y][x]=0
+                boardc[y+n+1][x]=player
+                return boardc
             elif l==4:
-                pass
+                for i in range(7):
+                    if y-i-1>-1:
+                        if boardc[y-i-1][x]<=0:
+                            if boardc[y-i-1][x]!=0:
+                                childrenT.append(i)
+                                break
+                            else:
+                                childrenT.append(i)
+                        else:
+                            break
+                    else:
+                        break
+                #
+                n=random.choice(childrenT)
+                boardc[y][x]=0
+                boardc[y-n-1][x]=player
+                return boardc
 
 #
 
