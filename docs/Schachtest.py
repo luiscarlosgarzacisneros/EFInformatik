@@ -963,9 +963,8 @@ def generate_one_random_child(position, playerk):#für Monte Carlo Simulation
                     piecesy.append(y)
                     piecesx.append(x)
     #
-    n=random.randint(0,(len(piecesy))-1)
-    y=piecesy[n]
-    x=piecesx[n]
+    if piecesx==[]:
+        return []
     #
     while True:
         n = random.randint(0, len(piecesy) - 1)
@@ -1918,8 +1917,8 @@ class Schach():
         ]
         #
         self.players.clear()
-        self.players.append(MCTSPlayer(6))
-        self.players.append(MinimaxPlayer(-6))
+        self.players.append(MCTSPlayer(6))#k
+        self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
         while True:
@@ -2262,8 +2261,8 @@ class MCTSPlayer(Player):
         #-----
         self.maxtime=5
         self.c=math.sqrt(2)
-        self.depth=1
-        self.numberofsimulations=1
+        self.depth=2
+        self.numberofsimulations=30
         #-----
         
     def mcts(self,board):
@@ -2342,6 +2341,8 @@ class MCTSNode(MCTSPlayer):
             player=self.playeramzug
             for i in range(self.depth):
                 nextpos=generate_one_random_child(pos,player)
+                if nextpos==[]:
+                    break
                 pos=nextpos
                 if player==-1:
                     player=1
@@ -2559,4 +2560,4 @@ def spielen(z):
 spielen(20)
 
 
-# generate one randomchild für MCTS noch nicht fertig
+# gorc MC:was wenn keine spielfiguren mehr vorhanden sind?
