@@ -967,41 +967,25 @@ def generate_one_random_child(position, playerk):#für Monte Carlo Simulation
     y=piecesy[n]
     x=piecesx[n]
     #
-    if boardcopy[y][x] in (1,-1):
-        child=gorcBb(y,x,boardcopy,boardcopy[y][x])
-        if child==[]:
-            generate_one_random_child(position, playerk)
-        else:
-            return child
-    if boardcopy[y][x] in (2,-2):
-        child=gorcLl(y,x,boardcopy,boardcopy[y][x])
-        if child==[]:
-            generate_one_random_child(position, playerk)
-        else:
-            return child
-    if boardcopy[y][x] in (3,-3):
-        child=gorcXx(y,x,boardcopy,boardcopy[y][x])
-        if child==[]:
-            generate_one_random_child(position, playerk)
-        else:
-            return child
-    if boardcopy[y][x] in (4,-4):
-        child=gorcTt(y,x,boardcopy,boardcopy[y][x])
-        if child==[]:
-            generate_one_random_child(position, playerk)
-        else:
-            return child
-    if boardcopy[y][x] in (5,-5):
-        child=gorcQq(y,x,boardcopy,boardcopy[y][x])
-        if child==[]:
-            generate_one_random_child(position, playerk)
-        else:
-            return child
-    if boardcopy[y][x] in (6,-6):
-        child=gorcKk(y,x,boardcopy,boardcopy[y][x])
-        if child==[]:
-            generate_one_random_child(position, playerk)
-        else:
+    while True:
+        n = random.randint(0, len(piecesy) - 1)
+        y = piecesy[n]
+        x = piecesx[n]
+
+        if boardcopy[y][x] == 1 or boardcopy[y][x] == -1:
+            child = gorcBb(y, x, boardcopy, boardcopy[y][x])
+        elif boardcopy[y][x] == 2 or boardcopy[y][x] == -2:
+            child = gorcLl(y, x, boardcopy, boardcopy[y][x])
+        elif boardcopy[y][x] == 3 or boardcopy[y][x] == -3:
+            child = gorcXx(y, x, boardcopy, boardcopy[y][x])
+        elif boardcopy[y][x] == 4 or boardcopy[y][x] == -4:
+            child = gorcTt(y, x, boardcopy, boardcopy[y][x])
+        elif boardcopy[y][x] == 5 or boardcopy[y][x] == -5:
+            child = gorcQq(y, x, boardcopy, boardcopy[y][x])
+        elif boardcopy[y][x] == 6 or boardcopy[y][x] == -6:
+            child = gorcKk(y, x, boardcopy, boardcopy[y][x])
+        #
+        if child!=[]: 
             return child
 
 def gorcKk(y,x,boardc,player):
@@ -1934,7 +1918,7 @@ class Schach():
         ]
         #
         self.players.clear()
-        self.players.append(MinimaxPlayer(6))
+        self.players.append(MCTSPlayer(6))
         self.players.append(MinimaxPlayer(-6))
         #
         current=0
