@@ -2559,5 +2559,3 @@ def spielen(z):
 
 spielen(20)
 
-
-# gorc MC:was wenn keine spielfiguren mehr vorhanden sind?
