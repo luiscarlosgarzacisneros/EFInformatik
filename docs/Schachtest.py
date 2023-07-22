@@ -2486,7 +2486,6 @@ class MinimaxNode():
         self.token=None
         self.depth=None
         self.expanded=False
-        self.parent=None
 
     def expandnode(self):
         children=genchildren(self.position,self.playeramzug)
@@ -2498,7 +2497,6 @@ class MinimaxNode():
             instance.token=self.token
             instance.depth=self.depth+1
             instance.expanded=False
-            instance.parent=self
             self.children.append(instance)
         return self.children
 
@@ -2609,4 +2607,4 @@ def spielen(z):
 
 spielen(20)
 
-# check kann vielleicht für weitere layers implementiert werden: Node self.illegal
+# check kann vielleicht für weitere layers implementiert werden: Node self.illegal und self.parent
