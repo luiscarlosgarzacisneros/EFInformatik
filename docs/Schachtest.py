@@ -1935,21 +1935,21 @@ class Schach():
                 self.board=nextmove
             else:
                 king_captured=False
-                if current==6:
+                if player.token==6:
                     other=-6
                 else:
                     other=6
                 for child in genchildren(self.board,other):
-                    if verloren(child,current):
+                    if verloren(child,player.token):
                         king_captured=True
                 if not king_captured:
                     print('UNENTSCHIEDEN')
                     return ' '
                 else:
-                    if current==6:
+                    if player.token==6:
                         print('K HAT GEWONNEN')
                         return 'K'
-                    elif current==-6:
+                    elif player.token==-6:
                         print('k HAT GEWONNEN')
                         return 'k'
             current = (current + 1) % 2
@@ -2461,7 +2461,7 @@ class MinimaxPlayer(Player):
             move=self.minimaxer(depth,(time.time() - start))
             if move!=[]:
                 bestmove=move
-            elif move==[] and depth==self.starting_depth+1:
+            elif move==[] and depth==self.starting_depth+1:#No immediate legal moves left
                 return []
             elif move==[]:
                 break
@@ -2513,16 +2513,14 @@ class MinimaxNode():
             other_player=6
         #
         if verloren(self.position, self.playeramzug):
-            #d.h. self: König wurde geschlagen (von playeramzug), self.parent: auf Schach wurde nicht korrekt reagiert (other_player), self.parent.parent: Schach (playeramzug)
-            #d.h. self.parent ist illegal
             self.value = evaluatepos(self.position, self.token)
             return self.value
         #
-        if verloren(self.position, other_player):
+        elif verloren(self.position, other_player):
             self.value = evaluatepos(self.position, self.token)
             return self.value
         #
-        if self.depth==maxdepth:
+        elif self.depth==maxdepth:
             self.value = evaluatepos(self.position, self.token)
             return self.value
         #
@@ -2611,3 +2609,4 @@ def spielen(z):
 
 spielen(20)
 
+# check kann vielleicht für weitere layers implementiert werden: Node self.illegal
