@@ -1820,11 +1820,11 @@ def evaluatepos(pos,playerk):
                 elif pos[p][o]==-5:
                     val=val-9
                 elif pos[p][o]==-6:
-                    val=val-1000
+                    val+=-1000
                 elif pos[p][o]==5:
                     val=val+9
                 elif pos[p][o]==6:
-                    val=val+1000
+                    val+=1000
     elif playerk==-6:
         for p in range(8):
             for o in range(8):
@@ -1852,11 +1852,11 @@ def evaluatepos(pos,playerk):
                 elif pos[p][o]==-5:
                     val=val+9
                 elif pos[p][o]==-6:
-                    val=val+1000
+                    val+=1000
                 elif pos[p][o]==5:
                     val=val-9
                 elif pos[p][o]==6:
-                    val=val-1000
+                    val+=-1000
     return val
 
 #
@@ -1906,18 +1906,18 @@ class Schach():
     def play(self):
         #
         self.board=[
-            [-4, -2, -3, -5, -6, -3, -2, -4],
+            [-4, -2, -3, 0, -6, -3, -2, -4],
             [-1, -1, -1, -1, -1, -1, -1, -1],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [1, 1, 1, 1, 1, 1, 1, 1],
-            [4, 2, 3, 5, 6, 3, 2, 4]
+            [0,0,0,0,-5,0,0,0],
+            [0,0,0,0,-5,0,0,0],
+            [0,6,0,-5,0,0,0,0],
+            [0,0,0,0,-5,0,0,0],
+            [1, 1, 1, 0, 1, 0, 1, 1],
+            [4, 0, 0, 0, 0, 3, 2, 4]
         ]
         #
         self.players.clear()
-        self.players.append(MCTSPlayer(6))#k
+        self.players.append(MinimaxPlayer(6))#k
         self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
@@ -1930,9 +1930,31 @@ class Schach():
             else:
                 istamzug='K'
             print(istamzug, ' ist am Zug')
-            self.board=player.get_move(copy.deepcopy(self.board))
+            nextmove=player.get_move(copy.deepcopy(self.board))
+            if nextmove!=[]:
+                self.board=nextmove
+            else:
+                king_captured=False
+                if current==6:
+                    other=-6
+                else:
+                    other=6
+                for child in genchildren(self.board,other):
+                    if verloren(child,current):
+                        king_captured=True
+                if not king_captured:
+                    print('UNENTSCHIEDEN')
+                    return ' '
+                else:
+                    if current==6:
+                        print('K HAT GEWONNEN')
+                        return 'K'
+                    elif current==-6:
+                        print('k HAT GEWONNEN')
+                        return 'k'
             current = (current + 1) % 2
             self.turn+=1
+            # für MCTS und Human: noch nicht implementiert
             if verloren(self.board,-6) or verloren(self.board,6):
                 break
         self.printboard(self.board)
@@ -2253,7 +2275,6 @@ class HumanPlayer(Player):
 #
 
 class MCTSPlayer(Player):
-
     def __init__(self, token):
         super().__init__(token)
         self.counter=0
@@ -2391,27 +2412,34 @@ class MinimaxPlayer(Player):
     def minimaxer(self, depth, vergangene_zeit):
         start=time.time()
         for child in self.rootnode.children:
-            child.minimax(-math.inf,math.inf,False, depth)
-            print("a ",end="") # child wurde fertig berechnet
-            if ((time.time()+vergangene_zeit) - start) > self.maxtime:
-                break
+            if child.value==None or child.value>-500:#illegal moves are not searched
+                child.minimax(-math.inf,math.inf,False, depth)
+                print("a ",end="") # child wurde fertig berechnet(und ist legal)
+                if ((time.time()+vergangene_zeit) - start) > self.maxtime:
+                    break
         #
         values=[]
         for child in self.rootnode.children:
-            values.append(child.value)
+            if child.value>-500:#illegal moved cant be chosen
+                values.append(child.value)
         #
-        bestmoves=[]
-        bestvalue=max(values)
-        for child in self.rootnode.children:
-            if child.value==bestvalue:
-                bestmoves.append(child)
-        #output---------
-        print("")
-        print(values)
-        print(bestvalue)
-        #---------------
-        bestmove=random.choice(bestmoves)
-        return bestmove.position
+        if values!=[]:
+            bestmoves=[]
+            bestvalue=max(values)
+            for child in self.rootnode.children:
+                if child.value==bestvalue:
+                    bestmoves.append(child)
+            #output---------
+            print("")
+            print(values)
+            print(bestvalue)
+            #---------------
+            bestmove=random.choice(bestmoves)
+            return bestmove.position
+        else:
+            print("NO LEGAL MOVES LEFT")
+            print(values)
+            return []
     
     def get_move(self, board):
         start=time.time()
@@ -2427,15 +2455,25 @@ class MinimaxPlayer(Player):
         self.rootnode.children=self.rootnode.expandnode()
         #
         depth=self.starting_depth
+        bestmove=[]
         while (time.time() - start) < self.maxtime:
             print("DEPTH: ",depth)
             move=self.minimaxer(depth,(time.time() - start))
-            bestmove=move
+            if move!=[]:
+                bestmove=move
+            elif move==[] and depth==self.starting_depth+1:
+                return []
+            elif move==[]:
+                break
+            #
             if (time.time() - start) > self.maxtime:
                 print("NICHT FERTIG")
             else:
                 self.rootnode.sort(True)
                 depth+=1
+            if depth==20:
+                break
+            #
         print("---",minimax_counter4)
         return bestmove
 
@@ -2448,6 +2486,7 @@ class MinimaxNode():
         self.token=None
         self.depth=None
         self.expanded=False
+        self.parent=None
 
     def expandnode(self):
         children=genchildren(self.position,self.playeramzug)
@@ -2459,6 +2498,7 @@ class MinimaxNode():
             instance.token=self.token
             instance.depth=self.depth+1
             instance.expanded=False
+            instance.parent=self
             self.children.append(instance)
         return self.children
 
@@ -2467,10 +2507,22 @@ class MinimaxNode():
         global minimax_counter4
         minimax_counter4+=1
         #
-        if self.depth==maxdepth:
+        if self.playeramzug==6:
+            other_player=-6
+        else:
+            other_player=6
+        #
+        if verloren(self.position, self.playeramzug):
+            #d.h. self: König wurde geschlagen (von playeramzug), self.parent: auf Schach wurde nicht korrekt reagiert (other_player), self.parent.parent: Schach (playeramzug)
+            #d.h. self.parent ist illegal
             self.value = evaluatepos(self.position, self.token)
             return self.value
-        elif verloren(self.position, 6) or verloren(self.position, -6):
+        #
+        if verloren(self.position, other_player):
+            self.value = evaluatepos(self.position, self.token)
+            return self.value
+        #
+        if self.depth==maxdepth:
             self.value = evaluatepos(self.position, self.token)
             return self.value
         #
