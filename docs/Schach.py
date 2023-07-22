@@ -1820,11 +1820,11 @@ def evaluatepos(pos,playerk):
                 elif pos[p][o]==-5:
                     val=val-9
                 elif pos[p][o]==-6:
-                    val=-math.inf
+                    val+=-1000
                 elif pos[p][o]==5:
                     val=val+9
                 elif pos[p][o]==6:
-                    val=math.inf
+                    val+=1000
     elif playerk==-6:
         for p in range(8):
             for o in range(8):
@@ -1852,11 +1852,11 @@ def evaluatepos(pos,playerk):
                 elif pos[p][o]==-5:
                     val=val+9
                 elif pos[p][o]==-6:
-                    val=math.inf
+                    val+=1000
                 elif pos[p][o]==5:
                     val=val-9
                 elif pos[p][o]==6:
-                    val=-math.inf
+                    val+=-1000
     return val
 
 #
@@ -1866,6 +1866,7 @@ class Schach():
         self.board=[]
         self.turn=0
         self.players=[]
+        self.maxturns=200
 
     def printboard(self,board):
         print('  1   2   3   4   5   6   7   8')
@@ -1906,18 +1907,18 @@ class Schach():
     def play(self):
         #
         self.board=[
-            [-4, -2, -3, 0, -6, -3, -2, -4],
+            [-4, -2, -3, -5, -6, -3, -2, -4],
             [-1, -1, -1, -1, -1, -1, -1, -1],
-            [0,0,0,0,-5,0,0,0],
-            [0,0,0,0,-5,0,0,0],
-            [0,6,0,-5,0,0,0,0],
-            [0,0,0,0,-5,0,0,0],
-            [1, 1, 1, 0, 1, 0, 1, 1],
-            [4, 0, 0, 0, 0, 3, 2, 4]
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [4, 2, 3, 5, 6, 3, 2, 4]
         ]
         #
         self.players.clear()
-        self.players.append(HumanPlayer(6))#k
+        self.players.append(MinimaxPlayer(6))#k
         self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
@@ -1930,21 +1931,35 @@ class Schach():
             else:
                 istamzug='K'
             print(istamzug, ' ist am Zug')
-            self.board=player.get_move(copy.deepcopy(self.board))
+            nextmove=player.get_move(copy.deepcopy(self.board))
+            if nextmove!=[]:
+                self.board=nextmove
+            else:
+                king_captured=False
+                if player.token==6:
+                    other=-6
+                else:
+                    other=6
+                for child in genchildren(self.board,other):
+                    if verloren(child,player.token):
+                        king_captured=True
+                if not king_captured:
+                    print('UNENTSCHIEDEN')
+                    return ' '
+                else:
+                    if player.token==6:
+                        print('K HAT GEWONNEN')
+                        return 'K'
+                    elif player.token==-6:
+                        print('k HAT GEWONNEN')
+                        return 'k'
             current = (current + 1) % 2
             self.turn+=1
-            if verloren(self.board,-6) or verloren(self.board,6):
-                break
-        self.printboard(self.board)
-        if verloren(self.board,6):
-            print('K HAT GEWONNEN')
-            return 'K'
-        elif verloren(self.board,-6):
-            print('k HAT GEWONNEN')
-            return 'k'
-        else:
-            print('UNENTSCHIEDEN')
-            return ' '
+            #
+            if self.turn==self.maxturns:
+                print('UNENTSCHIEDEN')
+                return ' '
+            #
         
 #
 
@@ -1960,6 +1975,7 @@ class Player():
 class HumanPlayer(Player):
     def __init__(self, token):
         super().__init__(token)
+        self.token=token
         self.e=[]
 
     def eingabe(self,pos):
@@ -2226,29 +2242,66 @@ class HumanPlayer(Player):
             return False
 
     def player(self,pos):
+        boardcopy=copy.deepcopy(pos)
+        #
+        if self.token==6:
+            other_player=-6
+        else:
+            other_player=6
+        #
+        # Existiert Zug?
+        legal_move_exists = False
+        for child_of_root in genchildren(pos, self.token):
+            king_is_killed = False
+            for child_of_child in genchildren(child_of_root, other_player):
+                if verloren(child_of_child, self.token):
+                    king_is_killed = True
+                    break
+            if not king_is_killed:
+                legal_move_exists = True
+                break  # Exit loop when legal move is found
+
+        # No legal moves
+        if not legal_move_exists:
+            return []
+        #
         while True:
-            if self.eingabe(pos)==True:
+            while True:
+                if self.eingabe(boardcopy)==True:
+                    break
+                else:
+                    continue
+            #
+            vy = self.e[0]
+            vx = self.e[1]
+            zy = self.e[2]
+            zx = self.e[3]
+            #
+            boardcopy[zy][zx]=boardcopy[vy][vx]
+            boardcopy[vy][vx]=0
+            for feld in boardcopy[0]:
+                if boardcopy[0][feld]==1:
+                    boardcopy[0][feld]=5
+            for feld in boardcopy[7]:
+                if boardcopy[0][feld]==-1:
+                    boardcopy[0][feld]=-5
+            #
+            #legal oder nicht
+            falsch=False
+            for child in genchildren(boardcopy,other_player):
+                if verloren(child, self.token):
+                    print('SCHACH')
+                    falsch=True
+                    boardcopy=copy.deepcopy(pos)
+                    break
+                    
+            if not falsch:
                 break
-            else:
-                continue
         #
-        vy = self.e[0]
-        vx = self.e[1]
-        zy = self.e[2]
-        zx = self.e[3]
-        #
-        pos[zy][zx]=pos[vy][vx]
-        pos[vy][vx]=0
-        for feld in pos[0]:
-            if pos[0][feld]==1:
-                pos[0][feld]=5
-        for feld in pos[7]:
-            if pos[0][feld]==-1:
-                pos[0][feld]=-5
+        return boardcopy
 
     def get_move(self, board):
-        self.player(board)
-        return board
+        return self.player(board)
 
 #
 
@@ -2264,16 +2317,9 @@ class MCTSPlayer(Player):
         self.numberofsimulations=30
         #-----
         
-    def mcts(self,board):
-        self.rootnode=MCTSNode(self.token)
-        self.rootnode.position=board
-        self.rootnode.playeramzug=self.token
-        self.rootnode.score=0
-        self.rootnode.visits=0
-        self.rootnode.children=[]
-        #
-        self.rootnode.expand()
+    def mcts(self):
         start = time.time()
+        #
         while True:
             self.counter+=1
             selectednode=self.rootnode.selectleafnode()
@@ -2287,6 +2333,38 @@ class MCTSPlayer(Player):
 
     def get_move(self,board):
         self.counter=0
+        #
+        self.rootnode=MCTSNode(self.token)
+        self.rootnode.position=board
+        self.rootnode.playeramzug=self.token
+        self.rootnode.score=0
+        self.rootnode.visits=0
+        self.rootnode.children=[]
+        #
+        #
+        #Illegale Züge weg
+        self.rootnode.expand()
+        number_of_legal_moves = 0
+        legal_moves = []
+        for child_of_root in self.rootnode.children:
+            child_of_root.expand()
+            king_is_killed = False
+            for child_of_child in child_of_root.children:
+                if verloren(child_of_child.position, self.rootnode.playeramzug):
+                    king_is_killed = True
+                    break
+            if not king_is_killed:
+                legal_moves.append(child_of_root)
+                number_of_legal_moves += 1
+        #
+        self.rootnode.children=legal_moves
+        #keine Züge mehr
+        print("rootnode children",len(self.rootnode.children))
+        print("number_of_legal_moves",number_of_legal_moves)
+        if number_of_legal_moves==0:
+            return []
+        #
+        #
         self.mcts(board)
         print(self.counter)
         bestmove=[]
@@ -2384,33 +2462,40 @@ class MinimaxPlayer(Player):
     #sucht bis max zeit erreicht ist, depth =+1, move sorting
     def __init__(self, token):
         super().__init__(token)
-        self.maxtime=2
+        self.maxtime=5
         self.starting_depth=1 #wenn suche bei layer1 nicht fertig wird: crash
 
     def minimaxer(self, depth, vergangene_zeit):
         start=time.time()
         for child in self.rootnode.children:
-            child.minimax(-math.inf,math.inf,False, depth)
-            print("a ",end="") # child wurde fertig berechnet
-            if ((time.time()+vergangene_zeit) - start) > self.maxtime:
-                break
+            if child.value==None or child.value>-500:#illegal moves are not searched
+                child.minimax(-math.inf,math.inf,False, depth)
+                print("a ",end="") # child wurde fertig berechnet(und ist legal)
+                if ((time.time()+vergangene_zeit) - start) > self.maxtime:
+                    break
         #
         values=[]
         for child in self.rootnode.children:
-            values.append(child.value)
+            if child.value>-500:#illegal moved cant be chosen
+                values.append(child.value)
         #
-        bestmoves=[]
-        bestvalue=max(values)
-        for child in self.rootnode.children:
-            if child.value==bestvalue:
-                bestmoves.append(child)
-        #output---------
-        print("")
-        print(values)
-        print(bestvalue)
-        #---------------
-        bestmove=random.choice(bestmoves)
-        return bestmove.position
+        if values!=[]:
+            bestmoves=[]
+            bestvalue=max(values)
+            for child in self.rootnode.children:
+                if child.value==bestvalue:
+                    bestmoves.append(child)
+            #output---------
+            print("")
+            print(values)
+            print(bestvalue)
+            #---------------
+            bestmove=random.choice(bestmoves)
+            return bestmove.position
+        else:
+            print("NO LEGAL MOVES LEFT")
+            print(values)
+            return []
     
     def get_move(self, board):
         start=time.time()
@@ -2430,12 +2515,21 @@ class MinimaxPlayer(Player):
         while (time.time() - start) < self.maxtime:
             print("DEPTH: ",depth)
             move=self.minimaxer(depth,(time.time() - start))
-            bestmove=move
+            if move!=[]:
+                bestmove=move
+            elif move==[] and depth==self.starting_depth+1:#No immediate legal moves left
+                return []
+            elif move==[]:
+                break
+            #
             if (time.time() - start) > self.maxtime:
                 print("NICHT FERTIG")
             else:
                 self.rootnode.sort(True)
                 depth+=1
+            if depth==20:
+                break
+            #
         print("---",minimax_counter4)
         return bestmove
 
@@ -2448,7 +2542,6 @@ class MinimaxNode():
         self.token=None
         self.depth=None
         self.expanded=False
-        self.parent=None
 
     def expandnode(self):
         children=genchildren(self.position,self.playeramzug)
@@ -2460,7 +2553,6 @@ class MinimaxNode():
             instance.token=self.token
             instance.depth=self.depth+1
             instance.expanded=False
-            instance.parent=self
             self.children.append(instance)
         return self.children
 
@@ -2475,16 +2567,14 @@ class MinimaxNode():
             other_player=6
         #
         if verloren(self.position, self.playeramzug):
-            #d.h. self: König wurde geschlagen (von playeramzug), self.parent: auf Schach wurde nicht korrekt reagiert (other_player), self.parent.parent: Schach (playeramzug)
-            #d.h. self.parent ist illegal
             self.value = evaluatepos(self.position, self.token)
             return self.value
         #
-        if verloren(self.position, other_player):
+        elif verloren(self.position, other_player):
             self.value = evaluatepos(self.position, self.token)
             return self.value
         #
-        if self.depth==maxdepth:
+        elif self.depth==maxdepth:
             self.value = evaluatepos(self.position, self.token)
             return self.value
         #
@@ -2559,6 +2649,7 @@ def spielen(z):
     k_wins=0
     unentschieden=0
     for i in range(z):
+        game.turn=0
         r=game.play() 
         if r== 'K':
             K_wins += 1

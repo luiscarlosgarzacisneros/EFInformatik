@@ -2317,7 +2317,7 @@ class MCTSPlayer(Player):
         self.numberofsimulations=30
         #-----
         
-    def mcts(self,board):
+    def mcts(self):
         start = time.time()
         #
         while True:
