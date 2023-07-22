@@ -1918,7 +1918,7 @@ class Schach():
         ]
         #
         self.players.clear()
-        self.players.append(MCTSPlayer(6))#k
+        self.players.append(HumanPlayer(6))#k
         self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
@@ -1960,7 +1960,7 @@ class Schach():
                 print('UNENTSCHIEDEN')
                 return ' '
             #
-            # für MCTS und Human: noch nicht implementiert
+            #Human: noch nicht implementiert
             if verloren(self.board,-6) or verloren(self.board,6):
                 break
             #
@@ -1989,6 +1989,7 @@ class Player():
 class HumanPlayer(Player):
     def __init__(self, token):
         super().__init__(token)
+        self.token=token
         self.e=[]
 
     def eingabe(self,pos):
@@ -2255,29 +2256,66 @@ class HumanPlayer(Player):
             return False
 
     def player(self,pos):
+        boardcopy=copy.deepcopy(pos)
+        #
+        if self.token==6:
+            other_player=-6
+        else:
+            other_player=6
+        #
+        # Existiert Zug?
+        legal_move_exists = False
+        for child_of_root in genchildren(pos, self.token):
+            king_is_killed = False
+            for child_of_child in genchildren(child_of_root, other_player):
+                if verloren(child_of_child, self.token):
+                    king_is_killed = True
+                    break
+            if not king_is_killed:
+                legal_move_exists = True
+                break  # Exit loop when legal move is found
+
+        # No legal moves
+        if not legal_move_exists:
+            return []
+        #
         while True:
-            if self.eingabe(pos)==True:
+            while True:
+                if self.eingabe(boardcopy)==True:
+                    break
+                else:
+                    continue
+            #
+            vy = self.e[0]
+            vx = self.e[1]
+            zy = self.e[2]
+            zx = self.e[3]
+            #
+            boardcopy[zy][zx]=boardcopy[vy][vx]
+            boardcopy[vy][vx]=0
+            for feld in boardcopy[0]:
+                if boardcopy[0][feld]==1:
+                    boardcopy[0][feld]=5
+            for feld in boardcopy[7]:
+                if boardcopy[0][feld]==-1:
+                    boardcopy[0][feld]=-5
+            #
+            #legal oder nicht
+            falsch=False
+            for child in genchildren(boardcopy,other_player):
+                if verloren(child, self.token):
+                    print('SCHACH')
+                    falsch=True
+                    boardcopy=copy.deepcopy(pos)
+                    break
+                    
+            if not falsch:
                 break
-            else:
-                continue
         #
-        vy = self.e[0]
-        vx = self.e[1]
-        zy = self.e[2]
-        zx = self.e[3]
-        #
-        pos[zy][zx]=pos[vy][vx]
-        pos[vy][vx]=0
-        for feld in pos[0]:
-            if pos[0][feld]==1:
-                pos[0][feld]=5
-        for feld in pos[7]:
-            if pos[0][feld]==-1:
-                pos[0][feld]=-5
+        return boardcopy
 
     def get_move(self, board):
-        self.player(board)
-        return board
+        return self.player(board)
 
 #
 

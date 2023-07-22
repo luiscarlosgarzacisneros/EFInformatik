@@ -1909,15 +1909,15 @@ class Schach():
             [-4, -2, -3, 0, -6, -3, -2, -4],
             [-1, -1, -1, -1, -1, -1, -1, -1],
             [0,0,0,0,-5,0,0,0],
-            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,-5,0,0,0],
             [0,6,0,-5,0,0,0,0],
             [0,0,0,0,-5,0,0,0],
-            [1, 1, 0, 0, 1, 0, 1, 1],
+            [1, 1, 1, 0, 1, 0, 1, 1],
             [4, 0, 0, 0, 0, 3, 2, 4]
         ]
         #
         self.players.clear()
-        self.players.append(MinimaxPlayer(6))#k
+        self.players.append(HumanPlayer(6))#k
         self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
