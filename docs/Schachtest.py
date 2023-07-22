@@ -1866,6 +1866,7 @@ class Schach():
         self.board=[]
         self.turn=0
         self.players=[]
+        self.maxturns=200
 
     def printboard(self,board):
         print('  1   2   3   4   5   6   7   8')
@@ -1917,7 +1918,7 @@ class Schach():
         ]
         #
         self.players.clear()
-        self.players.append(MinimaxPlayer(6))#k
+        self.players.append(MCTSPlayer(6))#k
         self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
@@ -1954,9 +1955,15 @@ class Schach():
                         return 'k'
             current = (current + 1) % 2
             self.turn+=1
+            #
+            if self.turn==self.maxturns:
+                print('UNENTSCHIEDEN')
+                return ' '
+            #
             # für MCTS und Human: noch nicht implementiert
             if verloren(self.board,-6) or verloren(self.board,6):
                 break
+            #
         self.printboard(self.board)
         if verloren(self.board,6):
             print('K HAT GEWONNEN')
@@ -2287,15 +2294,8 @@ class MCTSPlayer(Player):
         #-----
         
     def mcts(self,board):
-        self.rootnode=MCTSNode(self.token)
-        self.rootnode.position=board
-        self.rootnode.playeramzug=self.token
-        self.rootnode.score=0
-        self.rootnode.visits=0
-        self.rootnode.children=[]
-        #
-        self.rootnode.expand()
         start = time.time()
+        #
         while True:
             self.counter+=1
             selectednode=self.rootnode.selectleafnode()
@@ -2309,6 +2309,38 @@ class MCTSPlayer(Player):
 
     def get_move(self,board):
         self.counter=0
+        #
+        self.rootnode=MCTSNode(self.token)
+        self.rootnode.position=board
+        self.rootnode.playeramzug=self.token
+        self.rootnode.score=0
+        self.rootnode.visits=0
+        self.rootnode.children=[]
+        #
+        #
+        #Illegale Züge weg
+        self.rootnode.expand()
+        number_of_legal_moves = 0
+        legal_moves = []
+        for child_of_root in self.rootnode.children:
+            child_of_root.expand()
+            king_is_killed = False
+            for child_of_child in child_of_root.children:
+                if verloren(child_of_child.position, self.rootnode.playeramzug):
+                    king_is_killed = True
+                    break
+            if not king_is_killed:
+                legal_moves.append(child_of_root)
+                number_of_legal_moves += 1
+        #
+        self.rootnode.children=legal_moves
+        #keine Züge mehr
+        print("rootnode children",len(self.rootnode.children))
+        print("number_of_legal_moves",number_of_legal_moves)
+        if number_of_legal_moves==0:
+            return []
+        #
+        #
         self.mcts(board)
         print(self.counter)
         bestmove=[]
@@ -2606,5 +2638,3 @@ def spielen(z):
     print('FERTIG')
 
 spielen(20)
-
-# check kann vielleicht für weitere layers implementiert werden: Node self.illegal und self.parent
