@@ -1907,18 +1907,18 @@ class Schach():
     def play(self):
         #
         self.board=[
-            [-4, -2, -3, 0, -6, -3, -2, -4],
+            [-4, -2, -3, -5, -6, -3, -2, -4],
             [-1, -1, -1, -1, -1, -1, -1, -1],
-            [0,0,0,0,-5,0,0,0],
-            [0,0,0,0,-5,0,0,0],
-            [0,6,0,-5,0,0,0,0],
-            [0,0,0,0,-5,0,0,0],
-            [1, 1, 1, 0, 1, 0, 1, 1],
-            [4, 0, 0, 0, 0, 3, 2, 4]
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [4, 2, 3, 5, 6, 3, 2, 4]
         ]
         #
         self.players.clear()
-        self.players.append(HumanPlayer(6))#k
+        self.players.append(MinimaxPlayer(6))#k
         self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
@@ -1960,20 +1960,6 @@ class Schach():
                 print('UNENTSCHIEDEN')
                 return ' '
             #
-            #Human: noch nicht implementiert
-            if verloren(self.board,-6) or verloren(self.board,6):
-                break
-            #
-        self.printboard(self.board)
-        if verloren(self.board,6):
-            print('K HAT GEWONNEN')
-            return 'K'
-        elif verloren(self.board,-6):
-            print('k HAT GEWONNEN')
-            return 'k'
-        else:
-            print('UNENTSCHIEDEN')
-            return ' '
         
 #
 
@@ -2663,6 +2649,7 @@ def spielen(z):
     k_wins=0
     unentschieden=0
     for i in range(z):
+        game.turn=0
         r=game.play() 
         if r== 'K':
             K_wins += 1
