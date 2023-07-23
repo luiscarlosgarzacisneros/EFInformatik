@@ -193,22 +193,54 @@ def gcKk(y,x,pos,player):
             boardc[0][3]=-4
             boardc[0][0]=0
             boardc[0][4]=0
+            legal=True
+            for child in genchildren(boardc,6):
+                if child[0][2]>0 or child[0][3]>0 or child[0][4]>0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(boardc)
+            boardc=copy.deepcopy(pos)
         if boardc[0][7]==-7 and boardc[0][6]==0 and boardc[0][5]==0:
             boardc[0][6]=-6
             boardc[0][5]=-4
             boardc[0][7]=0
             boardc[0][4]=0
+            legal=True
+            for child in genchildren(boardc,6):
+                if child[0][4]>0 or child[0][5]>0 or child[0][6]>0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(boardc)
+            boardc=copy.deepcopy(pos)
     elif player==8:
         if boardc[7][0]==7 and boardc[7][1]==0 and boardc[7][2]==0 and boardc[7][3]==0:
             boardc[7][2]=6
             boardc[7][3]=4
             boardc[7][0]=0
             boardc[7][4]=0
+            legal=True
+            for child in genchildren(boardc,-6):
+                if child[7][2]<0 or child[7][3]<0 or child[7][4]<0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(boardc)
+            boardc=copy.deepcopy(pos)
         if boardc[7][7]==7 and boardc[7][6]==0 and boardc[7][5]==0:
             boardc[7][6]=6
             boardc[7][5]=4
             boardc[7][7]=0
             boardc[7][4]=0
+            legal=True
+            for child in genchildren(boardc,-6):
+                if child[7][4]<0 or child[7][5]<0 or child[7][6]<0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(boardc)
+            boardc=copy.deepcopy(pos)
     return childrenK
 
 def gcLl(y,x,pos,player):
@@ -1918,11 +1950,11 @@ class Schach():
                     print('l', end='')
                 elif board[i][j]==3:
                     print('x', end='')
-                elif board[i][j]==4:
+                elif board[i][j]==4 or board[i][j]==7:
                     print('t', end='')
                 elif board[i][j]==5:
                     print('q', end='')
-                elif board[i][j]==6:
+                elif board[i][j]==6 or board[i][j]==8:
                     print('k', end='')
                 elif board[i][j]==-1:
                     print('B', end='')
@@ -1930,11 +1962,11 @@ class Schach():
                     print('L', end='')
                 elif board[i][j]==-3:
                     print('X', end='')
-                elif board[i][j]==-4:
+                elif board[i][j]==-4 or board[i][j]==-7:
                     print('T', end='')
                 elif board[i][j]==-5:
                     print('Q', end='')
-                elif board[i][j]==-6:
+                elif board[i][j]==-6 or board[i][j]==-8:
                     print('K', end='')
                 elif board[i][j]==0:
                     print(' ', end='')
@@ -1945,14 +1977,14 @@ class Schach():
     def play(self):
         #
         self.board=[
-            [-4, -2, -3, -5, -6, -3, -2, -4],
+            [-7, -2, -3, -5, -8, -3, -2, -7],
             [-1, -1, -1, -1, -1, -1, -1, -1],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [1, 1, 1, 1, 1, 1, 1, 1],
-            [4, 2, 3, 5, 6, 3, 2, 4]
+            [7, 2, 3, 5, 8, 3, 2, 7]
         ]
         #
         self.players.clear()
@@ -2700,4 +2732,60 @@ def spielen(z):
         print('-:',unentschieden)
     print('FERTIG')
 
-spielen(20)
+spielen(3)
+
+
+#----------------------------------------------------------------
+board=[
+    [-7,0,0,0,-8,0,0,-7],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,4,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,8,0,0,0]
+]
+
+def printboard(board):
+    print('  1   2   3   4   5   6   7   8')
+    print('---------------------------------')
+    for i in range(8):
+        print('I ', end='')
+        for j in range(8):
+            if board[i][j]==1:
+                print('b', end='')
+            elif board[i][j]==2:
+                print('l', end='')
+            elif board[i][j]==3:
+                print('x', end='')
+            elif board[i][j]==4 or board[i][j]==7:
+                print('t', end='')
+            elif board[i][j]==5:
+                print('q', end='')
+            elif board[i][j]==6 or board[i][j]==8:
+                print('k', end='')
+            elif board[i][j]==-1:
+                print('B', end='')
+            elif board[i][j]==-2:
+                print('L', end='')
+            elif board[i][j]==-3:
+                print('X', end='')
+            elif board[i][j]==-4 or board[i][j]==-7:
+                print('T', end='')
+            elif board[i][j]==-5:
+                print('Q', end='')
+            elif board[i][j]==-6 or board[i][j]==-8:
+                print('K', end='')
+            elif board[i][j]==0:
+                print(' ', end='')
+            print(' I ', end='')
+        print(i + 1)
+        print('---------------------------------')
+
+def test():
+    for child in genchildren(board,-6):
+        printboard(child)
+
+#test()
+#----------------------------------------------------------------
