@@ -2184,9 +2184,11 @@ class HumanPlayer(Player):
         super().__init__(token)
         self.token=token
         self.e=[]
+        self.rochade=0
+        self.en_passant=False
+        self.bB_2_nach_vorne=False
 
     def eingabe(self,pos):
-        self.e.clear()
         korrekt=False
         try:
             vx = int(input('von x: ')) - 1
@@ -2204,49 +2206,64 @@ class HumanPlayer(Player):
                 if vy==6 and pos[zy][zx]==0 and pos[vy-1][vx]==0 and vx==zx and zy==vy-2:
                     korrekt=True
                 #1nachv normal bew
-                if pos[zy][zx]==0 and vx==zx and zy==vy-1:
+                elif pos[zy][zx]==0 and vx==zx and zy==vy-1:
                     korrekt=True
                 #schlagen
-                if pos[zy][zx]<0 and zy==vy-1 and vx-1==zx:
+                elif pos[zy][zx]<0 and zy==vy-1 and vx-1==zx:
                     korrekt=True
-                if pos[zy][zx]<0 and zy==vy-1 and vx+1==zx:
+                elif pos[zy][zx]<0 and zy==vy-1 and vx+1==zx:
                     korrekt=True
+                #en passant
+                elif zy==vy-1 and vx-1==zx and pos[zy][zx]==0 and pos[vy][zx]==-9:
+                    korrekt=True
+                    self.en_passant=True
+                elif zy==vy-1 and vx+1==zx and pos[zy][zx]==0 and pos[vy][zx]==-9:
+                    korrekt=True
+                    self.en_passant=True
             #B
-            if pos[vy][vx]==-1:
+            elif pos[vy][vx]==-1:
                 #2nachv
                 if vy==1 and pos[zy][zx]==0 and pos[vy+1][vx]==0 and vx==zx and zy==vy+2:
                     korrekt=True
                 #1nachv normal bew
-                if pos[zy][zx]==0 and vx==zx and zy==vy+1:
+                elif pos[zy][zx]==0 and vx==zx and zy==vy+1:
                     korrekt=True
                 #schlagen
-                if pos[zy][zx]>0 and zy==vy+1 and vx-1==zx:
+                elif pos[zy][zx]>0 and zy==vy+1 and vx-1==zx:
                     korrekt=True
-                if pos[zy][zx]>0 and zy==vy+1 and vx+1==zx:
+                elif pos[zy][zx]>0 and zy==vy+1 and vx+1==zx:
                     korrekt=True
+                #en passant
+                elif zy==vy+1 and vx-1==zx and pos[zy][zx]==0 and pos[vy][zx]==9:
+                    korrekt=True
+                    self.en_passant=True
+                elif zy==vy+1 and vx+1==zx and pos[zy][zx]==0 and pos[vy][zx]==9:
+                    korrekt=True
+                    self.en_passant=True
             #kK
-            if (pos[vy][vx]==6 and pos[zy][zx]<=0) or (pos[vy][vx]==-6 and pos[zy][zx]>=0):
+            elif (pos[vy][vx]==6 and pos[zy][zx]<=0) or (pos[vy][vx]==-6 and pos[zy][zx]>=0):
                 #vertikal
                 if vx-1==zx and zy==vy:
                     korrekt=True
-                if vx+1==zx and zy==vy:
+                elif vx+1==zx and zy==vy:
                     korrekt=True
                 #horizontal
-                if vx==zx and zy==vy-1:
+                elif vx==zx and zy==vy-1:
                     korrekt=True
-                if vx==zx and zy==vy+1:
+                elif vx==zx and zy==vy+1:
                     korrekt=True
                 #diagonal
-                if vx-1==zx and zy==vy-1:
+                elif vx-1==zx and zy==vy-1:
                     korrekt=True
-                if vx+1==zx and zy==vy-1:
+                elif vx+1==zx and zy==vy-1:
                     korrekt=True
-                if vx+1==zx and zy==vy+1:
+                elif vx+1==zx and zy==vy+1:
                     korrekt=True
-                if vx-1==zx and zy==vy+1:
+                elif vx-1==zx and zy==vy+1:
                     korrekt=True
+                #rochade
             #tT
-            if (pos[vy][vx]==4 and pos[zy][zx]<=0) or (pos[vy][vx]==-4 and pos[zy][zx]>=0):
+            elif (pos[vy][vx]==4 and pos[zy][zx]<=0) or (pos[vy][vx]==-4 and pos[zy][zx]>=0):
                 #vertikal
                 if vx==zx:
                     #nach unten
@@ -2263,7 +2280,7 @@ class HumanPlayer(Player):
                         if pathclear:
                             korrekt=True
                     #nach oben
-                    if vy>zy:
+                    elif vy>zy:
                         pathclear=True
                         f=1
                         while True:
@@ -2276,7 +2293,7 @@ class HumanPlayer(Player):
                         if pathclear:
                             korrekt=True
                 #horizontal
-                if vy==zy:
+                elif vy==zy:
                     #nach rechts
                     if vx<zx:
                         pathclear=True
@@ -2291,7 +2308,7 @@ class HumanPlayer(Player):
                         if pathclear:
                             korrekt=True
                     #nach links
-                    if vx>zx:
+                    elif vx>zx:
                         pathclear=True
                         f=1
                         while True:
@@ -2304,7 +2321,7 @@ class HumanPlayer(Player):
                         if pathclear:
                             korrekt=True
             #xX
-            if (pos[vy][vx]==3 and pos[zy][zx]<=0) or (pos[vy][vx]==-3 and pos[zy][zx]>=0):
+            elif (pos[vy][vx]==3 and pos[zy][zx]<=0) or (pos[vy][vx]==-3 and pos[zy][zx]>=0):
                 pathclear=False
                 for u in range(8):
                     if zy>vy and zx>vx:
@@ -2313,19 +2330,19 @@ class HumanPlayer(Player):
                             break
                         if pos[vy+u+1][vx+u+1]!=0:
                             break
-                    if zy<vy and zx>vx:
+                    elif zy<vy and zx>vx:
                         if vx+u+1==zx and vy-u-1==zy:
                             pathclear=True
                             break
                         if pos[vy-u-1][vx+u+1]!=0:
                             break
-                    if zy>vy and zx<vx:
+                    elif zy>vy and zx<vx:
                         if vx-u-1==zx and vy+u+1==zy:
                             pathclear=True
                             break
                         if pos[vy+u+1][vx-1-u]!=0:
                             break
-                    if zy<vy and zx<vx:
+                    elif zy<vy and zx<vx:
                         if vx-1-u==zx and vy-u-1==zy:
                             pathclear=True
                             break
@@ -2334,7 +2351,7 @@ class HumanPlayer(Player):
                 if pathclear:
                     korrekt=True
             #qQ
-            if (pos[vy][vx]==5 and pos[zy][zx]<=0) or (pos[vy][vx]==-5 and pos[zy][zx]>=0):
+            elif (pos[vy][vx]==5 and pos[zy][zx]<=0) or (pos[vy][vx]==-5 and pos[zy][zx]>=0):
                 pathcleart=False
                 for u in range(8):
                     if zy>vy and zx>vx:
@@ -2343,19 +2360,19 @@ class HumanPlayer(Player):
                             break
                         if pos[vy+u+1][vx+u+1]!=0:
                             break
-                    if zy<vy and zx>vx:
+                    elif zy<vy and zx>vx:
                         if vx+u+1==zx and vy-u-1==zy:
                             pathcleart=True
                             break
                         if pos[vy-u-1][vx+u+1]!=0:
                             break
-                    if zy>vy and zx<vx:
+                    elif zy>vy and zx<vx:
                         if vx-u-1==zx and vy+u+1==zy:
                             pathcleart=True
                             break
                         if pos[vy+u+1][vx-1-u]!=0:
                             break
-                    if zy<vy and zx<vx:
+                    elif zy<vy and zx<vx:
                         if vx-1-u==zx and vy-u-1==zy:
                             pathcleart=True
                             break
@@ -2379,7 +2396,7 @@ class HumanPlayer(Player):
                         if pathclearl:
                             korrekt=True
                     #nach oben
-                    if vy>zy:
+                    elif vy>zy:
                         pathclearl=True
                         f=1
                         while True:
@@ -2392,7 +2409,7 @@ class HumanPlayer(Player):
                         if pathclearl:
                             korrekt=True
                 #horizontal
-                if vy==zy:
+                elif vy==zy:
                     #nach rechts
                     if vx<zx:
                         pathclearl=True
@@ -2407,7 +2424,7 @@ class HumanPlayer(Player):
                         if pathclearl:
                             korrekt=True
                     #nach links
-                    if vx>zx:
+                    elif vx>zx:
                         pathclearl=True
                         f=1
                         while True:
@@ -2420,22 +2437,22 @@ class HumanPlayer(Player):
                         if pathclearl:
                             korrekt=True
             #lL
-            if (pos[vy][vx]==2 and pos[zy][zx]<=0) or (pos[vy][vx]==-2 and pos[zy][zx]>=0):
+            elif (pos[vy][vx]==2 and pos[zy][zx]<=0) or (pos[vy][vx]==-2 and pos[zy][zx]>=0):
                 if zy==vy-2 and zx==vx+1:
                     korrekt=True
-                if zy==vy-2 and zx==vx-1:
+                elif zy==vy-2 and zx==vx-1:
                     korrekt=True
-                if zy==vy+2 and zx==vx+1:
+                elif zy==vy+2 and zx==vx+1:
                     korrekt=True
-                if zy==vy+2 and zx==vx-1:
+                elif zy==vy+2 and zx==vx-1:
                     korrekt=True
-                if zy==vy+1 and zx==vx+2:
+                elif zy==vy+1 and zx==vx+2:
                     korrekt=True
-                if zy==vy-1 and zx==vx+2:
+                elif zy==vy-1 and zx==vx+2:
                     korrekt=True
-                if zy==vy+1 and zx==vx-2:
+                elif zy==vy+1 and zx==vx-2:
                     korrekt=True
-                if zy==vy-1 and zx==vx-2:
+                elif zy==vy-1 and zx==vx-2:
                     korrekt=True
 
         if korrekt:
@@ -2450,6 +2467,18 @@ class HumanPlayer(Player):
 
     def player(self,pos):
         boardcopy=copy.deepcopy(pos)
+        #
+        #9&-9 zu 1&-1
+        if self.token==6:
+            for y in range(len(boardcopy)):
+                for x in range(len(boardcopy[y])):
+                    if boardcopy[y][x]==9:
+                        boardcopy[y][x]=1
+        elif self.token==-6:
+            for y in range(len(boardcopy)):
+                for x in range(len(boardcopy[y])):
+                    if boardcopy[y][x]==-9:
+                        boardcopy[y][x]=-1
         #
         if self.token==6:
             other_player=-6
@@ -2486,6 +2515,17 @@ class HumanPlayer(Player):
             #
             boardcopy[zy][zx]=boardcopy[vy][vx]
             boardcopy[vy][vx]=0
+            #en passant
+            if self.en_passant:
+                boardcopy[vy][zx]=0
+            #2nachvorne
+            if self.bB_2_nach_vorne:
+                if self.token==6:
+                    boardcopy[zy][zx]=9
+                elif self.token==-6:
+                    boardcopy[zy][zx]=-9
+            #rochade
+
             for feld in range(len(boardcopy[0])):
                 if boardcopy[0][feld]==1:
                     boardcopy[0][feld]=5
