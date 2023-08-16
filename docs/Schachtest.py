@@ -2114,14 +2114,14 @@ class Schach():
     def play(self):
         #
         self.board=[
-            [-7, -2, -3, -5, -8, -3, -2, -7],
-            [-1, -1, -1, -1, -1, -1, -1, -1],
+            [0,0,0,0,-8,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
-            [1, 1, 1, 1, 1, 1, 1, 1],
-            [7, 2, 3, 5, 8, 3, 2, 7]
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [7,0,0,0,8,0,0,7]
         ]
         #
         self.players.clear()
@@ -2261,8 +2261,7 @@ class HumanPlayer(Player):
                     korrekt=True
                 elif vx-1==zx and zy==vy+1:
                     korrekt=True
-            #rochade
-            elif (pos[vy][vx]==8 and pos[zy][zx]<=0) or (pos[vy][vx]==-8 and pos[zy][zx]>=0):
+                #rochade
                 if pos[vy][vx]==-8:
                     if zy==0 and zx==2 and pos[0][0]==-7 and pos[0][1]==0 and pos[0][2]==0 and pos[0][3]==0:
                         boardc=copy.deepcopy(pos)
@@ -2589,13 +2588,17 @@ class HumanPlayer(Player):
             if self.rochade==1:
                 if self.token==6:
                     boardcopy[zy][zx+1]=4
+                    boardcopy[7][0]=0
                 elif self.token==-6:
                     boardcopy[zy][zx+1]=-4
+                    boardcopy[7][0]=0
             elif self.rochade==2:
                 if self.token==6:
                     boardcopy[zy][zx-1]=4
+                    boardcopy[7][7]=0
                 elif self.token==-6:
                     boardcopy[zy][zx-1]=-4
+                    boardcopy[7][7]=0
             #
             for feld in range(len(boardcopy[0])):
                 if boardcopy[0][feld]==1:
@@ -3048,3 +3051,4 @@ def test():
 
 
 #Human: keine rochade, MCTS: kein en passant
+#Minimax wenn legal moves left in depth 1 aber nicht tiefer-> verloren?
