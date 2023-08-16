@@ -10,6 +10,8 @@ import math
 #4:t
 #5:q
 #6:k
+#7:not moved towert
+#8:not moved kingk
 
 #-1:B
 #-2:L
@@ -17,7 +19,8 @@ import math
 #-4:T
 #-5:Q
 #-6:K
-
+#-7:not moved towerT
+#-8:not moved kingK
 
 #
 minimaxc=0
@@ -32,41 +35,48 @@ def genchildren(position, playerk):
                 if position[y][x]==1:
                     for h in gcBb(y,x,position,1):
                         children.append(h)
-                if position[y][x]==6:
+                elif position[y][x]==6:
                     for h in gcKk(y,x,position,6):
                         children.append(h)
-                if position[y][x]==4:
+                elif position[y][x]==4 or position[y][x]==7:
                     for h in gcTt(y,x,position,4):
                         children.append(h)
-                if position[y][x]==3:
+                elif position[y][x]==3:
                     for h in gcXx(y,x,position,3):
                         children.append(h)
-                if position[y][x]==5:
+                elif position[y][x]==5:
                     for h in gcQq(y,x,position,5):
                         children.append(h)
-                if position[y][x]==2:
+                elif position[y][x]==6:
                     for h in gcLl(y,x,position,2):
                         children.append(h)
-    if playerk==-6:
+                elif position[y][x]==8:
+                    for h in gcKk(y,x,position,8):
+                        children.append(h)
+                
+    elif playerk==-6:
         for y in range(8):
             for x in range(8):
                 if position[y][x]==-1:
                     for h in gcBb(y,x,position,-1):
                         children.append(h)
-                if position[y][x]==-6:
+                elif position[y][x]==-6:
                     for h in gcKk(y,x,position,-6):
                         children.append(h)
-                if position[y][x]==-4:
+                elif position[y][x]==-4 or position[y][x]==-7:
                     for h in gcTt(y,x,position,-4):
                         children.append(h)
-                if position[y][x]==-3:
+                elif position[y][x]==-3:
                     for h in gcXx(y,x,position,-3):
                         children.append(h)
-                if position[y][x]==-5:
+                elif position[y][x]==-5:
                     for h in gcQq(y,x,position,-5):
                         children.append(h)
-                if position[y][x]==-3:
+                elif position[y][x]==-3:
                     for h in gcLl(y,x,position,-3):
+                        children.append(h)
+                elif position[y][x]==-8:
+                    for h in gcKk(y,x,position,-8):
                         children.append(h)
     #
     global minimaxc
@@ -77,7 +87,7 @@ def genchildren(position, playerk):
 def gcKk(y,x,pos,player):
     boardc=copy.deepcopy(pos)
     childrenK= []
-    if player==-6:
+    if player==-6 or player==-8:
         if y+1<8 and x+1<8:
             if boardc[y+1][x+1]>=0:
                 boardc[y][x]=0
@@ -126,7 +136,7 @@ def gcKk(y,x,pos,player):
                 boardc[y-1][x]=-6
                 childrenK.append(boardc)
                 boardc=copy.deepcopy(pos)
-    if player==6:
+    elif player==6 or player==8:
         if y+1<8 and x+1<8:
             if boardc[y+1][x+1]<=0:
                 boardc[y][x]=0
@@ -175,6 +185,61 @@ def gcKk(y,x,pos,player):
                 boardc[y-1][x]=6
                 childrenK.append(boardc)
                 boardc=copy.deepcopy(pos)
+    #rochade
+    if player==-8:
+        if boardc[0][0]==-7 and boardc[0][1]==0 and boardc[0][2]==0 and boardc[0][3]==0:
+            boardc[0][2]=-6
+            boardc[0][3]=-4
+            boardc[0][0]=0
+            boardc[0][4]=0
+            legal=True
+            for child in genchildren(boardc,6):
+                if child[0][2]>0 or child[0][3]>0 or child[0][4]>0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(boardc)
+            boardc=copy.deepcopy(pos)
+        if boardc[0][7]==-7 and boardc[0][6]==0 and boardc[0][5]==0:
+            boardc[0][6]=-6
+            boardc[0][5]=-4
+            boardc[0][7]=0
+            boardc[0][4]=0
+            legal=True
+            for child in genchildren(boardc,6):
+                if child[0][4]>0 or child[0][5]>0 or child[0][6]>0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(boardc)
+            boardc=copy.deepcopy(pos)
+    elif player==8:
+        if boardc[7][0]==7 and boardc[7][1]==0 and boardc[7][2]==0 and boardc[7][3]==0:
+            boardc[7][2]=6
+            boardc[7][3]=4
+            boardc[7][0]=0
+            boardc[7][4]=0
+            legal=True
+            for child in genchildren(boardc,-6):
+                if child[7][2]<0 or child[7][3]<0 or child[7][4]<0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(boardc)
+            boardc=copy.deepcopy(pos)
+        if boardc[7][7]==7 and boardc[7][6]==0 and boardc[7][5]==0:
+            boardc[7][6]=6
+            boardc[7][5]=4
+            boardc[7][7]=0
+            boardc[7][4]=0
+            legal=True
+            for child in genchildren(boardc,-6):
+                if child[7][4]<0 or child[7][5]<0 or child[7][6]<0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(boardc)
+            boardc=copy.deepcopy(pos)
     return childrenK
 
 def gcLl(y,x,pos,player):
@@ -356,7 +421,7 @@ def gcTt(y,x,pos,player):
                     break
             else:
                 break
-    if player==4:
+    elif player==4:
         for i in range(7):
             if x+i+1<8:
                 if boardc[y][x+i+1]<=0:
@@ -1782,9 +1847,13 @@ def gorcBb(y,x,boardc,player):
 
 def verloren(pos,player):
     eval=False
+    if player==-6:
+        player2=-8
+    else:
+        player2=8
     for p in range(8):
         for o in range(8):
-            if pos[p][o]==player:
+            if pos[p][o]==player or pos[p][o]==player2:
                 eval=True
     if eval:
         return False
@@ -1808,22 +1877,22 @@ def evaluatepos(pos,playerk):
                     val=val-3
                 elif pos[p][o]==-3:
                     val=val-3
-                elif pos[p][o]==-4:
+                elif pos[p][o]==-4 or pos[p][o]==-7:
                     val=val-5
                 elif pos[p][o]==2:
                     val=val+3
                 elif pos[p][o]==3:
                     val=val+3
-                elif pos[p][o]==4:
+                elif pos[p][o]==4 or pos[p][o]==7:
                     val=val+5
                 #
                 elif pos[p][o]==-5:
                     val=val-9
-                elif pos[p][o]==-6:
+                elif pos[p][o]==-6 or pos[p][o]==-8:
                     val+=-1000
                 elif pos[p][o]==5:
                     val=val+9
-                elif pos[p][o]==6:
+                elif pos[p][o]==6 or pos[p][o]==8:
                     val+=1000
     elif playerk==-6:
         for p in range(8):
@@ -1840,22 +1909,22 @@ def evaluatepos(pos,playerk):
                     val=val+3
                 elif pos[p][o]==-3:
                     val=val+3
-                elif pos[p][o]==-4:
+                elif pos[p][o]==-4 or pos[p][o]==-7:
                     val=val+5
                 elif pos[p][o]==2:
                     val=val-3
                 elif pos[p][o]==3:
                     val=val-3
-                elif pos[p][o]==4:
+                elif pos[p][o]==4 or pos[p][o]==7:
                     val=val-5
                 #
                 elif pos[p][o]==-5:
                     val=val+9
-                elif pos[p][o]==-6:
+                elif pos[p][o]==-6 or pos[p][o]==-8:
                     val+=1000
                 elif pos[p][o]==5:
                     val=val-9
-                elif pos[p][o]==6:
+                elif pos[p][o]==6 or pos[p][o]==8:
                     val+=-1000
     return val
 
@@ -1880,11 +1949,11 @@ class Schach():
                     print('l', end='')
                 elif board[i][j]==3:
                     print('x', end='')
-                elif board[i][j]==4:
+                elif board[i][j]==4 or board[i][j]==7:
                     print('t', end='')
                 elif board[i][j]==5:
                     print('q', end='')
-                elif board[i][j]==6:
+                elif board[i][j]==6 or board[i][j]==8:
                     print('k', end='')
                 elif board[i][j]==-1:
                     print('B', end='')
@@ -1892,11 +1961,11 @@ class Schach():
                     print('L', end='')
                 elif board[i][j]==-3:
                     print('X', end='')
-                elif board[i][j]==-4:
+                elif board[i][j]==-4 or board[i][j]==-7:
                     print('T', end='')
                 elif board[i][j]==-5:
                     print('Q', end='')
-                elif board[i][j]==-6:
+                elif board[i][j]==-6 or board[i][j]==-8:
                     print('K', end='')
                 elif board[i][j]==0:
                     print(' ', end='')
@@ -2279,12 +2348,12 @@ class HumanPlayer(Player):
             #
             boardcopy[zy][zx]=boardcopy[vy][vx]
             boardcopy[vy][vx]=0
-            for feld in boardcopy[0]:
+            for feld in range(len(boardcopy[0])):
                 if boardcopy[0][feld]==1:
                     boardcopy[0][feld]=5
-            for feld in boardcopy[7]:
-                if boardcopy[0][feld]==-1:
-                    boardcopy[0][feld]=-5
+            for feld in range(len(boardcopy[7])):
+                if boardcopy[7][feld]==-1:
+                    boardcopy[7][feld]=-5
             #
             #legal oder nicht
             falsch=False
@@ -2662,4 +2731,4 @@ def spielen(z):
         print('-:',unentschieden)
     print('FERTIG')
 
-spielen(20)
+spielen(3)
