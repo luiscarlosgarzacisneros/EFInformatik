@@ -2241,7 +2241,7 @@ class HumanPlayer(Player):
                     korrekt=True
                     self.en_passant=True
             #kK
-            elif (pos[vy][vx]==6 and pos[zy][zx]<=0) or (pos[vy][vx]==-6 and pos[zy][zx]>=0):
+            elif (pos[vy][vx]==6 and pos[zy][zx]<=0) or (pos[vy][vx]==-6 and pos[zy][zx]>=0) or (pos[vy][vx]==8 and pos[zy][zx]<=0) or (pos[vy][vx]==-8 and pos[zy][zx]>=0):
                 #vertikal
                 if vx-1==zx and zy==vy:
                     korrekt=True
@@ -2261,9 +2261,68 @@ class HumanPlayer(Player):
                     korrekt=True
                 elif vx-1==zx and zy==vy+1:
                     korrekt=True
-                #rochade
+            #rochade
+            elif (pos[vy][vx]==8 and pos[zy][zx]<=0) or (pos[vy][vx]==-8 and pos[zy][zx]>=0):
+                if pos[vy][vx]==-8:
+                    if zy==0 and zx==2 and pos[0][0]==-7 and pos[0][1]==0 and pos[0][2]==0 and pos[0][3]==0:
+                        boardc=copy.deepcopy(pos)
+                        boardc[0][2]=-6
+                        boardc[0][3]=-4
+                        boardc[0][0]=0
+                        boardc[0][4]=0
+                        legal=True
+                        for child in genchildren(boardc,6):
+                            if child[0][2]>0 or child[0][3]>0 or child[0][4]>0:
+                                legal=False
+                                break
+                        if legal:
+                            korrekt=True
+                            self.rochade=1
+                    elif zy==0 and zx==6 and pos[0][7]==-7 and pos[0][6]==0 and pos[0][5]==0:
+                        boardc=copy.deepcopy(pos)
+                        boardc[0][6]=-6
+                        boardc[0][5]=-4
+                        boardc[0][7]=0
+                        boardc[0][4]=0
+                        legal=True
+                        for child in genchildren(boardc,6):
+                            if child[0][4]>0 or child[0][5]>0 or child[0][6]>0:
+                                legal=False
+                                break
+                        if legal:
+                            korrekt=True
+                            self.rochade=2
+                elif pos[vy][vx]==8:
+                    if zy==7 and zx==2 and pos[7][0]==7 and pos[7][1]==0 and pos[7][2]==0 and pos[7][3]==0:
+                        boardc=copy.deepcopy(pos)
+                        boardc[7][2]=6
+                        boardc[7][3]=4
+                        boardc[7][0]=0
+                        boardc[7][4]=0
+                        legal=True
+                        for child in genchildren(boardc,-6):
+                            if child[7][2]<0 or child[7][3]<0 or child[7][4]<0:
+                                legal=False
+                                break
+                        if legal:
+                            korrekt=True
+                            self.rochade=1
+                    elif zy==7 and zx==6 and pos[7][7]==7 and pos[7][6]==0 and pos[7][5]==0:
+                        boardc=copy.deepcopy(pos)
+                        boardc[7][6]=6
+                        boardc[7][5]=4
+                        boardc[7][7]=0
+                        boardc[7][4]=0
+                        legal=True
+                        for child in genchildren(boardc,-6):
+                            if child[7][4]<0 or child[7][5]<0 or child[7][6]<0:
+                                legal=False
+                                break
+                        if legal:
+                            korrekt=True
+                            self.rochade=2
             #tT
-            elif (pos[vy][vx]==4 and pos[zy][zx]<=0) or (pos[vy][vx]==-4 and pos[zy][zx]>=0):
+            elif (pos[vy][vx]==4 and pos[zy][zx]<=0) or (pos[vy][vx]==-4 and pos[zy][zx]>=0) or (pos[vy][vx]==7 and pos[zy][zx]<=0) or (pos[vy][vx]==-7 and pos[zy][zx]>=0):
                 #vertikal
                 if vx==zx:
                     #nach unten
@@ -2508,6 +2567,8 @@ class HumanPlayer(Player):
                 else:
                     continue
             #
+            #
+            #
             vy = self.e[0]
             vx = self.e[1]
             zy = self.e[2]
@@ -2525,13 +2586,25 @@ class HumanPlayer(Player):
                 elif self.token==-6:
                     boardcopy[zy][zx]=-9
             #rochade
-
+            if self.rochade==1:
+                if self.token==6:
+                    boardcopy[zy][zx+1]=4
+                elif self.token==-6:
+                    boardcopy[zy][zx+1]=-4
+            elif self.rochade==2:
+                if self.token==6:
+                    boardcopy[zy][zx-1]=4
+                elif self.token==-6:
+                    boardcopy[zy][zx-1]=-4
+            #
             for feld in range(len(boardcopy[0])):
                 if boardcopy[0][feld]==1:
                     boardcopy[0][feld]=5
             for feld in range(len(boardcopy[7])):
                 if boardcopy[7][feld]==-1:
                     boardcopy[7][feld]=-5
+            #
+            #
             #
             #legal oder nicht
             falsch=False
@@ -2914,14 +2987,14 @@ spielen(3)
 
 #----------------------------------------------------------------
 board=[
-    [0,0,0,0,-8,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,-9,1,-9,0,0,0,0],
+    [-7,0,0,0,-8,0,0,-7],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [0,0,0,0,8,0,0,0]
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [7,0,0,0,8,0,0,7]
 ]
 
 def printboard(board):
