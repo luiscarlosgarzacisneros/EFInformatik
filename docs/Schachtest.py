@@ -1043,11 +1043,11 @@ def generate_one_random_child(position, playerk):#für Monte Carlo Simulation
             child = gorcLl(y, x, boardcopy, boardcopy[y][x])
         elif boardcopy[y][x] == 3 or boardcopy[y][x] == -3:
             child = gorcXx(y, x, boardcopy, boardcopy[y][x])
-        elif boardcopy[y][x] == 4 or boardcopy[y][x] == -4:
+        elif boardcopy[y][x] == 4 or boardcopy[y][x] == -4 or boardcopy[y][x] == -7 or boardcopy[y][x] == 7:
             child = gorcTt(y, x, boardcopy, boardcopy[y][x])
         elif boardcopy[y][x] == 5 or boardcopy[y][x] == -5:
             child = gorcQq(y, x, boardcopy, boardcopy[y][x])
-        elif boardcopy[y][x] == 6 or boardcopy[y][x] == -6:
+        elif boardcopy[y][x] == 6 or boardcopy[y][x] == -6 or boardcopy[y][x] == -8 or boardcopy[y][x] == 8:
             child = gorcKk(y, x, boardcopy, boardcopy[y][x])
         #
         if child!=[]: 
@@ -1055,7 +1055,7 @@ def generate_one_random_child(position, playerk):#für Monte Carlo Simulation
 
 def gorcKk(y,x,boardc,player):
     childrenK= []
-    if player==-6:
+    if player==-6 or player==-8:
         if y+1<8 and x+1<8:
             if boardc[y+1][x+1]>=0:
                 childrenK.append(1)
@@ -1081,7 +1081,7 @@ def gorcKk(y,x,boardc,player):
             if boardc[y-1][x]>=0:
                 childrenK.append(8)
         #
-    elif player==6:
+    elif player==6 or player==8:
         if y+1<8 and x+1<8:
             if boardc[y+1][x+1]<=0:
                 childrenK.append(1)
@@ -1106,6 +1106,62 @@ def gorcKk(y,x,boardc,player):
         if y-1>-1:
             if boardc[y-1][x]<=0:
                 childrenK.append(8)
+    #
+    #rochade
+    if player==-8:
+        if boardc[0][0]==-7 and boardc[0][1]==0 and boardc[0][2]==0 and boardc[0][3]==0:
+            boardcc=copy.deepcopy(boardc)
+            boardcc[0][2]=-6
+            boardcc[0][3]=-4
+            boardcc[0][0]=0
+            boardcc[0][4]=0
+            legal=True
+            for child in genchildren(boardcc,6):
+                if child[0][2]>0 or child[0][3]>0 or child[0][4]>0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(9)
+        if boardc[0][7]==-7 and boardc[0][6]==0 and boardc[0][5]==0:
+            boardcc=copy.deepcopy(boardc)
+            boardcc[0][6]=-6
+            boardcc[0][5]=-4
+            boardcc[0][7]=0
+            boardcc[0][4]=0
+            legal=True
+            for child in genchildren(boardcc,6):
+                if child[0][4]>0 or child[0][5]>0 or child[0][6]>0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(10)
+    elif player==8:
+        if boardc[7][0]==7 and boardc[7][1]==0 and boardc[7][2]==0 and boardc[7][3]==0:
+            boardcc=copy.deepcopy(boardc)
+            boardcc[7][2]=6
+            boardcc[7][3]=4
+            boardcc[7][0]=0
+            boardcc[7][4]=0
+            legal=True
+            for child in genchildren(boardcc,-6):
+                if child[7][2]<0 or child[7][3]<0 or child[7][4]<0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(11)
+        if boardc[7][7]==7 and boardc[7][6]==0 and boardc[7][5]==0:
+            boardcc=copy.deepcopy(boardc)
+            boardcc[7][6]=6
+            boardcc[7][5]=4
+            boardcc[7][7]=0
+            boardcc[7][4]=0
+            legal=True
+            for child in genchildren(boardcc,-6):
+                if child[7][4]<0 or child[7][5]<0 or child[7][6]<0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(12)
     #
     if childrenK==[]:
         return []
@@ -1142,6 +1198,30 @@ def gorcKk(y,x,boardc,player):
         elif n==8:
             boardc[y][x]=0
             boardc[y-1][x]=player
+            return boardc
+        elif n==9:
+            boardc[0][2]=-6
+            boardc[0][3]=-4
+            boardc[0][0]=0
+            boardc[0][4]=0
+            return boardc
+        elif n==10:
+            boardc[0][6]=-6
+            boardc[0][5]=-4
+            boardc[0][7]=0
+            boardc[0][4]=0
+            return boardc
+        elif n==11:
+            boardc[7][2]=6
+            boardc[7][3]=4
+            boardc[7][0]=0
+            boardc[7][4]=0
+            return boardc
+        elif n==12:
+            boardc[7][6]=6
+            boardc[7][5]=4
+            boardc[7][7]=0
+            boardc[7][4]=0
             return boardc
 
 def gorcLl(y,x,boardc,player):
@@ -1236,6 +1316,11 @@ def gorcLl(y,x,boardc,player):
 
 def gorcTt(y,x,boardc,player):
     childrenT= []
+    if player==-7:
+        player=-4
+    elif player==7:
+        player=4
+    #
     if player==-4:
         #rechts
         for i in range(7):
@@ -1861,6 +1946,8 @@ def verloren(pos,player):
     else:
         return True
 
+#
+
 def evaluatepos(pos,playerk):
     val=0
     if playerk==6:
@@ -1989,7 +2076,7 @@ class Schach():
         #
         self.players.clear()
         self.players.append(HumanPlayer(6))#k
-        self.players.append(MinimaxPlayer(-6))#K
+        self.players.append(MCTSPlayer(-6))#K
         #
         current=0
         while True:
@@ -2435,7 +2522,7 @@ class MCTSPlayer(Player):
             return []
         #
         #
-        self.mcts(board)
+        self.mcts()
         print(self.counter)
         bestmove=[]
         highestnumberofvisits=-1

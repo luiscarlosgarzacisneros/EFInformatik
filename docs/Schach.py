@@ -1987,8 +1987,8 @@ class Schach():
         ]
         #
         self.players.clear()
-        self.players.append(MinimaxPlayer(6))#k
-        self.players.append(MinimaxPlayer(-6))#K
+        self.players.append(HumanPlayer(6))#k
+        self.players.append(MCTSPlayer(-6))#K
         #
         current=0
         while True:
