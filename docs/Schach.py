@@ -12,6 +12,7 @@ import math
 #6:k
 #7:not moved towert
 #8:not moved kingk
+#9:en passant b
 
 #-1:B
 #-2:L
@@ -21,6 +22,8 @@ import math
 #-6:K
 #-7:not moved towerT
 #-8:not moved kingK
+#-9:en passant B
+
 
 #
 minimaxc=0
@@ -28,11 +31,25 @@ minimaxc=0
 
 def genchildren(position, playerk):
     children = []
+    #9&-9 zu 1&-1
+    if playerk==6:
+        for y in range(len(position)):
+            for x in range(len(position[y])):
+                if position[y][x]==9:
+                    position[y][x]=1
+    elif playerk==-6:
+        for y in range(len(position)):
+            for x in range(len(position[y])):
+                if position[y][x]==-9:
+                    position[y][x]=-1
     #
     if playerk==6:
         for y in range(8):
             for x in range(8):
                 if position[y][x]==1:
+                    for h in gcBb(y,x,position,1):
+                        children.append(h)
+                elif position[y][x]==9:
                     for h in gcBb(y,x,position,1):
                         children.append(h)
                 elif position[y][x]==6:
@@ -58,6 +75,9 @@ def genchildren(position, playerk):
         for y in range(8):
             for x in range(8):
                 if position[y][x]==-1:
+                    for h in gcBb(y,x,position,-1):
+                        children.append(h)
+                elif position[y][x]==-9:
                     for h in gcBb(y,x,position,-1):
                         children.append(h)
                 elif position[y][x]==-6:
@@ -950,7 +970,7 @@ def gcBb(y,x,pos,player):
     if player==-1:
         if y==1 and boardc[y+2][x]==0 and boardc[y+1][x]==0:
             boardc[y][x]=0
-            boardc[y+2][x]=-1
+            boardc[y+2][x]=-9
             childrenB.append(boardc)
             boardc=copy.deepcopy(pos)
         if y+1<8:
@@ -977,10 +997,26 @@ def gcBb(y,x,pos,player):
                     boardc[y+1][x+1]=-5
                 childrenB.append(boardc)
                 boardc=copy.deepcopy(pos)
-    if player==1:
+        #en passant
+        if x-1>-1 and y+1<8:
+            if boardc[y][x-1]==9 and boardc[y+1][x-1]==0:
+                boardc[y][x]=0
+                boardc[y+1][x-1]=-1
+                boardc[y][x-1]=0
+                childrenB.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if x+1<8 and y+1<8:
+            if boardc[y][x+1]==9 and boardc[y+1][x+1]==0:
+                boardc[y][x]=0
+                boardc[y+1][x+1]=-1
+                boardc[y][x+1]=0
+                childrenB.append(boardc)
+                boardc=copy.deepcopy(pos)
+
+    elif player==1:
         if y==6 and boardc[y-2][x]==0 and boardc[y-1][x]==0:
             boardc[y][x]=0
-            boardc[y-2][x]=1
+            boardc[y-2][x]=9
             childrenB.append(boardc)
             boardc=copy.deepcopy(pos)
         if y-1>-1:
@@ -1005,6 +1041,21 @@ def gcBb(y,x,pos,player):
                 boardc[y-1][x+1]=1
                 if y-1==0:
                     boardc[y-1][x+1]=5
+                childrenB.append(boardc)
+                boardc=copy.deepcopy(pos)
+        #en passant
+        if x-1>-1 and y-1>-1:
+            if boardc[y][x-1]==-9 and boardc[y-1][x-1]==0:
+                boardc[y][x]=0
+                boardc[y-1][x-1]=1
+                boardc[y][x-1]=0
+                childrenB.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if x+1<8 and y-1>-1:
+            if boardc[y][x+1]==-9 and boardc[y-1][x+1]==0:
+                boardc[y][x]=0
+                boardc[y-1][x+1]=1
+                boardc[y][x+1]=0
                 childrenB.append(boardc)
                 boardc=copy.deepcopy(pos)
     return childrenB
@@ -1042,11 +1093,11 @@ def generate_one_random_child(position, playerk):#für Monte Carlo Simulation
             child = gorcLl(y, x, boardcopy, boardcopy[y][x])
         elif boardcopy[y][x] == 3 or boardcopy[y][x] == -3:
             child = gorcXx(y, x, boardcopy, boardcopy[y][x])
-        elif boardcopy[y][x] == 4 or boardcopy[y][x] == -4:
+        elif boardcopy[y][x] == 4 or boardcopy[y][x] == -4 or boardcopy[y][x] == -7 or boardcopy[y][x] == 7:
             child = gorcTt(y, x, boardcopy, boardcopy[y][x])
         elif boardcopy[y][x] == 5 or boardcopy[y][x] == -5:
             child = gorcQq(y, x, boardcopy, boardcopy[y][x])
-        elif boardcopy[y][x] == 6 or boardcopy[y][x] == -6:
+        elif boardcopy[y][x] == 6 or boardcopy[y][x] == -6 or boardcopy[y][x] == -8 or boardcopy[y][x] == 8:
             child = gorcKk(y, x, boardcopy, boardcopy[y][x])
         #
         if child!=[]: 
@@ -1054,7 +1105,7 @@ def generate_one_random_child(position, playerk):#für Monte Carlo Simulation
 
 def gorcKk(y,x,boardc,player):
     childrenK= []
-    if player==-6:
+    if player==-6 or player==-8:
         if y+1<8 and x+1<8:
             if boardc[y+1][x+1]>=0:
                 childrenK.append(1)
@@ -1080,7 +1131,7 @@ def gorcKk(y,x,boardc,player):
             if boardc[y-1][x]>=0:
                 childrenK.append(8)
         #
-    elif player==6:
+    elif player==6 or player==8:
         if y+1<8 and x+1<8:
             if boardc[y+1][x+1]<=0:
                 childrenK.append(1)
@@ -1105,6 +1156,62 @@ def gorcKk(y,x,boardc,player):
         if y-1>-1:
             if boardc[y-1][x]<=0:
                 childrenK.append(8)
+    #
+    #rochade
+    if player==-8:
+        if boardc[0][0]==-7 and boardc[0][1]==0 and boardc[0][2]==0 and boardc[0][3]==0:
+            boardcc=copy.deepcopy(boardc)
+            boardcc[0][2]=-6
+            boardcc[0][3]=-4
+            boardcc[0][0]=0
+            boardcc[0][4]=0
+            legal=True
+            for child in genchildren(boardcc,6):
+                if child[0][2]>0 or child[0][3]>0 or child[0][4]>0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(9)
+        if boardc[0][7]==-7 and boardc[0][6]==0 and boardc[0][5]==0:
+            boardcc=copy.deepcopy(boardc)
+            boardcc[0][6]=-6
+            boardcc[0][5]=-4
+            boardcc[0][7]=0
+            boardcc[0][4]=0
+            legal=True
+            for child in genchildren(boardcc,6):
+                if child[0][4]>0 or child[0][5]>0 or child[0][6]>0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(10)
+    elif player==8:
+        if boardc[7][0]==7 and boardc[7][1]==0 and boardc[7][2]==0 and boardc[7][3]==0:
+            boardcc=copy.deepcopy(boardc)
+            boardcc[7][2]=6
+            boardcc[7][3]=4
+            boardcc[7][0]=0
+            boardcc[7][4]=0
+            legal=True
+            for child in genchildren(boardcc,-6):
+                if child[7][2]<0 or child[7][3]<0 or child[7][4]<0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(11)
+        if boardc[7][7]==7 and boardc[7][6]==0 and boardc[7][5]==0:
+            boardcc=copy.deepcopy(boardc)
+            boardcc[7][6]=6
+            boardcc[7][5]=4
+            boardcc[7][7]=0
+            boardcc[7][4]=0
+            legal=True
+            for child in genchildren(boardcc,-6):
+                if child[7][4]<0 or child[7][5]<0 or child[7][6]<0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(12)
     #
     if childrenK==[]:
         return []
@@ -1141,6 +1248,30 @@ def gorcKk(y,x,boardc,player):
         elif n==8:
             boardc[y][x]=0
             boardc[y-1][x]=player
+            return boardc
+        elif n==9:
+            boardc[0][2]=-6
+            boardc[0][3]=-4
+            boardc[0][0]=0
+            boardc[0][4]=0
+            return boardc
+        elif n==10:
+            boardc[0][6]=-6
+            boardc[0][5]=-4
+            boardc[0][7]=0
+            boardc[0][4]=0
+            return boardc
+        elif n==11:
+            boardc[7][2]=6
+            boardc[7][3]=4
+            boardc[7][0]=0
+            boardc[7][4]=0
+            return boardc
+        elif n==12:
+            boardc[7][6]=6
+            boardc[7][5]=4
+            boardc[7][7]=0
+            boardc[7][4]=0
             return boardc
 
 def gorcLl(y,x,boardc,player):
@@ -1235,6 +1366,11 @@ def gorcLl(y,x,boardc,player):
 
 def gorcTt(y,x,boardc,player):
     childrenT= []
+    if player==-7:
+        player=-4
+    elif player==7:
+        player=4
+    #
     if player==-4:
         #rechts
         for i in range(7):
@@ -1860,6 +1996,8 @@ def verloren(pos,player):
     else:
         return True
 
+#
+
 def evaluatepos(pos,playerk):
     val=0
     if playerk==6:
@@ -1868,9 +2006,9 @@ def evaluatepos(pos,playerk):
                 if pos[p][o]==0:
                     pass
                 #
-                elif pos[p][o]==-1:
+                elif pos[p][o]==-1 or pos[p][o]==-9:
                     val=val-1
-                elif pos[p][o]==1:
+                elif pos[p][o]==1 or pos[p][o]==9:
                     val=val+1
                 #
                 elif pos[p][o]==-2:
@@ -1900,9 +2038,9 @@ def evaluatepos(pos,playerk):
                 if pos[p][o]==0:
                     pass
                 #
-                elif pos[p][o]==-1:
+                elif pos[p][o]==-1 or pos[p][o]==-9:
                     val=val+1
-                elif pos[p][o]==1:
+                elif pos[p][o]==1 or pos[p][o]==9:
                     val=val-1
                 #
                 elif pos[p][o]==-2:
@@ -1943,7 +2081,7 @@ class Schach():
         for i in range(8):
             print('I ', end='')
             for j in range(8):
-                if board[i][j]==1:
+                if board[i][j]==1 or board[i][j]==9:
                     print('b', end='')
                 elif board[i][j]==2:
                     print('l', end='')
@@ -1955,7 +2093,7 @@ class Schach():
                     print('q', end='')
                 elif board[i][j]==6 or board[i][j]==8:
                     print('k', end='')
-                elif board[i][j]==-1:
+                elif board[i][j]==-1 or board[i][j]==-9:
                     print('B', end='')
                 elif board[i][j]==-2:
                     print('L', end='')
@@ -1988,7 +2126,7 @@ class Schach():
         #
         self.players.clear()
         self.players.append(HumanPlayer(6))#k
-        self.players.append(MCTSPlayer(-6))#K
+        self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
         while True:
@@ -2046,9 +2184,11 @@ class HumanPlayer(Player):
         super().__init__(token)
         self.token=token
         self.e=[]
+        self.rochade=0
+        self.en_passant=False
+        self.bB_2_nach_vorne=False
 
     def eingabe(self,pos):
-        self.e.clear()
         korrekt=False
         try:
             vx = int(input('von x: ')) - 1
@@ -2066,49 +2206,64 @@ class HumanPlayer(Player):
                 if vy==6 and pos[zy][zx]==0 and pos[vy-1][vx]==0 and vx==zx and zy==vy-2:
                     korrekt=True
                 #1nachv normal bew
-                if pos[zy][zx]==0 and vx==zx and zy==vy-1:
+                elif pos[zy][zx]==0 and vx==zx and zy==vy-1:
                     korrekt=True
                 #schlagen
-                if pos[zy][zx]<0 and zy==vy-1 and vx-1==zx:
+                elif pos[zy][zx]<0 and zy==vy-1 and vx-1==zx:
                     korrekt=True
-                if pos[zy][zx]<0 and zy==vy-1 and vx+1==zx:
+                elif pos[zy][zx]<0 and zy==vy-1 and vx+1==zx:
                     korrekt=True
+                #en passant
+                elif zy==vy-1 and vx-1==zx and pos[zy][zx]==0 and pos[vy][zx]==-9:
+                    korrekt=True
+                    self.en_passant=True
+                elif zy==vy-1 and vx+1==zx and pos[zy][zx]==0 and pos[vy][zx]==-9:
+                    korrekt=True
+                    self.en_passant=True
             #B
-            if pos[vy][vx]==-1:
+            elif pos[vy][vx]==-1:
                 #2nachv
                 if vy==1 and pos[zy][zx]==0 and pos[vy+1][vx]==0 and vx==zx and zy==vy+2:
                     korrekt=True
                 #1nachv normal bew
-                if pos[zy][zx]==0 and vx==zx and zy==vy+1:
+                elif pos[zy][zx]==0 and vx==zx and zy==vy+1:
                     korrekt=True
                 #schlagen
-                if pos[zy][zx]>0 and zy==vy+1 and vx-1==zx:
+                elif pos[zy][zx]>0 and zy==vy+1 and vx-1==zx:
                     korrekt=True
-                if pos[zy][zx]>0 and zy==vy+1 and vx+1==zx:
+                elif pos[zy][zx]>0 and zy==vy+1 and vx+1==zx:
                     korrekt=True
+                #en passant
+                elif zy==vy+1 and vx-1==zx and pos[zy][zx]==0 and pos[vy][zx]==9:
+                    korrekt=True
+                    self.en_passant=True
+                elif zy==vy+1 and vx+1==zx and pos[zy][zx]==0 and pos[vy][zx]==9:
+                    korrekt=True
+                    self.en_passant=True
             #kK
-            if (pos[vy][vx]==6 and pos[zy][zx]<=0) or (pos[vy][vx]==-6 and pos[zy][zx]>=0):
+            elif (pos[vy][vx]==6 and pos[zy][zx]<=0) or (pos[vy][vx]==-6 and pos[zy][zx]>=0):
                 #vertikal
                 if vx-1==zx and zy==vy:
                     korrekt=True
-                if vx+1==zx and zy==vy:
+                elif vx+1==zx and zy==vy:
                     korrekt=True
                 #horizontal
-                if vx==zx and zy==vy-1:
+                elif vx==zx and zy==vy-1:
                     korrekt=True
-                if vx==zx and zy==vy+1:
+                elif vx==zx and zy==vy+1:
                     korrekt=True
                 #diagonal
-                if vx-1==zx and zy==vy-1:
+                elif vx-1==zx and zy==vy-1:
                     korrekt=True
-                if vx+1==zx and zy==vy-1:
+                elif vx+1==zx and zy==vy-1:
                     korrekt=True
-                if vx+1==zx and zy==vy+1:
+                elif vx+1==zx and zy==vy+1:
                     korrekt=True
-                if vx-1==zx and zy==vy+1:
+                elif vx-1==zx and zy==vy+1:
                     korrekt=True
+                #rochade
             #tT
-            if (pos[vy][vx]==4 and pos[zy][zx]<=0) or (pos[vy][vx]==-4 and pos[zy][zx]>=0):
+            elif (pos[vy][vx]==4 and pos[zy][zx]<=0) or (pos[vy][vx]==-4 and pos[zy][zx]>=0):
                 #vertikal
                 if vx==zx:
                     #nach unten
@@ -2125,7 +2280,7 @@ class HumanPlayer(Player):
                         if pathclear:
                             korrekt=True
                     #nach oben
-                    if vy>zy:
+                    elif vy>zy:
                         pathclear=True
                         f=1
                         while True:
@@ -2138,7 +2293,7 @@ class HumanPlayer(Player):
                         if pathclear:
                             korrekt=True
                 #horizontal
-                if vy==zy:
+                elif vy==zy:
                     #nach rechts
                     if vx<zx:
                         pathclear=True
@@ -2153,7 +2308,7 @@ class HumanPlayer(Player):
                         if pathclear:
                             korrekt=True
                     #nach links
-                    if vx>zx:
+                    elif vx>zx:
                         pathclear=True
                         f=1
                         while True:
@@ -2166,7 +2321,7 @@ class HumanPlayer(Player):
                         if pathclear:
                             korrekt=True
             #xX
-            if (pos[vy][vx]==3 and pos[zy][zx]<=0) or (pos[vy][vx]==-3 and pos[zy][zx]>=0):
+            elif (pos[vy][vx]==3 and pos[zy][zx]<=0) or (pos[vy][vx]==-3 and pos[zy][zx]>=0):
                 pathclear=False
                 for u in range(8):
                     if zy>vy and zx>vx:
@@ -2175,19 +2330,19 @@ class HumanPlayer(Player):
                             break
                         if pos[vy+u+1][vx+u+1]!=0:
                             break
-                    if zy<vy and zx>vx:
+                    elif zy<vy and zx>vx:
                         if vx+u+1==zx and vy-u-1==zy:
                             pathclear=True
                             break
                         if pos[vy-u-1][vx+u+1]!=0:
                             break
-                    if zy>vy and zx<vx:
+                    elif zy>vy and zx<vx:
                         if vx-u-1==zx and vy+u+1==zy:
                             pathclear=True
                             break
                         if pos[vy+u+1][vx-1-u]!=0:
                             break
-                    if zy<vy and zx<vx:
+                    elif zy<vy and zx<vx:
                         if vx-1-u==zx and vy-u-1==zy:
                             pathclear=True
                             break
@@ -2196,7 +2351,7 @@ class HumanPlayer(Player):
                 if pathclear:
                     korrekt=True
             #qQ
-            if (pos[vy][vx]==5 and pos[zy][zx]<=0) or (pos[vy][vx]==-5 and pos[zy][zx]>=0):
+            elif (pos[vy][vx]==5 and pos[zy][zx]<=0) or (pos[vy][vx]==-5 and pos[zy][zx]>=0):
                 pathcleart=False
                 for u in range(8):
                     if zy>vy and zx>vx:
@@ -2205,19 +2360,19 @@ class HumanPlayer(Player):
                             break
                         if pos[vy+u+1][vx+u+1]!=0:
                             break
-                    if zy<vy and zx>vx:
+                    elif zy<vy and zx>vx:
                         if vx+u+1==zx and vy-u-1==zy:
                             pathcleart=True
                             break
                         if pos[vy-u-1][vx+u+1]!=0:
                             break
-                    if zy>vy and zx<vx:
+                    elif zy>vy and zx<vx:
                         if vx-u-1==zx and vy+u+1==zy:
                             pathcleart=True
                             break
                         if pos[vy+u+1][vx-1-u]!=0:
                             break
-                    if zy<vy and zx<vx:
+                    elif zy<vy and zx<vx:
                         if vx-1-u==zx and vy-u-1==zy:
                             pathcleart=True
                             break
@@ -2241,7 +2396,7 @@ class HumanPlayer(Player):
                         if pathclearl:
                             korrekt=True
                     #nach oben
-                    if vy>zy:
+                    elif vy>zy:
                         pathclearl=True
                         f=1
                         while True:
@@ -2254,7 +2409,7 @@ class HumanPlayer(Player):
                         if pathclearl:
                             korrekt=True
                 #horizontal
-                if vy==zy:
+                elif vy==zy:
                     #nach rechts
                     if vx<zx:
                         pathclearl=True
@@ -2269,7 +2424,7 @@ class HumanPlayer(Player):
                         if pathclearl:
                             korrekt=True
                     #nach links
-                    if vx>zx:
+                    elif vx>zx:
                         pathclearl=True
                         f=1
                         while True:
@@ -2282,22 +2437,22 @@ class HumanPlayer(Player):
                         if pathclearl:
                             korrekt=True
             #lL
-            if (pos[vy][vx]==2 and pos[zy][zx]<=0) or (pos[vy][vx]==-2 and pos[zy][zx]>=0):
+            elif (pos[vy][vx]==2 and pos[zy][zx]<=0) or (pos[vy][vx]==-2 and pos[zy][zx]>=0):
                 if zy==vy-2 and zx==vx+1:
                     korrekt=True
-                if zy==vy-2 and zx==vx-1:
+                elif zy==vy-2 and zx==vx-1:
                     korrekt=True
-                if zy==vy+2 and zx==vx+1:
+                elif zy==vy+2 and zx==vx+1:
                     korrekt=True
-                if zy==vy+2 and zx==vx-1:
+                elif zy==vy+2 and zx==vx-1:
                     korrekt=True
-                if zy==vy+1 and zx==vx+2:
+                elif zy==vy+1 and zx==vx+2:
                     korrekt=True
-                if zy==vy-1 and zx==vx+2:
+                elif zy==vy-1 and zx==vx+2:
                     korrekt=True
-                if zy==vy+1 and zx==vx-2:
+                elif zy==vy+1 and zx==vx-2:
                     korrekt=True
-                if zy==vy-1 and zx==vx-2:
+                elif zy==vy-1 and zx==vx-2:
                     korrekt=True
 
         if korrekt:
@@ -2312,6 +2467,18 @@ class HumanPlayer(Player):
 
     def player(self,pos):
         boardcopy=copy.deepcopy(pos)
+        #
+        #9&-9 zu 1&-1
+        if self.token==6:
+            for y in range(len(boardcopy)):
+                for x in range(len(boardcopy[y])):
+                    if boardcopy[y][x]==9:
+                        boardcopy[y][x]=1
+        elif self.token==-6:
+            for y in range(len(boardcopy)):
+                for x in range(len(boardcopy[y])):
+                    if boardcopy[y][x]==-9:
+                        boardcopy[y][x]=-1
         #
         if self.token==6:
             other_player=-6
@@ -2348,6 +2515,17 @@ class HumanPlayer(Player):
             #
             boardcopy[zy][zx]=boardcopy[vy][vx]
             boardcopy[vy][vx]=0
+            #en passant
+            if self.en_passant:
+                boardcopy[vy][zx]=0
+            #2nachvorne
+            if self.bB_2_nach_vorne:
+                if self.token==6:
+                    boardcopy[zy][zx]=9
+                elif self.token==-6:
+                    boardcopy[zy][zx]=-9
+            #rochade
+
             for feld in range(len(boardcopy[0])):
                 if boardcopy[0][feld]==1:
                     boardcopy[0][feld]=5
@@ -2434,7 +2612,7 @@ class MCTSPlayer(Player):
             return []
         #
         #
-        self.mcts(board)
+        self.mcts()
         print(self.counter)
         bestmove=[]
         highestnumberofvisits=-1
@@ -2732,3 +2910,68 @@ def spielen(z):
     print('FERTIG')
 
 spielen(3)
+
+
+#----------------------------------------------------------------
+board=[
+    [0,0,0,0,-8,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,-9,1,-9,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,8,0,0,0]
+]
+
+def printboard(board):
+    print('  1   2   3   4   5   6   7   8')
+    print('---------------------------------')
+    for i in range(8):
+        print('I ', end='')
+        for j in range(8):
+            if board[i][j]==1:
+                print('b', end='')
+            elif board[i][j]==2:
+                print('l', end='')
+            elif board[i][j]==3:
+                print('x', end='')
+            elif board[i][j]==4 or board[i][j]==7:
+                print('t', end='')
+            elif board[i][j]==5:
+                print('q', end='')
+            elif board[i][j]==6 or board[i][j]==8:
+                print('k', end='')
+            elif board[i][j]==-1:
+                print('B', end='')
+            elif board[i][j]==-2:
+                print('L', end='')
+            elif board[i][j]==-3:
+                print('X', end='')
+            elif board[i][j]==-4 or board[i][j]==-7:
+                print('T', end='')
+            elif board[i][j]==-5:
+                print('Q', end='')
+            elif board[i][j]==-6 or board[i][j]==-8:
+                print('K', end='')
+            elif board[i][j]==0:
+                print(' ', end='')
+            #
+            elif board[i][j]==9:
+                print('f', end='')
+            elif board[i][j]==-9:
+                print('F', end='')
+            #
+            print(' I ', end='')
+        print(i + 1)
+        print('---------------------------------')
+
+def test():
+    for child in genchildren(board,6):
+        printboard(child)
+
+#test()
+#----------------------------------------------------------------
+
+
+#Human: keine rochade, MCTS: kein en passant
