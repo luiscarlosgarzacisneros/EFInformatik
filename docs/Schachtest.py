@@ -12,6 +12,7 @@ import math
 #6:k
 #7:not moved towert
 #8:not moved kingk
+#9:en passant b
 
 #-1:B
 #-2:L
@@ -21,6 +22,7 @@ import math
 #-6:K
 #-7:not moved towerT
 #-8:not moved kingK
+#-9:en passant B
 
 
 #
@@ -29,11 +31,25 @@ minimaxc=0
 
 def genchildren(position, playerk):
     children = []
+    #9&-9 zu 1&-1
+    if playerk==6:
+        for y in range(len(position)):
+            for x in range(len(position[y])):
+                if position[y][x]==9:
+                    position[y][x]=1
+    elif playerk==-6:
+        for y in range(len(position)):
+            for x in range(len(position[y])):
+                if position[y][x]==-9:
+                    position[y][x]=-1
     #
     if playerk==6:
         for y in range(8):
             for x in range(8):
                 if position[y][x]==1:
+                    for h in gcBb(y,x,position,1):
+                        children.append(h)
+                elif position[y][x]==9:
                     for h in gcBb(y,x,position,1):
                         children.append(h)
                 elif position[y][x]==6:
@@ -59,6 +75,9 @@ def genchildren(position, playerk):
         for y in range(8):
             for x in range(8):
                 if position[y][x]==-1:
+                    for h in gcBb(y,x,position,-1):
+                        children.append(h)
+                elif position[y][x]==-9:
                     for h in gcBb(y,x,position,-1):
                         children.append(h)
                 elif position[y][x]==-6:
@@ -951,7 +970,7 @@ def gcBb(y,x,pos,player):
     if player==-1:
         if y==1 and boardc[y+2][x]==0 and boardc[y+1][x]==0:
             boardc[y][x]=0
-            boardc[y+2][x]=-1
+            boardc[y+2][x]=-9
             childrenB.append(boardc)
             boardc=copy.deepcopy(pos)
         if y+1<8:
@@ -978,10 +997,26 @@ def gcBb(y,x,pos,player):
                     boardc[y+1][x+1]=-5
                 childrenB.append(boardc)
                 boardc=copy.deepcopy(pos)
-    if player==1:
+        #en passant
+        if x-1>-1 and y+1<8:
+            if boardc[y][x-1]==9 and boardc[y+1][x-1]==0:
+                boardc[y][x]=0
+                boardc[y+1][x-1]=-1
+                boardc[y][x-1]=0
+                childrenB.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if x+1<8 and y+1<8:
+            if boardc[y][x+1]==9 and boardc[y+1][x+1]==0:
+                boardc[y][x]=0
+                boardc[y+1][x+1]=-1
+                boardc[y][x+1]=0
+                childrenB.append(boardc)
+                boardc=copy.deepcopy(pos)
+
+    elif player==1:
         if y==6 and boardc[y-2][x]==0 and boardc[y-1][x]==0:
             boardc[y][x]=0
-            boardc[y-2][x]=1
+            boardc[y-2][x]=9
             childrenB.append(boardc)
             boardc=copy.deepcopy(pos)
         if y-1>-1:
@@ -1006,6 +1041,21 @@ def gcBb(y,x,pos,player):
                 boardc[y-1][x+1]=1
                 if y-1==0:
                     boardc[y-1][x+1]=5
+                childrenB.append(boardc)
+                boardc=copy.deepcopy(pos)
+        #en passant
+        if x-1>-1 and y-1>-1:
+            if boardc[y][x-1]==-9 and boardc[y-1][x-1]==0:
+                boardc[y][x]=0
+                boardc[y-1][x-1]=1
+                boardc[y][x-1]=0
+                childrenB.append(boardc)
+                boardc=copy.deepcopy(pos)
+        if x+1<8 and y-1>-1:
+            if boardc[y][x+1]==-9 and boardc[y-1][x+1]==0:
+                boardc[y][x]=0
+                boardc[y-1][x+1]=1
+                boardc[y][x+1]=0
                 childrenB.append(boardc)
                 boardc=copy.deepcopy(pos)
     return childrenB
@@ -1956,9 +2006,9 @@ def evaluatepos(pos,playerk):
                 if pos[p][o]==0:
                     pass
                 #
-                elif pos[p][o]==-1:
+                elif pos[p][o]==-1 or pos[p][o]==-9:
                     val=val-1
-                elif pos[p][o]==1:
+                elif pos[p][o]==1 or pos[p][o]==9:
                     val=val+1
                 #
                 elif pos[p][o]==-2:
@@ -1988,9 +2038,9 @@ def evaluatepos(pos,playerk):
                 if pos[p][o]==0:
                     pass
                 #
-                elif pos[p][o]==-1:
+                elif pos[p][o]==-1 or pos[p][o]==-9:
                     val=val+1
-                elif pos[p][o]==1:
+                elif pos[p][o]==1 or pos[p][o]==9:
                     val=val-1
                 #
                 elif pos[p][o]==-2:
@@ -2031,7 +2081,7 @@ class Schach():
         for i in range(8):
             print('I ', end='')
             for j in range(8):
-                if board[i][j]==1:
+                if board[i][j]==1 or board[i][j]==9:
                     print('b', end='')
                 elif board[i][j]==2:
                     print('l', end='')
@@ -2043,7 +2093,7 @@ class Schach():
                     print('q', end='')
                 elif board[i][j]==6 or board[i][j]==8:
                     print('k', end='')
-                elif board[i][j]==-1:
+                elif board[i][j]==-1 or board[i][j]==-9:
                     print('B', end='')
                 elif board[i][j]==-2:
                     print('L', end='')
@@ -2076,7 +2126,7 @@ class Schach():
         #
         self.players.clear()
         self.players.append(HumanPlayer(6))#k
-        self.players.append(MCTSPlayer(-6))#K
+        self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
         while True:
@@ -2824,11 +2874,11 @@ spielen(3)
 
 #----------------------------------------------------------------
 board=[
-    [-7,0,0,0,-8,0,0,-7],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,4,0,0],
+    [0,0,0,0,-8,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,9,-1,9,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,8,0,0,0]
@@ -2866,12 +2916,18 @@ def printboard(board):
                 print('K', end='')
             elif board[i][j]==0:
                 print(' ', end='')
+            #
+            elif board[i][j]==9:
+                print('f', end='')
+            elif board[i][j]==-9:
+                print('F', end='')
+            #
             print(' I ', end='')
         print(i + 1)
         print('---------------------------------')
 
 def test():
-    for child in genchildren(board,-6):
+    for child in genchildren(board,6):
         printboard(child)
 
 #test()
