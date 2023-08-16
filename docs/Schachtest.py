@@ -1988,7 +1988,7 @@ class Schach():
         ]
         #
         self.players.clear()
-        self.players.append(MinimaxPlayer(6))#k
+        self.players.append(HumanPlayer(6))#k
         self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
@@ -2349,12 +2349,12 @@ class HumanPlayer(Player):
             #
             boardcopy[zy][zx]=boardcopy[vy][vx]
             boardcopy[vy][vx]=0
-            for feld in boardcopy[0]:
+            for feld in range(len(boardcopy[0])):
                 if boardcopy[0][feld]==1:
                     boardcopy[0][feld]=5
-            for feld in boardcopy[7]:
-                if boardcopy[0][feld]==-1:
-                    boardcopy[0][feld]=-5
+            for feld in range(len(boardcopy[7])):
+                if boardcopy[7][feld]==-1:
+                    boardcopy[7][feld]=-5
             #
             #legal oder nicht
             falsch=False
