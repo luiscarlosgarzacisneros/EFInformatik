@@ -74,7 +74,7 @@ minimaxc=0
 #
 
 def genchildren(position, playerk):
-    children = []
+    children=[]
     #9&-9 zu 1&-1
     if playerk==6:
         for y in range(len(position)):
@@ -114,7 +114,6 @@ def genchildren(position, playerk):
                 elif position[y][x]==8:
                     for h in gcKk(y,x,position,8):
                         children.append(h)
-                
     elif playerk==-6:
         for y in range(8):
             for x in range(8):
@@ -2308,7 +2307,6 @@ class HumanPlayer(Player):
             for child_of_child in genchildren(child_of_root, other_player):
                 if verloren(child_of_child, self.token):
                     king_is_killed = True
-                    break
             if not king_is_killed:
                 legal_move_exists = True
                 legal_moves.append(child_of_root)
