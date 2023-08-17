@@ -3,6 +3,15 @@ import time
 import random
 import math
 
+#-1:B
+#-2:L
+#-3:X
+#-4:T
+#-5:Q
+#-6:K
+#-7:Z not moved towerT
+#-8:Y not moved kingK
+#-9:F en passant B (just moved 2 forw)
 
 #1:b
 #2:l
@@ -10,21 +19,52 @@ import math
 #4:t
 #5:q
 #6:k
-#7:not moved towert
-#8:not moved kingk
-#9:en passant b
+#7:z not moved towert
+#8:y not moved kingk
+#9:f en passant b (just moved 2 forw)
 
-#-1:B
-#-2:L
-#-3:X
-#-4:T
-#-5:Q
-#-6:K
-#-7:not moved towerT
-#-8:not moved kingK
-#-9:en passant B
+#
+minimaxc=0
+#
 
-#für Human
+#
+
+def printboard2(board):
+    print('  1   2   3   4   5   6   7   8')
+    print('---------------------------------')
+    for i in range(8):
+        print('I ', end='')
+        for j in range(8):
+            if board[i][j]==1 or board[i][j]==9:
+                print('b', end='')
+            elif board[i][j]==2:
+                print('l', end='')
+            elif board[i][j]==3:
+                print('x', end='')
+            elif board[i][j]==4 or board[i][j]==7:
+                print('t', end='')
+            elif board[i][j]==5:
+                print('q', end='')
+            elif board[i][j]==6 or board[i][j]==8:
+                print('k', end='')
+            elif board[i][j]==-1 or board[i][j]==-9:
+                print('B', end='')
+            elif board[i][j]==-2:
+                print('L', end='')
+            elif board[i][j]==-3:
+                print('X', end='')
+            elif board[i][j]==-4 or board[i][j]==-7:
+                print('T', end='')
+            elif board[i][j]==-5:
+                print('Q', end='')
+            elif board[i][j]==-6 or board[i][j]==-8:
+                print('K', end='')
+            elif board[i][j]==0:
+                print(' ', end='')
+            print(' I ', end='')
+        print(i + 1)
+        print('---------------------------------')
+
 def printboard(board):
     print('  1   2   3   4   5   6   7   8')
     print('---------------------------------')
@@ -41,7 +81,7 @@ def printboard(board):
                 print('t', end='')
             elif board[i][j]==5:
                 print('q', end='')
-            elif board[i][j]==6 or board[i][j]==8:
+            elif board[i][j]==6:
                 print('k', end='')
             elif board[i][j]==-1:
                 print('B', end='')
@@ -53,7 +93,7 @@ def printboard(board):
                 print('T', end='')
             elif board[i][j]==-5:
                 print('Q', end='')
-            elif board[i][j]==-6 or board[i][j]==-8:
+            elif board[i][j]==-6:
                 print('K', end='')
             elif board[i][j]==0:
                 print(' ', end='')
@@ -76,10 +116,7 @@ def printboard(board):
             print(' I ', end='')
         print(i + 1)
         print('---------------------------------')
-#
 
-#
-minimaxc=0
 #
 
 def genchildren(position, playerk):
@@ -2174,94 +2211,6 @@ class Schach():
         self.players=[]
         self.maxturns=200
 
-    def printboard2(self,board):
-        print('  1   2   3   4   5   6   7   8')
-        print('---------------------------------')
-        for i in range(8):
-            print('I ', end='')
-            for j in range(8):
-                if board[i][j]==1 or board[i][j]==9:
-                    print('b', end='')
-                elif board[i][j]==2:
-                    print('l', end='')
-                elif board[i][j]==3:
-                    print('x', end='')
-                elif board[i][j]==4 or board[i][j]==7:
-                    print('t', end='')
-                elif board[i][j]==5:
-                    print('q', end='')
-                elif board[i][j]==6 or board[i][j]==8:
-                    print('k', end='')
-                elif board[i][j]==-1 or board[i][j]==-9:
-                    print('B', end='')
-                elif board[i][j]==-2:
-                    print('L', end='')
-                elif board[i][j]==-3:
-                    print('X', end='')
-                elif board[i][j]==-4 or board[i][j]==-7:
-                    print('T', end='')
-                elif board[i][j]==-5:
-                    print('Q', end='')
-                elif board[i][j]==-6 or board[i][j]==-8:
-                    print('K', end='')
-                elif board[i][j]==0:
-                    print(' ', end='')
-                print(' I ', end='')
-            print(i + 1)
-            print('---------------------------------')
-
-    def printboard(self,board):
-        print('  1   2   3   4   5   6   7   8')
-        print('---------------------------------')
-        for i in range(8):
-            print('I ', end='')
-            for j in range(8):
-                if board[i][j]==1:
-                    print('b', end='')
-                elif board[i][j]==2:
-                    print('l', end='')
-                elif board[i][j]==3:
-                    print('x', end='')
-                elif board[i][j]==4:
-                    print('t', end='')
-                elif board[i][j]==5:
-                    print('q', end='')
-                elif board[i][j]==6:
-                    print('k', end='')
-                elif board[i][j]==-1:
-                    print('B', end='')
-                elif board[i][j]==-2:
-                    print('L', end='')
-                elif board[i][j]==-3:
-                    print('X', end='')
-                elif board[i][j]==-4:
-                    print('T', end='')
-                elif board[i][j]==-5:
-                    print('Q', end='')
-                elif board[i][j]==-6:
-                    print('K', end='')
-                elif board[i][j]==0:
-                    print(' ', end='')
-                #
-                elif board[i][j]==9:
-                    print('f', end='')
-                elif board[i][j]==-9:
-                    print('F', end='')
-                #
-                elif board[i][j]==7:
-                    print('z', end='')
-                elif board[i][j]==-7:
-                    print('Z', end='')
-                #
-                elif board[i][j]==8:
-                    print('y', end='')
-                elif board[i][j]==-8:
-                    print('Y', end='')
-                #
-                print(' I ', end='')
-            print(i + 1)
-            print('---------------------------------')
-
     def play(self):
         #
         self.board=[
@@ -2282,7 +2231,7 @@ class Schach():
         current=0
         while True:
             print(self.turn)
-            self.printboard(self.board)
+            printboard(self.board)
             player = self.players[current]
             if player.token==6:
                 istamzug='k'
@@ -2466,7 +2415,16 @@ class HumanPlayer(Player):
                 boardcopy[vy][zx]=0
             #normal bew/schlagen
             if not special:
-                boardcopy[zy][zx]=boardcopy[vy][vx]
+                if boardcopy[vy][vx]==7:
+                    boardcopy[zy][zx]=4
+                elif boardcopy[vy][vx]==-7:
+                    boardcopy[zy][zx]=-4
+                elif boardcopy[vy][vx]==8:
+                    boardcopy[zy][zx]=6
+                elif boardcopy[vy][vx]==-8:
+                    boardcopy[zy][zx]=-6
+                else:
+                    boardcopy[zy][zx]=boardcopy[vy][vx]
                 boardcopy[vy][vx]=0
             #
             move_legal = False
@@ -2479,9 +2437,11 @@ class HumanPlayer(Player):
                 return boardcopy
             else:
                 printboard(boardcopy)
-                print("children")
+                print("legal_children")
                 for s in legal_moves:
                     printboard(s)
+                print("---------------------------------")
+                printboard(pos)
                 print('EINGABE NICHT KORREKT2')
 
     def get_move(self, board):
@@ -2848,6 +2808,7 @@ def spielen(z):
 
 spielen(3)
 
+#
 
 #----------------------------------------------------------------
 board=[
@@ -2861,48 +2822,6 @@ board=[
     [7, 2, 3, 5, 8, 3, 2, 7]
 ]
 
-def printboard(board):
-    print('  1   2   3   4   5   6   7   8')
-    print('---------------------------------')
-    for i in range(8):
-        print('I ', end='')
-        for j in range(8):
-            if board[i][j]==1:
-                print('b', end='')
-            elif board[i][j]==2:
-                print('l', end='')
-            elif board[i][j]==3:
-                print('x', end='')
-            elif board[i][j]==4 or board[i][j]==7:
-                print('t', end='')
-            elif board[i][j]==5:
-                print('q', end='')
-            elif board[i][j]==6 or board[i][j]==8:
-                print('k', end='')
-            elif board[i][j]==-1:
-                print('B', end='')
-            elif board[i][j]==-2:
-                print('L', end='')
-            elif board[i][j]==-3:
-                print('X', end='')
-            elif board[i][j]==-4 or board[i][j]==-7:
-                print('T', end='')
-            elif board[i][j]==-5:
-                print('Q', end='')
-            elif board[i][j]==-6 or board[i][j]==-8:
-                print('K', end='')
-            elif board[i][j]==0:
-                print(' ', end='')
-            #
-            elif board[i][j]==9:
-                print('f', end='')
-            elif board[i][j]==-9:
-                print('F', end='')
-            #
-            print(' I ', end='')
-        print(i + 1)
-        print('---------------------------------')
-
 def test():
     for child in genchildren(board,6):
         printboard(child)
@@ -2913,4 +2832,3 @@ def test():
 
 #MCTS: gorc verbessern
 #evaluatepos verbessern
-#Human: if 8 or 7 move-> turn into 6 and 4
