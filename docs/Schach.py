@@ -24,6 +24,48 @@ import math
 #-8:not moved kingK
 #-9:en passant B
 
+def printboard(board):
+    print('  1   2   3   4   5   6   7   8')
+    print('---------------------------------')
+    for i in range(8):
+        print('I ', end='')
+        for j in range(8):
+            if board[i][j]==1:
+                print('b', end='')
+            elif board[i][j]==2:
+                print('l', end='')
+            elif board[i][j]==3:
+                print('x', end='')
+            elif board[i][j]==4 or board[i][j]==7:
+                print('t', end='')
+            elif board[i][j]==5:
+                print('q', end='')
+            elif board[i][j]==6 or board[i][j]==8:
+                print('k', end='')
+            elif board[i][j]==-1:
+                print('B', end='')
+            elif board[i][j]==-2:
+                print('L', end='')
+            elif board[i][j]==-3:
+                print('X', end='')
+            elif board[i][j]==-4 or board[i][j]==-7:
+                print('T', end='')
+            elif board[i][j]==-5:
+                print('Q', end='')
+            elif board[i][j]==-6 or board[i][j]==-8:
+                print('K', end='')
+            elif board[i][j]==0:
+                print(' ', end='')
+            #
+            elif board[i][j]==9:
+                print('f', end='')
+            elif board[i][j]==-9:
+                print('F', end='')
+            #
+            print(' I ', end='')
+        print(i + 1)
+        print('---------------------------------')
+
 
 #
 minimaxc=0
@@ -55,7 +97,7 @@ def genchildren(position, playerk):
                 elif position[y][x]==6:
                     for h in gcKk(y,x,position,6):
                         children.append(h)
-                elif position[y][x]==4 or position[y][x]==7:
+                elif position[y][x]==4:
                     for h in gcTt(y,x,position,4):
                         children.append(h)
                 elif position[y][x]==3:
@@ -83,7 +125,7 @@ def genchildren(position, playerk):
                 elif position[y][x]==-6:
                     for h in gcKk(y,x,position,-6):
                         children.append(h)
-                elif position[y][x]==-4 or position[y][x]==-7:
+                elif position[y][x]==-4:
                     for h in gcTt(y,x,position,-4):
                         children.append(h)
                 elif position[y][x]==-3:
@@ -2125,7 +2167,7 @@ class Schach():
         ]
         #
         self.players.clear()
-        self.players.append(HumanPlayer(6))#k
+        self.players.append(Human2Player(6))#k
         self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
@@ -2485,6 +2527,7 @@ class HumanPlayer(Player):
             #
             boardcopy[zy][zx]=boardcopy[vy][vx]
             boardcopy[vy][vx]=0
+            #
             for feld in range(len(boardcopy[0])):
                 if boardcopy[0][feld]==1:
                     boardcopy[0][feld]=5
@@ -2508,6 +2551,289 @@ class HumanPlayer(Player):
     
     def get_move(self, board):
         return self.player(board)
+
+#
+
+class Human2Player(Player):
+    def __init__(self, token):
+        super().__init__(token)
+        self.token=token
+
+    def do_these_two_lists_have_the_same_elements(self, list1, list2):
+        for row1, row2 in zip(list1, list2):
+            for item1, item2 in zip(row1, row2):
+                if item1 != item2:
+                    return False
+        return True
+
+    def eingabe(self):
+        while True:
+            try:
+                vx = int(input('von x: ')) - 1
+                vy = int(input('von y: ')) - 1
+                zx = int(input('zu x: ')) - 1
+                zy = int(input('zu y: ')) - 1
+            except:
+                print('EINGABE NICHT KORREKT1')
+                continue  # Continue the loop to get new input
+
+            if vy < 8 and vy > -1 and vx < 8 and vx > -1 and zy < 8 and zy > -1 and zx < 8 and zx > -1:
+                return [vy, vx, zy, zx]
+            else:
+                print('EINGABE NICHT KORREKT1')
+                continue  # Continue the loop to get new input
+
+    def player2(self,pos):
+        if self.token == 6:
+            other_player = -6
+        else:
+            other_player = 6
+        
+        legal_moves = []
+        legal_move_exists = False
+        
+        for child_of_root in genchildren(pos, self.token):
+            king_is_killed = False
+            for child_of_child in genchildren(child_of_root, other_player):
+                if verloren(child_of_child, self.token):
+                    king_is_killed = True
+                    break
+            if not king_is_killed:
+                legal_move_exists = True
+                legal_moves.append(child_of_root)
+        
+        if not legal_move_exists:
+            return []
+        
+        while True:
+            boardcopy = copy.deepcopy(pos)
+            input_move = self.eingabe()  # Change 'input' to 'input_move'
+
+            vy, vx, zy, zx = input_move
+
+            # Process special moves and update boardcopy
+            #1&-1 zu 5&-5
+            for feld in range(len(boardcopy[0])):
+                if boardcopy[0][feld]==1:
+                    boardcopy[0][feld]=5
+            for feld in range(len(boardcopy[7])):
+                if boardcopy[7][feld]==-1:
+                    boardcopy[7][feld]=-5
+            #9&-9 entfernen
+            if self.token==6:
+                for y in range(len(boardcopy)):
+                    for x in range(len(boardcopy[y])):
+                        if boardcopy[y][x]==9:
+                            boardcopy[y][x]=1
+            elif self.token==-6:
+                for y in range(len(boardcopy)):
+                    for x in range(len(boardcopy[y])):
+                        if boardcopy[y][x]==-9:
+                            boardcopy[y][x]=-1
+            #spezielle Züge:
+            special=False
+            #rochade
+            if vy==7 and vx==4 and zy==7 and zx==2 and self.token==6 and boardcopy[vy][vx]==8:
+                special=True
+                boardcopy[7][2]=6
+                boardcopy[7][3]=4
+                boardcopy[7][0]=0
+                boardcopy[7][4]=0
+            if vy==7 and vx==4 and zy==7 and zx==6 and self.token==6 and boardcopy[vy][vx]==8:
+                special=True
+                boardcopy[7][6]=6
+                boardcopy[7][5]=4
+                boardcopy[7][7]=0
+                boardcopy[7][4]=0
+            if vy==0 and vx==4 and zy==0 and zx==2 and self.token==-6 and boardcopy[vy][vx]==-8:
+                special=True
+                boardcopy[0][2]=-6
+                boardcopy[0][3]=-4
+                boardcopy[0][0]=0
+                boardcopy[0][4]=0
+            if vy==0 and vx==4 and zy==0 and zx==6 and self.token==-6 and boardcopy[vy][vx]==-8:
+                special=True
+                boardcopy[0][6]=-6
+                boardcopy[0][5]=-4
+                boardcopy[0][7]=0
+                boardcopy[0][4]=0
+            #Bb 2 nach vorne
+            if boardcopy[vy][vx]==1 and vy==6 and boardcopy[zy][zx]==0 and boardcopy[vy-1][vx]==0 and vx==zx and zy==vy-2:
+                special=True
+                boardcopy[zy][zx]=9
+                boardcopy[vy][vx]=0
+            if boardcopy[vy][vx]==-1 and vy==1 and boardcopy[zy][zx]==0 and boardcopy[vy+1][vx]==0 and vx==zx and zy==vy+2:
+                special=True
+                boardcopy[zy][zx]=-9
+                boardcopy[vy][vx]=0
+            #en passant
+            if boardcopy[vy][vx]==1 and zy==vy-1 and zx==vx-1 and boardcopy[zy][zx]==0:
+                special=True
+                boardcopy[vy][vx]=0
+                boardcopy[zy][zx]=1
+                boardcopy[vy][zx]=0
+            if boardcopy[vy][vx]==1 and zy==vy-1 and zx==vx+1 and boardcopy[zy][zx]==0:
+                special=True
+                boardcopy[vy][vx]=0
+                boardcopy[zy][zx]=1
+                boardcopy[vy][zx]=0
+            if boardcopy[vy][vx]==-1 and zy==vy+1 and zx==vx-1 and boardcopy[zy][zx]==0:
+                special=True
+                boardcopy[vy][vx]=0
+                boardcopy[zy][zx]=-1
+                boardcopy[vy][zx]=0
+            if boardcopy[vy][vx]==-1 and zy==vy+1 and zx==vx+1 and boardcopy[zy][zx]==0:
+                special=True
+                boardcopy[vy][vx]=0
+                boardcopy[zy][zx]=-1
+                boardcopy[vy][zx]=0
+            #normal bew/schlagen
+            if not special:
+                boardcopy[zy][zx]=boardcopy[vy][vx]
+                boardcopy[vy][vx]=0
+            #
+            move_legal = False
+            for legal_move in legal_moves:
+                if self.do_these_two_lists_have_the_same_elements(boardcopy, legal_move):
+                    move_legal = True
+                    break
+            
+            if move_legal:
+                print("special",special)
+                return boardcopy
+            else:
+                print("special",special)
+                printboard(boardcopy)
+                print("children")
+                for s in legal_moves:
+                    printboard(s)
+                print('EINGABE NICHT KORREKT2')
+
+    def player(self,pos):
+        #
+        ##### Alle legale Züge generieren
+        #
+        if self.token==6:
+            other_player=-6
+        else:
+            other_player=6
+        #
+        legal_moves=[]
+        legal_move_exists = False
+        for child_of_root in genchildren(pos, self.token):
+            king_is_killed = False
+            for child_of_child in genchildren(child_of_root, other_player):
+                if verloren(child_of_child, self.token):
+                    king_is_killed = True
+                    break
+            if not king_is_killed:
+                legal_move_exists = True
+                legal_moves.append(child_of_root)
+        # No legal moves
+        if not legal_move_exists:
+            return []
+        #
+        #####Zug ausführen
+        #
+        while True:
+            #
+            boardcopy=copy.deepcopy(pos)
+            #
+            #
+            #####eingabeüberprüfung
+            #
+            while True:
+                input=self.eingabe()
+                if input!=[]:
+                    break
+            #
+            vy = input[0]
+            vx = input[1]
+            zy = input[2]
+            zx = input[3]
+            #
+            #1&-1 zu 5&-5
+            for feld in range(len(boardcopy[0])):
+                if boardcopy[0][feld]==1:
+                    boardcopy[0][feld]=5
+            for feld in range(len(boardcopy[7])):
+                if boardcopy[7][feld]==-1:
+                    boardcopy[7][feld]=-5
+            #9&-9 entfernen
+            if self.token==6:
+                for y in range(len(boardcopy)):
+                    for x in range(len(boardcopy[y])):
+                        if boardcopy[y][x]==9:
+                            boardcopy[y][x]=1
+            elif self.token==-6:
+                for y in range(len(boardcopy)):
+                    for x in range(len(boardcopy[y])):
+                        if boardcopy[y][x]==-9:
+                            boardcopy[y][x]=-1
+            #spezielle Züge:
+            #rochade
+            if vy==7 and vx==4 and zy==7 and zx==2 and self.token==6 and boardcopy[vy][vx]==8:
+                boardcopy[7][2]=6
+                boardcopy[7][3]=4
+                boardcopy[7][0]=0
+                boardcopy[7][4]=0
+            elif vy==7 and vx==4 and zy==7 and zx==6 and self.token==6 and boardcopy[vy][vx]==8:
+                boardcopy[7][6]=6
+                boardcopy[7][5]=4
+                boardcopy[7][7]=0
+                boardcopy[7][4]=0
+            elif vy==0 and vx==4 and zy==0 and zx==2 and self.token==-6 and boardcopy[vy][vx]==-8:
+                boardcopy[0][2]=-6
+                boardcopy[0][3]=-4
+                boardcopy[0][0]=0
+                boardcopy[0][4]=0
+            elif vy==0 and vx==4 and zy==0 and zx==6 and self.token==-6 and boardcopy[vy][vx]==-8:
+                boardcopy[0][6]=-6
+                boardcopy[0][5]=-4
+                boardcopy[0][7]=0
+                boardcopy[0][4]=0
+            #Bb 2 nach vorne
+            elif boardcopy[vy][vx]==1 and vy==6 and boardcopy[zy][zx]==0 and boardcopy[vy-1][vx]==0 and vx==zx and zy==vy-2:
+                boardcopy[zy][zx]=9
+                boardcopy[vy][vx]=0
+            elif boardcopy[vy][vx]==-1 and vy==1 and boardcopy[zy][zx]==0 and boardcopy[vy+1][vx]==0 and vx==zx and zy==vy+2:
+                boardcopy[zy][zx]=-9
+                boardcopy[vy][vx]=0
+            #en passant
+            elif boardcopy[vy][vx]==1 and zy==vy-1 and zx==vx-1 and boardcopy[zy][zx]==0:
+                boardcopy[vy][vx]=0
+                boardcopy[zy][zx]=1
+                boardcopy[vy][zx]=0
+            elif boardcopy[vy][vx]==1 and zy==vy-1 and zx==vx+1 and boardcopy[zy][zx]==0:
+                boardcopy[vy][vx]=0
+                boardcopy[zy][zx]=1
+                boardcopy[vy][zx]=0
+            elif boardcopy[vy][vx]==-1 and zy==vy+1 and zx==vx-1 and boardcopy[zy][zx]==0:
+                boardcopy[vy][vx]=0
+                boardcopy[zy][zx]=-1
+                boardcopy[vy][zx]=0
+            elif boardcopy[vy][vx]==-1 and zy==vy+1 and zx==vx+1 and boardcopy[zy][zx]==0:
+                boardcopy[vy][vx]=0
+                boardcopy[zy][zx]=-1
+                boardcopy[vy][zx]=0
+            #normal bew/schlagen
+            else:
+                boardcopy[zy][zx]=boardcopy[vy][vx]
+                boardcopy[vy][vx]=0
+            #
+            #ist zug legal?
+            move_legal=False
+            for legal_move in legal_moves:
+                if self.do_these_two_lists_have_the_same_elements(boardcopy, legal_move):
+                    move_legal=True
+                    break
+            if move_legal:
+                return boardcopy
+            else:
+                print('EINGABE NICHT KORREKT')
+
+    def get_move(self, board):
+        return self.player2(board)   
 
 #
 
@@ -2873,57 +3199,15 @@ spielen(3)
 
 #----------------------------------------------------------------
 board=[
-    [-7,0,0,0,-8,0,0,-7],
+    [-7, -2, -3, -5, -8, -3, -2, -7],
+    [0, -1, -1, -1, -1, -1, -1, -1],
+    [0,0,0,0,0,0,0,0],
+    [-9,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [7,0,0,0,8,0,0,7]
+    [1, 1, 1, 1, 1, 1, 1, 1],
+    [7, 2, 3, 5, 8, 3, 2, 7]
 ]
-
-def printboard(board):
-    print('  1   2   3   4   5   6   7   8')
-    print('---------------------------------')
-    for i in range(8):
-        print('I ', end='')
-        for j in range(8):
-            if board[i][j]==1:
-                print('b', end='')
-            elif board[i][j]==2:
-                print('l', end='')
-            elif board[i][j]==3:
-                print('x', end='')
-            elif board[i][j]==4 or board[i][j]==7:
-                print('t', end='')
-            elif board[i][j]==5:
-                print('q', end='')
-            elif board[i][j]==6 or board[i][j]==8:
-                print('k', end='')
-            elif board[i][j]==-1:
-                print('B', end='')
-            elif board[i][j]==-2:
-                print('L', end='')
-            elif board[i][j]==-3:
-                print('X', end='')
-            elif board[i][j]==-4 or board[i][j]==-7:
-                print('T', end='')
-            elif board[i][j]==-5:
-                print('Q', end='')
-            elif board[i][j]==-6 or board[i][j]==-8:
-                print('K', end='')
-            elif board[i][j]==0:
-                print(' ', end='')
-            #
-            elif board[i][j]==9:
-                print('f', end='')
-            elif board[i][j]==-9:
-                print('F', end='')
-            #
-            print(' I ', end='')
-        print(i + 1)
-        print('---------------------------------')
 
 def test():
     for child in genchildren(board,6):
