@@ -24,6 +24,59 @@ import math
 #-8:not moved kingK
 #-9:en passant B
 
+#für Human
+def printboard(board):
+    print('  1   2   3   4   5   6   7   8')
+    print('---------------------------------')
+    for i in range(8):
+        print('I ', end='')
+        for j in range(8):
+            if board[i][j]==1:
+                print('b', end='')
+            elif board[i][j]==2:
+                print('l', end='')
+            elif board[i][j]==3:
+                print('x', end='')
+            elif board[i][j]==4:
+                print('t', end='')
+            elif board[i][j]==5:
+                print('q', end='')
+            elif board[i][j]==6 or board[i][j]==8:
+                print('k', end='')
+            elif board[i][j]==-1:
+                print('B', end='')
+            elif board[i][j]==-2:
+                print('L', end='')
+            elif board[i][j]==-3:
+                print('X', end='')
+            elif board[i][j]==-4:
+                print('T', end='')
+            elif board[i][j]==-5:
+                print('Q', end='')
+            elif board[i][j]==-6 or board[i][j]==-8:
+                print('K', end='')
+            elif board[i][j]==0:
+                print(' ', end='')
+            #
+            elif board[i][j]==9:
+                print('f', end='')
+            elif board[i][j]==-9:
+                print('F', end='')
+            #
+            elif board[i][j]==7:
+                print('z', end='')
+            elif board[i][j]==-7:
+                print('Z', end='')
+            #
+            elif board[i][j]==8:
+                print('y', end='')
+            elif board[i][j]==-8:
+                print('Y', end='')
+            #
+            print(' I ', end='')
+        print(i + 1)
+        print('---------------------------------')
+#
 
 #
 minimaxc=0
@@ -55,7 +108,7 @@ def genchildren(position, playerk):
                 elif position[y][x]==6:
                     for h in gcKk(y,x,position,6):
                         children.append(h)
-                elif position[y][x]==4:
+                elif position[y][x]==4 or position[y][x]==7:
                     for h in gcTt(y,x,position,4):
                         children.append(h)
                 elif position[y][x]==3:
@@ -82,7 +135,7 @@ def genchildren(position, playerk):
                 elif position[y][x]==-6:
                     for h in gcKk(y,x,position,-6):
                         children.append(h)
-                elif position[y][x]==-4:
+                elif position[y][x]==-4 or position[y][x]==-7:
                     for h in gcTt(y,x,position,-4):
                         children.append(h)
                 elif position[y][x]==-3:
@@ -1063,6 +1116,19 @@ def gcBb(y,x,pos,player):
 
 def generate_one_random_child(position, playerk):#für Monte Carlo Simulation
     boardcopy = copy.deepcopy(position)
+    #
+    #9&-9 zu 1&-1
+    if playerk==6:
+        for y in range(len(boardcopy)):
+            for x in range(len(boardcopy[y])):
+                if boardcopy[y][x]==9:
+                    boardcopy[y][x]=1
+    elif playerk==-6:
+        for y in range(len(boardcopy)):
+            for x in range(len(boardcopy[y])):
+                if boardcopy[y][x]==-9:
+                    boardcopy[y][x]=-1
+    #
     piecesy=[]
     piecesx=[]
     if playerk==6:
@@ -1911,6 +1977,13 @@ def gorcBb(y,x,boardc,player):
         if x+1<8 and y+1<8:
             if boardc[y+1][x+1]>0:
                 childrenB.append(4)
+        #en passant
+        if x-1>-1 and y+1<8:
+            if boardc[y][x-1]==9 and boardc[y+1][x-1]==0:
+                childrenB.append(5)
+        if x+1<8 and y+1<8:
+            if boardc[y][x+1]==9 and boardc[y+1][x+1]==0:
+                childrenB.append(6)
     if player==1:
         if y==6 and boardc[y-2][x]==0 and boardc[y-1][x]==0:
             childrenB.append(1)
@@ -1923,6 +1996,13 @@ def gorcBb(y,x,boardc,player):
         if x+1<8 and y-1>-1:
             if boardc[y-1][x+1]<0:
                 childrenB.append(4)
+        #en passant
+        if x-1>-1 and y-1>-1:
+            if boardc[y][x-1]==-9 and boardc[y-1][x-1]==0:
+                childrenB.append(5)
+        if x+1<8 and y-1>-1:
+            if boardc[y][x+1]==-9 and boardc[y-1][x+1]==0:
+                childrenB.append(6)
     if player==-1:
         if childrenB==[]:
             return []
@@ -1930,7 +2010,7 @@ def gorcBb(y,x,boardc,player):
             n=random.choice(childrenB)
             if n==1:
                 boardc[y][x]=0
-                boardc[y+2][x]=-1
+                boardc[y+2][x]=-9
                 return boardc
             elif n==2:
                 boardc[y][x]=0
@@ -1950,6 +2030,16 @@ def gorcBb(y,x,boardc,player):
                 if y+1==7:
                     boardc[y+1][x+1]=-5
                 return boardc
+            elif n==5:
+                boardc[y][x]=0
+                boardc[y+1][x-1]=-1
+                boardc[y][x-1]=0
+                return boardc
+            elif n==6:
+                boardc[y][x]=0
+                boardc[y+1][x+1]=-1
+                boardc[y][x+1]=0
+                return boardc
     elif player==1:
         if childrenB==[]:
             return []
@@ -1957,7 +2047,7 @@ def gorcBb(y,x,boardc,player):
             n=random.choice(childrenB)
             if n==1:
                 boardc[y][x]=0
-                boardc[y-2][x]=1
+                boardc[y-2][x]=9
                 return boardc
             elif n==2:
                 boardc[y][x]=0
@@ -1976,6 +2066,16 @@ def gorcBb(y,x,boardc,player):
                 boardc[y-1][x+1]=1
                 if y-1==0:
                     boardc[y-1][x+1]=5
+                return boardc
+            elif n==5:
+                boardc[y][x]=0
+                boardc[y-1][x-1]=1
+                boardc[y][x-1]=0
+                return boardc
+            elif n==6:
+                boardc[y][x]=0
+                boardc[y-1][x+1]=1
+                boardc[y][x+1]=0
                 return boardc
 
 #
@@ -2122,11 +2222,11 @@ class Schach():
                     print('l', end='')
                 elif board[i][j]==3:
                     print('x', end='')
-                elif board[i][j]==4 or board[i][j]==7:
+                elif board[i][j]==4:
                     print('t', end='')
                 elif board[i][j]==5:
                     print('q', end='')
-                elif board[i][j]==6 or board[i][j]==8:
+                elif board[i][j]==6:
                     print('k', end='')
                 elif board[i][j]==-1:
                     print('B', end='')
@@ -2134,11 +2234,11 @@ class Schach():
                     print('L', end='')
                 elif board[i][j]==-3:
                     print('X', end='')
-                elif board[i][j]==-4 or board[i][j]==-7:
+                elif board[i][j]==-4:
                     print('T', end='')
                 elif board[i][j]==-5:
                     print('Q', end='')
-                elif board[i][j]==-6 or board[i][j]==-8:
+                elif board[i][j]==-6:
                     print('K', end='')
                 elif board[i][j]==0:
                     print(' ', end='')
@@ -2147,6 +2247,16 @@ class Schach():
                     print('f', end='')
                 elif board[i][j]==-9:
                     print('F', end='')
+                #
+                elif board[i][j]==7:
+                    print('z', end='')
+                elif board[i][j]==-7:
+                    print('Z', end='')
+                #
+                elif board[i][j]==8:
+                    print('y', end='')
+                elif board[i][j]==-8:
+                    print('Y', end='')
                 #
                 print(' I ', end='')
             print(i + 1)
@@ -2366,11 +2476,6 @@ class HumanPlayer(Player):
                     break
             
             if move_legal:
-                printboard(boardcopy)
-                print("children")
-                for s in legal_moves:
-                    printboard(s)
-                print("KORREKT")
                 return boardcopy
             else:
                 printboard(boardcopy)
@@ -2806,4 +2911,6 @@ def test():
 #----------------------------------------------------------------
 
 
-#MCTS: kein en passant
+#MCTS: gorc verbessern
+#evaluatepos verbessern
+#Human: if 8 or 7 move-> turn into 6 and 4
