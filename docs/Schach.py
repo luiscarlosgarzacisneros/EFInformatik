@@ -108,7 +108,7 @@ def genchildren(position, playerk):
                 elif position[y][x]==5:
                     for h in gcQq(y,x,position,5):
                         children.append(h)
-                elif position[y][x]==6:
+                elif position[y][x]==2:
                     for h in gcLl(y,x,position,2):
                         children.append(h)
                 elif position[y][x]==8:
@@ -135,8 +135,8 @@ def genchildren(position, playerk):
                 elif position[y][x]==-5:
                     for h in gcQq(y,x,position,-5):
                         children.append(h)
-                elif position[y][x]==-3:
-                    for h in gcLl(y,x,position,-3):
+                elif position[y][x]==-2:
+                    for h in gcLl(y,x,position,-2):
                         children.append(h)
                 elif position[y][x]==-8:
                     for h in gcKk(y,x,position,-8):
@@ -2301,12 +2301,14 @@ class HumanPlayer(Player):
         
         legal_moves = []
         legal_move_exists = False
-        
-        for child_of_root in genchildren(pos, self.token):
+        all_moves=genchildren(pos, self.token)
+
+        for child_of_root in all_moves:
             king_is_killed = False
             for child_of_child in genchildren(child_of_root, other_player):
                 if verloren(child_of_child, self.token):
                     king_is_killed = True
+                    break
             if not king_is_killed:
                 legal_move_exists = True
                 legal_moves.append(child_of_root)
@@ -2316,11 +2318,11 @@ class HumanPlayer(Player):
         
         while True:
             boardcopy = copy.deepcopy(pos)
-            input_move = self.eingabe()  # Change 'input' to 'input_move'
+            input_move = self.eingabe()
 
             vy, vx, zy, zx = input_move
 
-            # Process special moves and update boardcopy
+            #update boardcopy
             #1&-1 zu 5&-5
             for feld in range(len(boardcopy[0])):
                 if boardcopy[0][feld]==1:
@@ -2408,7 +2410,6 @@ class HumanPlayer(Player):
                     break
             
             if move_legal:
-                print("special",special)
                 printboard(boardcopy)
                 print("children")
                 for s in legal_moves:
@@ -2416,7 +2417,6 @@ class HumanPlayer(Player):
                 print("KORREKT")
                 return boardcopy
             else:
-                print("special",special)
                 printboard(boardcopy)
                 print("children")
                 for s in legal_moves:
@@ -2532,7 +2532,7 @@ class MCTSNode(MCTSPlayer):
             instance.parent=self
             instance.score=0
             instance.visits=0
-            
+
     def simulate(self):
         value=0
         values=[]
@@ -2791,12 +2791,12 @@ spielen(3)
 #----------------------------------------------------------------
 board=[
     [-7, -2, -3, -5, -8, -3, -2, -7],
-    [0, -1, -1, -1, -1, -1, -1, -1],
-    [0,0,0,0,0,0,0,0],
-    [-9,1,0,0,0,0,0,0],
+    [-1, -1, -1, -1, -1, -1, -1, -1],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [1, 0, 1, 1, 1, 1, 1, 1],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [1, 1, 1, 1, 1, 1, 1, 1],
     [7, 2, 3, 5, 8, 3, 2, 7]
 ]
 
@@ -2809,4 +2809,3 @@ def test():
 
 
 #MCTS: kein en passant
-#Human: keine rochade, kein en passant
