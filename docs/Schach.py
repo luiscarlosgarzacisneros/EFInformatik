@@ -24,6 +24,8 @@ import math
 #-8:not moved kingK
 #-9:en passant B
 
+
+#für tests
 def printboard(board):
     print('  1   2   3   4   5   6   7   8')
     print('---------------------------------')
@@ -65,7 +67,7 @@ def printboard(board):
             print(' I ', end='')
         print(i + 1)
         print('---------------------------------')
-
+#
 
 #
 minimaxc=0
@@ -2117,7 +2119,7 @@ class Schach():
         self.players=[]
         self.maxturns=200
 
-    def printboard(self,board):
+    def printboard2(self,board):
         print('  1   2   3   4   5   6   7   8')
         print('---------------------------------')
         for i in range(8):
@@ -2153,6 +2155,48 @@ class Schach():
             print(i + 1)
             print('---------------------------------')
 
+    def printboard(self,board):
+        print('  1   2   3   4   5   6   7   8')
+        print('---------------------------------')
+        for i in range(8):
+            print('I ', end='')
+            for j in range(8):
+                if board[i][j]==1:
+                    print('b', end='')
+                elif board[i][j]==2:
+                    print('l', end='')
+                elif board[i][j]==3:
+                    print('x', end='')
+                elif board[i][j]==4 or board[i][j]==7:
+                    print('t', end='')
+                elif board[i][j]==5:
+                    print('q', end='')
+                elif board[i][j]==6 or board[i][j]==8:
+                    print('k', end='')
+                elif board[i][j]==-1:
+                    print('B', end='')
+                elif board[i][j]==-2:
+                    print('L', end='')
+                elif board[i][j]==-3:
+                    print('X', end='')
+                elif board[i][j]==-4 or board[i][j]==-7:
+                    print('T', end='')
+                elif board[i][j]==-5:
+                    print('Q', end='')
+                elif board[i][j]==-6 or board[i][j]==-8:
+                    print('K', end='')
+                elif board[i][j]==0:
+                    print(' ', end='')
+                #
+                elif board[i][j]==9:
+                    print('f', end='')
+                elif board[i][j]==-9:
+                    print('F', end='')
+                #
+                print(' I ', end='')
+            print(i + 1)
+            print('---------------------------------')
+
     def play(self):
         #
         self.board=[
@@ -2167,7 +2211,7 @@ class Schach():
         ]
         #
         self.players.clear()
-        self.players.append(Human2Player(6))#k
+        self.players.append(HumanPlayer(6))#k
         self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
@@ -2225,339 +2269,6 @@ class HumanPlayer(Player):
     def __init__(self, token):
         super().__init__(token)
         self.token=token
-        self.e=[]
-
-    def eingabe(self,pos):
-        self.e.clear()
-        korrekt=False
-        try:
-            vx = int(input('von x: ')) - 1
-            vy = int(input('von y: ')) - 1
-            zx = int(input('zu x: ')) - 1
-            zy = int(input('zu y: ')) - 1
-        except:
-            print('EINGABE NICHT KORREKT')
-            return False
-        #
-        if vy<8 and vy>-1 and vx<8 and vx>-1 and zy<8 and zy>-1 and zx<8 and zx>-1:
-            #b
-            if pos[vy][vx]==1:
-                #2nachv
-                if vy==6 and pos[zy][zx]==0 and pos[vy-1][vx]==0 and vx==zx and zy==vy-2:
-                    korrekt=True
-                #1nachv normal bew
-                if pos[zy][zx]==0 and vx==zx and zy==vy-1:
-                    korrekt=True
-                #schlagen
-                if pos[zy][zx]<0 and zy==vy-1 and vx-1==zx:
-                    korrekt=True
-                if pos[zy][zx]<0 and zy==vy-1 and vx+1==zx:
-                    korrekt=True
-            #B
-            if pos[vy][vx]==-1:
-                #2nachv
-                if vy==1 and pos[zy][zx]==0 and pos[vy+1][vx]==0 and vx==zx and zy==vy+2:
-                    korrekt=True
-                #1nachv normal bew
-                if pos[zy][zx]==0 and vx==zx and zy==vy+1:
-                    korrekt=True
-                #schlagen
-                if pos[zy][zx]>0 and zy==vy+1 and vx-1==zx:
-                    korrekt=True
-                if pos[zy][zx]>0 and zy==vy+1 and vx+1==zx:
-                    korrekt=True
-            #kK
-            if (pos[vy][vx]==6 and pos[zy][zx]<=0) or (pos[vy][vx]==-6 and pos[zy][zx]>=0) or (pos[vy][vx]==8 and pos[zy][zx]<=0) or (pos[vy][vx]==-8 and pos[zy][zx]>=0):
-                #vertikal
-                if vx-1==zx and zy==vy:
-                    korrekt=True
-                if vx+1==zx and zy==vy:
-                    korrekt=True
-                #horizontal
-                if vx==zx and zy==vy-1:
-                    korrekt=True
-                if vx==zx and zy==vy+1:
-                    korrekt=True
-                #diagonal
-                if vx-1==zx and zy==vy-1:
-                    korrekt=True
-                if vx+1==zx and zy==vy-1:
-                    korrekt=True
-                if vx+1==zx and zy==vy+1:
-                    korrekt=True
-                if vx-1==zx and zy==vy+1:
-                    korrekt=True
-            #tT
-            if (pos[vy][vx]==4 and pos[zy][zx]<=0) or (pos[vy][vx]==-4 and pos[zy][zx]>=0) or (pos[vy][vx]==7 and pos[zy][zx]<=0) or (pos[vy][vx]==-7 and pos[zy][zx]>=0):
-                #vertikal
-                if vx==zx:
-                    #nach unten
-                    if vy<zy:
-                        pathclear=True
-                        f=1
-                        while True:
-                            if vy+f==zy:
-                                break
-                            if pos[vy+f][vx]!=0:
-                                pathclear=False
-                                break
-                            f=f+1
-                        if pathclear:
-                            korrekt=True
-                    #nach oben
-                    if vy>zy:
-                        pathclear=True
-                        f=1
-                        while True:
-                            if vy-f==zy:
-                                break
-                            if pos[vy-f][vx]!=0:
-                                pathclear=False
-                                break
-                            f=f+1
-                        if pathclear:
-                            korrekt=True
-                #horizontal
-                if vy==zy:
-                    #nach rechts
-                    if vx<zx:
-                        pathclear=True
-                        f=1
-                        while True:
-                            if vx+f==zx:
-                                break
-                            if pos[vy][vx+f]!=0:
-                                pathclear=False
-                                break
-                            f=f+1
-                        if pathclear:
-                            korrekt=True
-                    #nach links
-                    if vx>zx:
-                        pathclear=True
-                        f=1
-                        while True:
-                            if vx-f==zx:
-                                break
-                            if pos[vy][vx-f]!=0:
-                                pathclear=False
-                                break
-                            f=f+1
-                        if pathclear:
-                            korrekt=True
-            #xX
-            if (pos[vy][vx]==3 and pos[zy][zx]<=0) or (pos[vy][vx]==-3 and pos[zy][zx]>=0):
-                pathclear=False
-                for u in range(8):
-                    if zy>vy and zx>vx:
-                        if vx+u+1==zx and vy+u+1==zy:
-                            pathclear=True
-                            break
-                        if pos[vy+u+1][vx+u+1]!=0:
-                            break
-                    if zy<vy and zx>vx:
-                        if vx+u+1==zx and vy-u-1==zy:
-                            pathclear=True
-                            break
-                        if pos[vy-u-1][vx+u+1]!=0:
-                            break
-                    if zy>vy and zx<vx:
-                        if vx-u-1==zx and vy+u+1==zy:
-                            pathclear=True
-                            break
-                        if pos[vy+u+1][vx-1-u]!=0:
-                            break
-                    if zy<vy and zx<vx:
-                        if vx-1-u==zx and vy-u-1==zy:
-                            pathclear=True
-                            break
-                        if pos[vy-u-1][vx-u-1]!=0:
-                            break
-                if pathclear:
-                    korrekt=True
-            #qQ
-            if (pos[vy][vx]==5 and pos[zy][zx]<=0) or (pos[vy][vx]==-5 and pos[zy][zx]>=0):
-                pathcleart=False
-                for u in range(8):
-                    if zy>vy and zx>vx:
-                        if vx+u+1==zx and vy+u+1==zy:
-                            pathcleart=True
-                            break
-                        if pos[vy+u+1][vx+u+1]!=0:
-                            break
-                    if zy<vy and zx>vx:
-                        if vx+u+1==zx and vy-u-1==zy:
-                            pathcleart=True
-                            break
-                        if pos[vy-u-1][vx+u+1]!=0:
-                            break
-                    if zy>vy and zx<vx:
-                        if vx-u-1==zx and vy+u+1==zy:
-                            pathcleart=True
-                            break
-                        if pos[vy+u+1][vx-1-u]!=0:
-                            break
-                    if zy<vy and zx<vx:
-                        if vx-1-u==zx and vy-u-1==zy:
-                            pathcleart=True
-                            break
-                        if pos[vy-u-1][vx-u-1]!=0:
-                            break
-                if pathcleart:
-                    korrekt=True
-                #vertikal
-                if vx==zx:
-                    #nach unten
-                    if vy<zy:
-                        pathclearl=True
-                        f=1
-                        while True:
-                            if vy+f==zy:
-                                break
-                            if pos[vy+f][vx]!=0:
-                                pathclearl=False
-                                break
-                            f=f+1
-                        if pathclearl:
-                            korrekt=True
-                    #nach oben
-                    if vy>zy:
-                        pathclearl=True
-                        f=1
-                        while True:
-                            if vy-f==zy:
-                                break
-                            if pos[vy-f][vx]!=0:
-                                pathclearl=False
-                                break
-                            f=f+1
-                        if pathclearl:
-                            korrekt=True
-                #horizontal
-                if vy==zy:
-                    #nach rechts
-                    if vx<zx:
-                        pathclearl=True
-                        f=1
-                        while True:
-                            if vx+f==zx:
-                                break
-                            if pos[vy][vx+f]!=0:
-                                pathclearl=False
-                                break
-                            f=f+1
-                        if pathclearl:
-                            korrekt=True
-                    #nach links
-                    if vx>zx:
-                        pathclearl=True
-                        f=1
-                        while True:
-                            if vx-f==zx:
-                                break
-                            if pos[vy][vx-f]!=0:
-                                pathclearl=False
-                                break
-                            f=f+1
-                        if pathclearl:
-                            korrekt=True
-            #lL
-            if (pos[vy][vx]==2 and pos[zy][zx]<=0) or (pos[vy][vx]==-2 and pos[zy][zx]>=0):
-                if zy==vy-2 and zx==vx+1:
-                    korrekt=True
-                if zy==vy-2 and zx==vx-1:
-                    korrekt=True
-                if zy==vy+2 and zx==vx+1:
-                    korrekt=True
-                if zy==vy+2 and zx==vx-1:
-                    korrekt=True
-                if zy==vy+1 and zx==vx+2:
-                    korrekt=True
-                if zy==vy-1 and zx==vx+2:
-                    korrekt=True
-                if zy==vy+1 and zx==vx-2:
-                    korrekt=True
-                if zy==vy-1 and zx==vx-2:
-                    korrekt=True
-        
-        if korrekt:
-            self.e.append(vy)
-            self.e.append(vx)
-            self.e.append(zy)
-            self.e.append(zx)
-            return True
-        else:
-            print('EINGABE NICHT KORREKT')
-            return False
-        
-    def player(self,pos):
-        boardcopy=copy.deepcopy(pos)
-        #
-        if self.token==6:
-            other_player=-6
-        else:
-            other_player=6
-        #
-        # Existiert Zug?
-        legal_move_exists = False
-        for child_of_root in genchildren(pos, self.token):
-            king_is_killed = False
-            for child_of_child in genchildren(child_of_root, other_player):
-                if verloren(child_of_child, self.token):
-                    king_is_killed = True
-                    break
-            if not king_is_killed:
-                legal_move_exists = True
-                break  # Exit loop when legal move is found
-        # No legal moves
-        if not legal_move_exists:
-            return []
-        #
-        while True:
-            while True:
-                if self.eingabe(boardcopy)==True:
-                    break
-                else:
-                    continue
-            #
-            vy = self.e[0]
-            vx = self.e[1]
-            zy = self.e[2]
-            zx = self.e[3]
-            #
-            boardcopy[zy][zx]=boardcopy[vy][vx]
-            boardcopy[vy][vx]=0
-            #
-            for feld in range(len(boardcopy[0])):
-                if boardcopy[0][feld]==1:
-                    boardcopy[0][feld]=5
-            for feld in range(len(boardcopy[7])):
-                if boardcopy[7][feld]==-1:
-                    boardcopy[7][feld]=-5
-            #
-            #legal oder nicht
-            falsch=False
-            for child in genchildren(boardcopy,other_player):
-                if verloren(child, self.token):
-                    print('SCHACH')
-                    falsch=True
-                    boardcopy=copy.deepcopy(pos)
-                    break
-                    
-            if not falsch:
-                break
-        #
-        return boardcopy
-    
-    def get_move(self, board):
-        return self.player(board)
-
-#
-
-class Human2Player(Player):
-    def __init__(self, token):
-        super().__init__(token)
-        self.token=token
 
     def do_these_two_lists_have_the_same_elements(self, list1, list2):
         for row1, row2 in zip(list1, list2):
@@ -2583,7 +2294,7 @@ class Human2Player(Player):
                 print('EINGABE NICHT KORREKT1')
                 continue  # Continue the loop to get new input
 
-    def player2(self,pos):
+    def player(self,pos):
         if self.token == 6:
             other_player = -6
         else:
@@ -2620,12 +2331,12 @@ class Human2Player(Player):
                 if boardcopy[7][feld]==-1:
                     boardcopy[7][feld]=-5
             #9&-9 entfernen
-            if self.token==6:
+            if self.token==-6:
                 for y in range(len(boardcopy)):
                     for x in range(len(boardcopy[y])):
                         if boardcopy[y][x]==9:
                             boardcopy[y][x]=1
-            elif self.token==-6:
+            elif self.token==6:
                 for y in range(len(boardcopy)):
                     for x in range(len(boardcopy[y])):
                         if boardcopy[y][x]==-9:
@@ -2700,6 +2411,11 @@ class Human2Player(Player):
             
             if move_legal:
                 print("special",special)
+                printboard(boardcopy)
+                print("children")
+                for s in legal_moves:
+                    printboard(s)
+                print("KORREKT")
                 return boardcopy
             else:
                 print("special",special)
@@ -2709,131 +2425,8 @@ class Human2Player(Player):
                     printboard(s)
                 print('EINGABE NICHT KORREKT2')
 
-    def player(self,pos):
-        #
-        ##### Alle legale Züge generieren
-        #
-        if self.token==6:
-            other_player=-6
-        else:
-            other_player=6
-        #
-        legal_moves=[]
-        legal_move_exists = False
-        for child_of_root in genchildren(pos, self.token):
-            king_is_killed = False
-            for child_of_child in genchildren(child_of_root, other_player):
-                if verloren(child_of_child, self.token):
-                    king_is_killed = True
-                    break
-            if not king_is_killed:
-                legal_move_exists = True
-                legal_moves.append(child_of_root)
-        # No legal moves
-        if not legal_move_exists:
-            return []
-        #
-        #####Zug ausführen
-        #
-        while True:
-            #
-            boardcopy=copy.deepcopy(pos)
-            #
-            #
-            #####eingabeüberprüfung
-            #
-            while True:
-                input=self.eingabe()
-                if input!=[]:
-                    break
-            #
-            vy = input[0]
-            vx = input[1]
-            zy = input[2]
-            zx = input[3]
-            #
-            #1&-1 zu 5&-5
-            for feld in range(len(boardcopy[0])):
-                if boardcopy[0][feld]==1:
-                    boardcopy[0][feld]=5
-            for feld in range(len(boardcopy[7])):
-                if boardcopy[7][feld]==-1:
-                    boardcopy[7][feld]=-5
-            #9&-9 entfernen
-            if self.token==6:
-                for y in range(len(boardcopy)):
-                    for x in range(len(boardcopy[y])):
-                        if boardcopy[y][x]==9:
-                            boardcopy[y][x]=1
-            elif self.token==-6:
-                for y in range(len(boardcopy)):
-                    for x in range(len(boardcopy[y])):
-                        if boardcopy[y][x]==-9:
-                            boardcopy[y][x]=-1
-            #spezielle Züge:
-            #rochade
-            if vy==7 and vx==4 and zy==7 and zx==2 and self.token==6 and boardcopy[vy][vx]==8:
-                boardcopy[7][2]=6
-                boardcopy[7][3]=4
-                boardcopy[7][0]=0
-                boardcopy[7][4]=0
-            elif vy==7 and vx==4 and zy==7 and zx==6 and self.token==6 and boardcopy[vy][vx]==8:
-                boardcopy[7][6]=6
-                boardcopy[7][5]=4
-                boardcopy[7][7]=0
-                boardcopy[7][4]=0
-            elif vy==0 and vx==4 and zy==0 and zx==2 and self.token==-6 and boardcopy[vy][vx]==-8:
-                boardcopy[0][2]=-6
-                boardcopy[0][3]=-4
-                boardcopy[0][0]=0
-                boardcopy[0][4]=0
-            elif vy==0 and vx==4 and zy==0 and zx==6 and self.token==-6 and boardcopy[vy][vx]==-8:
-                boardcopy[0][6]=-6
-                boardcopy[0][5]=-4
-                boardcopy[0][7]=0
-                boardcopy[0][4]=0
-            #Bb 2 nach vorne
-            elif boardcopy[vy][vx]==1 and vy==6 and boardcopy[zy][zx]==0 and boardcopy[vy-1][vx]==0 and vx==zx and zy==vy-2:
-                boardcopy[zy][zx]=9
-                boardcopy[vy][vx]=0
-            elif boardcopy[vy][vx]==-1 and vy==1 and boardcopy[zy][zx]==0 and boardcopy[vy+1][vx]==0 and vx==zx and zy==vy+2:
-                boardcopy[zy][zx]=-9
-                boardcopy[vy][vx]=0
-            #en passant
-            elif boardcopy[vy][vx]==1 and zy==vy-1 and zx==vx-1 and boardcopy[zy][zx]==0:
-                boardcopy[vy][vx]=0
-                boardcopy[zy][zx]=1
-                boardcopy[vy][zx]=0
-            elif boardcopy[vy][vx]==1 and zy==vy-1 and zx==vx+1 and boardcopy[zy][zx]==0:
-                boardcopy[vy][vx]=0
-                boardcopy[zy][zx]=1
-                boardcopy[vy][zx]=0
-            elif boardcopy[vy][vx]==-1 and zy==vy+1 and zx==vx-1 and boardcopy[zy][zx]==0:
-                boardcopy[vy][vx]=0
-                boardcopy[zy][zx]=-1
-                boardcopy[vy][zx]=0
-            elif boardcopy[vy][vx]==-1 and zy==vy+1 and zx==vx+1 and boardcopy[zy][zx]==0:
-                boardcopy[vy][vx]=0
-                boardcopy[zy][zx]=-1
-                boardcopy[vy][zx]=0
-            #normal bew/schlagen
-            else:
-                boardcopy[zy][zx]=boardcopy[vy][vx]
-                boardcopy[vy][vx]=0
-            #
-            #ist zug legal?
-            move_legal=False
-            for legal_move in legal_moves:
-                if self.do_these_two_lists_have_the_same_elements(boardcopy, legal_move):
-                    move_legal=True
-                    break
-            if move_legal:
-                return boardcopy
-            else:
-                print('EINGABE NICHT KORREKT')
-
     def get_move(self, board):
-        return self.player2(board)   
+        return self.player(board)   
 
 #
 
@@ -3202,10 +2795,10 @@ board=[
     [-7, -2, -3, -5, -8, -3, -2, -7],
     [0, -1, -1, -1, -1, -1, -1, -1],
     [0,0,0,0,0,0,0,0],
-    [-9,0,0,0,0,0,0,0],
+    [-9,1,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 1, 1, 1, 1, 1],
     [7, 2, 3, 5, 8, 3, 2, 7]
 ]
 
