@@ -374,7 +374,6 @@ class HumanPlayer(Player):
 #
 
 class MCTSPlayer(Player):
-
     def __init__(self, token):
         super().__init__(token)
         self.counter=0
