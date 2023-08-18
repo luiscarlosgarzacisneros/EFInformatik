@@ -1149,7 +1149,7 @@ def gcBb(y,x,pos,player):
                 boardc=copy.deepcopy(pos)
     return childrenB
 
-#
+#Gorc Variante1
 
 class GorcMove():
     def __init__(self):
@@ -2210,7 +2210,7 @@ def gorcBb1(y,x,boardc,player):
     #
     return moves
 
-#
+#Gorc Variante2
 
 def generate_one_random_child2(position, playerk):#für MCTS Simulation
     #wählt random Spielfigur aus, gen moves für Figur, wählt random move -> not all moves are equal, schneller
@@ -4202,7 +4202,7 @@ spielen(3)
 
 #
 
-#----------------------------------------------------------------
+#----------------------------------------------------------------test
 board=[
     [-7, -2, -3, -5, -8, -3, -2, -7],
     [-1, -1, -1, -1, -1, -1, -1, -1],
@@ -4222,6 +4222,7 @@ def test():
 
 #printboard(board)
 #print(evaluatepos(board,6))
-#----------------------------------------------------------------
+#----------------------------------------------------------------test
 
 #evaluatepos verbessern mobility?
+#tk board
