@@ -3284,6 +3284,156 @@ other_k_matrix = [[-v for v in row] for row in k_matrix]
 
 
 def evaluatepos(pos,playerk):
+    #mit Matrixen+pawn structure
+    val=0
+    if playerk==6:
+        for p in range(8):
+            for o in range(8):
+                if pos[p][o]==0:
+                    pass
+                #
+                elif pos[p][o]==-1 or pos[p][o]==-9:
+                    val+=-100
+                    val+=other_Bb_matrix[p][o]
+                    #pawn structure
+                    if p+1<=7 and o+1<=7:
+                        if pos[p+1][o+1]==-1 or pos[p+1][o+1]==-9:
+                            val+=-1
+                    if p-1>=0 and o-1>=0:
+                        if pos[p-1][o-1]==-1 or pos[p-1][o-1]==-9:
+                            val+=-1
+                    if p+1<=7 and o-1>=0:
+                        if pos[p+1][o-1]==-1 or pos[p+1][o-1]==-9:
+                            val+=-1
+                    if p-1>=0 and o+1<=7:
+                        if pos[p-1][o+1]==-1 or pos[p-1][o+1]==-9:
+                            val+=-1
+                    #
+                elif pos[p][o]==1 or pos[p][o]==9:
+                    val+=+100
+                    val+=Bb_matrix[p][o]
+                    #pawn structure
+                    if p+1<=7 and o+1<=7:
+                        if pos[p+1][o+1]==1 or pos[p+1][o+1]==9:
+                            val+=1
+                    if p-1>=0 and o-1>=0:
+                        if pos[p-1][o-1]==1 or pos[p-1][o-1]==9:
+                            val+=1
+                    if p+1<=7 and o-1>=0:
+                        if pos[p+1][o-1]==1 or pos[p+1][o-1]==9:
+                            val+=1
+                    if p-1>=0 and o+1<=7:
+                        if pos[p-1][o+1]==1 or pos[p-1][o+1]==9:
+                            val+=1
+                    #
+                #
+                elif pos[p][o]==-2:
+                    val+=-300
+                    val+=other_Ll_matrix[p][o]
+                elif pos[p][o]==-3:
+                    val+=-300
+                    val+=other_Xx_matrix[o][p]
+                elif pos[p][o]==-4 or pos[p][o]==-7:
+                    val+=-500
+                    val+=other_Tt_matrix[p][o]
+                elif pos[p][o]==2:
+                    val+=+300
+                    val+=Ll_matrix[p][o]
+                elif pos[p][o]==3:
+                    val+=+300
+                    val+=Xx_matrix[o][p]
+                elif pos[p][o]==4 or pos[p][o]==7:
+                    val+=+500
+                    val+=Tt_matrix[p][o]
+                #
+                elif pos[p][o]==-5:
+                    val+=-900
+                    val+=other_Qq_matrix[p][o]
+                elif pos[p][o]==-6 or pos[p][o]==-8:
+                    val+=-100000
+                    val+=other_K_matrix[p][o]
+                elif pos[p][o]==5:
+                    val+=+900
+                    val+=Qq_matrix[p][o]
+                elif pos[p][o]==6 or pos[p][o]==8:
+                    val+=100000
+                    val+=k_matrix[p][o]
+    elif playerk==-6:
+        for p in range(8):
+            for o in range(8):
+                if pos[p][o]==0:
+                    pass
+                #
+                elif pos[p][o]==-1 or pos[p][o]==-9:
+                    val+=+100
+                    val+=Bb_matrix[p][o]
+                    #pawn structure
+                    if p+1<=7 and o+1<=7:
+                        if pos[p+1][o+1]==-1 or pos[p+1][o+1]==-9:
+                            val+=1
+                    if p-1>=0 and o-1>=0:
+                        if pos[p-1][o-1]==-1 or pos[p-1][o-1]==-9:
+                            val+=1
+                    if p+1<=7 and o-1>=0:
+                        if pos[p+1][o-1]==-1 or pos[p+1][o-1]==-9:
+                            val+=1
+                    if p-1>=0 and o+1<=7:
+                        if pos[p-1][o+1]==-1 or pos[p-1][o+1]==-9:
+                            val+=1
+                    #
+                elif pos[p][o]==1 or pos[p][o]==9:
+                    val+=-100
+                    val+=other_Bb_matrix[p][o]
+                    #pawn structure
+                    if p+1<=7 and o+1<=7:
+                        if pos[p+1][o+1]==1 or pos[p+1][o+1]==9:
+                            val+=-1
+                    if p-1>=0 and o-1>=0:
+                        if pos[p-1][o-1]==1 or pos[p-1][o-1]==9:
+                            val+=-1
+                    if p+1<=7 and o-1>=0:
+                        if pos[p+1][o-1]==1 or pos[p+1][o-1]==9:
+                            val+=-1
+                    if p-1>=0 and o+1<=7:
+                        if pos[p-1][o+1]==1 or pos[p-1][o+1]==9:
+                            val+=-1
+                    #
+                #
+                elif pos[p][o]==-2:
+                    val+=+300
+                    val+=Ll_matrix[p][o]
+                elif pos[p][o]==-3:
+                    val+=+300
+                    val+=Xx_matrix[p][o]
+                elif pos[p][o]==-4 or pos[p][o]==-7:
+                    val+=+500
+                    val+=Tt_matrix[p][o]
+                elif pos[p][o]==2:
+                    val+=-300
+                    val+=other_Ll_matrix[p][o]
+                elif pos[p][o]==3:
+                    val+=-300
+                    val+=other_Xx_matrix[p][o]
+                elif pos[p][o]==4 or pos[p][o]==7:
+                    val+=-500
+                    val+=other_Tt_matrix[p][o]
+                #
+                elif pos[p][o]==-5:
+                    val+=+900
+                    val+=Qq_matrix[p][o]
+                elif pos[p][o]==-6 or pos[p][o]==-8:
+                    val+=100000
+                    val+=K_matrix[p][o]
+                elif pos[p][o]==5:
+                    val+=-900
+                    val+=other_Qq_matrix[p][o]
+                elif pos[p][o]==6 or pos[p][o]==8:
+                    val+=-100000
+                    val+=other_k_matrix[p][o]
+    return val
+
+def evaluatepos2(pos,playerk):
+    #mit Matrixen
     val=0
     if playerk==6:
         for p in range(8):
@@ -3375,7 +3525,8 @@ def evaluatepos(pos,playerk):
                     val+=other_k_matrix[p][o]
     return val
 
-def evaluatepos2(pos,playerk):
+def evaluatepos3(pos,playerk):
+    #ohne Matrixen
     val=0
     if playerk==6:
         for p in range(8):
@@ -4068,6 +4219,9 @@ def test():
         printboard(child)
 
 #test()
+
+#printboard(board)
+#print(evaluatepos(board,6))
 #----------------------------------------------------------------
 
 #evaluatepos verbessern mobility?
