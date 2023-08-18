@@ -3196,6 +3196,93 @@ def verloren(pos,player):
 
 #
 
+Bb_matrix = [
+    [ 0,  0,  0,  0,  0,  0,  0,  0],
+    [ 1,  1,  1,  1,  1,  1,  1,  1],
+    [ 3,  3,  3,  3,  3,  3,  3,  3],
+    [ 4,  4,  4,  4,  4,  4,  4,  4],
+    [ 4,  4,  4,  4,  4,  4,  4,  4],
+    [ 3,  3,  3,  3,  3,  3,  3,  3],
+    [ 1,  1,  1,  1,  1,  1,  1,  1],
+    [ 0,  0,  0,  0,  0,  0,  0,  0]
+]
+
+Ll_matrix = [
+    [-1, -3, -2, -2, -2, -2, -3, -1],
+    [-1,  0,  0,  0,  0,  0,  0, -1],
+    [-1,  0,  1,  1,  1,  1,  0, -1],
+    [-1,  0,  1,  2,  2,  1,  0, -1],
+    [-1,  0,  1,  2,  2,  1,  0, -1],
+    [-1,  0,  1,  1,  1,  1,  0, -1],
+    [-1,  0,  0,  0,  0,  0,  0, -1],
+    [-1, -3, -2, -2, -2, -2, -3, -1]
+]
+
+Xx_matrix = [
+    [-2, -1, -1, -1, -1, -1, -1, -2],
+    [-1,  0,  0,  0,  0,  0,  0, -1],
+    [-1,  0,  1,  1,  1,  1,  0, -1],
+    [-1,  0,  1,  2,  2,  1,  0, -1],
+    [-1,  0,  1,  2,  2,  1,  0, -1],
+    [-1,  0,  1,  1,  1,  1,  0, -1],
+    [-1,  0,  0,  0,  0,  0,  0, -1],
+    [-2, -1, -1, -1, -1, -1, -1, -2]
+]
+
+Tt_matrix = [
+    [ 0,  0,  0,  0,  0,  0,  0,  0],
+    [ 1,  1,  1,  1,  1,  1,  1,  1],
+    [ 1,  1,  1,  1,  1,  1,  1,  1],
+    [ 1,  1,  1,  1,  1,  1,  1,  1],
+    [ 1,  1,  1,  1,  1,  1,  1,  1],
+    [ 1,  1,  1,  1,  1,  1,  1,  1],
+    [ 1,  1,  1,  1,  1,  1,  1,  1],
+    [ 0,  0,  0,  0,  0,  0,  0,  0]
+]
+
+Qq_matrix = [
+    [-1, -1, -1, -1, -1, -1, -1, -1],
+    [-1,  0,  0,  0,  0,  0,  0, -1],
+    [-1,  0,  1,  1,  1,  1,  0, -1],
+    [-1,  0,  1,  2,  2,  1,  0, -1],
+    [-1,  0,  1,  2,  2,  1,  0, -1],
+    [-1,  0,  1,  1,  1,  1,  0, -1],
+    [-1,  0,  0,  0,  0,  0,  0, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1]
+]
+
+K_matrix = [
+    [ 2,  3,  1,  0,  0,  1,  3,  2],
+    [ 2,  2,  0,  0,  0,  0,  2,  2],
+    [-1, -2, -2, -2, -2, -2, -2, -1],
+    [-2, -3, -3, -4, -4, -3, -3, -2],
+    [-3, -4, -4, -5, -5, -4, -4, -3],
+    [-3, -4, -4, -5, -5, -4, -4, -3],
+    [-4, -5, -5, -6, -6, -5, -5, -4],
+    [-4, -5, -5, -6, -6, -5, -5, -4]
+]
+
+k_matrix = [
+    [ -4,  -5,  -5,  -6,  -6,  -5,  -5,  -4],
+    [ -4,  -5,  -5,  -6,  -6,  -5,  -5,  -4],
+    [ -3,  -4,  -4,  -5,  -5,  -4,  -4,  -3],
+    [ -3,  -4,  -4,  -5,  -5,  -4,  -4,  -3],
+    [ -2,  -3,  -3,  -4,  -4,  -3,  -3,  -2],
+    [ -1,  -2,  -2,  -2,  -2,  -2,  -2,  -1],
+    [  2,   2,   0,   0,   0,   0,   2,   2],
+    [  2,   3,   1,   0,   0,   1,   3,   2]
+]
+
+
+other_Bb_matrix = [[-v for v in row] for row in Bb_matrix]
+other_Ll_matrix = [[-v for v in row] for row in Ll_matrix]
+other_Xx_matrix = [[-v for v in row] for row in Xx_matrix]
+other_Tt_matrix = [[-v for v in row] for row in Tt_matrix]
+other_Qq_matrix = [[-v for v in row] for row in Qq_matrix]
+other_K_matrix = [[-v for v in row] for row in K_matrix]
+other_k_matrix = [[-v for v in row] for row in k_matrix]
+
+
 def evaluatepos(pos,playerk):
     val=0
     if playerk==6:
@@ -3205,31 +3292,43 @@ def evaluatepos(pos,playerk):
                     pass
                 #
                 elif pos[p][o]==-1 or pos[p][o]==-9:
-                    val=val-1
+                    val+=-100
+                    val+=other_Bb_matrix[o][p]
                 elif pos[p][o]==1 or pos[p][o]==9:
-                    val=val+1
+                    val+=+100
+                    val+=Bb_matrix[o][p]
                 #
                 elif pos[p][o]==-2:
-                    val=val-3
+                    val+=-300
+                    val+=other_Ll_matrix[o][p]
                 elif pos[p][o]==-3:
-                    val=val-3
+                    val+=-300
+                    val+=other_Xx_matrix[o][p]
                 elif pos[p][o]==-4 or pos[p][o]==-7:
-                    val=val-5
+                    val+=-500
+                    val+=other_Tt_matrix[o][p]
                 elif pos[p][o]==2:
-                    val=val+3
+                    val+=+300
+                    val+=Ll_matrix[o][p]
                 elif pos[p][o]==3:
-                    val=val+3
+                    val+=+300
+                    val+=Xx_matrix[o][p]
                 elif pos[p][o]==4 or pos[p][o]==7:
-                    val=val+5
+                    val+=+500
+                    val+=Tt_matrix[o][p]
                 #
                 elif pos[p][o]==-5:
-                    val=val-9
+                    val+=-900
+                    val+=other_Qq_matrix[o][p]
                 elif pos[p][o]==-6 or pos[p][o]==-8:
-                    val+=-1000
+                    val+=-100000
+                    val+=other_K_matrix[o][p]
                 elif pos[p][o]==5:
-                    val=val+9
+                    val+=+900
+                    val+=Qq_matrix[o][p]
                 elif pos[p][o]==6 or pos[p][o]==8:
-                    val+=1000
+                    val+=100000
+                    val+=k_matrix[o][p]
     elif playerk==-6:
         for p in range(8):
             for o in range(8):
@@ -3237,32 +3336,114 @@ def evaluatepos(pos,playerk):
                     pass
                 #
                 elif pos[p][o]==-1 or pos[p][o]==-9:
-                    val=val+1
+                    val+=+100
+                    val+=Bb_matrix[o][p]
                 elif pos[p][o]==1 or pos[p][o]==9:
-                    val=val-1
+                    val+=-100
+                    val+=other_Bb_matrix[o][p]
                 #
                 elif pos[p][o]==-2:
-                    val=val+3
+                    val+=+300
+                    val+=Ll_matrix[o][p]
                 elif pos[p][o]==-3:
-                    val=val+3
+                    val+=+300
+                    val+=Xx_matrix[o][p]
                 elif pos[p][o]==-4 or pos[p][o]==-7:
-                    val=val+5
+                    val+=+500
+                    val+=Tt_matrix[o][p]
                 elif pos[p][o]==2:
-                    val=val-3
+                    val+=-300
+                    val+=other_Ll_matrix[o][p]
                 elif pos[p][o]==3:
-                    val=val-3
+                    val+=-300
+                    val+=other_Xx_matrix[o][o]
                 elif pos[p][o]==4 or pos[p][o]==7:
-                    val=val-5
+                    val+=-500
+                    val+=other_Tt_matrix[o][p]
                 #
                 elif pos[p][o]==-5:
-                    val=val+9
+                    val+=+900
+                    val+=Qq_matrix[o][p]
                 elif pos[p][o]==-6 or pos[p][o]==-8:
-                    val+=1000
+                    val+=100000
+                    val+=K_matrix[o][p]
                 elif pos[p][o]==5:
-                    val=val-9
+                    val+=-900
+                    val+=other_Qq_matrix[o][p]
                 elif pos[p][o]==6 or pos[p][o]==8:
-                    val+=-1000
+                    val+=-100000
+                    val+=other_k_matrix[o][p]
     return val
+
+def evaluatepos2(pos,playerk):
+    val=0
+    if playerk==6:
+        for p in range(8):
+            for o in range(8):
+                if pos[p][o]==0:
+                    pass
+                #
+                elif pos[p][o]==-1 or pos[p][o]==-9:
+                    val=val-100
+                elif pos[p][o]==1 or pos[p][o]==9:
+                    val=val+100
+                #
+                elif pos[p][o]==-2:
+                    val=val-300
+                elif pos[p][o]==-3:
+                    val=val-300
+                elif pos[p][o]==-4 or pos[p][o]==-7:
+                    val=val-500
+                elif pos[p][o]==2:
+                    val=val+300
+                elif pos[p][o]==3:
+                    val=val+300
+                elif pos[p][o]==4 or pos[p][o]==7:
+                    val=val+500
+                #
+                elif pos[p][o]==-5:
+                    val=val-900
+                elif pos[p][o]==-6 or pos[p][o]==-8:
+                    val+=-100000
+                elif pos[p][o]==5:
+                    val=val+900
+                elif pos[p][o]==6 or pos[p][o]==8:
+                    val+=100000
+    elif playerk==-6:
+        for p in range(8):
+            for o in range(8):
+                if pos[p][o]==0:
+                    pass
+                #
+                elif pos[p][o]==-1 or pos[p][o]==-9:
+                    val=val+100
+                elif pos[p][o]==1 or pos[p][o]==9:
+                    val=val-100
+                #
+                elif pos[p][o]==-2:
+                    val=val+300
+                elif pos[p][o]==-3:
+                    val=val+300
+                elif pos[p][o]==-4 or pos[p][o]==-7:
+                    val=val+500
+                elif pos[p][o]==2:
+                    val=val-300
+                elif pos[p][o]==3:
+                    val=val-300
+                elif pos[p][o]==4 or pos[p][o]==7:
+                    val=val-500
+                #
+                elif pos[p][o]==-5:
+                    val=val+900
+                elif pos[p][o]==-6 or pos[p][o]==-8:
+                    val+=100000
+                elif pos[p][o]==5:
+                    val=val-900
+                elif pos[p][o]==6 or pos[p][o]==8:
+                    val+=-100000
+    return val
+
+pruning_min=50
 
 #
 
@@ -3803,7 +3984,7 @@ class MinimaxNode():
                 # pruning
                 if eval > alpha:
                     alpha = eval
-                if beta <= alpha:
+                if beta <= alpha - pruning_min:
                     break
             self.value=maxvalue
             return maxvalue
@@ -3817,7 +3998,7 @@ class MinimaxNode():
                 # pruning
                 if eval < beta:
                     beta = eval
-                if beta <= alpha:
+                if beta <= alpha - pruning_min:
                     break
             self.value=minvalue
             return minvalue
