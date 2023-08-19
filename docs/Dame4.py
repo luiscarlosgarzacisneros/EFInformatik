@@ -702,6 +702,37 @@ class HumanPlayer(Player):
                 print('EINGABE NICHT KORREKT1')
                 continue
 
+    def eingabe_schlagen_XO(self,pos,vy,vx):
+        while True:
+            korrekt=False
+            try:
+                zx = int(input('zu x: ')) - 1
+                zy = int(input('zu y: ')) - 1
+            except:
+                print('EINGABE NICHT KORREKT3')
+                return False
+            #
+            if zx==vx and zy==vy:
+                korrekt=True
+            #
+            if zy<8 and zy>-1 and zx<8 and zx>-1:
+                if self.token==1:
+                    if zy==vy-2 and zx==vx-2 and pos[vy][vx]==1 and pos[zy][zx]==0 and pos[vy-1][vx-1]<0:
+                        korrekt=True
+                    if zy==vy-2 and zx==vx+2 and pos[vy][vx]==1 and pos[zy][zx]==0 and pos[vy-1][vx+1]<0:
+                        korrekt=True
+                elif self.token==-1:
+                    if zy==vy+2 and zx==vx-2 and pos[vy][vx]==-1 and pos[zy][zx]==0 and pos[vy+1][vx-1]>0:
+                        korrekt=True
+                    if zy==vy+2 and zx==vx+2 and pos[vy][vx]==-1 and pos[zy][zx]==0 and pos[vy+1][vx+1]>0:
+                        korrekt=True
+            #
+            if korrekt:
+                return [zy,zx]
+            else:
+                print('EINGABE NICHT KORREKT3')
+                continue
+
     def schlagen_moeglich_XO(self,y,x,pos):
         moeglich=False
         if self.token==1:
@@ -821,56 +852,76 @@ class HumanPlayer(Player):
         #
         return moeglich
 
-    def player_schlagen_XO(self,vy,vx,zy,zx,pos):
+    def player_schlagen_chain_XO(self,vy,vx,zy,zx,pos):
+        #erstes Mal schlagen bei playerschlagen
         if self.schlagen_moeglich_XO(vy,vx,pos):
             if zx==vx and vy==zy:
                 pass
             if self.token==1:
-                if zy==vy-2 and zx==vx-2 and pos[vy][vx]==1 and pos[zy][zx]==0:
-                    if pos[vy-1][vx-1]<0:
-                        pos[vy][vx]=0
-                        pos[zy][zx]=1
-                        if zy==0:
-                            pos[zy][zx]=2
-                        pos[vy-1][vx-1]=0
-                        printboard(pos)
-                        #
-                        vy = zy
-                        vx = zx
-                        if self.schlagen_moeglich_XO(vy,vx,pos):
-                            while True:
-                                if eingabeschlagen(pos,vy,vx)==True:
-                                    break
-                                else:
-                                    continue
-                            zy = es[0]
-                            zx = es[1]
-                            self.player_schlagen_XO(vy,vx,zy,zx,pos)
-
-                if zy==vy-2 and zx==vx+2 and pos[vy][vx]==1 and pos[zy][zx]==0:
-                    if pos[vy-1][vx+1]<0:
-                        pos[vy][vx]=0
-                        pos[zy][zx]=1
-                        if zy==0:
-                            pos[zy][zx]=2
-                        pos[vy-1][vx+1]=0
-                        printboard(pos)
-                        #
-                        vy = zy
-                        vx = zx
-                        if self.schlagen_moeglich_XO(vy,vx,pos):
-                            while True:
-                                if eingabeschlagen(pos,vy,vx)==True:
-                                    break
-                                else:
-                                    continue
-                            zy = es[0]
-                            zx = es[1]
-                            self.player_schlagen_XO(vy,vx,zy,zx,pos)
+                if zy==vy-2 and zx==vx-2 and pos[vy][vx]==1 and pos[zy][zx]==0 and pos[vy-1][vx-1]<0:
+                    pos[vy][vx]=0
+                    pos[zy][zx]=1
+                    if zy==0:
+                        pos[zy][zx]=2
+                    pos[vy-1][vx-1]=0
+                    #
+                    printboard(pos)
+                    #
+                    vy = zy
+                    vx = zx
+                    if self.schlagen_moeglich_XO(vy,vx,pos):
+                        input_move=self.eingabe_schlagen_XO(pos,vy,vx)
+                        zy,zx=input_move
+                        self.player_schlagen_chain_XO(vy,vx,zy,zx,pos)
+                #
+                elif zy==vy-2 and zx==vx+2 and pos[vy][vx]==1 and pos[zy][zx]==0 and pos[vy-1][vx+1]<0:
+                    pos[vy][vx]=0
+                    pos[zy][zx]=1
+                    if zy==0:
+                        pos[zy][zx]=2
+                    pos[vy-1][vx+1]=0
+                    printboard(pos)
+                    #
+                    vy = zy
+                    vx = zx
+                    if self.schlagen_moeglich_XO(vy,vx,pos):
+                        input_move=self.eingabe_schlagen_XO(pos,vy,vx)
+                        zy,zx=input_move
+                        self.player_schlagen_chain_XO(vy,vx,zy,zx,pos)
             elif self.token==-1:
-                pass
-    
-    
+                if zy==vy+2 and zx==vx-2 and pos[vy][vx]==-1 and pos[zy][zx]==0 and pos[vy+1][vx-1]>0:
+                    pos[vy][vx]=0
+                    pos[zy][zx]=-1
+                    if zy==0:
+                        pos[zy][zx]=-2
+                    pos[vy+1][vx-1]=0
+                    #
+                    printboard(pos)
+                    #
+                    vy = zy
+                    vx = zx
+                    if self.schlagen_moeglich_XO(vy,vx,pos):
+                        input_move=self.eingabe_schlagen_XO(pos,vy,vx)
+                        zy,zx=input_move
+                        self.player_schlagen_chain_XO(vy,vx,zy,zx,pos)
+                #
+                elif zy==vy+2 and zx==vx+2 and pos[vy][vx]==-1 and pos[zy][zx]==0 and pos[vy+1][vx+1]>0:
+                    pos[vy][vx]=0
+                    pos[zy][zx]=-1
+                    if zy==0:
+                        pos[zy][zx]=-2
+                    pos[vy+1][vx+1]=0
+                    printboard(pos)
+                    #
+                    vy = zy
+                    vx = zx
+                    if self.schlagen_moeglich_XO(vy,vx,pos):
+                        input_move=self.eingabe_schlagen_XO(pos,vy,vx)
+                        zy,zx=input_move
+                        self.player_schlagen_chain_XO(vy,vx,zy,zx,pos)
+            #
+            return pos
+
     def player(self,pos):
         while True:
             korrekt=False
