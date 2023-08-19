@@ -702,7 +702,7 @@ class HumanPlayer(Player):
                 print('EINGABE NICHT KORREKT1')
                 continue
 
-    def eingabe_schlagen_XO(self,pos,vy,vx):
+    def eingabe_schlagen_XO(self,vy,vx,pos):
         while True:
             korrekt=False
             try:
@@ -852,11 +852,17 @@ class HumanPlayer(Player):
         #
         return moeglich
 
-    def player_schlagen_chain_XO(self,vy,vx,zy,zx,pos):
+    def player_schlagen_chain_XO(self,vy,vx,pos):
         #erstes Mal schlagen bei playerschlagen
-        if self.schlagen_moeglich_XO(vy,vx,pos):
-            if zx==vx and vy==zy:
+        if self.schlagen_moeglich_XO(pos,vy,vx):
+            printboard(pos)
+            #
+            input_move=self.eingabe_schlagen_XO(vy,vx,pos)
+            zy,zx=input_move
+            #
+            if zx==vx and vy==zy:#um nicht mehr zu schlagen
                 pass
+            #
             if self.token==1:
                 if zy==vy-2 and zx==vx-2 and pos[vy][vx]==1 and pos[zy][zx]==0 and pos[vy-1][vx-1]<0:
                     pos[vy][vx]=0
@@ -864,15 +870,11 @@ class HumanPlayer(Player):
                     if zy==0:
                         pos[zy][zx]=2
                     pos[vy-1][vx-1]=0
-                    #
                     printboard(pos)
                     #
                     vy = zy
                     vx = zx
-                    if self.schlagen_moeglich_XO(vy,vx,pos):
-                        input_move=self.eingabe_schlagen_XO(pos,vy,vx)
-                        zy,zx=input_move
-                        self.player_schlagen_chain_XO(vy,vx,zy,zx,pos)
+                    self.player_schlagen_chain_XO(vy,vx,pos)
                 #
                 elif zy==vy-2 and zx==vx+2 and pos[vy][vx]==1 and pos[zy][zx]==0 and pos[vy-1][vx+1]<0:
                     pos[vy][vx]=0
@@ -884,10 +886,8 @@ class HumanPlayer(Player):
                     #
                     vy = zy
                     vx = zx
-                    if self.schlagen_moeglich_XO(vy,vx,pos):
-                        input_move=self.eingabe_schlagen_XO(pos,vy,vx)
-                        zy,zx=input_move
-                        self.player_schlagen_chain_XO(vy,vx,zy,zx,pos)
+                    self.player_schlagen_chain_XO(vy,vx,pos)
+            #
             elif self.token==-1:
                 if zy==vy+2 and zx==vx-2 and pos[vy][vx]==-1 and pos[zy][zx]==0 and pos[vy+1][vx-1]>0:
                     pos[vy][vx]=0
@@ -895,15 +895,11 @@ class HumanPlayer(Player):
                     if zy==0:
                         pos[zy][zx]=-2
                     pos[vy+1][vx-1]=0
-                    #
                     printboard(pos)
                     #
                     vy = zy
                     vx = zx
-                    if self.schlagen_moeglich_XO(vy,vx,pos):
-                        input_move=self.eingabe_schlagen_XO(pos,vy,vx)
-                        zy,zx=input_move
-                        self.player_schlagen_chain_XO(vy,vx,zy,zx,pos)
+                    self.player_schlagen_chain_XO(vy,vx,pos)
                 #
                 elif zy==vy+2 and zx==vx+2 and pos[vy][vx]==-1 and pos[zy][zx]==0 and pos[vy+1][vx+1]>0:
                     pos[vy][vx]=0
@@ -915,12 +911,9 @@ class HumanPlayer(Player):
                     #
                     vy = zy
                     vx = zx
-                    if self.schlagen_moeglich_XO(vy,vx,pos):
-                        input_move=self.eingabe_schlagen_XO(pos,vy,vx)
-                        zy,zx=input_move
-                        self.player_schlagen_chain_XO(vy,vx,zy,zx,pos)
-            #
-            return pos
+                    self.player_schlagen_chain_XO(vy,vx,pos)
+        #
+        return pos
 
     def player(self,pos):
         while True:
@@ -943,6 +936,28 @@ class HumanPlayer(Player):
                     if zy==0:
                         pos[zy][zx]=2
                 #X schlagen
+                elif zy==vy-2 and zx==vx-2 and pos[vy][vx]==1 and pos[zy][zx]==0 and pos[vy-1][vx-1]<0:
+                    korrekt=True
+                    pos[vy][vx]=0
+                    pos[zy][zx]=1
+                    if zy==0:
+                        pos[zy][zx]=2
+                    pos[vy-1][vx-1]=0
+                    #
+                    vy = zy
+                    vx = zx
+                    self.player_schlagen_chain_XO(vy,vx,pos)
+                elif zy==vy-2 and zx==vx+2 and pos[vy][vx]==1 and pos[zy][zx]==0 and pos[vy-1][vx+1]<0:
+                    korrekt=True
+                    pos[vy][vx]=0
+                    pos[zy][zx]=1
+                    if zy==0:
+                        pos[zy][zx]=2
+                    pos[vy-1][vx+1]=0
+                    #
+                    vy = zy
+                    vx = zx
+                    self.player_schlagen_chain_XO(vy,vx,pos)
             elif self.token==-1:
                 #O normal
                 if zy==vy+1 and zx==vx-1 and pos[vy][vx]==-1 and pos[zy][zx]==0:
@@ -958,6 +973,28 @@ class HumanPlayer(Player):
                     if zy==7:
                         pos[zy][zx]=-2
                 #O schlagen
+                elif zy==vy+2 and zx==vx-2 and pos[vy][vx]==-1 and pos[zy][zx]==0 and pos[vy+1][vx-1]>0:
+                    korrekt=True
+                    pos[vy][vx]=0
+                    pos[zy][zx]=-1
+                    if zy==0:
+                        pos[zy][zx]=-2
+                    pos[vy+1][vx-1]=0
+                    #
+                    vy = zy
+                    vx = zx
+                    self.player_schlagen_chain_XO(vy,vx,pos)
+                elif zy==vy+2 and zx==vx+2 and pos[vy][vx]==-1 and pos[zy][zx]==0 and pos[vy+1][vx+1]>0:
+                    korrekt=True
+                    pos[vy][vx]=0
+                    pos[zy][zx]=-1
+                    if zy==0:
+                        pos[zy][zx]=-2
+                    pos[vy+1][vx+1]=0
+                    #
+                    vy = zy
+                    vx = zx
+                    self.player_schlagen_chain_XO(vy,vx,pos)
             #
             if korrekt:
                 return pos 
