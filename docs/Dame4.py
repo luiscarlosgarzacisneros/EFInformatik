@@ -1164,8 +1164,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=2
                                     pos[vy-i-1][vx-i-1]=0
-                                    #schlagenWM
-                                    break
+                                    return self.player_schlagen_chain_WM(vy,vx,pos)
                                 else:
                                     break
                             else:
@@ -1186,8 +1185,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=2
                                     pos[vy+i+1][vx-i-1]=0
-                                    #schlagenWM
-                                    break
+                                    return self.player_schlagen_chain_WM(vy,vx,pos)
                                 else:
                                     break
                             else:
@@ -1208,8 +1206,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=2
                                     pos[vy-i-1][vx+i+1]=0
-                                    #schlagenWM
-                                    break
+                                    return self.player_schlagen_chain_WM(vy,vx,pos)
                                 else:
                                     break
                             else:
@@ -1230,8 +1227,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=2
                                     pos[vy+i+1][vx+i+1]=0
-                                    #schlagenWM
-                                    break
+                                    return self.player_schlagen_chain_WM(vy,vx,pos)
                                 else:
                                     break
                             else:
@@ -1289,8 +1285,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=-2
                                     pos[vy-i-1][vx-i-1]=0
-                                    #schlagenWM
-                                    break
+                                    return self.player_schlagen_chain_WM(vy,vx,pos)
                                 else:
                                     break
                             else:
@@ -1311,8 +1306,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=-2
                                     pos[vy+i+1][vx-i-1]=0
-                                    #schlagenWM
-                                    break
+                                    return self.player_schlagen_chain_WM(vy,vx,pos)
                                 else:
                                     break
                             else:
@@ -1333,8 +1327,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=-2
                                     pos[vy-i-1][vx+i+1]=0
-                                    #schlagenWM
-                                    break
+                                    return self.player_schlagen_chain_WM(vy,vx,pos)
                                 else:
                                     break
                             else:
@@ -1355,8 +1348,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=-2
                                     pos[vy+i+1][vx+i+1]=0
-                                    #schlagenWM
-                                    break
+                                    return self.player_schlagen_chain_WM(vy,vx,pos)
                                 else:
                                     break
                             else:
