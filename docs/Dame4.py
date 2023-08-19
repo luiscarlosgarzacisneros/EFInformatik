@@ -637,7 +637,7 @@ class Dame():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(Minimax4Player(1))
+        self.players.append(HumanPlayer(1))
         self.players.append(Minimax4Player(-1))
         #
         current=0
@@ -956,7 +956,7 @@ class HumanPlayer(Player):
 
     def player_schlagen_chain_XO(self,vy,vx,pos):
         #erstes Mal schlagen bei playerschlagen
-        if self.schlagen_moeglich_XO(pos,vy,vx):
+        if self.schlagen_moeglich_XO(vy,vx,pos):
             printboard(pos)
             #
             input_move=self.eingabe_schlagen_XO(vy,vx,pos)
@@ -1019,7 +1019,7 @@ class HumanPlayer(Player):
 
     def player_schlagen_chain_WM(self,vy,vx,pos):
         #erstes Mal schlagen bei playerschlagen
-        if self.schlagen_moeglich_WM(pos,vy,vx):
+        if self.schlagen_moeglich_WM(vy,vx,pos):
             printboard(pos)
             #
             input_move=self.eingabe_schlagen_WM(vy,vx,pos)
@@ -1459,7 +1459,7 @@ class MCTSNode(MCTSPlayer):
                     player=1
                 elif player==1:
                     player=-1
-            values.append(inarow(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
+            values.append(evaluatepos(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
         value=sum(values)/len(values)
         return value
     
@@ -1676,4 +1676,4 @@ def spielen(z):
 spielen(20)
 
 #MCTS: gorc fehlt
-#Human: WM: normal+schlagen fehlen
+#evaluatepos: open v closed?, forw?
