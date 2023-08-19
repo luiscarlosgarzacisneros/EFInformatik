@@ -3652,10 +3652,11 @@ class Schach():
                     elif player.token==-6:
                         print('k HAT GEWONNEN')
                         return 'k'
+            #
             current = (current + 1) % 2
             self.turn+=1
             #
-            if self.turn==self.maxturns:
+            if self.turn==self.maxturns:#für simulationen
                 print('UNENTSCHIEDEN')
                 return ' '
             #
@@ -3692,13 +3693,13 @@ class HumanPlayer(Player):
                 zy = int(input('zu y: ')) - 1
             except:
                 print('EINGABE NICHT KORREKT1')
-                continue  # Continue the loop to get new input
+                continue 
 
             if vy < 8 and vy > -1 and vx < 8 and vx > -1 and zy < 8 and zy > -1 and zx < 8 and zx > -1:
                 return [vy, vx, zy, zx]
             else:
                 print('EINGABE NICHT KORREKT1')
-                continue  # Continue the loop to get new input
+                continue 
 
     def player(self,pos):
         if self.token == 6:

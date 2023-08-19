@@ -1,30 +1,9 @@
 import copy
-import time
 import random
+import time
 import math
 
-board = [
-    [0,-1,0,-1,0,-1,0,-1],
-    [-1,0,-1,0,-1,0,-1,0],
-    [0,-1,0,-1,0,-1,0,-1],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [1,0,1,0,1,0,1,0],
-    [0,1,0,1,0,1,0,1],
-    [1,0,1,0,1,0,1,0],
-    
-]
 #
-minimaxc = 0
-d = 6
-nextmoves = []
-scores = []
-move = []
-moves=[]
-bestscores=[]
-maxtime = 20
-turn=0
-
 
 def printboard(board):
     print('  1   2   3   4   5   6   7   8')
@@ -44,517 +23,7 @@ def printboard(board):
                 print(' ', end='')
             print(' I ', end='')
         print(i + 1)
-        print('---------------------------------')
-     
-#
-
-def play():
-    global turn
-    while not verloren2(board, -1,-2) and not verloren2(board, 1,2):
-        turn =turn+1
-        print(turn)
-        printboard(board)
-        player(board)
-        printboard(board)
-        if not verloren2(board, -1,-2) and not verloren2(board, 1,2):
-            start = time.time()
-            minimaxer(board)
-            end = time.time()
-            board.clear()
-            board.extend(copy.deepcopy(move))
-            print(end - start)
-            print(minimaxc)
-    print(turn)
-    printboard(board)
-    print('GAME OVER')
-    if verloren2(board, 1,2):
-        print(':( VERLOREN')
-    elif verloren2(board, -1,-2):
-        print(':) GEWONNEN')
-
-#
-e=[]
-es=[]
-esw=[]
-ds=[]
-
-def eingabeschlagen(pos,vy,vx):
-    es.clear()
-    korrekt=False
-    try:
-        zx = int(input('zu x: ')) - 1
-        zy = int(input('zu y: ')) - 1
-    except:
-        print('EINGABE NICHT KORREKT')
-        return False
-    #
-    if zx==vx and zy==vy:
-        korrekt=True
-    #
-    if zy<8 and zy>-1 and zx<8 and zx>-1:
-        #
-        if zy==vy-2 and zx==vx-2 and pos[vy][vx]==1 and pos[zy][zx]==0:
-            if pos[vy-1][vx-1]<0:
-                korrekt=True
-        if zy==vy-2 and zx==vx+2 and pos[vy][vx]==1 and pos[zy][zx]==0:
-            if pos[vy-1][vx+1]<0:
-                korrekt=True
-    if korrekt:
-        es.append(zy)
-        es.append(zx)
-        return True
-    else:
-        print('EINGABE NICHT KORREKT')
-        return False
-
-def player(pos):
-    while True:
-        if eingabe(pos)==True:
-            break
-        else:
-            continue
-    #
-    vy = e[0]
-    vx = e[1]
-    zy = e[2]
-    zx = e[3]
-    #
-    if zy==vy-1 and zx==vx-1 and pos[vy][vx]==1 and pos[zy][zx]==0:
-        pos[vy][vx]=0
-        pos[zy][zx]=1
-        if zy==0:
-            pos[zy][zx]=2
-    elif zy==vy-1 and zx==vx+1 and pos[vy][vx]==1 and pos[zy][zx]==0:
-        pos[vy][vx]=0
-        pos[zy][zx]=1
-        if zy==0:
-            pos[zy][zx]=2
-    #schlagen.
-    elif zy==vy-2 and zx==vx-2 and pos[vy][vx]==1 and pos[zy][zx]==0:
-        if pos[vy-1][vx-1]<0:
-            playerschlagen(vy,vx,zy,zx,pos)
-            if zy==0:
-                pos[zy][zx]=2
-    elif zy==vy-2 and zx==vx+2 and pos[vy][vx]==1 and pos[zy][zx]==0:
-        if pos[vy-1][vx+1]<0:
-            playerschlagen(vy,vx,zy,zx,pos)
-            if zy==0:
-                pos[zy][zx]=2
-    #W
-    if pos[vy][vx]==2:
-        try:
-            if pos[ds[0]][ds[1]]<0:
-                pos[vy][vx]=0
-                pos[zy][zx]=2
-                pos[ds[0]][ds[1]]=0
-                if schlagenmoeglichW(zy,zx,pos):
-                    playerschlagenW(zy,zx,pos)
-        except:
-            pos[vy][vx]=0
-            pos[zy][zx]=2
-
-def damewerden(player,pos):
-    if player==-1:
-        for i in range(len(pos[0])):
-            if pos[7][i]==-1:
-                pos[7][i]=-2
-    if player==1:
-        for i in range(len(pos[0])):
-            if pos[0][i]==1:
-                pos[0][i]=2
-
-def schlagenmoeglichW(y,x,boar):
-    moeglich=False
-    for i in range(7):
-        if y+2+i>7 or x+2+i>7:
-            break
-        if boar[y+1+i][x+1+i]>0:
-            break
-        if boar[y+1+i][x+1+i]<0:
-            if boar[y+2+i][x+2+i]==0:
-                moeglich=True
-                break
-            else:
-                break
-    if not moeglich:
-        for i in range(7):
-            if y-2-i<0 or x+2+i>7:
-                break
-            if boar[y-1-i][x+1+i]>0:
-                break
-            if boar[y-1-i][x+1+i]<0:
-                if boar[y-2-i][x+2+i]==0:
-                    moeglich=True
-                    break
-                else:
-                    break
-    if not moeglich:
-        for i in range(7):
-            if y-2-i<0 or x-2-i<0:
-                break
-            if boar[y-1-i][x-1-i]>0:
-                break
-            if boar[y-1-i][x-1-i]<0:
-                if boar[y-2-i][x-2-i]==0:
-                    moeglich=True
-                    break
-                else:
-                    break
-    if not moeglich:
-        for i in range(7):
-            if y+2+i>7 or x-2-i<0:
-                break
-            if boar[y+1+i][x-1-i]>0:
-                break
-            if boar[y+1+i][x-1-i]<0:
-                if boar[y+2+i][x-2-i]==0:
-                    moeglich=True
-                    break
-                else:
-                    break
-    return moeglich
-
-def eingabeschlagenW(vy,vx,pos):
-    esw.clear()
-    korrekt=False
-    try:
-        zx = int(input('zu x: ')) - 1
-        zy = int(input('zu y: ')) - 1
-    except:
-        print('EINGABE NICHT KORREKT')
-        return False
-    #
-    if zx==vx and zy==vy:
-        korrekt=True
-    #
-    if zy<8 and zy>-1 and zx<8 and zx>-1:
-        #
-        for i in range(7):
-            if vy+2+i>7 or vx+2+i>7:
-                break
-            if pos[vy+1+i][vx+1+i]>0:
-                break
-            if pos[vy+1+i][vx+1+i]<0:
-                if pos[vy+2+i][vx+2+i]==0 and vy+2+i==zy and vx+2+i==zx:
-                    oy=vy+1+i
-                    ox=vx+1+i
-                    korrekt=True
-                    break
-        if not korrekt:
-            for i in range(7):
-                if vy+2+i>7 or vx-2-i<0:
-                    break
-                if pos[vy+1+i][vx-1-i]>0:
-                    break
-                if pos[vy+1+i][vx-1-i]<0:
-                    if pos[vy+2+i][vx-2-i]==0 and vy+2+i==zy and vx-2-i==zx:
-                        oy=vy+1+i
-                        ox=vx-1-i
-                        korrekt=True
-                        break
-        if not korrekt:
-            for i in range(7):
-                if vy-2-i<0 or vx-2-i<0:
-                    break
-                if pos[vy-1-i][vx-1-i]>0:
-                    break
-                if pos[vy-1-i][vx-1-i]<0:
-                    if pos[vy-2-i][vx-2-i]==0 and vy-2-i==zy and vx-2-i==zx:
-                        oy=vy-1-i
-                        ox=vx-1-i
-                        korrekt=True
-                        break
-        if not korrekt:
-            for i in range(7):
-                if vy-2-i<0 or vx+2+i>7:
-                    break
-                if pos[vy-1-i][vx+1+i]>0:
-                    break
-                if pos[vy-1-i][vx+1+i]<0:
-                    if pos[vy-2-i][vx+2+i]==0 and vy-2-i==zy and vx+2+i==zx:
-                        oy=vy-1-i
-                        ox=vx+1+i
-                        korrekt=True
-                        break
-        #
-    if korrekt:
-        esw.append(zy)
-        esw.append(zx)
-        esw.append(oy)
-        esw.append(ox)
-        return True
-    else:
-        print('EINGABE NICHT KORREKT')
-        return False
-
-def playerschlagenW(vy,vx,pos):
-    if schlagenmoeglichW(vy,vx,pos):
-        printboard(pos)
-        while True:
-            if eingabeschlagenW(vy,vx,pos)==True:
-                break
-            else:
-                continue
-        if vx==esw[1] and esw[0]==vy:
-            pass
-        else:
-            zy=esw[0]
-            zx=esw[1]
-            oy=esw[2]
-            ox=esw[3]
-            pos[zy][zx]=2
-            pos[vy][vx]=0
-            pos[oy][ox]=0
-            playerschlagenW(zy,zx,pos)
-
-def schlagenmoeglichX(y,x,boar):
-    r=False
-    if y-2>-1 and x-2>-1:
-        if boar[y-2][x-2]==0:
-            if boar[y-1][x-1]<0:
-                r=True
-    if y-2>-1 and x+2<8:
-        if boar[y-2][x+2]==0:
-            if boar[y-1][x+1]<0:
-                r=True
-    return r
-
-def eingabe(pos):
-    e.clear()
-    korrekt=False
-    try:
-        vx = int(input('von x: ')) - 1
-        vy = int(input('von y: ')) - 1
-        zx = int(input('zu x: ')) - 1
-        zy = int(input('zu y: ')) - 1
-    except:
-        print('EINGABE NICHT KORREKT')
-        return False
-    #
-    if vy<8 and vy>-1 and vx<8 and vx>-1 and zy<8 and zy>-1 and zx<8 and zx>-1:
-        if zy==vy-1 and zx==vx-1 and pos[vy][vx]==1 and pos[zy][zx]==0:
-            korrekt=True
-        if not korrekt:
-            if zy==vy-1 and zx==vx+1 and pos[vy][vx]==1 and pos[zy][zx]==0:
-                korrekt=True
-        #
-        if not korrekt:
-            if zy==vy-2 and zx==vx-2 and pos[vy][vx]==1 and pos[zy][zx]==0:
-                if pos[vy-1][vx-1]<0:
-                    korrekt=True
-        if not korrekt:
-            if zy==vy-2 and zx==vx+2 and pos[vy][vx]==1 and pos[zy][zx]==0:
-                if pos[vy-1][vx+1]<0:
-                    korrekt=True
-        #
-        ds.clear()
-        if pos[vy][vx]==2:
-            schlagen=False
-            for i in range(7):
-                if vy-1-i<0 or vx-1-i<0:
-                    break
-                if pos[vy-1-i][vx-1-i]>0:
-                    break
-                if pos[vy-1-i][vx-1-i]<0:
-                    schlagen=True
-                if pos[vy-1-i][vx-1-i]==0 and vy-1-i==zy and vx-1-i==zx:
-                    korrekt=True
-                    break
-                if schlagen:
-                    if vy-2-i==zy and vx-2-i==zx and pos[vy-2-i][vx-2-i]==0:
-                        korrekt=True
-                        ds.append(vy-1-i)
-                        ds.append(vx-1-i)
-                        break
-                    break
-        if not korrekt:
-            if pos[vy][vx]==2:
-                schlagen=False
-                for i in range(7):
-                    if vy+1+i>7 or vx+1+i>7:
-                        break
-                    if pos[vy+1+i][vx+1+i]>0:
-                        break
-                    if pos[vy+1+i][vx+1+i]<0:
-                        schlagen=True
-                    if pos[vy+1+i][vx+1+i]==0 and vy+1+i==zy and vx+1+i==zx:
-                        korrekt=True
-                        break
-                    if schlagen:
-                        if vy+2+i==zy and vx+2+i==zx and pos[vy+2+i][vx+2+i]==0:
-                            korrekt=True
-                            ds.append(vy+1+i)
-                            ds.append(vx+1+i)
-                            break
-                        break
-        if not korrekt:
-            if pos[vy][vx]==2:
-                schlagen=False
-                for i in range(7):
-                    if vy+1+i>7 or vx-1-i<0:
-                        break
-                    if pos[vy+1+i][vx-1-i]>0:
-                        break
-                    if pos[vy+1+i][vx-1-i]<0:
-                        schlagen=True
-                    if pos[vy+1+i][vx-1-i]==0 and vy+1+i==zy and vx-1-i==zx:
-                        korrekt=True
-                        break
-                    if schlagen:
-                        if vy+2+i==zy and vx-2-i==zx and pos[vy+2+i][vx-2-i]==0:
-                            korrekt=True
-                            ds.append(vy+1+i)
-                            ds.append(vx-1-i)
-                            break
-                        break
-        if not korrekt:
-            if pos[vy][vx]==2:
-                schlagen=False
-                for i in range(7):
-                    if vy-1-i<0 or vx+1+i>7:
-                        break
-                    if pos[vy-1-i][vx+1+i]>0:
-                        break
-                    if pos[vy-1-i][vx+1+i]<0:
-                        schlagen=True
-                    if pos[vy-1-i][vx+1+i]==0 and vy-1-i==zy and vx+1+i==zx:
-                        korrekt=True
-                        break
-                    if schlagen:
-                        if vy-2-i==zy and vx+2+i==zx and pos[vy-2-i][vx+2+i]==0:
-                            korrekt=True
-                            ds.append(vy-1-i)
-                            ds.append(vx+1+i)
-                            break
-                        break
-            #
-                
-    if korrekt:
-        e.append(vy)
-        e.append(vx)
-        e.append(zy)
-        e.append(zx)
-        return True
-    else:
-        print('EINGABE NICHT KORREKT')
-        return False
-
-def playerschlagen(vy,vx,zy,zx,pos):
-    if schlagenmoeglichX(vy,vx,pos):
-        if zx==vx and vy==zy:
-            pass
-        if zy==vy-2 and zx==vx-2 and pos[vy][vx]==1 and pos[zy][zx]==0:
-            if pos[vy-1][vx-1]<0:
-                pos[vy][vx]=0
-                pos[zy][zx]=1
-                if zy==0:
-                    pos[zy][zx]=2
-                pos[vy-1][vx-1]=0
-                printboard(pos)
-                #
-                vy = zy
-                vx = zx
-                if schlagenmoeglichX(vy,vx,pos):
-                    while True:
-                        if eingabeschlagen(pos,vy,vx)==True:
-                            break
-                        else:
-                            continue
-                    zy = es[0]
-                    zx = es[1]
-                    playerschlagen(vy,vx,zy,zx,pos)
-
-        if zy==vy-2 and zx==vx+2 and pos[vy][vx]==1 and pos[zy][zx]==0:
-            if pos[vy-1][vx+1]<0:
-                pos[vy][vx]=0
-                pos[zy][zx]=1
-                if zy==0:
-                    pos[zy][zx]=2
-                pos[vy-1][vx+1]=0
-                printboard(pos)
-                #
-                vy = zy
-                vx = zx
-                if schlagenmoeglichX(vy,vx,pos):
-                    while True:
-                        if eingabeschlagen(pos,vy,vx)==True:
-                            break
-                        else:
-                            continue
-                    zy = es[0]
-                    zx = es[1]
-                    playerschlagen(vy,vx,zy,zx,pos)
-   
-#
-
-def minimax(position, depth, maxplayer, alpha, beta):
-    # X:maxplayer,spieler O:minplayer,computer
-    # Spieler
-    # alpha: best maxpl, beta: best minpl
-    if maxplayer:
-        player = 1
-    else:
-        player = -1
-
-    # return
-    if verloren1(position, -1,-2) == True:
-        return evaluatepos(position,-1)
-    elif verloren1(position, 1,2) == True:
-        return evaluatepos(position,-1)
-    elif depth == d:
-        return evaluatepos(position,-1)
-    children=genchildren(position, player)
-    if children == [] and player==1:
-        return -8888
-    elif children == [] and player==-1:
-        return +8888
-    #
-    if maxplayer:
-        maxvalue = -100000000000
-        for child in children:
-            value = minimax(child, depth + 1, False, alpha, beta)
-            if value > maxvalue:
-                maxvalue = value
-            # pruning
-            if value > alpha:
-                alpha = value
-            if beta <= alpha:
-                break
-        return maxvalue
-    #
-    if not maxplayer:
-        minvalue = 1000000000000
-        for child in children:
-            value = minimax(child, depth + 1, True, alpha, beta)
-            if value < minvalue:
-                minvalue = value
-            # pruning
-            if value < beta:
-                beta = value
-            if beta <= alpha:
-                break
-        return minvalue
-
-def minimaxer(boa):
-    global minimaxc
-    minimaxc = 0
-    nextmoves.clear()
-    scores.clear()
-    move.clear()
-    moves.clear()
-    start = time.time()
-    for firstgenchild in genchildren(boa, -1):
-        nextmoves.append(copy.deepcopy(firstgenchild))
-        scores.append(minimax(firstgenchild, 1, True, -1000000000000, 100000000000000))
-        if (time.time() - start) > maxtime:
-            break
-    #
-    print(scores)
-    #
-    for y in range(len(scores)):
-        if scores[y]==(min(scores)):
-            moves.append(copy.deepcopy(nextmoves[y]))
-    move.extend(copy.deepcopy(random.choice(moves)))
+        print('---------------------------------')     
 
 #
 
@@ -564,28 +33,36 @@ def keinezugmoeglichkeiten(pos,player):
     else:
         return False
 
-def verloren1(pos,playerf1, playerf2):
+def verloren1(pos,player):
+    if player==1:
+        player2=2
+    else:
+        player2=-2
     eval=0
     for sl in range(len(pos)):
-        for o in range(pos[sl].count(playerf1)):
+        for o in range(pos[sl].count(player)):
             eval=eval+1
-        for p in range(pos[sl].count(playerf2)):
+        for p in range(pos[sl].count(player2)):
             eval=eval+1
     if eval==0:
         return True
     else:
         return False
 
-def verloren2(pos,playerf1, playerf2):
+def verloren2(pos,player):
     eval=0
+    if player==1:
+        player2=2
+    else:
+        player2=-2
     for sl in range(len(pos)):
-        for o in range(pos[sl].count(playerf1)):
+        for o in range(pos[sl].count(player)):
             eval=eval+1
-        for p in range(pos[sl].count(playerf2)):
+        for p in range(pos[sl].count(player2)):
             eval=eval+1
     if eval==0:
         return True
-    elif keinezugmoeglichkeiten(pos,playerf1):
+    elif keinezugmoeglichkeiten(pos,player):
         return True
     else:
         return False
@@ -655,9 +132,6 @@ def genchildren(position, player):
                 elif boardcopy[y][x] == -2:
                     for r in genchildrenWM(y,x,boardcopy,-2):
                         children1.append(r)
-    #
-    global minimaxc
-    minimaxc = minimaxc + 1
     #
     children1.extend(children2)
     #
@@ -1098,19 +572,19 @@ def evaluatepos(pos,player):
         for sl in range(len(pos)):
             for o in range(pos[sl].count(1)):
                 eval=eval+9
-                anz_X+=1
+                anz_X=anz_X+1
             for o in range(pos[sl].count(-1)):
                 eval=eval-1
-                anz_O+=1
+                anz_O=anz_O+1
             for o in range(pos[sl].count(2)):
                 eval=eval+49
-                anz_W+=1
+                anz_W=anz_W+1
             for o in range(pos[sl].count(-2)):
                 eval=eval-51
-                anz_M+=1
+                anz_M=anz_M+1
         if anz_X==0 and anz_W==0:
             eval=eval-8888
-        elif anz_O and anz_M==0:
+        elif anz_O==0 and anz_M==0:
             eval=eval+8888
         return eval
     elif player==-1:
@@ -1121,24 +595,636 @@ def evaluatepos(pos,player):
         for sl in range(len(pos)):
             for o in range(pos[sl].count(1)):
                 eval=eval-11
-                anz_X+=1
+                anz_X=anz_X+1
             for o in range(pos[sl].count(-1)):
                 eval=eval+9
-                anz_O+=1
+                anz_O=anz_O+1
             for o in range(pos[sl].count(2)):
                 eval=eval-51
-                anz_W+=1
+                anz_W=anz_W+1
             for o in range(pos[sl].count(-2)):
                 eval=eval+49
-                anz_M+=1
+                anz_M=anz_M+1
         if anz_X==0 and anz_W==0:
             eval=eval+8888
-        elif anz_O and anz_M==0:
+        elif anz_O==0 and anz_M==0:
             eval=eval-8888
         return eval
 
 #
 
-play()
+class Dame():
+    def __init__(self):
+        self.board = []
+        self.turn=0
+        self.players=[]
+        self.max_turns=50
+    
+    def play(self):
+        self.board = [
+        [0,-1,0,-1,0,-1,0,-1],
+        [-1,0,-1,0,-1,0,-1,0],
+        [0,-1,0,-1,0,-1,0,-1],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [1,0,1,0,1,0,1,0],
+        [0,1,0,1,0,1,0,1],
+        [1,0,1,0,1,0,1,0],
+        ]
+        #
+        self.turn=0
+        #
+        # Spieler:innen vorbereiten
+        # X spielt immer zuerst
+        self.players.clear()
+        self.players.append(Minimax4Player(1))
+        self.players.append(Minimax4Player(-1))
+        #
+        current=0
+        while True:
+            if self.turn==self.max_turns:
+                break
+            print(self.turn)
+            printboard(self.board)
+            player = self.players[current]
+            if player.token==1:
+                istamzug='X'
+            else:
+                istamzug='O'
+            print(istamzug, ' ist am Zug')
+            new_board=player.get_move(copy.deepcopy(self.board))
+            if new_board!=[]:
+                self.board=new_board
+            current = (current + 1) % 2
+            self.turn+=1
+            if verloren2(self.board,-1)or verloren2(self.board,1):
+                break
+        printboard(self.board)
+        if verloren2(self.board,1):
+            print('O HAT GEWONNEN')
+            return 'O'
+        elif verloren2(self.board,-1):
+            print('X HAT GEWONNEN')
+            return 'X'
+        else:
+            print('UNENTSCHIEDEN')
+            return ' '
 
-#wenn klar gewonnen dann d -2 odr so
+#
+
+class Player():
+    def __init__(self, token):
+        self.token = token
+
+    def get_move(self, board):
+        raise NotImplementedError('Not implemented')
+
+#---
+
+class HumanPlayer(Player):
+    def __init__(self, token):
+        super().__init__(token)
+
+    def eingabe(self):
+        while True:
+            try:
+                vx = int(input('von x: ')) - 1
+                vy = int(input('von y: ')) - 1
+                zx = int(input('zu x: ')) - 1
+                zy = int(input('zu y: ')) - 1
+            except:
+                print('EINGABE NICHT KORREKT1')
+                continue
+
+            if vy < 8 and vy > -1 and vx < 8 and vx > -1 and zy < 8 and zy > -1 and zx < 8 and zx > -1:
+                return [vy, vx, zy, zx]
+            else:
+                print('EINGABE NICHT KORREKT1')
+                continue
+
+    def schlagen_moeglich_XO(self,y,x,pos):
+        moeglich=False
+        if self.token==1:
+            if y-2>-1 and x-2>-1:
+                if pos[y-2][x-2]==0 and pos[y-1][x-1]<0:
+                    moeglich=True
+            if y-2>-1 and x+2<8:
+                if pos[y-2][x+2]==0 and pos[y-1][x+1]<0:
+                    moeglich=True
+        elif self.token==-1:
+            if y+2<8 and x-2>-1:
+                if pos[y+2][x-2]==0 and pos[y+1][x-1]>0:
+                    moeglich=True
+            if y+2<8 and x+2<8:
+                if pos[y+2][x+2]==0 and pos[y+1][x+1]>0:
+                    moeglich=True
+        return moeglich
+
+    def schlagen_moeglich_WM(self,y,x,pos):
+        moeglich=False
+        if self.token==1:
+            for i in range(7):
+                if y+2+i>7 or x+2+i>7:
+                    break
+                if pos[y+1+i][x+1+i]>0:
+                    break
+                if pos[y+1+i][x+1+i]<0:
+                    if pos[y+2+i][x+2+i]==0:
+                        moeglich=True
+                        break
+                    else:
+                        break
+            if not moeglich:
+                for i in range(7):
+                    if y-2-i<0 or x+2+i>7:
+                        break
+                    if pos[y-1-i][x+1+i]>0:
+                        break
+                    if pos[y-1-i][x+1+i]<0:
+                        if pos[y-2-i][x+2+i]==0:
+                            moeglich=True
+                            break
+                        else:
+                            break
+            if not moeglich:
+                for i in range(7):
+                    if y-2-i<0 or x-2-i<0:
+                        break
+                    if pos[y-1-i][x-1-i]>0:
+                        break
+                    if pos[y-1-i][x-1-i]<0:
+                        if pos[y-2-i][x-2-i]==0:
+                            moeglich=True
+                            break
+                        else:
+                            break
+            if not moeglich:
+                for i in range(7):
+                    if y+2+i>7 or x-2-i<0:
+                        break
+                    if pos[y+1+i][x-1-i]>0:
+                        break
+                    if pos[y+1+i][x-1-i]<0:
+                        if pos[y+2+i][x-2-i]==0:
+                            moeglich=True
+                            break
+                        else:
+                            break
+        elif self.token==-1:
+            for i in range(7):
+                if y+2+i>7 or x+2+i>7:
+                    break
+                if pos[y+1+i][x+1+i]<0:
+                    break
+                if pos[y+1+i][x+1+i]>0:
+                    if pos[y+2+i][x+2+i]==0:
+                        moeglich=True
+                        break
+                    else:
+                        break
+            if not moeglich:
+                for i in range(7):
+                    if y-2-i<0 or x+2+i>7:
+                        break
+                    if pos[y-1-i][x+1+i]<0:
+                        break
+                    if pos[y-1-i][x+1+i]>0:
+                        if pos[y-2-i][x+2+i]==0:
+                            moeglich=True
+                            break
+                        else:
+                            break
+            if not moeglich:
+                for i in range(7):
+                    if y-2-i<0 or x-2-i<0:
+                        break
+                    if pos[y-1-i][x-1-i]<0:
+                        break
+                    if pos[y-1-i][x-1-i]>0:
+                        if pos[y-2-i][x-2-i]==0:
+                            moeglich=True
+                            break
+                        else:
+                            break
+            if not moeglich:
+                for i in range(7):
+                    if y+2+i>7 or x-2-i<0:
+                        break
+                    if pos[y+1+i][x-1-i]<0:
+                        break
+                    if pos[y+1+i][x-1-i]>0:
+                        if pos[y+2+i][x-2-i]==0:
+                            moeglich=True
+                            break
+                        else:
+                            break
+        #
+        return moeglich
+
+    def player_schlagen_XO(self,vy,vx,zy,zx,pos):
+        if self.schlagen_moeglich_XO(vy,vx,pos):
+            if zx==vx and vy==zy:
+                pass
+            if self.token==1:
+                if zy==vy-2 and zx==vx-2 and pos[vy][vx]==1 and pos[zy][zx]==0:
+                    if pos[vy-1][vx-1]<0:
+                        pos[vy][vx]=0
+                        pos[zy][zx]=1
+                        if zy==0:
+                            pos[zy][zx]=2
+                        pos[vy-1][vx-1]=0
+                        printboard(pos)
+                        #
+                        vy = zy
+                        vx = zx
+                        if self.schlagen_moeglich_XO(vy,vx,pos):
+                            while True:
+                                if eingabeschlagen(pos,vy,vx)==True:
+                                    break
+                                else:
+                                    continue
+                            zy = es[0]
+                            zx = es[1]
+                            self.player_schlagen_XO(vy,vx,zy,zx,pos)
+
+                if zy==vy-2 and zx==vx+2 and pos[vy][vx]==1 and pos[zy][zx]==0:
+                    if pos[vy-1][vx+1]<0:
+                        pos[vy][vx]=0
+                        pos[zy][zx]=1
+                        if zy==0:
+                            pos[zy][zx]=2
+                        pos[vy-1][vx+1]=0
+                        printboard(pos)
+                        #
+                        vy = zy
+                        vx = zx
+                        if self.schlagen_moeglich_XO(vy,vx,pos):
+                            while True:
+                                if eingabeschlagen(pos,vy,vx)==True:
+                                    break
+                                else:
+                                    continue
+                            zy = es[0]
+                            zx = es[1]
+                            self.player_schlagen_XO(vy,vx,zy,zx,pos)
+            elif self.token==-1:
+                pass
+    
+    
+    def player(self,pos):
+        while True:
+            korrekt=False
+            input_move = self.eingabe()
+            vy, vx, zy, zx = input_move
+            #
+            if self.token==1:
+                #X normal
+                if zy==vy-1 and zx==vx-1 and pos[vy][vx]==1 and pos[zy][zx]==0:
+                    korrekt=True
+                    pos[vy][vx]=0
+                    pos[zy][zx]=1
+                    if zy==0:
+                        pos[zy][zx]=2
+                elif zy==vy-1 and zx==vx+1 and pos[vy][vx]==1 and pos[zy][zx]==0:
+                    korrekt=True
+                    pos[vy][vx]=0
+                    pos[zy][zx]=1
+                    if zy==0:
+                        pos[zy][zx]=2
+                #X schlagen
+            elif self.token==-1:
+                #O normal
+                if zy==vy+1 and zx==vx-1 and pos[vy][vx]==-1 and pos[zy][zx]==0:
+                    korrekt=True
+                    pos[vy][vx]=0
+                    pos[zy][zx]=-1
+                    if zy==7:
+                        pos[zy][zx]=-2
+                elif zy==vy+1 and zx==vx+1 and pos[vy][vx]==-1 and pos[zy][zx]==0:
+                    korrekt=True
+                    pos[vy][vx]=0
+                    pos[zy][zx]=-1
+                    if zy==7:
+                        pos[zy][zx]=-2
+                #O schlagen
+            #
+            if korrekt:
+                return pos 
+            else:
+                print('EINGABE NICHT KORREKT2')
+
+    def get_move(self, board):
+        return self.player(copy.deepcopy(board))   
+
+#---
+
+#gorc fehlt
+
+class MCTSPlayer(Player):
+    def __init__(self, token):
+        super().__init__(token)
+        self.counter=0
+        self.numberofiterations=0
+        #-----
+        self.maxtime=5
+        self.c=math.sqrt(2)
+        self.depth=2
+        self.numberofsimulations=30
+        #-----
+        
+    def mcts(self,board):
+        self.rootnode=MCTSNode(self.token)
+        self.rootnode.position=board
+        self.rootnode.playeramzug=self.token
+        self.rootnode.score=0
+        self.rootnode.visits=0
+        self.rootnode.children=[]
+        #
+        self.rootnode.expand()
+        start = time.time()
+        while True:
+            self.counter+=1
+            selectednode=self.rootnode.selectleafnode()
+            if selectednode.is_it_a_new_node():
+                selectednode.backpropagate(selectednode.simulate(),selectednode.numberofsimulations)
+            else:
+                selectednode.expand()
+            #
+            if (time.time() - start) > self.maxtime:
+                break
+
+    def get_move(self,board):
+        self.counter=0
+        self.mcts(board)
+        print(self.counter)
+        bestmove=[]
+        highestnumberofvisits=-1
+        for rootnodechild in self.rootnode.children:
+            if rootnodechild.visits>highestnumberofvisits:
+                bestmove=rootnodechild
+                highestnumberofvisits=rootnodechild.visits
+        return bestmove.position
+
+class MCTSNode(MCTSPlayer):
+    def __init__(self,token):
+        super().__init__(token)
+        #
+        self.position=[]
+        self.playeramzug=0
+        self.parent=None
+        self.children=[]
+        self.score=0
+        self.visits=0
+    
+    def calculateubc(self):
+        par=self.parent
+        if self.visits==0:
+            ubc=math.inf
+        else:
+            ubc=(self.score/self.visits)+self.c*(math.sqrt(math.log(par.visits/self.visits)))
+        return ubc
+    
+    def expand(self):
+        children=genchildren(self.position,self.playeramzug)
+        for i in range(len(children)):
+            self.numberofiterations+=1
+            instance = MCTSNode(self.token)
+            self.children.append(instance)
+            #
+            instance.position=children[i]
+            if self.playeramzug==-1:
+                instance.playeramzug=1
+            elif self.playeramzug==1:
+                instance.playeramzug=-1
+            instance.parent=self
+            instance.score=0
+            instance.visits=0
+            
+    def simulate(self):
+        value=0
+        values=[]
+        for j in range(self.numberofsimulations):
+            pos=self.position
+            player=self.playeramzug
+            for i in range(self.depth):
+                nextpos=generate_one_random_child(pos,player)
+                pos=nextpos
+                if player==-1:
+                    player=1
+                elif player==1:
+                    player=-1
+            values.append(inarow(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
+        value=sum(values)/len(values)
+        return value
+    
+    def is_it_a_new_node(self):
+        if self.children==[]:
+            return True
+        else:
+            return False
+
+    def selectleafnode(self):
+        children = self.children
+        bestvalue = -math.inf
+        for child in children:
+            ucbofchild = child.calculateubc()
+            if ucbofchild > bestvalue:
+                bestvalue = ucbofchild
+                selectednode = child
+        if selectednode.children == []:
+            return selectednode
+        else:
+            return selectednode.selectleafnode()
+
+    def backpropagate(self, newscore, numberofsimulations):
+        self.score += newscore
+        self.visits += numberofsimulations
+        parent=self.parent
+
+        if parent is not None:
+            parent.backpropagate(newscore, numberofsimulations)
+
+#---
+
+minimax_counter4=0
+
+class Minimax4Player(Player):
+    #sucht bis max zeit erreicht ist, depth =+1, move sorting
+    def __init__(self, token):
+        super().__init__(token)
+        self.maxtime=5
+        self.starting_depth=1 #wenn suche bei layer1 nicht fertig wird: crash
+
+    def minimaxer(self, depth, vergangene_zeit):
+        start=time.time()
+        for child in self.rootnode.children:
+            child.minimax(-math.inf,math.inf,False, depth)
+            print("a ",end="") # child wurde fertig berechnet
+            if ((time.time()+vergangene_zeit) - start) > self.maxtime:
+                break
+        #
+        values=[]
+        for child in self.rootnode.children:
+            values.append(child.value)
+        #
+        bestmoves=[]
+        bestvalue=max(values)
+        for child in self.rootnode.children:
+            if child.value==bestvalue:
+                bestmoves.append(child)
+        #output---------
+        print("")
+        print(values)
+        print(bestvalue)
+        #---------------
+        bestmove=random.choice(bestmoves)
+        return bestmove.position
+    
+    def get_move(self, board):
+        start=time.time()
+        global minimax_counter4
+        minimax_counter4=0
+        #rootnode
+        self.rootnode=Minimax4Node()
+        self.rootnode.position=board
+        self.rootnode.playeramzug=self.token
+        self.rootnode.value=None
+        self.rootnode.token=self.token
+        self.rootnode.depth=0
+        self.rootnode.children=self.rootnode.expandnode()
+        #
+        depth=self.starting_depth
+        while (time.time() - start) < self.maxtime:
+            print("DEPTH: ",depth)
+            move=self.minimaxer(depth,(time.time() - start))
+            bestmove=move
+            if (time.time() - start) > self.maxtime:
+                print("NICHT FERTIG")
+            else:
+                self.rootnode.sort(True)
+                depth+=1
+        print("---",minimax_counter4)
+        return bestmove
+
+class Minimax4Node():
+    def __init__(self):
+        self.value=None
+        self.children=[]
+        self.position=[]
+        self.playeramzug=None
+        self.token=None
+        self.depth=None
+        self.expanded=False
+
+    def expandnode(self):
+        children=genchildren(self.position,self.playeramzug)
+        for i in range(len(children)):
+            instance=Minimax4Node()
+            instance.position=children[i]
+            instance.playeramzug = -self.playeramzug
+            instance.value=None
+            instance.token=self.token
+            instance.depth=self.depth+1
+            instance.expanded=False
+            self.children.append(instance)
+        return self.children
+
+    def minimax(self, alpha, beta, maxplayer, maxdepth):
+        #
+        global minimax_counter4
+        minimax_counter4+=1
+        #
+        if self.depth==maxdepth:
+            self.value = evaluatepos(self.position, self.token)
+            return self.value
+        elif verloren1(self.position, 1) or verloren1(self.position, -1):
+            self.value = evaluatepos(self.position, self.token)
+            return self.value
+        #
+        if self.expanded:
+            children=self.children
+        else:
+            children=self.expandnode()
+            self.expanded=True
+        #
+        if children == []:
+            if self.playeramzug==self.token:
+                self.value = -8888
+            else:
+                self.value = +8888
+            return self.value
+        #
+        if maxplayer:
+            maxvalue = -math.inf
+            for child in children:
+                eval = child.minimax(alpha, beta, False, maxdepth)
+                if eval>maxvalue:
+                    maxvalue=eval
+                # pruning
+                if eval > alpha:
+                    alpha = eval
+                if beta <= alpha:
+                    break
+            self.value=maxvalue
+            return maxvalue
+        #
+        else:
+            minvalue = math.inf
+            for child in children:
+                eval = child.minimax(alpha, beta, True, maxdepth)
+                if eval<minvalue:
+                    minvalue=eval
+                # pruning
+                if eval < beta:
+                    beta = eval
+                if beta <= alpha:
+                    break
+            self.value=minvalue
+            return minvalue
+        
+    def sort(self, maxplayer):
+        not_none_children=[]
+        none_children=[]
+        for child in self.children:
+            if child.value==None:
+                none_children.append(child)
+            else:
+                not_none_children.append(child)
+        #
+        if maxplayer:
+            sorted_children = sorted(not_none_children, key=lambda x: x.value, reverse=True)
+            sorted_children.extend(none_children)
+            self.children=sorted_children
+            #
+            for child in not_none_children:
+                child.sort(False)
+        #
+        else:
+            sorted_children = sorted(not_none_children, key=lambda x: x.value, reverse=False)
+            sorted_children.extend(none_children)
+            self.children=sorted_children
+            #
+            for child in not_none_children:
+                child.sort(True)
+        
+#
+
+def spielen(z):
+    game =Dame()
+    x_wins = 0
+    o_wins=0
+    unentschieden=0
+    for i in range(z):
+        r=game.play() 
+        if r== 'X':
+            x_wins += 1
+        elif r=='O':
+            o_wins+=1
+        else:
+            unentschieden+=1
+        print('X:',x_wins)
+        print('O:',o_wins)
+        print('-:',unentschieden)
+    print('FERTIG')
+
+spielen(20)

@@ -270,7 +270,6 @@ def generate_one_random_child(position,player):#für Monte Carlo Simulation
 
 #
 minimax_counter4=0
-minimax_counter3=0
 #
 
 class VierGewinnt():
