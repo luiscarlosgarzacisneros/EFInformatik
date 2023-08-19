@@ -22,16 +22,23 @@ for row in range(8):
         square = canvas.create_rectangle(col * 50, row * 50, (col + 1) * 50, (row + 1) * 50, fill=color)
         canvas.tag_bind(square, '<Button-1>', handle_click)
 
-# Load sprite images
-white_pawn_img = tk.PhotoImage(file="white_pawn.png")
-black_king_img = tk.PhotoImage(file="black_king.png")
+# Load the original image
+
+
+# Display the resized image using canvas.create_image
+# Example: Displaying a black king at position (0, 4)
+white_king_sprite = canvas.create_image(4 * 50, 0 * 50, image="docs/MA/white_king.png")
 
 # Display sprites using canvas.create_image
 # Example: Displaying a white pawn at position (1, 2)
-white_pawn_sprite = canvas.create_image(2 * 50, 1 * 50, image=white_pawn_img)
 
-# Example: Displaying a black king at position (0, 4)
-black_king_sprite = canvas.create_image(4 * 50, 0 * 50, image=black_king_img)
 
 # Start the Tkinter event loop
 root.mainloop()
+
+#
+
+
+
+
+

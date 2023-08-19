@@ -562,6 +562,10 @@ def genchildrenschlagenWM(y,x,pos,player,new):
 
 #
 
+X_matrix=[2,0,0,1,2,3,4,5]
+
+O_matrix=[5,4,3,2,1,0,0,2]
+
 def evaluatepos(pos,player):
     eval=0
     if player==1:
@@ -569,46 +573,50 @@ def evaluatepos(pos,player):
         anz_O=0
         anz_W=0
         anz_M=0
-        for sl in range(len(pos)):
-            for o in range(pos[sl].count(1)):
-                eval=eval+9
-                anz_X=anz_X+1
-            for o in range(pos[sl].count(-1)):
-                eval=eval-1
-                anz_O=anz_O+1
-            for o in range(pos[sl].count(2)):
-                eval=eval+49
-                anz_W=anz_W+1
-            for o in range(pos[sl].count(-2)):
-                eval=eval-51
-                anz_M=anz_M+1
+        for l in range(len(pos)):
+            for o in range(pos[l].count(1)):
+                eval+=9
+                anz_X+=1
+                eval+=X_matrix[l]
+            for o in range(pos[l].count(-1)):
+                eval+=-11
+                anz_O+=1
+                eval+=-O_matrix[l]
+            for o in range(pos[l].count(2)):
+                eval+=49
+                anz_W+=1
+            for o in range(pos[l].count(-2)):
+                eval+=-51
+                anz_M+=1
         if anz_X==0 and anz_W==0:
-            eval=eval-8888
+            eval+=-8888
         elif anz_O==0 and anz_M==0:
-            eval=eval+8888
+            eval+=8888
         return eval
     elif player==-1:
         anz_X=0
         anz_O=0
         anz_W=0
         anz_M=0
-        for sl in range(len(pos)):
-            for o in range(pos[sl].count(1)):
-                eval=eval-11
+        for l in range(len(pos)):
+            for o in range(pos[l].count(1)):
+                eval+=-11
                 anz_X=anz_X+1
-            for o in range(pos[sl].count(-1)):
-                eval=eval+9
-                anz_O=anz_O+1
-            for o in range(pos[sl].count(2)):
-                eval=eval-51
-                anz_W=anz_W+1
-            for o in range(pos[sl].count(-2)):
-                eval=eval+49
-                anz_M=anz_M+1
+                eval+=-X_matrix[l]
+            for o in range(pos[l].count(-1)):
+                eval+=9
+                anz_O+=1
+                eval+=O_matrix[l]
+            for o in range(pos[l].count(2)):
+                eval+=-51
+                anz_W+=1
+            for o in range(pos[l].count(-2)):
+                eval+=49
+                anz_M+=1
         if anz_X==0 and anz_W==0:
-            eval=eval+8888
+            eval+=8888
         elif anz_O==0 and anz_M==0:
-            eval=eval-8888
+            eval+=8888
         return eval
 
 #
@@ -1364,9 +1372,42 @@ class HumanPlayer(Player):
 
 #
 
-#gorc fehlt----------
+#--------------------nicht fertig
 
-class MCTSPlayer(Player):
+def generate_one_random_child(position,player):#pick rand piece, then pick rand move
+    boardcopy = copy.deepcopy(position)
+    #
+    piecesy=[]
+    piecesx=[]
+    if player==1:
+        for y in range(8):
+            for x in range(8):
+                if boardcopy[y][x]>0:
+                    piecesy.append(y)
+                    piecesx.append(x)
+    elif player==-1:
+        for y in range(8):
+            for x in range(8):
+                if boardcopy[y][x]<0:
+                    piecesy.append(y)
+                    piecesx.append(x)
+    #
+    n = random.randint(0, len(piecesy) - 1)
+    y = piecesy[n]
+    x = piecesx[n]
+    #
+    if player==1:
+        if boardcopy[y][x]==1:
+            pass
+        elif boardcopy[y][x]==2:
+            pass
+    elif player==-1:
+        if boardcopy[y][x]==1:
+            pass
+        elif boardcopy[y][x]==2:
+            pass
+
+class MCTSPlayer(Player):#ist auch schwach
     def __init__(self, token):
         super().__init__(token)
         self.counter=0
@@ -1490,7 +1531,7 @@ class MCTSNode(MCTSPlayer):
         if parent is not None:
             parent.backpropagate(newscore, numberofsimulations)
 
-#--------------------
+#--------------------nicht fertig
 
 minimax_counter4=0
 
@@ -1675,5 +1716,4 @@ def spielen(z):
 
 spielen(20)
 
-#MCTS: gorc fehlt
-#evaluatepos: open v closed?, forw?
+#evaluatepos: open v closed?
