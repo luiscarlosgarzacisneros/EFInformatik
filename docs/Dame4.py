@@ -679,11 +679,13 @@ class Player():
     def get_move(self, board):
         raise NotImplementedError('Not implemented')
 
-#---
+#
 
 class HumanPlayer(Player):
     def __init__(self, token):
         super().__init__(token)
+
+    #
 
     def eingabe(self):
         while True:
@@ -703,6 +705,7 @@ class HumanPlayer(Player):
                 continue
 
     def eingabe_schlagen_XO(self,vy,vx,pos):
+        #schlagen muss moeglich sein
         while True:
             korrekt=False
             try:
@@ -710,7 +713,7 @@ class HumanPlayer(Player):
                 zy = int(input('zu y: ')) - 1
             except:
                 print('EINGABE NICHT KORREKT3')
-                return False
+                continue
             #
             if zx==vx and zy==vy:
                 korrekt=True
@@ -732,6 +735,103 @@ class HumanPlayer(Player):
             else:
                 print('EINGABE NICHT KORREKT3')
                 continue
+
+    def eingabe_schlagen_WM(self,vy,vx,pos):
+        #schlagen muss moeglich sein
+        while True:
+            korrekt=False
+            try:
+                zx = int(input('zu x: ')) - 1
+                zy = int(input('zu y: ')) - 1
+            except:
+                print('EINGABE NICHT KORREKT4')
+                continue
+            #
+            if zx==vx and zy==vy:#um nicht mehr zu schlagen
+                korrekt=True
+            #
+            if zy<8 and zy>-1 and zx<8 and zx>-1:
+                #
+                if self.token==1:
+                    for i in range(7):
+                        if vy+2+i>7 or vx+2+i>7:
+                            break
+                        if pos[vy+1+i][vx+1+i]>0:
+                            break
+                        if pos[vy+1+i][vx+1+i]<0 and pos[vy+2+i][vx+2+i]==0 and vy+2+i==zy and vx+2+i==zx:
+                            korrekt=True
+                            break
+                    if not korrekt:
+                        for i in range(7):
+                            if vy+2+i>7 or vx-2-i<0:
+                                break
+                            if pos[vy+1+i][vx-1-i]>0:
+                                break
+                            if pos[vy+1+i][vx-1-i]<0 and pos[vy+2+i][vx-2-i]==0 and vy+2+i==zy and vx-2-i==zx:
+                                korrekt=True
+                                break
+                    if not korrekt:
+                        for i in range(7):
+                            if vy-2-i<0 or vx-2-i<0:
+                                break
+                            if pos[vy-1-i][vx-1-i]>0:
+                                break
+                            if pos[vy-1-i][vx-1-i]<0 and pos[vy-2-i][vx-2-i]==0 and vy-2-i==zy and vx-2-i==zx:
+                                korrekt=True
+                                break
+                    if not korrekt:
+                        for i in range(7):
+                            if vy-2-i<0 or vx+2+i>7:
+                                break
+                            if pos[vy-1-i][vx+1+i]>0:
+                                break
+                            if pos[vy-1-i][vx+1+i]<0 and pos[vy-2-i][vx+2+i]==0 and vy-2-i==zy and vx+2+i==zx:
+                                korrekt=True
+                                break
+                elif self.token==-1:
+                    for i in range(7):
+                        if vy+2+i>7 or vx+2+i>7:
+                            break
+                        if pos[vy+1+i][vx+1+i]<0:
+                            break
+                        if pos[vy+1+i][vx+1+i]>0 and pos[vy+2+i][vx+2+i]==0 and vy+2+i==zy and vx+2+i==zx:
+                            korrekt=True
+                            break
+                    if not korrekt:
+                        for i in range(7):
+                            if vy+2+i>7 or vx-2-i<0:
+                                break
+                            if pos[vy+1+i][vx-1-i]<0:
+                                break
+                            if pos[vy+1+i][vx-1-i]>0 and pos[vy+2+i][vx-2-i]==0 and vy+2+i==zy and vx-2-i==zx:
+                                korrekt=True
+                                break
+                    if not korrekt:
+                        for i in range(7):
+                            if vy-2-i<0 or vx-2-i<0:
+                                break
+                            if pos[vy-1-i][vx-1-i]<0:
+                                break
+                            if pos[vy-1-i][vx-1-i]>0 and pos[vy-2-i][vx-2-i]==0 and vy-2-i==zy and vx-2-i==zx:
+                                korrekt=True
+                                break
+                    if not korrekt:
+                        for i in range(7):
+                            if vy-2-i<0 or vx+2+i>7:
+                                break
+                            if pos[vy-1-i][vx+1+i]<0:
+                                break
+                            if pos[vy-1-i][vx+1+i]>0 and pos[vy-2-i][vx+2+i]==0 and vy-2-i==zy and vx+2+i==zx:
+                                korrekt=True
+                                break
+            #
+            if korrekt:
+                return [zy,zx]
+            else:
+                print('EINGABE NICHT KORREKT4')
+                continue
+
+    #
 
     def schlagen_moeglich_XO(self,y,x,pos):
         moeglich=False
@@ -852,6 +952,8 @@ class HumanPlayer(Player):
         #
         return moeglich
 
+    #
+
     def player_schlagen_chain_XO(self,vy,vx,pos):
         #erstes Mal schlagen bei playerschlagen
         if self.schlagen_moeglich_XO(pos,vy,vx):
@@ -915,6 +1017,8 @@ class HumanPlayer(Player):
         #
         return pos
 
+    #
+
     def player(self,pos):
         while True:
             korrekt=False
@@ -922,7 +1026,7 @@ class HumanPlayer(Player):
             vy, vx, zy, zx = input_move
             #
             if self.token==1:
-                #X normal
+                #X normal------------------------------
                 if zy==vy-1 and zx==vx-1 and pos[vy][vx]==1 and pos[zy][zx]==0:
                     korrekt=True
                     pos[vy][vx]=0
@@ -935,7 +1039,7 @@ class HumanPlayer(Player):
                     pos[zy][zx]=1
                     if zy==0:
                         pos[zy][zx]=2
-                #X schlagen
+                #X schlagen------------------------------
                 elif zy==vy-2 and zx==vx-2 and pos[vy][vx]==1 and pos[zy][zx]==0 and pos[vy-1][vx-1]<0:
                     korrekt=True
                     pos[vy][vx]=0
@@ -958,6 +1062,100 @@ class HumanPlayer(Player):
                     vy = zy
                     vx = zx
                     self.player_schlagen_chain_XO(vy,vx,pos)
+                #W normal+erstes Mal schlagen------------------------------
+                elif pos[vy][vx]==2 and pos[zy][zx]==0 and zy<vy and zx<vx:
+                    for i in range(7):
+                        if vy-i-1<0 or vx-i-1<0:#ende von board erreicht: nicht korrekt
+                            break
+                        if vy-i-1==zy and vx-i-1==zx:#ziel erreicht: normal bew
+                            korrekt=True
+                            pos[vy][vx]=0
+                            pos[zy][zx]=2
+                            break
+                        if pos[vy-i-1][vx-i-1]>0:#weg von eigene figur blockiert: nicht korrekt
+                            break
+                        if pos[vy-i-1][vx-i-1]<0:#auf gegnerische figur gestossen: schlagen oder nicht korrekt?
+                            if not vy-i-2<0 or vx-i-2<0:
+                                if vy-i-2==zy and vx-i-2==zx:#schlagen
+                                    pos[vy][vx]=0
+                                    pos[zy][zx]=2
+                                    pos[vy-i-1][vx-i-1]=0
+                                    #schlagenWM
+                                    break
+                                else:
+                                    break
+                            else:
+                                break
+                elif pos[vy][vx]==2 and pos[zy][zx]==0 and zy>vy and zx<vx:
+                    for i in range(7):
+                        if vy+i+1>7 or vx-i-1<0:#ende von board erreicht: nicht korrekt
+                            break
+                        if vy+i+1==zy and vx-i-1==zx:#ziel erreicht: normal bew
+                            korrekt=True
+                            pos[vy][vx]=0
+                            pos[zy][zx]=2
+                            break
+                        if pos[vy+i+1][vx-i-1]>0:#weg von eigene figur blockiert: nicht korrekt
+                            break
+                        if pos[vy+i+1][vx-i-1]<0:#auf gegnerische figur gestossen: schlagen oder nicht korrekt?
+                            if not vy+i+2>7 or vx-i-2<0:
+                                if vy+i+2==zy and vx-i-2==zx:#schlagen
+                                    pos[vy][vx]=0
+                                    pos[zy][zx]=2
+                                    pos[vy+i+1][vx-i-1]=0
+                                    #schlagenWM
+                                    break
+                                else:
+                                    break
+                            else:
+                                break
+                elif pos[vy][vx]==2 and pos[zy][zx]==0 and zy<vy and zx>vx:
+                    for i in range(7):
+                        if vy-i-1<0 or vx+i+1>7:#ende von board erreicht: nicht korrekt
+                            break
+                        if vy-i-1==zy and vx+i+1==zx:#ziel erreicht: normal bew
+                            korrekt=True
+                            pos[vy][vx]=0
+                            pos[zy][zx]=2
+                            break
+                        if pos[vy-i-1][vx+i+1]>0:#weg von eigene figur blockiert: nicht korrekt
+                            break
+                        if pos[vy-i-1][vx+i+1]<0:#auf gegnerische figur gestossen: schlagen oder nicht korrekt?
+                            if not vy-i-2<0 or vx+i+2>7:
+                                if vy-i-2==zy and vx+i+2==zx:#schlagen
+                                    pos[vy][vx]=0
+                                    pos[zy][zx]=2
+                                    pos[vy-i-1][vx+i+1]=0
+                                    #schlagenWM
+                                    break
+                                else:
+                                    break
+                            else:
+                                break
+                elif pos[vy][vx]==2 and pos[zy][zx]==0 and zy>vy and zx>vx:
+                    for i in range(7):
+                        if vy+i+1>7 or vx+i+1>7:#ende von board erreicht: nicht korrekt
+                            break
+                        if vy+i+1==zy and vx+i+1==zx:#ziel erreicht: normal bew
+                            korrekt=True
+                            pos[vy][vx]=0
+                            pos[zy][zx]=2
+                            break
+                        if pos[vy+i+1][vx+i+1]>0:#weg von eigene figur blockiert: nicht korrekt
+                            break
+                        if pos[vy+i+1][vx+i+1]<0:#auf gegnerische figur gestossen: schlagen oder nicht korrekt?
+                            if not vy+i+2>7 or vx+i+2>7:
+                                if vy+i+2==zy and vx+i+2==zx:#schlagen
+                                    pos[vy][vx]=0
+                                    pos[zy][zx]=2
+                                    pos[vy+i+1][vx+i+1]=0
+                                    #schlagenWM
+                                    break
+                                else:
+                                    break
+                            else:
+                                break
+                #------------------------------
             elif self.token==-1:
                 #O normal
                 if zy==vy+1 and zx==vx-1 and pos[vy][vx]==-1 and pos[zy][zx]==0:
@@ -972,7 +1170,7 @@ class HumanPlayer(Player):
                     pos[zy][zx]=-1
                     if zy==7:
                         pos[zy][zx]=-2
-                #O schlagen
+                #O schlagen------------------------------
                 elif zy==vy+2 and zx==vx-2 and pos[vy][vx]==-1 and pos[zy][zx]==0 and pos[vy+1][vx-1]>0:
                     korrekt=True
                     pos[vy][vx]=0
@@ -995,6 +1193,100 @@ class HumanPlayer(Player):
                     vy = zy
                     vx = zx
                     self.player_schlagen_chain_XO(vy,vx,pos)
+                #M normal+erstes Mal schlagen------------------------------
+                elif pos[vy][vx]==-2 and pos[zy][zx]==0 and zy<vy and zx<vx:
+                    for i in range(7):
+                        if vy-i-1<0 or vx-i-1<0:#ende von board erreicht: nicht korrekt
+                            break
+                        if vy-i-1==zy and vx-i-1==zx:#ziel erreicht: normal bew
+                            korrekt=True
+                            pos[vy][vx]=0
+                            pos[zy][zx]=-2
+                            break
+                        if pos[vy-i-1][vx-i-1]<0:#weg von eigene figur blockiert: nicht korrekt
+                            break
+                        if pos[vy-i-1][vx-i-1]>0:#auf gegnerische figur gestossen: schlagen oder nicht korrekt?
+                            if not vy-i-2<0 or vx-i-2<0:
+                                if vy-i-2==zy and vx-i-2==zx:#schlagen
+                                    pos[vy][vx]=0
+                                    pos[zy][zx]=-2
+                                    pos[vy-i-1][vx-i-1]=0
+                                    #schlagenWM
+                                    break
+                                else:
+                                    break
+                            else:
+                                break
+                elif pos[vy][vx]==-2 and pos[zy][zx]==0 and zy>vy and zx<vx:
+                    for i in range(7):
+                        if vy+i+1>7 or vx-i-1<0:#ende von board erreicht: nicht korrekt
+                            break
+                        if vy+i+1==zy and vx-i-1==zx:#ziel erreicht: normal bew
+                            korrekt=True
+                            pos[vy][vx]=0
+                            pos[zy][zx]=-2
+                            break
+                        if pos[vy+i+1][vx-i-1]<0:#weg von eigene figur blockiert: nicht korrekt
+                            break
+                        if pos[vy+i+1][vx-i-1]>0:#auf gegnerische figur gestossen: schlagen oder nicht korrekt?
+                            if not vy+i+2>7 or vx-i-2<0:
+                                if vy+i+2==zy and vx-i-2==zx:#schlagen
+                                    pos[vy][vx]=0
+                                    pos[zy][zx]=-2
+                                    pos[vy+i+1][vx-i-1]=0
+                                    #schlagenWM
+                                    break
+                                else:
+                                    break
+                            else:
+                                break
+                elif pos[vy][vx]==-2 and pos[zy][zx]==0 and zy<vy and zx>vx:
+                    for i in range(7):
+                        if vy-i-1<0 or vx+i+1>7:#ende von board erreicht: nicht korrekt
+                            break
+                        if vy-i-1==zy and vx+i+1==zx:#ziel erreicht: normal bew
+                            korrekt=True
+                            pos[vy][vx]=0
+                            pos[zy][zx]=-2
+                            break
+                        if pos[vy-i-1][vx+i+1]<0:#weg von eigene figur blockiert: nicht korrekt
+                            break
+                        if pos[vy-i-1][vx+i+1]>0:#auf gegnerische figur gestossen: schlagen oder nicht korrekt?
+                            if not vy-i-2<0 or vx+i+2>7:
+                                if vy-i-2==zy and vx+i+2==zx:#schlagen
+                                    pos[vy][vx]=0
+                                    pos[zy][zx]=-2
+                                    pos[vy-i-1][vx+i+1]=0
+                                    #schlagenWM
+                                    break
+                                else:
+                                    break
+                            else:
+                                break
+                elif pos[vy][vx]==-2 and pos[zy][zx]==0 and zy>vy and zx>vx:
+                    for i in range(7):
+                        if vy+i+1>7 or vx+i+1>7:#ende von board erreicht: nicht korrekt
+                            break
+                        if vy+i+1==zy and vx+i+1==zx:#ziel erreicht: normal bew
+                            korrekt=True
+                            pos[vy][vx]=0
+                            pos[zy][zx]=-2
+                            break
+                        if pos[vy+i+1][vx+i+1]<0:#weg von eigene figur blockiert: nicht korrekt
+                            break
+                        if pos[vy+i+1][vx+i+1]>0:#auf gegnerische figur gestossen: schlagen oder nicht korrekt?
+                            if not vy+i+2>7 or vx+i+2>7:
+                                if vy+i+2==zy and vx+i+2==zx:#schlagen
+                                    pos[vy][vx]=0
+                                    pos[zy][zx]=-2
+                                    pos[vy+i+1][vx+i+1]=0
+                                    #schlagenWM
+                                    break
+                                else:
+                                    break
+                            else:
+                                break
+                #------------------------------
             #
             if korrekt:
                 return pos 
@@ -1004,9 +1296,11 @@ class HumanPlayer(Player):
     def get_move(self, board):
         return self.player(copy.deepcopy(board))   
 
-#---
+    #
 
-#gorc fehlt
+#
+
+#gorc fehlt----------
 
 class MCTSPlayer(Player):
     def __init__(self, token):
@@ -1132,7 +1426,7 @@ class MCTSNode(MCTSPlayer):
         if parent is not None:
             parent.backpropagate(newscore, numberofsimulations)
 
-#---
+#--------------------
 
 minimax_counter4=0
 
@@ -1316,3 +1610,6 @@ def spielen(z):
     print('FERTIG')
 
 spielen(20)
+
+#MCTS: gorc fehlt
+#Human: WM: normal+schlagen fehlen
