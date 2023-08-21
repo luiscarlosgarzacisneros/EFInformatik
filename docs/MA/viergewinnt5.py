@@ -500,6 +500,8 @@ class MCTSNode(MCTSPlayer):
 
 #
 
+minimax_counter4=0
+
 class Minimax4Player(Player):
     #sucht bis max zeit erreicht ist, depth =+1, move sorting
     def __init__(self, token):
@@ -582,6 +584,9 @@ class Minimax4Node():
         return self.children
 
     def minimax(self, alpha, beta, maxplayer, maxdepth):
+        #
+        global minimax_counter4
+        minimax_counter4+=1
         #
         if self.depth==maxdepth:
             self.value = inarow(self.position, self.token)
@@ -677,4 +682,4 @@ def spielen(z):
 spielen(20)
 
 
-#minimax: if self.children==[] kann nicht vorkommen
+#minimax: if self.children==[] kann nicht vorkommen auch bei dame/schach?
