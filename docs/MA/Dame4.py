@@ -1533,6 +1533,8 @@ class MCTSNode(MCTSPlayer):
 
 #--------------------nicht fertig
 
+#
+
 minimax_counter4=0
 
 class Minimax4Player(Player):
@@ -1628,13 +1630,11 @@ class Minimax4Node():
             self.value = evaluatepos(self.position, self.token)
             return self.value
         #
-        if self.expanded:
-            children=self.children
-        else:
-            children=self.expandnode()
+        if not self.expanded:
+            self.expandnode()
             self.expanded=True
         #
-        if children == []:
+        if self.children == []:
             if self.playeramzug==self.token:
                 self.value = -8888
             else:
@@ -1643,7 +1643,7 @@ class Minimax4Node():
         #
         if maxplayer:
             maxvalue = -math.inf
-            for child in children:
+            for child in self.children:
                 eval = child.minimax(alpha, beta, False, maxdepth)
                 if eval>maxvalue:
                     maxvalue=eval
@@ -1657,7 +1657,7 @@ class Minimax4Node():
         #
         else:
             minvalue = math.inf
-            for child in children:
+            for child in self.children:
                 eval = child.minimax(alpha, beta, True, maxdepth)
                 if eval<minvalue:
                     minvalue=eval

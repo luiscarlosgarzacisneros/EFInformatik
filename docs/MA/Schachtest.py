@@ -4115,19 +4115,17 @@ class MinimaxNode():
             self.value = evaluatepos(self.position, self.token)
             return self.value
         #
-        if self.expanded:
-            children=self.children
-        else:
-            children=self.expandnode()
+        if not self.expanded:
+            self.expandnode()
             self.expanded=True
         #
-        if children == []:
+        if self.children == []:
             self.value = evaluatepos(self.position, self.token)
             return self.value
         #
         if maxplayer:
             maxvalue = -math.inf
-            for child in children:
+            for child in self.children:
                 eval = child.minimax(alpha, beta, False, maxdepth)
                 if eval>maxvalue:
                     maxvalue=eval
@@ -4141,7 +4139,7 @@ class MinimaxNode():
         #
         else:
             minvalue = math.inf
-            for child in children:
+            for child in self.children:
                 eval = child.minimax(alpha, beta, True, maxdepth)
                 if eval<minvalue:
                     minvalue=eval
