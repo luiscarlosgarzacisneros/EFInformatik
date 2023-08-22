@@ -24,7 +24,6 @@ void printboard(const std::vector<std::vector<int>>& board) {
 }
 
 int generate_random_int(int min, int max) {
-    srand(time(0)); //seed
     int random_number=min+rand()%(max-min+1);
     return random_number;
 }
@@ -232,7 +231,7 @@ void fall(std::vector<std::vector<int>>& board, int y, int x, const int player) 
     }
 }
 
-std::list<std::vector<std::vector<int>>> generate_children(std::vector<std::vector<int>>& board, const int player) {
+std::list<std::vector<std::vector<int>>> generate_children(const std::vector<std::vector<int>>& board, const int player) {
     std::list<std::vector<std::vector<int>>> children;
     for (int x = 0; x < 7; ++x) {
         std::vector<std::vector<int>> board_copy = deepcopy(board);
@@ -245,7 +244,7 @@ std::list<std::vector<std::vector<int>>> generate_children(std::vector<std::vect
     return children;
 }
 
-std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<int>>& board, const int player) {
+std::vector<std::vector<int>> generate_one_random_child(const std::vector<std::vector<int>>& board, const int player) {
     std::vector<std::vector<int>> board_copy=deepcopy(board);
     int x=generate_random_int(0, 6);
     while (true) {
@@ -334,14 +333,10 @@ public:
 
     int minimax(int alpha, int beta, bool max_player, const int max_depth) {
         //
+        minimax_counter+=1;
+        //
         if (this->depth==max_depth || gewonnen(this->board,1) || gewonnen(this->board,-1) || game_over(this->board)) {
             this->value = evaluate_position(this->board, this->token);
-            //std::cout<<"board";
-            //printboard(this->board);
-            //std::cout<<"token";
-            //std::cout<<this->token<<std::endl;
-            //std::cout<<"value";
-            //std::cout<<this->value<<std::endl;
             this->value_not_none=true;
             return this->value;
         }
@@ -421,13 +416,25 @@ public:
     int token;
     std::vector<std::vector<int>> board;
     int max_time=7;
+    int max_depth=10;
     int starting_depth=1;
 
-    std::vector<std::vector<int>> minimaxer(int depth, std::chrono::duration<double> vergangene_zeit) {
+    std::vector<std::vector<int>> minimaxer(const int depth, const std::chrono::duration<double> vergangene_zeit) {
         auto start = std::chrono::high_resolution_clock::now();
         //
-        for (MinimaxNode child : root_node.children){
-            child.minimax(-1000000,std::numeric_limits<int>::max(),false, depth);
+        std::vector<int> values;
+        std::vector<MinimaxNode> best_moves;
+        MinimaxNode best_move;
+        int best_value = -1000000;
+        std::vector<MinimaxNode> root_node_children=root_node.children;
+        std::vector<std::vector<int>> return_board;
+        //
+        for (MinimaxNode& child : root_node_children){
+            int eval;
+            eval=child.minimax(-1000000,1000000,false, depth);
+            child.value=eval;
+            values.push_back(eval);
+            //std::cout<<child.value<<std::endl; //für test
             std::cout<<"a";//child wurde fertig berechnet
             //
             auto now = std::chrono::high_resolution_clock::now();
@@ -435,17 +442,9 @@ public:
             if (vergangene_zeit2.count() >= max_time) {break;}
         }
         //
-        std::list<int> values;
-        for (MinimaxNode child : root_node.children) {values.push_back(child.value);}
-        //
-        std::vector<MinimaxNode> best_moves;
-        int best_value = -std::numeric_limits<int>::max();
-        for (int v : values) {
-            if (v > best_value) {
-                best_value = v;
-            }
-        }
-        for (MinimaxNode child : root_node.children) {
+        for (int v : values) {if (v > best_value) {best_value = v;}}
+        //for (MinimaxNode& child : root_node_children) {std::cout<<child.value<<std::endl;} //für test
+        for (MinimaxNode& child : root_node_children) {
             if (child.value==best_value) {
                 best_moves.push_back(child);
             }
@@ -453,18 +452,20 @@ public:
         //
         //output---------
         std::cout << std::endl;
-        for (int value : values) {
-            std::cout<<value;
-        }
+        for (int value : values) {std::cout<<value;}
         std::cout << std::endl;
         std::cout << best_value << std::endl;
         //---------------
-        MinimaxNode best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
-        return best_move.board;
+        //std::cout <<"OK1"<<std::endl;
+        std::cout<<best_moves.size()<<std::endl;
+        best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
+        //std::cout <<"OK2"<<std::endl;
+        return_board=deepcopy(best_move.board);
+        return return_board;
 
     }
 
-    std::vector<std::vector<int>> minimaxerer(std::vector<std::vector<int>> board_0) {
+    std::vector<std::vector<int>> minimaxerer(const std::vector<std::vector<int>> board_0) {
         auto start = std::chrono::high_resolution_clock::now();
         int minimax_counter=0;
         //
@@ -477,6 +478,7 @@ public:
             auto now = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> vergangene_zeit = now - start;
             if (vergangene_zeit.count() >= max_time) {break;}
+            else if (depth>max_depth) {break;}
             //calculate move
             move=minimaxer(depth,vergangene_zeit);
             //sort+output
@@ -571,6 +573,7 @@ void spielen(int z) {
 //
 
 int main() {
+    srand(time(0)); //seed
     spielen(3);
 
 }
@@ -578,3 +581,4 @@ int main() {
 //MCTS +reserve?
 //eingabe Human
 //reset board after game is over
+//problem: minimax return ist nicht gut
