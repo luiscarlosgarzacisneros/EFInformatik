@@ -68,7 +68,6 @@ bool game_over(const std::vector<std::vector<int>>& board) {
 
 int evaluate_position(const std::vector<std::vector<int>>& board, int player) {
     int score=0;
-    std::cout<<score<<std::endl;
     int otherplayer;
     if (player==1) {otherplayer=-1;}
     else {otherplayer=1;}
@@ -209,7 +208,7 @@ int evaluate_position(const std::vector<std::vector<int>>& board, int player) {
         }
     }
     //
-    std::cout<<score<<std::endl;
+    //std::cout<<score<<std::endl;
     return score;
 }
 
@@ -337,7 +336,12 @@ public:
         //
         if (this->depth==max_depth || gewonnen(this->board,1) || gewonnen(this->board,-1) || game_over(this->board)) {
             this->value = evaluate_position(this->board, this->token);
-            std::cout<<this->value<<std::endl;
+            //std::cout<<"board";
+            //printboard(this->board);
+            //std::cout<<"token";
+            //std::cout<<this->token<<std::endl;
+            //std::cout<<"value";
+            //std::cout<<this->value<<std::endl;
             this->value_not_none=true;
             return this->value;
         }
@@ -407,6 +411,7 @@ public:
     MinimaxPlayer(int token, std::vector<std::vector<int>> board) : token(token), board(board) {
         root_node.board = board;
         root_node.player_am_zug = token;
+        root_node.token=token;
         root_node.value_not_none = false;
         root_node.value = 0;
         root_node.depth = 0;
@@ -415,7 +420,7 @@ public:
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time=1;
+    int max_time=7;
     int starting_depth=1;
 
     std::vector<std::vector<int>> minimaxer(int depth, std::chrono::duration<double> vergangene_zeit) {
@@ -573,4 +578,3 @@ int main() {
 //MCTS +reserve?
 //eingabe Human
 //reset board after game is over
-//evaluate_position:unexp: debug print biard and player
