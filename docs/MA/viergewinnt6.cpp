@@ -426,40 +426,34 @@ public:
         std::vector<MinimaxNode> best_moves;
         MinimaxNode best_move;
         int best_value = -1000000;
-        std::vector<MinimaxNode> root_node_children=root_node.children;
+        std::vector<MinimaxNode>& root_node_children=root_node.children;
         std::vector<std::vector<int>> return_board;
         //
         for (MinimaxNode& child : root_node_children){
             int eval;
             eval=child.minimax(-1000000,1000000,false, depth);
             child.value=eval;
-            values.push_back(eval);
-            //std::cout<<child.value<<std::endl; //für test
-            std::cout<<"a";//child wurde fertig berechnet
+            std::cout<<"a ";//child wurde fertig berechnet
             //
             auto now = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
-            if (vergangene_zeit2.count() >= max_time) {break;}
+            if (vergangene_zeit2.count() >= max_time) {std::cout<<" NICHT FERTIG"; break;}
         }
         //
+        for (MinimaxNode& child : root_node_children) {values.push_back(child.value);}
         for (int v : values) {if (v > best_value) {best_value = v;}}
-        //for (MinimaxNode& child : root_node_children) {std::cout<<child.value<<std::endl;} //für test
-        for (MinimaxNode& child : root_node_children) {
-            if (child.value==best_value) {
-                best_moves.push_back(child);
-            }
-        }
+        for (MinimaxNode& child : root_node_children) {if (child.value==best_value) {best_moves.push_back(child);}}
         //
         //output---------
         std::cout << std::endl;
-        for (int value : values) {std::cout<<value;}
+        for (int value : values) {std::cout<<value; std::cout<<", ";}
         std::cout << std::endl;
         std::cout << best_value << std::endl;
+        std::cout<<"COUNTER: ";
+        std::cout << "" <<std::endl;
+        std::cout<<minimax_counter<<std::endl;
         //---------------
-        //std::cout <<"OK1"<<std::endl;
-        std::cout<<best_moves.size()<<std::endl;
         best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
-        //std::cout <<"OK2"<<std::endl;
         return_board=deepcopy(best_move.board);
         return return_board;
 
@@ -472,7 +466,7 @@ public:
         int depth=this->starting_depth;
         std::vector<std::vector<int>> move;
         while (true) {
-            std::cout<<"DEPTH";
+            std::cout<<"DEPTH: ";
             std::cout<<depth<<std::endl;
             //break
             auto now = std::chrono::high_resolution_clock::now();
@@ -481,11 +475,9 @@ public:
             else if (depth>max_depth) {break;}
             //calculate move
             move=minimaxer(depth,vergangene_zeit);
-            //sort+output
-            if (vergangene_zeit.count() >= max_time) {std::cout<<"NICHT FERTIG";}
-            else {root_node.sort(true); depth+=1;}
-            std::cout<<"---";
-            std::cout<<minimax_counter<<std::endl;
+            //sort+depth
+            //else {root_node.sort(true);}
+            depth+=1;
         }
         return move;
     }
@@ -581,4 +573,4 @@ int main() {
 //MCTS +reserve?
 //eingabe Human
 //reset board after game is over
-//problem: minimax return ist nicht gut
+//sort geht nicht!!!!!
