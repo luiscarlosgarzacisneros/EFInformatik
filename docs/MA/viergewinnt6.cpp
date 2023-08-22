@@ -500,9 +500,10 @@ public:
         std::cout<<"TEST1"<<std::endl;
         //--------------------------
         HumanPlayer player_1(1);
+        std::cout<<"TEST2"<<std::endl;
         MinimaxPlayer player_2(-1);
         //--------------------------
-        std::cout<<"TEST2"<<std::endl;
+        std::cout<<"TEST3"<<std::endl;
         while (true) {
             std::cout <<this->turn<<std::endl;
             printboard(this->board);
@@ -556,7 +557,6 @@ void spielen(int z) {
 //
 
 int main() {
-    std::cout<<"wmkl"<<std::endl;
     spielen(3);
 
 }
