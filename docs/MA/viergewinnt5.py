@@ -1,685 +1,574 @@
-import copy
-import random
-import time
-import math
-
-#
-
-def gewonnen(board, player):
-    gew = False
-    # horizontal
-    for q in range(4):
-        for w in range(6):
-            if board[w][q] == player and board[w][q + 1] == player and board[w][q + 2] == player and board[w][q + 3] == player:
-                gew = True
-    # vertikal
-    for q in range(7):
-        for w in range(3):
-            if board[w][q] == player and board[w + 1][q] == player and board[w + 2][q] == player and board[w + 3][q] == player:
-                gew = True
-    # diagonal1
-    for q in range(4):
-        for w in range(3):
-            if board[w][q] == player and board[w + 1][q + 1] == player and board[w + 2][q + 2] == player and board[w + 3][q + 3] == player:
-                gew = True
-    # diagonal2
-    for q in range(4):
-        for w in range(3):
-            if board[w][q + 3] == player and board[w + 1][q + 2] == player and board[w + 2][q + 1] == player and board[w + 3][q] == player:
-                gew = True
-    return gew
-
-def gameover(board):
-    isover = True
-    for q in range(6):
-        if board[0][q] == 0:
-            isover = False
-            break
-    return isover
-
-def fall( board, y, x, player):
-    if y <= 4:
-        if board[y + 1][x] == 0:
-            board[y + 1][x] = player
-            board[y][x] = 0
-            y = y + 1
-            fall(board, y, x, player)
-        else:
-            pass
-
-def inarow(board,player):
-    score=0
-    if player==1:
-        otherplayer=-1
-    elif player==-1:
-        otherplayer=1
-    # horizontal
-    for q in range(4):
-        for w in range(6):
-            empty=0
-            other=0
-            filled=0
-            #
-            if board[w][q] == player:
-                filled=filled+ 1
-            elif board[w][q] == 0:
-                empty=empty+ 1
-            elif board[w][q] == otherplayer:
-                other=other+ 1
-            #
-            if board[w][q + 1] == player:
-                filled=filled+ 1
-            elif board[w][q + 1] == 0:
-                empty=empty+ 1
-            elif board[w][q + 1] == otherplayer:
-                other=other+ 1
-            #
-            if board[w][q + 2] == player:
-                filled=filled+ 1
-            elif board[w][q + 2] == 0:
-                empty=empty+ 1
-            elif board[w][q + 2] == otherplayer:
-                other=other+ 1
-            #
-            if board[w][q + 3] == player:
-                filled=filled+ 1
-            elif board[w][q + 3] == 0:
-                empty=empty+ 1
-            elif board[w][q + 3] == otherplayer:
-                other=other+ 1
-            #
-            if other==0:
-                if filled==4:
-                    score=score+10000
-                elif filled==3:
-                    score=score+1000
-                elif filled==2:
-                    score=score+3
-            elif filled==0:
-                if other==4:
-                    score=score-10000
-                elif other==3:
-                    score=score-100
-                elif other==2:
-                    score=score-3
-    # vertikal
-    for q in range(7):
-        for w in range(3):
-            empty=0
-            other=0
-            filled=0
-            #
-            if board[w][q] == player:
-                filled=filled+ 1
-            elif board[w][q] == 0:
-                empty=empty+ 1
-            elif board[w][q] == otherplayer:
-                other=other+ 1
-            #
-            if board[w + 1][q] == player:
-                filled=filled+ 1
-            elif board[w + 1][q] == 0:
-                empty=empty+ 1
-            elif board[w + 1][q] == otherplayer:
-                other=other+ 1
-            #
-            if board[w + 2][q] == player:
-                filled=filled+ 1
-            elif board[w + 2][q] == 0:
-                empty=empty+ 1
-            elif board[w + 2][q] == otherplayer:
-                other=other+ 1
-            #
-            if board[w + 3][q] == player:
-                filled=filled+ 1
-            elif board[w + 3][q] == 0:
-                empty=empty+ 1
-            elif board[w + 3][q] == otherplayer:
-                other=other+ 1
-            #
-            if other==0:
-                if filled==4:
-                    score=score+10000
-                elif filled==3:
-                    score=score+10
-                elif filled==2:
-                    score=score+1
-            elif filled==0:
-                if other==4:
-                    score=score-10000
-                elif other==3:
-                    score=score-30
-                elif other==2:
-                    score=score-1
-    # diagonal1
-    for q in range(4):
-        for w in range(3):
-            empty=0
-            other=0
-            filled=0
-            #
-            if board[w][q] == player:
-                filled=filled+ 1
-            elif board[w][q] == 0:
-                empty=empty+ 1
-            elif board[w][q] == otherplayer:
-                other=other+ 1
-            #
-            if board[w + 1][q + 1] == player:
-                filled=filled+ 1
-            elif board[w + 1][q + 1] == 0:
-                empty=empty+ 1
-            elif board[w + 1][q + 1] == otherplayer:
-                other=other+ 1
-            #
-            if board[w + 2][q + 2] == player:
-                filled=filled+ 1
-            elif board[w + 2][q + 2] == 0:
-                empty=empty+ 1
-            elif board[w + 2][q + 2] == otherplayer:
-                other=other+ 1
-            #
-            if board[w + 3][q + 3] == player:
-                filled=filled+ 1
-            elif board[w + 3][q + 3] == 0:
-                empty=empty+ 1
-            elif board[w + 3][q + 3] == otherplayer:
-                other=other+ 1
-            #
-            if other==0:
-                if filled==4:
-                    score=score+10000
-                elif filled==3:
-                    score=score+1000
-                elif filled==2:
-                    score=score+3
-            elif filled==0:
-                if other==4:
-                    score=score-10000
-                elif other==3:
-                    score=score-100
-                elif other==2:
-                    score=score-3
-    # diagonal2
-    for q in range(4):
-        for w in range(3):
-            empty=0
-            other=0
-            filled=0
-            #
-            if board[w][q + 3] == player:
-                filled=filled+ 1
-            elif board[w][q + 3] == 0:
-                empty=empty+ 1
-            elif board[w][q + 3] == otherplayer:
-                other=other+ 1
-            #
-            if board[w + 1][q + 2] == player:
-                filled=filled+ 1
-            elif board[w + 1][q + 2] == 0:
-                empty=empty+ 1
-            elif board[w + 1][q + 2] == otherplayer:
-                other=other+ 1
-            #
-            if board[w + 2][q + 1] == player:
-                filled=filled+ 1
-            elif board[w + 2][q + 1] == 0:
-                empty=empty+ 1
-            elif board[w + 2][q + 1] == otherplayer:
-                other=other+ 1
-            #
-            if board[w + 3][q] == player:
-                filled=filled+ 1
-            elif board[w + 3][q] == 0:
-                empty=empty+ 1
-            elif board[w + 3][q] == otherplayer:
-                other=other+ 1
-            #
-            if other==0:
-                if filled==4:
-                    score=score+10000
-                elif filled==3:
-                    score=score+1000
-                elif filled==2:
-                    score=score+3
-            elif filled==0:
-                if other==4:
-                    score=score-10000
-                elif other==3:
-                    score=score-100
-                elif other==2:
-                    score=score-3
-    return score
-    
-def genchildren(position, player):
-    children = []
-    for x in range(7):
-        boardcopy = copy.deepcopy(position)
-        if boardcopy[0][x] == 0:
-            boardcopy[0][x] = player
-            fall(boardcopy, 0, x, player)
-            children.append(boardcopy)
-    #
-    return children
-
-def generate_one_random_child(position,player):#für Monte Carlo Simulation
-        boardcopy = copy.deepcopy(position)
-        while True:
-            x=random.randint(0,6)
-            if boardcopy[0][x] == 0:
-                break
-        boardcopy[0][x] = player
-        fall(boardcopy, 0, x, player)
-        return boardcopy
-
-#
-
-class VierGewinnt():
-    def __init__(self):
-        self.board = []
-        self.turn=0
-        self.players=[]
-    
-    def printboard(self, board):
-        print('  1   2   3   4   5   6   7')
-        print('-----------------------------')
-        for i in range(6):
-            print('I ', end='')
-            for j in range(7):
-                if board[i][j]==1:
-                    print('X', end='')
-                elif board[i][j]==-1:
-                    print('O', end='')
-                else:
-                    print(' ', end='')
-                print(' I ', end='')
-            print('')
-            print('-----------------------------')
-
-    def play(self):
-        self.board = [
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0]
-        ]
-        #
-        self.turn=0
-        #
-        # Spieler:innen vorbereiten
-        # X spielt immer zuerst
-        self.players.clear()
-        self.players.append(Minimax4Player(1))
-        self.players.append(Minimax4Player(-1))
-        #
-        current=0
-        while True:
-            print(self.turn)
-            self.printboard(self.board)
-            player = self.players[current]
-            if player.token==1:
-                istamzug='X'
-            else:
-                istamzug='O'
-            print(istamzug, ' ist am Zug')
-            self.board=player.get_move(copy.deepcopy(self.board))
-            current = (current + 1) % 2
-            self.turn+=1
-            if gameover(self.board) or gewonnen(self.board,-1)or gewonnen(self.board,1):
-                break
-        self.printboard(self.board)
-        if gewonnen(self.board,-1):
-            print('O HAT GEWONNEN')
-            return 'O'
-        elif gewonnen(self.board,1):
-            print('X HAT GEWONNEN')
-            return 'X'
-        else:
-            print('UNENTSCHIEDEN')
-            return ' '
-
-#
-
-class Player():
-    def __init__(self, token):
-        self.token = token
-
-    def get_move(self, board):
-        raise NotImplementedError('Not implemented')
-
-#
-
-class HumanPlayer(Player):
-    def __init__(self, token):
-        super().__init__(token)
-
-    def player(self, board):
-        try:
-            x = int(input('x: ')) - 1
-            if board[0][x] == 0:
-                board[0][x] = self.token
-                fall(board, 0, x, self.token)
-            else:
-                print('FELD BESETZT')
-                self.player(board)
-        except:
-            print('EINGABE NICHT KORREKT')
-            self.player(board)
-
-    def get_move(self, board):
-        self.player(board)
-        return board
-
-#
-
-class MCTSPlayer(Player):
-    def __init__(self, token):
-        super().__init__(token)
-        self.counter=0
-        self.numberofiterations=0
-        #-----
-        self.maxtime=5
-        self.c=math.sqrt(2)
-        self.depth=2
-        self.numberofsimulations=30
-        #-----
-        
-    def mcts(self,board):
-        self.rootnode=MCTSNode(self.token)
-        self.rootnode.position=board
-        self.rootnode.playeramzug=self.token
-        self.rootnode.score=0
-        self.rootnode.visits=0
-        self.rootnode.children=[]
-        #
-        self.rootnode.expand()
-        start = time.time()
-        while True:
-            self.counter+=1
-            selectednode=self.rootnode.selectleafnode()
-            if selectednode.is_it_a_new_node():
-                selectednode.backpropagate(selectednode.simulate(),selectednode.numberofsimulations)
-            else:
-                selectednode.expand()
-            #
-            if (time.time() - start) > self.maxtime:
-                break
-
-    def get_move(self,board):
-        self.counter=0
-        self.mcts(board)
-        print(self.counter)
-        bestmove=[]
-        highestnumberofvisits=-1
-        for rootnodechild in self.rootnode.children:
-            if rootnodechild.visits>highestnumberofvisits:
-                bestmove=rootnodechild
-                highestnumberofvisits=rootnodechild.visits
-        return bestmove.position
-
-class MCTSNode(MCTSPlayer):
-    def __init__(self,token):
-        super().__init__(token)
-        #
-        self.position=[]
-        self.playeramzug=0
-        self.parent=None
-        self.children=[]
-        self.score=0
-        self.visits=0
-    
-    def calculateubc(self):
-        par=self.parent
-        if self.visits==0:
-            ubc=math.inf
-        else:
-            ubc=(self.score/self.visits)+self.c*(math.sqrt(math.log(par.visits/self.visits)))
-        return ubc
-    
-    def expand(self):
-        children=genchildren(self.position,self.playeramzug)
-        for i in range(len(children)):
-            self.numberofiterations+=1
-            instance = MCTSNode(self.token)
-            self.children.append(instance)
-            #
-            instance.position=children[i]
-            if self.playeramzug==-1:
-                instance.playeramzug=1
-            elif self.playeramzug==1:
-                instance.playeramzug=-1
-            instance.parent=self
-            instance.score=0
-            instance.visits=0
-            
-    def simulate(self):
-        value=0
-        values=[]
-        for j in range(self.numberofsimulations):
-            pos=self.position
-            player=self.playeramzug
-            for i in range(self.depth):
-                nextpos=generate_one_random_child(pos,player)
-                pos=nextpos
-                if player==-1:
-                    player=1
-                elif player==1:
-                    player=-1
-            values.append(inarow(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
-        value=sum(values)/len(values)
-        return value
-    
-    def is_it_a_new_node(self):
-        if self.children==[]:
-            return True
-        else:
-            return False
-
-    def selectleafnode(self):
-        children = self.children
-        bestvalue = -math.inf
-        for child in children:
-            ucbofchild = child.calculateubc()
-            if ucbofchild > bestvalue:
-                bestvalue = ucbofchild
-                selectednode = child
-        if selectednode.children == []:
-            return selectednode
-        else:
-            return selectednode.selectleafnode()
-
-    def backpropagate(self, newscore, numberofsimulations):
-        self.score += newscore
-        self.visits += numberofsimulations
-        parent=self.parent
-
-        if parent is not None:
-            parent.backpropagate(newscore, numberofsimulations)
-
-#
-
-minimax_counter4=0
-
-class Minimax4Player(Player):
-    #sucht bis max zeit erreicht ist, depth =+1, move sorting
-    def __init__(self, token):
-        super().__init__(token)
-        self.maxtime=5
-        self.starting_depth=1 #wenn suche bei layer1 nicht fertig wird: crash
-
-    def minimaxer(self, depth, vergangene_zeit):
-        start=time.time()
-        for child in self.rootnode.children:
-            child.minimax(-math.inf,math.inf,False, depth)
-            print("a ",end="") # child wurde fertig berechnet
-            if ((time.time()+vergangene_zeit) - start) > self.maxtime:
-                break
-        #
-        values=[]
-        for child in self.rootnode.children:
-            values.append(child.value)
-        #
-        bestmoves=[]
-        bestvalue=max(values)
-        for child in self.rootnode.children:
-            if child.value==bestvalue:
-                bestmoves.append(child)
-        #output---------
-        print("")
-        print(values)
-        print(bestvalue)
-        #---------------
-        bestmove=random.choice(bestmoves)
-        return bestmove.position
-    
-    def get_move(self, board):
-        start=time.time()
-        global minimax_counter4
-        minimax_counter4=0
-        #rootnode
-        self.rootnode=Minimax4Node()
-        self.rootnode.position=board
-        self.rootnode.playeramzug=self.token
-        self.rootnode.value=None
-        self.rootnode.token=self.token
-        self.rootnode.depth=0
-        self.rootnode.children=self.rootnode.expandnode()
-        #
-        depth=self.starting_depth
-        while (time.time() - start) < self.maxtime:
-            print("DEPTH: ",depth)
-            move=self.minimaxer(depth,(time.time() - start))
-            bestmove=move
-            if (time.time() - start) > self.maxtime:
-                print("NICHT FERTIG")
-            else:
-                self.rootnode.sort(True)
-                depth+=1
-        print("---",minimax_counter4)
-        return bestmove
-
-class Minimax4Node():
-    def __init__(self):
-        self.value=None
-        self.children=[]
-        self.position=[]
-        self.playeramzug=None
-        self.token=None
-        self.depth=None
-        self.expanded=False
-
-    def expandnode(self):
-        children=genchildren(self.position,self.playeramzug)
-        for i in range(len(children)):
-            instance=Minimax4Node()
-            instance.position=children[i]
-            instance.playeramzug = -self.playeramzug
-            instance.value=None
-            instance.token=self.token
-            instance.depth=self.depth+1
-            instance.expanded=False
-            self.children.append(instance)
-        return self.children
-
-    def minimax(self, alpha, beta, maxplayer, maxdepth):
-        #
-        global minimax_counter4
-        minimax_counter4+=1
-        #
-        if self.depth==maxdepth:
-            self.value = inarow(self.position, self.token)
-            return self.value
-        elif gewonnen(self.position, 1) or gewonnen(self.position, -1):
-            self.value = inarow(self.position, self.token)
-            return self.value
-        elif gameover(self.position):
-            self.value = inarow(self.position, self.token)
-            return self.value
-        #
-        if not self.expanded:
-            self.expandnode()
-            self.expanded=True
-        #------------
-        if self.children == []:
-            self.value = inarow(self.position, self.token)
-            return self.value
-        #------------
-        if maxplayer:
-            maxvalue = -math.inf
-            for child in self.children:
-                eval = child.minimax(alpha, beta, False, maxdepth)
-                if eval>maxvalue:
-                    maxvalue=eval
-                # pruning
-                if eval > alpha:
-                    alpha = eval
-                if beta <= alpha:
-                    break
-            self.value=maxvalue
-            return maxvalue
-        #
-        else:
-            minvalue = math.inf
-            for child in self.children:
-                eval = child.minimax(alpha, beta, True, maxdepth)
-                if eval<minvalue:
-                    minvalue=eval
-                # pruning
-                if eval < beta:
-                    beta = eval
-                if beta <= alpha:
-                    break
-            self.value=minvalue
-            return minvalue
-        
-    def sort(self, maxplayer):
-        not_none_children=[]
-        none_children=[]
-        for child in self.children:
-            if child.value==None:
-                none_children.append(child)
-            else:
-                not_none_children.append(child)
-        #
-        if maxplayer:
-            sorted_children = sorted(not_none_children, key=lambda x: x.value, reverse=True)
-            sorted_children.extend(none_children)
-            self.children=sorted_children
-            #
-            for child in not_none_children:
-                child.sort(False)
-        #
-        else:
-            sorted_children = sorted(not_none_children, key=lambda x: x.value, reverse=False)
-            sorted_children.extend(none_children)
-            self.children=sorted_children
-            #
-            for child in not_none_children:
-                child.sort(True)
-        
-#
-
-def spielen(z):
-    game =VierGewinnt()
-    x_wins = 0
-    o_wins=0
-    unentschieden=0
-    for i in range(z):
-        r=game.play() 
-        if r== 'X':
-            x_wins += 1
-        elif r=='O':
-            o_wins+=1
-        else:
-            unentschieden+=1
-        print('X:',x_wins)
-        print('O:',o_wins)
-        print('-:',unentschieden)
-    print('FERTIG')
-
-spielen(20)
+#include <iostream>
+#include <vector>
+#include <list>
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
+#include <chrono>
 
 
-#minimax: if self.children==[] kann nicht vorkommen auch bei dame/schach?
+void printboard(const std::vector<std::vector<int>>& board) {
+    std::cout<<"  1   2   3   4   5   6   7"<<std::endl;
+    std::cout<<"-----------------------------"<<std::endl;
+    for (int i = 0; i <6; ++i) {
+        std::cout<< "I ";
+        for (int j = 0; j < 7; ++j) {
+            if (board[i][j] == 1) {std::cout<<"X";}
+            else if (board[i][j] == -1) {std::cout<<"O";}
+            else {std::cout<<" ";}
+            std::cout <<" I ";
+        }
+        std::cout<<std::endl;
+        std::cout<<"-----------------------------"<<std::endl;
+    }
+}
+
+int generate_random_int(int min, int max) {
+    srand(time(0)); //seed
+    int random_number=min+rand()%(max-min+1);
+    return random_number;
+}
+
+bool gewonnen(const std::vector<std::vector<int>>& board, int player) {
+    bool gewonnen = false;
+    // horizontal
+    for (int q = 0; q < 4; ++q) {
+        for (int w = 0; w < 6; ++w) {
+            if (board[w][q] == player && board[w][q + 1] == player && board[w][q + 2] == player && board[w][q + 3] == player) {gewonnen = true;}
+        }
+    }
+    // vertikal
+    for (int q = 0; q < 7; ++q) {
+        for (int w = 0; w < 3; ++w) {
+            if (board[w][q] == player && board[w + 1][q] == player && board[w + 2][q] == player && board[w + 3][q] == player) {gewonnen = true;}
+        }
+    }
+    // diagonal1
+    for (int q = 0; q < 4; ++q) {
+        for (int w = 0; w < 3; ++w) {
+            if (board[w][q] == player && board[w + 1][q + 1] == player && board[w + 2][q + 2] == player && board[w + 3][q + 3] == player) {gewonnen = true;}
+        }
+    }
+    // diagonal2
+    for (int q = 0; q < 4; ++q) {
+        for (int w = 0; w < 3; ++w) {
+            if (board[w][q + 3] == player && board[w + 1][q + 2] == player && board[w + 2][q + 1] == player && board[w + 3][q] == player) {gewonnen = true;}
+        }
+    }
+    return gewonnen;
+}
+
+bool game_over(const std::vector<std::vector<int>>& board) {
+    bool over = true;
+    for (int q = 0; q < 6; ++q) {
+        if (board[0][q] == 0) {over = false; break;}
+    }
+    return over;
+}
+
+int evaluate_position(const std::vector<std::vector<int>>& board, int player) {
+    int score=0;
+    int otherplayer;
+    if (player==1) {otherplayer=-1;}
+    else if (player==-1) {otherplayer=1;}
+    //horizontal
+    for (int q=0; q<4; ++q) {
+        for (int w=0; w<6; ++w) {
+            int empty=0;
+            int other=0;
+            int filled=0;
+            //
+            if (board[w][q]==player) {filled+=1;}
+            else if (board[w][q]==0) {empty+=1;}
+            else if (board[w][q]==otherplayer) {other+=1;}
+            //
+            if (board[w][q + 1]==player) {filled+=1;}
+            else if (board[w][q+1]==0) {empty+=1;}
+            else if (board[w][q+1]==otherplayer) {other+=1;}
+            //
+            if (board[w][q+2]==player) {filled+=1;}
+            else if (board[w][q+2]==0) {empty+=1;}
+            else if (board[w][q+2]==otherplayer) {other+=1;}
+            //
+            if (board[w][q+3]==player) {filled+=1;}
+            else if (board[w][q+3]==0) {empty+=1;}
+            else if (board[w][q+3]==otherplayer) {other+=1;}
+            //
+            if (other==0) {
+                if (filled==4) {score+=10000;}
+                if (filled==3) {score+=1000;}
+                if (filled==2) {score+=3;}
+            } else if (filled==0) {
+                if (other==4) {score-=10000;}
+                if (other==3) {score-=100;}
+                if (other==2) {score-=3;}
+            }
+        }
+    }
+    //vertikal
+    for (int q=0; q<7; ++q) {
+        for (int w=0; w<3; ++w) {
+            int empty=0;
+            int other=0;
+            int filled=0;
+            //
+            if (board[w][q]==player) {filled+=1;}
+            else if (board[w][q]==0) {empty+=1;}
+            else if (board[w][q]==otherplayer) {other+=1;}
+            //
+            if (board[w+1][q]==player) {filled+=1;}
+            else if (board[w+1][q]==0) {empty+=1;}
+            else if (board[w+1][q]==otherplayer) {other+=1;}
+            //
+            if (board[w+2][q]==player) {filled+=1;}
+            else if (board[w+2][q]==0) {empty+=1;}
+            else if (board[w+2][q]==otherplayer) {other+=1;}
+            //
+            if (board[w+3][q]==player) {filled+=1;}
+            else if (board[w+3][q]==0) {empty+=1;}
+            else if (board[w+3][q]==otherplayer) {other+=1;}
+            //
+            if (other==0) {
+                if (filled==4) {score+=10000;}
+                if (filled==3) {score+=10;}
+                if (filled==2) {score+=1;}
+            } else if (filled==0) {
+                if (other==4) {score-=10000;}
+                if (other==3) {score-=30;}
+                if (other==2) {score-=1;}
+            }
+        }
+    }
+    //diagonal1
+    for (int q=0; q<4; ++q) {
+        for (int w=0; w<3; ++w) {
+            int empty=0;
+            int other=0;
+            int filled=0;
+            //
+            if (board[w][q]==player) {filled+=1;}
+            else if (board[w][q]==0) {empty+=1;}
+            else if (board[w][q]==otherplayer) {other+=1;}
+            //
+            if (board[w+1][q+1]==player) {filled+=1;}
+            else if (board[w+1][q+1]==0) {empty+=1;}
+            else if (board[w+1][q+1]==otherplayer) {other+=1;}
+            //
+            if (board[w+2][q+2]==player) {filled+=1;}
+            else if (board[w+2][q+2]==0) {empty+=1;}
+            else if (board[w+2][q+2]==otherplayer) {other+=1;}
+            //
+            if (board[w+3][q+3]==player) {filled+=1;}
+            else if (board[w+3][q+3]==0) {empty+=1;}
+            else if (board[w+3][q+3]==otherplayer) {other+=1;}
+            //
+            if (other==0) {
+                if (filled==4) {score+=10000;}
+                if (filled==3) {score+=1000;}
+                if (filled==2) {score+=3;}
+            } else if (filled==0) {
+                if (other==4) {score-=10000;}
+                if (other==3) {score-=100;}
+                if (other==2) {score-=3;}
+            }
+        }
+    }
+    //diagonal2
+    for (int q=0; q<4; ++q) {
+        for (int w=0; w<3; ++w) {
+            int empty=0;
+            int other=0;
+            int filled=0;
+            //
+            if (board[w][q+3]==player) {filled+=1;}
+            else if (board[w][q+3]==0) {empty+=1;}
+            else if (board[w][q+3]==otherplayer) {other+=1;}
+            //
+            if (board[w+1][q+2]==player) {filled+=1;}
+            else if (board[w+1][q+2]==0) {empty+=1;}
+            else if (board[w+1][q+2]==otherplayer) {other+=1;}
+            //
+            if (board[w+2][q+1]==player) {filled+=1;}
+            else if (board[w+2][q+1]==0) {empty+=1;}
+            else if (board[w+2][q+1]==otherplayer) {other+=1;}
+            //
+            if (board[w+3][q]==player) {filled+=1;}
+            else if (board[w+3][q]==0) {empty+=1;}
+            else if (board[w+3][q]==otherplayer) {other+=1;}
+            //
+            if (other==0) {
+                if (filled==4) {score+=10000;}
+                if (filled==3) {score+=1000;}
+                if (filled==2) {score+=3;}
+            } else if (filled==0) {
+                if (other==4) {score-=10000;}
+                if (other==3) {score-=100;}
+                if (other==2) {score-=3;}
+            }
+        }
+    }
+    //
+    return score;
+}
+
+std::vector<std::vector<int>> deepcopy(const std::vector<std::vector<int>>& board) {
+    std::vector<std::vector<int>> board_copy;
+    for (const std::vector<int>& row : board){
+        std::vector<int> new_y;
+        for (const int& x : row){
+            new_y.push_back(x);
+        }
+        board_copy.push_back(new_y);
+    }
+    return board_copy;
+}
+
+void fall(std::vector<std::vector<int>>& board, int y, int x, const int player) {
+    while (y<5 && board[y+1][x]==0) {
+        board[y+1][x] = player;
+        board[y][x] = 0;
+        y+=1;
+    }
+}
+
+std::list<std::vector<std::vector<int>>> generate_children(std::vector<std::vector<int>>& board, const int player) {
+    std::list<std::vector<std::vector<int>>> children;
+    for (int x = 0; x < 7; ++x) {
+        std::vector<std::vector<int>> board_copy = deepcopy(board);
+        if (board_copy[0][x] == 0) {
+            board_copy[0][x] = player;
+            fall(board_copy, 0, x, player);
+            children.push_back(board_copy);
+        }
+    }
+    return children;
+}
+
+std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<int>>& board, const int player) {
+    std::vector<std::vector<int>> board_copy=deepcopy(board);
+    int x=generate_random_int(0, 6);
+    while (true) {
+        if (board_copy[0][x]==0) {break;}
+        x=generate_random_int(0,6);
+    }
+    board_copy[0][x]=player;
+    fall(board_copy, 0, x, player);
+    return board_copy;
+}
+
+//
+
+class HumanPlayer {
+public:
+    HumanPlayer(int token) : token(token) {}
+
+    std::vector<std::vector<int>> player(std::vector<std::vector<int>>& board) {
+        try {
+            int x;
+            std::cout<<"x: ";
+            std::cin>>x;
+            x -= 1;
+            //
+            if (board[0][x]==0) {
+                board[0][x]=this->token;
+                fall(board, 0, x, this->token);
+                return board;
+            }
+            else {
+                std::cout << "FELD BESETZT" << std::endl;
+                return player(board);
+            }
+        }
+        catch (...) {
+            std::cout << "EINGABE NICHT KORREKT" << std::endl;
+            return player(board);
+        }
+    }
+
+    std::vector<std::vector<int>> get_move(std::vector<std::vector<int>>& board) {
+        return player(board);
+    }
+
+private:
+    int token;
+};
+
+//
+
+int minimax_counter=0;
+
+class MinimaxNode {
+public:
+    MinimaxNode() : value(), value_not_none(false),children(),board(),player_am_zug(),token(),depth(), expanded(false) {}
+
+    int value;
+    bool value_not_none;
+    std::vector<MinimaxNode> children;
+    std::vector<std::vector<int>> board;
+    int player_am_zug;
+    int token;
+    int depth;
+    bool expanded;
+
+    std::vector<MinimaxNode> expand_node() {
+        //reserve?
+        std::list<std::vector<std::vector<int>>> list_of_positions = generate_children(this->board, this->player_am_zug);
+        for (const std::vector<std::vector<int>>& board_position : list_of_positions) {
+            MinimaxNode child;
+            child.board=board_position;
+            child.player_am_zug = -this->player_am_zug;
+            child.token=this->token;
+            child.depth=this->depth+1;
+            child.value_not_none=false;
+            child.value;
+            child.children;
+            this->children.push_back(child);
+        }
+        return this->children;
+    }
+
+    int minimax(int alpha, int beta, bool max_player, const int max_depth) {
+        //
+        if (this->depth==max_depth) {
+            this->value=evaluate_position(this->board, this->token);
+            this->value_not_none=true;
+            return this->value;
+        }
+        else if (gewonnen(this->board,1)||gewonnen(this->board,-1)) {
+            this->value=evaluate_position(this->board, this->token);
+            this->value_not_none=true;
+            return this->value;
+        }
+        else {
+            this->value=evaluate_position(this->board, this->token);
+            this->value_not_none=true;
+            return this->value;
+        }
+        //
+        if (!this->expanded) {expand_node(); this->expanded=true;}
+        //
+        if (max_player) {
+            int max_value=-std::numeric_limits<int>::max();
+            for (MinimaxNode& child : this->children) {
+                int eval=child.minimax(alpha,beta,false,max_depth);
+                if (eval>max_value) {max_value=eval;}
+                //pruning
+                if (eval>alpha) {alpha=eval;}
+                if (beta<=alpha) {break;}
+            }
+            this->value=max_value;
+            return max_value;
+        }
+        else if (!max_player) {
+            int min_value=std::numeric_limits<int>::max();
+            for (MinimaxNode& child : this->children) {
+                int eval=child.minimax(alpha,beta,true,max_depth);
+                if (eval<min_value) {min_value=eval;}
+                //pruning
+                if (eval<beta) {beta=eval;}
+                if (beta<=alpha) {break;}
+            }
+            this->value=min_value;
+            return min_value;
+        }
+
+    }
+
+    void sort(bool max_player) {
+        //reserve?
+        std::vector<MinimaxNode> not_none_children;
+        std::list<MinimaxNode> none_children;
+        std::vector<MinimaxNode> sorted_children;
+        //
+        for (const MinimaxNode& child : this->children) {
+            if (!child.value_not_none) {none_children.push_back(child);}
+            else if (child.value_not_none) {not_none_children.push_back(child);}
+        }
+        //
+        if (max_player) {
+            std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode& a, const MinimaxNode& b) {return a.value > b.value;});
+            //
+            sorted_children.insert(sorted_children.end(), none_children.begin(), none_children.end());
+            this->children=sorted_children;
+            //
+            for (MinimaxNode& child : not_none_children) {child.sort(false);}
+        }
+        else if (!max_player) {
+            std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode& a, const MinimaxNode& b) {return a.value < b.value;});
+            //
+            sorted_children.insert(sorted_children.end(), none_children.begin(), none_children.end());
+            this->children=sorted_children;
+            //
+            for (MinimaxNode& child : not_none_children) {child.sort(true);}
+        }
+    }
+
+};
+
+class MinimaxPlayer {
+public:
+    MinimaxPlayer(int token, std::vector<std::vector<int>> board) : token(token), board(board) {
+        root_node.board = board;
+        root_node.player_am_zug = token;
+        root_node.value_not_none = false;
+        root_node.value = 0;
+        root_node.depth = 0;
+        root_node.children = root_node.expand_node();
+    }
+    MinimaxNode root_node;
+    int token;
+    std::vector<std::vector<int>> board;
+    int max_time=1;
+    int starting_depth=1;
+
+    std::vector<std::vector<int>> minimaxer(int depth, std::chrono::duration<double> vergangene_zeit) {
+        auto start = std::chrono::high_resolution_clock::now();
+        //
+        for (MinimaxNode child : root_node.children){
+            child.minimax(-std::numeric_limits<int>::max(),std::numeric_limits<int>::max(),false, depth);
+            std::cout<<"a";//child wurde fertig berechnet
+            //
+            auto now = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
+            if (vergangene_zeit2.count() >= max_time) {break;}
+        }
+        //
+        std::list<int> values;
+        for (MinimaxNode child : root_node.children) {values.push_back(child.value);}
+        //
+        std::vector<MinimaxNode> best_moves;
+        int best_value = -std::numeric_limits<int>::max();
+        for (int v : values) {
+            if (v > best_value) {
+                best_value = v;
+            }
+        }
+        for (MinimaxNode child : root_node.children) {
+            if (child.value==best_value) {
+                best_moves.push_back(child);
+            }
+        }
+        //
+        //output---------
+        std::cout << std::endl;
+        for (int value : values) {
+            std::cout<<value;
+        }
+        std::cout << std::endl;
+        std::cout << best_value << std::endl;
+        //---------------
+        MinimaxNode best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
+        return best_move.board;
+
+    }
+
+    std::vector<std::vector<int>> minimaxerer(std::vector<std::vector<int>> board_0) {
+        auto start = std::chrono::high_resolution_clock::now();
+        int minimax_counter=0;
+        //
+        int depth=this->starting_depth;
+        std::vector<std::vector<int>> move;
+        while (true) {
+            auto now = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> vergangene_zeit = now - start;
+            if (vergangene_zeit.count() >= max_time) {break;}
+            //
+            std::vector<std::vector<int>> move=minimaxer(depth,vergangene_zeit);
+            //
+            if (vergangene_zeit.count() >= max_time) {std::cout<<"NICHT FERTIG";}
+            else {root_node.sort(true); depth+=1;}
+            std::cout<<"---";
+            std::cout<<minimax_counter<<std::endl;
+        }
+        return move;
+    }
+
+    std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
+        return minimaxerer(board);
+    }
+};
+
+//
+
+class VierGewinnt {
+public:
+    VierGewinnt() : board({
+            {0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0}
+        }), turn(1) {}
+
+    int play() {
+    int current = 1;
+
+    //-----------------------------------------
+    HumanPlayer player_1(1);
+    MinimaxPlayer player_2(-1, this->board);
+    //-----------------------------------------
+
+    while (true) {
+        std::cout<<this->turn<<std::endl;
+        printboard(this->board);
+
+        if (current==1) {
+            std::cout <<"X ist am Zug"<<std::endl;
+            std::vector<std::vector<int>> board_copy = deepcopy(this->board);
+            std::vector<std::vector<int>> new_board = player_1.get_move(board_copy);
+            this->board=new_board;
+        }
+        else if (current==2) {
+            std::cout<<"O ist am Zug"<<std::endl;
+            std::vector<std::vector<int>> board_copy = deepcopy(this->board);
+            std::vector<std::vector<int>> new_board = player_2.get_move(board_copy);
+            this->board=new_board;
+        }
+        //
+        if (game_over(board)) {printboard(this->board); std::cout<<"UNENTSCHIEDEN"<<std::endl; return 0;}
+        else if (gewonnen(this->board, 1)) {printboard(this->board); std::cout<<"X HAT GEWONNEN"<<std::endl; return 1;}
+        else if (gewonnen(this->board, -1)) {printboard(this->board); std::cout<<"O HAT GEWONNEN"<<std::endl; return -1;}
+        //
+        if (current==1) {current = 2;}
+        else {current = 1;}
+        this->turn += 1;
+    }
+}
+
+
+private:
+    std::vector<std::vector<int>> board;
+    int turn;
+};
+
+//
+
+void spielen(int z) {
+    std::cout<<"NEUES SPIEL"<<std::endl;
+    VierGewinnt game;
+    int x_wins=0;
+    int o_wins=0;
+    int unentschieden=0;
+    //
+    for (int i=0; i<z; ++i) {
+        int r = game.play();
+        if (r==1) {x_wins+=1;}
+        else if (r== -1) {o_wins+=1;}
+        else if (r==0) {unentschieden+= 1;}
+        std::cout<<"X: "<<x_wins<<std::endl;
+        std::cout<<"O: "<<o_wins<<std::endl;
+        std::cout<<"-: "<<unentschieden<<std::endl;
+    }
+    std::cout<<"FERTIG"<<std::endl;
+}
+
+//
+
+int main() {
+    spielen(3);
+
+}
+
+//MCTS +reserve?

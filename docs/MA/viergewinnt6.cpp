@@ -503,35 +503,40 @@ public:
         }), turn(1) {}
 
     int play() {
-        int current=1;
-        //--------------------------
-        HumanPlayer player_1(1);
-        MinimaxPlayer player_2(-1, this->board);
-        //--------------------------
-        while (true) {
+    int current = 1;
 
-            std::cout <<this->turn<<std::endl;
-            printboard(this->board);
-            if (current==1) {
-                std::cout<<"X ist am Zug"<<std::endl;
-                std::vector<std::vector<int>> board_copy=deepcopy(this->board);
-                std::vector<std::vector<int>> new_board = player_1.get_move(board_copy);
-                this->board = new_board;
-            }
-            else if (current==2) {
-                std::cout<<"O ist am Zug"<<std::endl;
-                std::vector<std::vector<int>> board_copy=deepcopy(this->board);
-                std::vector<std::vector<int>> new_board = player_2.get_move(board_copy);
-                this->board = new_board;
-            }
-            current = (current + 1) % 2;
-            this->turn+=1;
-            //
-            if (game_over(board)) {printboard(this->board); std::cout<<"UNENTSCHIEDEN"<<std::endl; return 0;}
-            else if (gewonnen(this->board,1)) {printboard(this->board); std::cout<<"X HAT GEWONNEN"<<std::endl; return 1;}
-            else if (gewonnen(this->board,-1)) {printboard(this->board); std::cout<<"O HAT GEWONNEN"<<std::endl; return -1;}
+    //-----------------------------------------
+    HumanPlayer player_1(1);
+    MinimaxPlayer player_2(-1, this->board);
+    //-----------------------------------------
+
+    while (true) {
+        std::cout<<this->turn<<std::endl;
+        printboard(this->board);
+
+        if (current==1) {
+            std::cout <<"X ist am Zug"<<std::endl;
+            std::vector<std::vector<int>> board_copy = deepcopy(this->board);
+            std::vector<std::vector<int>> new_board = player_1.get_move(board_copy);
+            this->board=new_board;
         }
+        else if (current==2) {
+            std::cout<<"O ist am Zug"<<std::endl;
+            std::vector<std::vector<int>> board_copy = deepcopy(this->board);
+            std::vector<std::vector<int>> new_board = player_2.get_move(board_copy);
+            this->board=new_board;
+        }
+        //
+        if (game_over(board)) {printboard(this->board); std::cout<<"UNENTSCHIEDEN"<<std::endl; return 0;}
+        else if (gewonnen(this->board, 1)) {printboard(this->board); std::cout<<"X HAT GEWONNEN"<<std::endl; return 1;}
+        else if (gewonnen(this->board, -1)) {printboard(this->board); std::cout<<"O HAT GEWONNEN"<<std::endl; return -1;}
+        //
+        if (current==1) {current = 2;}
+        else {current = 1;}
+        this->turn += 1;
     }
+}
+
 
 private:
     std::vector<std::vector<int>> board;
