@@ -29,12 +29,11 @@ def gewonnen(board, player):
                 gew = True
     return gew
 
-def gameover(board):
+def gameover(boar):
     isover = True
     for q in range(6):
-        if board[0][q] == 0:
+        if boar[q].count(0) > 0:
             isover = False
-            break
     return isover
 
 def fall( board, y, x, player):
@@ -62,45 +61,44 @@ def inarow(board,player):
             #
             if board[w][q] == player:
                 filled=filled+ 1
-            elif board[w][q] == 0:
-                empty=empty+ 1
-            elif board[w][q] == otherplayer:
-                other=other+ 1
-            #
             if board[w][q + 1] == player:
                 filled=filled+ 1
-            elif board[w][q + 1] == 0:
-                empty=empty+ 1
-            elif board[w][q + 1] == otherplayer:
-                other=other+ 1
-            #
             if board[w][q + 2] == player:
                 filled=filled+ 1
-            elif board[w][q + 2] == 0:
-                empty=empty+ 1
-            elif board[w][q + 2] == otherplayer:
-                other=other+ 1
-            #
             if board[w][q + 3] == player:
                 filled=filled+ 1
-            elif board[w][q + 3] == 0:
+            #
+            if board[w][q] == 0:
                 empty=empty+ 1
-            elif board[w][q + 3] == otherplayer:
+            if board[w][q + 1] == 0:
+                empty=empty+ 1
+            if board[w][q + 2] == 0:
+                empty=empty+ 1
+            if board[w][q + 3] == 0:
+                empty=empty+ 1
+            #
+            if board[w][q] == otherplayer:
+                other=other+ 1
+            if board[w][q + 1] == otherplayer:
+                other=other+ 1
+            if board[w][q + 2] == otherplayer:
+                other=other+ 1
+            if board[w][q + 3] == otherplayer:
                 other=other+ 1
             #
             if other==0:
                 if filled==4:
                     score=score+10000
-                elif filled==3:
+                if filled==3:
                     score=score+1000
-                elif filled==2:
+                if filled==2:
                     score=score+3
             elif filled==0:
                 if other==4:
                     score=score-10000
-                elif other==3:
+                if other==3:
                     score=score-100
-                elif other==2:
+                if other==2:
                     score=score-3
     # vertikal
     for q in range(7):
@@ -111,45 +109,44 @@ def inarow(board,player):
             #
             if board[w][q] == player:
                 filled=filled+ 1
-            elif board[w][q] == 0:
-                empty=empty+ 1
-            elif board[w][q] == otherplayer:
-                other=other+ 1
-            #
             if board[w + 1][q] == player:
                 filled=filled+ 1
-            elif board[w + 1][q] == 0:
-                empty=empty+ 1
-            elif board[w + 1][q] == otherplayer:
-                other=other+ 1
-            #
             if board[w + 2][q] == player:
                 filled=filled+ 1
-            elif board[w + 2][q] == 0:
-                empty=empty+ 1
-            elif board[w + 2][q] == otherplayer:
-                other=other+ 1
-            #
             if board[w + 3][q] == player:
                 filled=filled+ 1
-            elif board[w + 3][q] == 0:
+            #
+            if board[w][q] == 0:
                 empty=empty+ 1
-            elif board[w + 3][q] == otherplayer:
+            if board[w + 1][q] == 0:
+                empty=empty+ 1
+            if board[w + 2][q] == 0:
+                empty=empty+ 1
+            if board[w + 3][q] == 0:
+                empty=empty+ 1
+            #
+            if board[w][q] == otherplayer:
+                other=other+ 1
+            if board[w + 1][q] == otherplayer:
+                other=other+ 1
+            if board[w + 2][q] == otherplayer:
+                other=other+ 1
+            if board[w + 3][q] == otherplayer:
                 other=other+ 1
             #
             if other==0:
                 if filled==4:
                     score=score+10000
-                elif filled==3:
+                if filled==3:
                     score=score+10
-                elif filled==2:
+                if filled==2:
                     score=score+1
             elif filled==0:
                 if other==4:
                     score=score-10000
-                elif other==3:
+                if other==3:
                     score=score-30
-                elif other==2:
+                if other==2:
                     score=score-1
     # diagonal1
     for q in range(4):
@@ -160,45 +157,44 @@ def inarow(board,player):
             #
             if board[w][q] == player:
                 filled=filled+ 1
-            elif board[w][q] == 0:
-                empty=empty+ 1
-            elif board[w][q] == otherplayer:
-                other=other+ 1
-            #
             if board[w + 1][q + 1] == player:
                 filled=filled+ 1
-            elif board[w + 1][q + 1] == 0:
-                empty=empty+ 1
-            elif board[w + 1][q + 1] == otherplayer:
-                other=other+ 1
-            #
             if board[w + 2][q + 2] == player:
                 filled=filled+ 1
-            elif board[w + 2][q + 2] == 0:
-                empty=empty+ 1
-            elif board[w + 2][q + 2] == otherplayer:
-                other=other+ 1
-            #
             if board[w + 3][q + 3] == player:
                 filled=filled+ 1
-            elif board[w + 3][q + 3] == 0:
+            #
+            if board[w][q] == 0:
                 empty=empty+ 1
-            elif board[w + 3][q + 3] == otherplayer:
+            if board[w + 1][q + 1] == 0:
+                empty=empty+ 1
+            if board[w + 2][q + 2] == 0:
+                empty=empty+ 1
+            if board[w + 3][q + 3] == 0:
+                empty=empty+ 1
+            #
+            if board[w][q] == otherplayer:
+                other=other+ 1
+            if board[w + 1][q + 1] == otherplayer:
+                other=other+ 1
+            if board[w + 2][q + 2] == otherplayer:
+                other=other+ 1
+            if board[w + 3][q + 3] == otherplayer:
                 other=other+ 1
             #
             if other==0:
                 if filled==4:
                     score=score+10000
-                elif filled==3:
+                if filled==3:
                     score=score+1000
-                elif filled==2:
+                if filled==2:
                     score=score+3
             elif filled==0:
                 if other==4:
                     score=score-10000
-                elif other==3:
+                if other==3:
                     score=score-100
-                elif other==2:
+                if other==2:
                     score=score-3
     # diagonal2
     for q in range(4):
@@ -209,56 +205,56 @@ def inarow(board,player):
             #
             if board[w][q + 3] == player:
                 filled=filled+ 1
-            elif board[w][q + 3] == 0:
-                empty=empty+ 1
-            elif board[w][q + 3] == otherplayer:
-                other=other+ 1
-            #
             if board[w + 1][q + 2] == player:
                 filled=filled+ 1
-            elif board[w + 1][q + 2] == 0:
-                empty=empty+ 1
-            elif board[w + 1][q + 2] == otherplayer:
-                other=other+ 1
-            #
             if board[w + 2][q + 1] == player:
                 filled=filled+ 1
-            elif board[w + 2][q + 1] == 0:
-                empty=empty+ 1
-            elif board[w + 2][q + 1] == otherplayer:
-                other=other+ 1
-            #
             if board[w + 3][q] == player:
                 filled=filled+ 1
-            elif board[w + 3][q] == 0:
+            #
+            if board[w][q + 3] == 0:
                 empty=empty+ 1
-            elif board[w + 3][q] == otherplayer:
+            if board[w + 1][q + 2] == 0:
+                empty=empty+ 1
+            if board[w + 2][q + 1] == 0:
+                empty=empty+ 1
+            if board[w + 3][q] == 0:
+                empty=empty+ 1
+            #
+            if board[w][q + 3] == otherplayer:
+                other=other+ 1
+            if board[w + 1][q + 2] == otherplayer:
+                other=other+ 1
+            if board[w + 2][q + 1] == otherplayer:
+                other=other+ 1
+            if board[w + 3][q] == otherplayer:
                 other=other+ 1
             #
             if other==0:
                 if filled==4:
                     score=score+10000
-                elif filled==3:
+                if filled==3:
                     score=score+1000
-                elif filled==2:
+                if filled==2:
                     score=score+3
             elif filled==0:
                 if other==4:
                     score=score-10000
-                elif other==3:
+                if other==3:
                     score=score-100
-                elif other==2:
+                if other==2:
                     score=score-3
     return score
     
 def genchildren(position, player):
     children = []
+    boardcopy = copy.deepcopy(position)
     for x in range(7):
-        boardcopy = copy.deepcopy(position)
         if boardcopy[0][x] == 0:
             boardcopy[0][x] = player
             fall(boardcopy, 0, x, player)
             children.append(boardcopy)
+            boardcopy = copy.deepcopy(position)
     #
     return children
 
@@ -272,6 +268,8 @@ def generate_one_random_child(position,player):#für Monte Carlo Simulation
         fall(boardcopy, 0, x, player)
         return boardcopy
 
+#
+minimax_counter4=0
 #
 
 class VierGewinnt():
@@ -500,13 +498,11 @@ class MCTSNode(MCTSPlayer):
 
 #
 
-minimax_counter4=0
-
 class Minimax4Player(Player):
     #sucht bis max zeit erreicht ist, depth =+1, move sorting
     def __init__(self, token):
         super().__init__(token)
-        self.maxtime=10
+        self.maxtime=5
         self.starting_depth=1 #wenn suche bei layer1 nicht fertig wird: crash
 
     def minimaxer(self, depth, vergangene_zeit):
@@ -594,21 +590,20 @@ class Minimax4Node():
         elif gewonnen(self.position, 1) or gewonnen(self.position, -1):
             self.value = inarow(self.position, self.token)
             return self.value
-        elif gameover(self.position):
+        #
+        if self.expanded:
+            children=self.children
+        else:
+            children=self.expandnode()
+            self.expanded=True
+        #
+        if children == []:
             self.value = inarow(self.position, self.token)
             return self.value
         #
-        if not self.expanded:
-            self.expandnode()
-            self.expanded=True
-        #------------
-        if self.children == []:
-            self.value = inarow(self.position, self.token)
-            return self.value
-        #------------
         if maxplayer:
             maxvalue = -math.inf
-            for child in self.children:
+            for child in children:
                 eval = child.minimax(alpha, beta, False, maxdepth)
                 if eval>maxvalue:
                     maxvalue=eval
@@ -622,7 +617,7 @@ class Minimax4Node():
         #
         else:
             minvalue = math.inf
-            for child in self.children:
+            for child in children:
                 eval = child.minimax(alpha, beta, True, maxdepth)
                 if eval<minvalue:
                     minvalue=eval
@@ -680,6 +675,3 @@ def spielen(z):
     print('FERTIG')
 
 spielen(20)
-
-
-#minimax: if self.children==[] kann nicht vorkommen auch bei dame/schach?
