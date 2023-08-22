@@ -310,9 +310,6 @@ public:
     int depth;
     bool expanded;
 
-
-
-
     std::vector<MinimaxNode> expand_node() {
         std::vector<MinimaxNode> new_children;
         std::list<std::vector<std::vector<int>>> list_of_positions = generate_children(this->board, this->player_am_zug);
