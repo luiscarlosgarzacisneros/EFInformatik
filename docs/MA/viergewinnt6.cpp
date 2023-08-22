@@ -450,7 +450,6 @@ public:
         std::cout << std::endl;
         std::cout << best_value << std::endl;
         std::cout<<"COUNTER: ";
-        std::cout << "" <<std::endl;
         std::cout<<minimax_counter<<std::endl;
         //---------------
         best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
@@ -472,7 +471,7 @@ public:
             if (vergangene_zeit.count() >= max_time) {break;}
             else if (depth>max_depth) {break;}
             //calculate move
-            std::cout<<"DEPTH: ";
+            std::cout<<"---DEPTH: ";
             std::cout<<depth<<std::endl;
             //
             move=minimaxer(depth,vergangene_zeit);
@@ -503,38 +502,38 @@ public:
         }), turn(1) {}
 
     int play() {
-    int current = 1;
+        int current = 1;
 
-    while (true) {
-        //-----------------------------------------
-        HumanPlayer player_1(1);
-        MinimaxPlayer player_2(-1, this->board);
-        //-----------------------------------------
-        std::cout<<this->turn<<std::endl;
-        printboard(this->board);
+        while (true) {
+            //-----------------------------------------
+            HumanPlayer player_1(1);
+            MinimaxPlayer player_2(-1, this->board);
+            //-----------------------------------------
+            std::cout<<this->turn<<std::endl;
+            printboard(this->board);
 
-        if (current==1) {
-            std::cout <<"X ist am Zug"<<std::endl;
-            std::vector<std::vector<int>> board_copy = deepcopy(this->board);
-            std::vector<std::vector<int>> new_board = player_1.get_move(board_copy);
-            this->board=new_board;
+            if (current==1) {
+                std::cout <<"X ist am Zug"<<std::endl;
+                std::vector<std::vector<int>> board_copy = deepcopy(this->board);
+                std::vector<std::vector<int>> new_board = player_1.get_move(board_copy);
+                this->board=new_board;
+            }
+            else if (current==2) {
+                std::cout<<"O ist am Zug"<<std::endl;
+                std::vector<std::vector<int>> board_copy = deepcopy(this->board);
+                std::vector<std::vector<int>> new_board = player_2.get_move(board_copy);
+                this->board=new_board;
+            }
+            //
+            if (game_over(board)) {printboard(this->board); std::cout<<"UNENTSCHIEDEN"<<std::endl; return 0;}
+            else if (gewonnen(this->board, 1)) {printboard(this->board); std::cout<<"X HAT GEWONNEN"<<std::endl; return 1;}
+            else if (gewonnen(this->board, -1)) {printboard(this->board); std::cout<<"O HAT GEWONNEN"<<std::endl; return -1;}
+            //
+            if (current==1) {current = 2;}
+            else {current = 1;}
+            this->turn += 1;
         }
-        else if (current==2) {
-            std::cout<<"O ist am Zug"<<std::endl;
-            std::vector<std::vector<int>> board_copy = deepcopy(this->board);
-            std::vector<std::vector<int>> new_board = player_2.get_move(board_copy);
-            this->board=new_board;
-        }
-        //
-        if (game_over(board)) {printboard(this->board); std::cout<<"UNENTSCHIEDEN"<<std::endl; return 0;}
-        else if (gewonnen(this->board, 1)) {printboard(this->board); std::cout<<"X HAT GEWONNEN"<<std::endl; return 1;}
-        else if (gewonnen(this->board, -1)) {printboard(this->board); std::cout<<"O HAT GEWONNEN"<<std::endl; return -1;}
-        //
-        if (current==1) {current = 2;}
-        else {current = 1;}
-        this->turn += 1;
     }
-}
 
 
 private:
