@@ -466,14 +466,15 @@ public:
         int depth=this->starting_depth;
         std::vector<std::vector<int>> move;
         while (true) {
-            std::cout<<"DEPTH: ";
-            std::cout<<depth<<std::endl;
             //break
             auto now = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> vergangene_zeit = now - start;
             if (vergangene_zeit.count() >= max_time) {break;}
             else if (depth>max_depth) {break;}
             //calculate move
+            std::cout<<"DEPTH: ";
+            std::cout<<depth<<std::endl;
+            //
             move=minimaxer(depth,vergangene_zeit);
             //sort+depth
             //else {root_node.sort(true);}
