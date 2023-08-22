@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
-# include <algorithm>
+#include <algorithm>
 #include <cstdlib>
 #include <ctime>
 #include <chrono>
@@ -53,7 +53,7 @@ bool game_over(const std::vector<std::vector<int>>& board) {
 int evaluate_position(const std::vector<std::vector<int>>& board, int player) {
     int score=0;
     int otherplayer;
-    if (player==1) {otherplayer=-1;} 
+    if (player==1) {otherplayer=-1;}
     else if (player==-1) {otherplayer=1;}
     //horizontal
     for (int q=0; q<4; ++q) {
@@ -251,15 +251,15 @@ public:
                 board[0][x]=this->token;
                 fall(board, 0, x, this->token);
                 return board;
-            } 
+            }
             else {
                 std::cout << "FELD BESETZT" << std::endl;
-                player(board);
+                return player(board);
             }
-        } 
+        }
         catch (...) {
             std::cout << "EINGABE NICHT KORREKT" << std::endl;
-            player(board);
+            return player(board);
         }
     }
 
@@ -278,7 +278,7 @@ int minimax_counter=0;
 class MinimaxNode {
 public:
     MinimaxNode() : value(), value_not_none(false),children(),board(),player_am_zug(),token(),depth(), expanded(false) {}
-    
+
     int value;
     bool value_not_none;
     std::vector<MinimaxNode> children;
@@ -294,7 +294,7 @@ public:
         for (const std::vector<std::vector<int>>& board_position : list_of_positions) {
             MinimaxNode child;
             child.board=board_position;
-            child.player_am_zug = -this->player_am_zug; 
+            child.player_am_zug = -this->player_am_zug;
             child.token=this->token;
             child.depth=this->depth+1;
             child.value_not_none=false;
@@ -308,18 +308,18 @@ public:
     int minimax(int alpha, int beta, bool max_player, const int max_depth) {
         //
         if (this->depth==max_depth) {
-            this->value=evaluate_position(this->board, this->token); 
-            this->value_not_none=true; 
+            this->value=evaluate_position(this->board, this->token);
+            this->value_not_none=true;
             return this->value;
         }
         else if (gewonnen(this->board,1)||gewonnen(this->board,-1)) {
-            this->value=evaluate_position(this->board, this->token); 
-            this->value_not_none=true; 
+            this->value=evaluate_position(this->board, this->token);
+            this->value_not_none=true;
             return this->value;
         }
-        else if (game_over(this->board)) {
-            this->value=evaluate_position(this->board, this->token); 
-            this->value_not_none=true; 
+        else {
+            this->value=evaluate_position(this->board, this->token);
+            this->value_not_none=true;
             return this->value;
         }
         //
@@ -397,7 +397,7 @@ public:
     int token;
     int max_time=5;
     int starting_depth=1;
-    
+
     std::vector<std::vector<int>> minimaxer(int depth, std::chrono::duration<double> vergangene_zeit) {
         auto start = std::chrono::high_resolution_clock::now();
         //
@@ -414,19 +414,24 @@ public:
         for (MinimaxNode child : root_node.children) {values.push_back(child.value);}
         //
         std::vector<MinimaxNode> best_moves;
-        int best_value= *std::max_element(values.begin(), values.end());//ohne*: returns iterator (pointer) zu element. mit * wird element mit info von iterator geholt.
+        int best_value = -std::numeric_limits<int>::max();
+        for (int v : values) {
+            if (v > best_value) {
+                best_value = v;
+            }
+        }
         for (MinimaxNode child : root_node.children) {
             if (child.value==best_value) {
                 best_moves.push_back(child);
             }
-        }  
+        }
         //
         //output---------
-        std::cout << std::endl; 
+        std::cout << std::endl;
         for (int value : values) {
             std::cout<<"---" << minimax_counter;
         }
-        std::cout << std::endl; 
+        std::cout << std::endl;
         std::cout << best_value << std::endl;
         //---------------
         MinimaxNode best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
@@ -449,7 +454,8 @@ public:
             //
             if (vergangene_zeit.count() >= max_time) {std::cout<<"NICHT FERTIG";}
             else {root_node.sort(true); depth+=1;}
-            std::cout<<"---",minimax_counter;
+            std::cout<<"---";
+            std::cout<<minimax_counter<<std::endl;
         }
         return move;
     }
@@ -479,8 +485,8 @@ public:
         for (int i = 0; i < 6; ++i) {
             std::cout<< "I ";
             for (int j = 0; j < 7; ++j) {
-                if (board[i][j] == 1) {std::cout << 'X';} 
-                else if (board[i][j] == -1) {std::cout << 'O';} 
+                if (board[i][j] == 1) {std::cout << 'X';}
+                else if (board[i][j] == -1) {std::cout << 'O';}
                 else {std::cout << ' ';}
                 std::cout <<" I ";
             }
@@ -527,6 +533,7 @@ private:
 //
 
 void spielen(int z) {
+    std::cout<<"NEUES SPIEL"<<std::endl;
     VierGewinnt game;
     int x_wins=0;
     int o_wins=0;
@@ -534,8 +541,9 @@ void spielen(int z) {
     //
     for (int i=0; i<z; ++i) {
         int r = game.play();
-        if (r==1) {x_wins+=1;} 
-        else if (r== -1) {o_wins+=1;} 
+        //std::cout<<"TEST"<<std::endl;
+        if (r==1) {x_wins+=1;}
+        else if (r== -1) {o_wins+=1;}
         else if (r==0) {unentschieden+= 1;}
         std::cout<<"X: "<<x_wins<<std::endl;
         std::cout<<"O: "<<o_wins<<std::endl;
@@ -546,6 +554,10 @@ void spielen(int z) {
 
 //
 
-int main() {spielen(3);}
+int main() {
+    std::cout<<"wmkl"<<std::endl;
+    spielen(3);
+
+}
 
 //MCTS +reserve?
