@@ -68,9 +68,10 @@ bool game_over(const std::vector<std::vector<int>>& board) {
 
 int evaluate_position(const std::vector<std::vector<int>>& board, int player) {
     int score=0;
+    std::cout<<score<<std::endl;
     int otherplayer;
     if (player==1) {otherplayer=-1;}
-    else if (player==-1) {otherplayer=1;}
+    else {otherplayer=1;}
     //horizontal
     for (int q=0; q<4; ++q) {
         for (int w=0; w<6; ++w) {
@@ -102,31 +103,31 @@ int evaluate_position(const std::vector<std::vector<int>>& board, int player) {
                 if (other==4) {score-=10000;}
                 if (other==3) {score-=100;}
                 if (other==2) {score-=3;}
-            }
+            } else {}
         }
     }
     //vertikal
-    for (int q=0; q<7; ++q) {
-        for (int w=0; w<3; ++w) {
+    for (int e=0; e<7; ++e) {
+        for (int r=0; r<3; ++r) {
             int empty=0;
             int other=0;
             int filled=0;
             //
-            if (board[w][q]==player) {filled+=1;}
-            else if (board[w][q]==0) {empty+=1;}
-            else if (board[w][q]==otherplayer) {other+=1;}
+            if (board[r][e]==player) {filled+=1;}
+            else if (board[r][e]==0) {empty+=1;}
+            else if (board[r][e]==otherplayer) {other+=1;}
             //
-            if (board[w+1][q]==player) {filled+=1;}
-            else if (board[w+1][q]==0) {empty+=1;}
-            else if (board[w+1][q]==otherplayer) {other+=1;}
+            if (board[r+1][e]==player) {filled+=1;}
+            else if (board[r+1][e]==0) {empty+=1;}
+            else if (board[r+1][e]==otherplayer) {other+=1;}
             //
-            if (board[w+2][q]==player) {filled+=1;}
-            else if (board[w+2][q]==0) {empty+=1;}
-            else if (board[w+2][q]==otherplayer) {other+=1;}
+            if (board[r+2][e]==player) {filled+=1;}
+            else if (board[r+2][e]==0) {empty+=1;}
+            else if (board[r+2][e]==otherplayer) {other+=1;}
             //
-            if (board[w+3][q]==player) {filled+=1;}
-            else if (board[w+3][q]==0) {empty+=1;}
-            else if (board[w+3][q]==otherplayer) {other+=1;}
+            if (board[r+3][e]==player) {filled+=1;}
+            else if (board[r+3][e]==0) {empty+=1;}
+            else if (board[r+3][e]==otherplayer) {other+=1;}
             //
             if (other==0) {
                 if (filled==4) {score+=10000;}
@@ -136,31 +137,31 @@ int evaluate_position(const std::vector<std::vector<int>>& board, int player) {
                 if (other==4) {score-=10000;}
                 if (other==3) {score-=30;}
                 if (other==2) {score-=1;}
-            }
+            } else {}
         }
     }
     //diagonal1
-    for (int q=0; q<4; ++q) {
-        for (int w=0; w<3; ++w) {
+    for (int a=0; a<4; ++a) {
+        for (int s=0; s<3; ++s) {
             int empty=0;
             int other=0;
             int filled=0;
             //
-            if (board[w][q]==player) {filled+=1;}
-            else if (board[w][q]==0) {empty+=1;}
-            else if (board[w][q]==otherplayer) {other+=1;}
+            if (board[s][a]==player) {filled+=1;}
+            else if (board[s][a]==0) {empty+=1;}
+            else if (board[s][a]==otherplayer) {other+=1;}
             //
-            if (board[w+1][q+1]==player) {filled+=1;}
-            else if (board[w+1][q+1]==0) {empty+=1;}
-            else if (board[w+1][q+1]==otherplayer) {other+=1;}
+            if (board[s+1][a+1]==player) {filled+=1;}
+            else if (board[s+1][a+1]==0) {empty+=1;}
+            else if (board[s+1][a+1]==otherplayer) {other+=1;}
             //
-            if (board[w+2][q+2]==player) {filled+=1;}
-            else if (board[w+2][q+2]==0) {empty+=1;}
-            else if (board[w+2][q+2]==otherplayer) {other+=1;}
+            if (board[s+2][a+2]==player) {filled+=1;}
+            else if (board[s+2][a+2]==0) {empty+=1;}
+            else if (board[s+2][a+2]==otherplayer) {other+=1;}
             //
-            if (board[w+3][q+3]==player) {filled+=1;}
-            else if (board[w+3][q+3]==0) {empty+=1;}
-            else if (board[w+3][q+3]==otherplayer) {other+=1;}
+            if (board[s+3][a+3]==player) {filled+=1;}
+            else if (board[s+3][a+3]==0) {empty+=1;}
+            else if (board[s+3][a+3]==otherplayer) {other+=1;}
             //
             if (other==0) {
                 if (filled==4) {score+=10000;}
@@ -170,31 +171,31 @@ int evaluate_position(const std::vector<std::vector<int>>& board, int player) {
                 if (other==4) {score-=10000;}
                 if (other==3) {score-=100;}
                 if (other==2) {score-=3;}
-            }
+            } else {}
         }
     }
     //diagonal2
-    for (int q=0; q<4; ++q) {
-        for (int w=0; w<3; ++w) {
+    for (int y=0; y<4; ++y) {
+        for (int x=0; x<3; ++x) {
             int empty=0;
             int other=0;
             int filled=0;
             //
-            if (board[w][q+3]==player) {filled+=1;}
-            else if (board[w][q+3]==0) {empty+=1;}
-            else if (board[w][q+3]==otherplayer) {other+=1;}
+            if (board[x][y+3]==player) {filled+=1;}
+            else if (board[x][y+3]==0) {empty+=1;}
+            else if (board[x][y+3]==otherplayer) {other+=1;}
             //
-            if (board[w+1][q+2]==player) {filled+=1;}
-            else if (board[w+1][q+2]==0) {empty+=1;}
-            else if (board[w+1][q+2]==otherplayer) {other+=1;}
+            if (board[x+1][y+2]==player) {filled+=1;}
+            else if (board[x+1][y+2]==0) {empty+=1;}
+            else if (board[x+1][y+2]==otherplayer) {other+=1;}
             //
-            if (board[w+2][q+1]==player) {filled+=1;}
-            else if (board[w+2][q+1]==0) {empty+=1;}
-            else if (board[w+2][q+1]==otherplayer) {other+=1;}
+            if (board[x+2][y+1]==player) {filled+=1;}
+            else if (board[x+2][y+1]==0) {empty+=1;}
+            else if (board[x+2][y+1]==otherplayer) {other+=1;}
             //
-            if (board[w+3][q]==player) {filled+=1;}
-            else if (board[w+3][q]==0) {empty+=1;}
-            else if (board[w+3][q]==otherplayer) {other+=1;}
+            if (board[x+3][y]==player) {filled+=1;}
+            else if (board[x+3][y]==0) {empty+=1;}
+            else if (board[x+3][y]==otherplayer) {other+=1;}
             //
             if (other==0) {
                 if (filled==4) {score+=10000;}
@@ -204,10 +205,11 @@ int evaluate_position(const std::vector<std::vector<int>>& board, int player) {
                 if (other==4) {score-=10000;}
                 if (other==3) {score-=100;}
                 if (other==2) {score-=3;}
-            }
+            } else {}
         }
     }
     //
+    std::cout<<score<<std::endl;
     return score;
 }
 
@@ -299,7 +301,7 @@ int minimax_counter=0;
 
 class MinimaxNode {
 public:
-    MinimaxNode() : value(), value_not_none(false),children(),board(),player_am_zug(),token(),depth(), expanded(false) {}
+    MinimaxNode() : value(0), value_not_none(false), children(), board(), player_am_zug(0), token(0), depth(0), expanded(false) {}
 
     int value;
     bool value_not_none;
@@ -310,46 +312,40 @@ public:
     int depth;
     bool expanded;
 
+
+
+
     std::vector<MinimaxNode> expand_node() {
-        //reserve?
+        std::vector<MinimaxNode> new_children;
         std::list<std::vector<std::vector<int>>> list_of_positions = generate_children(this->board, this->player_am_zug);
         for (const std::vector<std::vector<int>>& board_position : list_of_positions) {
             MinimaxNode child;
-            child.board=board_position;
+            child.board = board_position;
             child.player_am_zug = -this->player_am_zug;
-            child.token=this->token;
-            child.depth=this->depth+1;
-            child.value_not_none=false;
-            child.value;
+            child.token = this->token;
+            child.depth = this->depth + 1;
+            child.value_not_none = false;
+            child.value=0;
             child.children;
-            this->children.push_back(child);
+            new_children.push_back(child);
+
         }
-        return this->children;
+        return new_children;
     }
 
     int minimax(int alpha, int beta, bool max_player, const int max_depth) {
         //
-        std::cout<<"TEST1"<<std::endl;
-        if (this->depth==max_depth) {
-            this->value=evaluate_position(this->board, this->token);
-            this->value_not_none=true;
-            return this->value;
-        }
-        else if (gewonnen(this->board,1)||gewonnen(this->board,-1)) {
-            this->value=evaluate_position(this->board, this->token);
-            this->value_not_none=true;
-            return this->value;
-        }
-        else {
-            this->value=evaluate_position(this->board, this->token);
+        if (this->depth==max_depth || gewonnen(this->board,1) || gewonnen(this->board,-1) || game_over(this->board)) {
+            this->value = evaluate_position(this->board, this->token);
+            std::cout<<this->value<<std::endl;
             this->value_not_none=true;
             return this->value;
         }
         //
-        if (!this->expanded) {std::cout<<"TEST2"<<std::endl;expand_node(); this->expanded=true;}
+        if (!this->expanded) {this->children=this->expand_node(); this->expanded = true;}
         //
         if (max_player) {
-            int max_value=-std::numeric_limits<int>::max();
+            int max_value=-1000000;
             for (MinimaxNode& child : this->children) {
                 int eval=child.minimax(alpha,beta,false,max_depth);
                 if (eval>max_value) {max_value=eval;}
@@ -361,7 +357,7 @@ public:
             return max_value;
         }
         else if (!max_player) {
-            int min_value=std::numeric_limits<int>::max();
+            int min_value=1000000;
             for (MinimaxNode& child : this->children) {
                 int eval=child.minimax(alpha,beta,true,max_depth);
                 if (eval<min_value) {min_value=eval;}
@@ -426,7 +422,7 @@ public:
         auto start = std::chrono::high_resolution_clock::now();
         //
         for (MinimaxNode child : root_node.children){
-            child.minimax(-std::numeric_limits<int>::max(),std::numeric_limits<int>::max(),false, depth);
+            child.minimax(-1000000,std::numeric_limits<int>::max(),false, depth);
             std::cout<<"a";//child wurde fertig berechnet
             //
             auto now = std::chrono::high_resolution_clock::now();
@@ -470,6 +466,8 @@ public:
         int depth=this->starting_depth;
         std::vector<std::vector<int>> move;
         while (true) {
+            std::cout<<"DEPTH";
+            std::cout<<depth<<std::endl;
             //break
             auto now = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> vergangene_zeit = now - start;
@@ -574,3 +572,5 @@ int main() {
 
 //MCTS +reserve?
 //eingabe Human
+//reset board after game is over
+//evaluate_position:unexp: debug print biard and player
