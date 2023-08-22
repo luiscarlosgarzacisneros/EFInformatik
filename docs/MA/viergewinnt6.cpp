@@ -7,6 +7,22 @@
 #include <chrono>
 
 
+void printboard(const std::vector<std::vector<int>>& board) {
+    std::cout<<"  1   2   3   4   5   6   7"<<std::endl;
+    std::cout<<"-----------------------------"<<std::endl;
+    for (int i = 0; i <6; ++i) {
+        std::cout<< "I ";
+        for (int j = 0; j < 7; ++j) {
+            if (board[i][j] == 1) {std::cout<<"X";}
+            else if (board[i][j] == -1) {std::cout<<"O";}
+            else {std::cout<<" ";}
+            std::cout <<" I ";
+        }
+        std::cout<<std::endl;
+        std::cout<<"-----------------------------"<<std::endl;
+    }
+}
+
 int generate_random_int(int min, int max) {
     srand(time(0)); //seed
     int random_number=min+rand()%(max-min+1);
@@ -208,8 +224,10 @@ std::vector<std::vector<int>> deepcopy(const std::vector<std::vector<int>>& boar
 }
 
 void fall(std::vector<std::vector<int>>& board, int y, int x, const int player) {
-    if (y<=4){
-        if (board[y + 1][x] == 0) {board[y + 1][x] = player; board[y][x] = 0; fall(board, y+1, x, player);}
+    while (y<5 && board[y+1][x]==0) {
+        board[y+1][x] = player;
+        board[y][x] = 0;
+        y+=1;
     }
 }
 
@@ -217,7 +235,11 @@ std::list<std::vector<std::vector<int>>> generate_children(std::vector<std::vect
     std::list<std::vector<std::vector<int>>> children;
     for (int x = 0; x < 7; ++x) {
         std::vector<std::vector<int>> board_copy = deepcopy(board);
-        if (board_copy[0][x] == 0) {board_copy[0][x] = player; fall(board_copy, 0, x, player); children.push_back(board_copy);}
+        if (board_copy[0][x] == 0) {
+            board_copy[0][x] = player;
+            fall(board_copy, 0, x, player);
+            children.push_back(board_copy);
+        }
     }
     return children;
 }
@@ -385,8 +407,8 @@ public:
 
 class MinimaxPlayer {
 public:
-    MinimaxPlayer(int token) : token(token) {
-        root_node.board = {};
+    MinimaxPlayer(int token, std::vector<std::vector<int>> board) : token(token), board(board) {
+        root_node.board = board;
         root_node.player_am_zug = token;
         root_node.value_not_none = false;
         root_node.value = 0;
@@ -395,7 +417,8 @@ public:
     }
     MinimaxNode root_node;
     int token;
-    int max_time=5;
+    std::vector<std::vector<int>> board;
+    int max_time=1;
     int starting_depth=1;
 
     std::vector<std::vector<int>> minimaxer(int depth, std::chrono::duration<double> vergangene_zeit) {
@@ -479,32 +502,14 @@ public:
             {0,0,0,0,0,0,0}
         }), turn(1) {}
 
-    void printboard(const std::vector<std::vector<int>>& board) {
-        std::cout<<"  1   2   3   4   5   6   7"<<std::endl;
-        std::cout<<"-----------------------------"<<std::endl;
-        for (int i = 0; i < 6; ++i) {
-            std::cout<< "I ";
-            for (int j = 0; j < 7; ++j) {
-                if (board[i][j] == 1) {std::cout << 'X';}
-                else if (board[i][j] == -1) {std::cout << 'O';}
-                else {std::cout << ' ';}
-                std::cout <<" I ";
-            }
-            std::cout<<std::endl;
-            std::cout<<"-----------------------------"<<std::endl;
-        }
-    }
-
     int play() {
         int current=1;
-        std::cout<<"TEST1"<<std::endl;
         //--------------------------
         HumanPlayer player_1(1);
-        std::cout<<"TEST2"<<std::endl;
-        MinimaxPlayer player_2(-1);
+        MinimaxPlayer player_2(-1, this->board);
         //--------------------------
-        std::cout<<"TEST3"<<std::endl;
         while (true) {
+
             std::cout <<this->turn<<std::endl;
             printboard(this->board);
             if (current==1) {
@@ -562,4 +567,3 @@ int main() {
 }
 
 //MCTS +reserve?
-//see test
