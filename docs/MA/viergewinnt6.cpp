@@ -275,12 +275,12 @@ public:
                 return board;
             }
             else {
-                std::cout << "FELD BESETZT" << std::endl;
+                std::cout << "EINGABE NICHT KORREKT2" << std::endl;
                 return player(board);
             }
         }
         catch (...) {
-            std::cout << "EINGABE NICHT KORREKT" << std::endl;
+            std::cout << "EINGABE NICHT KORREKT1" << std::endl;
             return player(board);
         }
     }
@@ -329,6 +329,7 @@ public:
 
     int minimax(int alpha, int beta, bool max_player, const int max_depth) {
         //
+        std::cout<<"TEST1"<<std::endl;
         if (this->depth==max_depth) {
             this->value=evaluate_position(this->board, this->token);
             this->value_not_none=true;
@@ -345,7 +346,7 @@ public:
             return this->value;
         }
         //
-        if (!this->expanded) {expand_node(); this->expanded=true;}
+        if (!this->expanded) {std::cout<<"TEST2"<<std::endl;expand_node(); this->expanded=true;}
         //
         if (max_player) {
             int max_value=-std::numeric_limits<int>::max();
@@ -452,7 +453,7 @@ public:
         //output---------
         std::cout << std::endl;
         for (int value : values) {
-            std::cout<<"---" << minimax_counter;
+            std::cout<<value;
         }
         std::cout << std::endl;
         std::cout << best_value << std::endl;
@@ -469,12 +470,13 @@ public:
         int depth=this->starting_depth;
         std::vector<std::vector<int>> move;
         while (true) {
+            //break
             auto now = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> vergangene_zeit = now - start;
             if (vergangene_zeit.count() >= max_time) {break;}
-            //
-            std::vector<std::vector<int>> move=minimaxer(depth,vergangene_zeit);
-            //
+            //calculate move
+            move=minimaxer(depth,vergangene_zeit);
+            //sort+output
             if (vergangene_zeit.count() >= max_time) {std::cout<<"NICHT FERTIG";}
             else {root_node.sort(true); depth+=1;}
             std::cout<<"---";
@@ -505,12 +507,11 @@ public:
     int play() {
     int current = 1;
 
-    //-----------------------------------------
-    HumanPlayer player_1(1);
-    MinimaxPlayer player_2(-1, this->board);
-    //-----------------------------------------
-
     while (true) {
+        //-----------------------------------------
+        HumanPlayer player_1(1);
+        MinimaxPlayer player_2(-1, this->board);
+        //-----------------------------------------
         std::cout<<this->turn<<std::endl;
         printboard(this->board);
 
@@ -572,3 +573,4 @@ int main() {
 }
 
 //MCTS +reserve?
+//eingabe Human
