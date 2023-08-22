@@ -497,10 +497,12 @@ public:
 
     int play() {
         int current=1;
+        std::cout<<"TEST1"<<std::endl;
         //--------------------------
         HumanPlayer player_1(1);
         MinimaxPlayer player_2(-1);
         //--------------------------
+        std::cout<<"TEST2"<<std::endl;
         while (true) {
             std::cout <<this->turn<<std::endl;
             printboard(this->board);
@@ -541,7 +543,6 @@ void spielen(int z) {
     //
     for (int i=0; i<z; ++i) {
         int r = game.play();
-        //std::cout<<"TEST"<<std::endl;
         if (r==1) {x_wins+=1;}
         else if (r== -1) {o_wins+=1;}
         else if (r==0) {unentschieden+= 1;}
@@ -561,3 +562,4 @@ int main() {
 }
 
 //MCTS +reserve?
+//see test
