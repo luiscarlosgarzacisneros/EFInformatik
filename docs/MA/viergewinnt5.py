@@ -61,44 +61,45 @@ def inarow(board,player):
             #
             if board[w][q] == player:
                 filled=filled+ 1
+            elif board[w][q] == 0:
+                empty=empty+ 1
+            elif board[w][q] == otherplayer:
+                other=other+ 1
+            #
             if board[w][q + 1] == player:
                 filled=filled+ 1
+            elif board[w][q + 1] == 0:
+                empty=empty+ 1
+            elif board[w][q + 1] == otherplayer:
+                other=other+ 1
+            #
             if board[w][q + 2] == player:
                 filled=filled+ 1
+            elif board[w][q + 2] == 0:
+                empty=empty+ 1
+            elif board[w][q + 2] == otherplayer:
+                other=other+ 1
+            #
             if board[w][q + 3] == player:
                 filled=filled+ 1
-            #
-            if board[w][q] == 0:
+            elif board[w][q + 3] == 0:
                 empty=empty+ 1
-            if board[w][q + 1] == 0:
-                empty=empty+ 1
-            if board[w][q + 2] == 0:
-                empty=empty+ 1
-            if board[w][q + 3] == 0:
-                empty=empty+ 1
-            #
-            if board[w][q] == otherplayer:
-                other=other+ 1
-            if board[w][q + 1] == otherplayer:
-                other=other+ 1
-            if board[w][q + 2] == otherplayer:
-                other=other+ 1
-            if board[w][q + 3] == otherplayer:
+            elif board[w][q + 3] == otherplayer:
                 other=other+ 1
             #
             if other==0:
                 if filled==4:
                     score=score+10000
-                if filled==3:
+                elif filled==3:
                     score=score+1000
-                if filled==2:
+                elif filled==2:
                     score=score+3
             elif filled==0:
                 if other==4:
                     score=score-10000
-                if other==3:
+                elif other==3:
                     score=score-100
-                if other==2:
+                elif other==2:
                     score=score-3
     # vertikal
     for q in range(7):
@@ -109,44 +110,45 @@ def inarow(board,player):
             #
             if board[w][q] == player:
                 filled=filled+ 1
+            elif board[w][q] == 0:
+                empty=empty+ 1
+            elif board[w][q] == otherplayer:
+                other=other+ 1
+            #
             if board[w + 1][q] == player:
                 filled=filled+ 1
+            elif board[w + 1][q] == 0:
+                empty=empty+ 1
+            elif board[w + 1][q] == otherplayer:
+                other=other+ 1
+            #
             if board[w + 2][q] == player:
                 filled=filled+ 1
+            elif board[w + 2][q] == 0:
+                empty=empty+ 1
+            elif board[w + 2][q] == otherplayer:
+                other=other+ 1
+            #
             if board[w + 3][q] == player:
                 filled=filled+ 1
-            #
-            if board[w][q] == 0:
+            elif board[w + 3][q] == 0:
                 empty=empty+ 1
-            if board[w + 1][q] == 0:
-                empty=empty+ 1
-            if board[w + 2][q] == 0:
-                empty=empty+ 1
-            if board[w + 3][q] == 0:
-                empty=empty+ 1
-            #
-            if board[w][q] == otherplayer:
-                other=other+ 1
-            if board[w + 1][q] == otherplayer:
-                other=other+ 1
-            if board[w + 2][q] == otherplayer:
-                other=other+ 1
-            if board[w + 3][q] == otherplayer:
+            elif board[w + 3][q] == otherplayer:
                 other=other+ 1
             #
             if other==0:
                 if filled==4:
                     score=score+10000
-                if filled==3:
+                elif filled==3:
                     score=score+10
-                if filled==2:
+                elif filled==2:
                     score=score+1
             elif filled==0:
                 if other==4:
                     score=score-10000
-                if other==3:
+                elif other==3:
                     score=score-30
-                if other==2:
+                elif other==2:
                     score=score-1
     # diagonal1
     for q in range(4):
@@ -157,44 +159,45 @@ def inarow(board,player):
             #
             if board[w][q] == player:
                 filled=filled+ 1
+            elif board[w][q] == 0:
+                empty=empty+ 1
+            elif board[w][q] == otherplayer:
+                other=other+ 1
+            #
             if board[w + 1][q + 1] == player:
                 filled=filled+ 1
+            elif board[w + 1][q + 1] == 0:
+                empty=empty+ 1
+            elif board[w + 1][q + 1] == otherplayer:
+                other=other+ 1
+            #
             if board[w + 2][q + 2] == player:
                 filled=filled+ 1
+            elif board[w + 2][q + 2] == 0:
+                empty=empty+ 1
+            elif board[w + 2][q + 2] == otherplayer:
+                other=other+ 1
+            #
             if board[w + 3][q + 3] == player:
                 filled=filled+ 1
-            #
-            if board[w][q] == 0:
+            elif board[w + 3][q + 3] == 0:
                 empty=empty+ 1
-            if board[w + 1][q + 1] == 0:
-                empty=empty+ 1
-            if board[w + 2][q + 2] == 0:
-                empty=empty+ 1
-            if board[w + 3][q + 3] == 0:
-                empty=empty+ 1
-            #
-            if board[w][q] == otherplayer:
-                other=other+ 1
-            if board[w + 1][q + 1] == otherplayer:
-                other=other+ 1
-            if board[w + 2][q + 2] == otherplayer:
-                other=other+ 1
-            if board[w + 3][q + 3] == otherplayer:
+            elif board[w + 3][q + 3] == otherplayer:
                 other=other+ 1
             #
             if other==0:
                 if filled==4:
                     score=score+10000
-                if filled==3:
+                elif filled==3:
                     score=score+1000
-                if filled==2:
+                elif filled==2:
                     score=score+3
             elif filled==0:
                 if other==4:
                     score=score-10000
-                if other==3:
+                elif other==3:
                     score=score-100
-                if other==2:
+                elif other==2:
                     score=score-3
     # diagonal2
     for q in range(4):
@@ -205,47 +208,48 @@ def inarow(board,player):
             #
             if board[w][q + 3] == player:
                 filled=filled+ 1
+            elif board[w][q + 3] == 0:
+                empty=empty+ 1
+            elif board[w][q + 3] == otherplayer:
+                other=other+ 1
+            #
             if board[w + 1][q + 2] == player:
                 filled=filled+ 1
+            elif board[w + 1][q + 2] == 0:
+                empty=empty+ 1
+            elif board[w + 1][q + 2] == otherplayer:
+                other=other+ 1
+            #
             if board[w + 2][q + 1] == player:
                 filled=filled+ 1
+            elif board[w + 2][q + 1] == 0:
+                empty=empty+ 1
+            elif board[w + 2][q + 1] == otherplayer:
+                other=other+ 1
+            #
             if board[w + 3][q] == player:
                 filled=filled+ 1
-            #
-            if board[w][q + 3] == 0:
+            elif board[w + 3][q] == 0:
                 empty=empty+ 1
-            if board[w + 1][q + 2] == 0:
-                empty=empty+ 1
-            if board[w + 2][q + 1] == 0:
-                empty=empty+ 1
-            if board[w + 3][q] == 0:
-                empty=empty+ 1
-            #
-            if board[w][q + 3] == otherplayer:
-                other=other+ 1
-            if board[w + 1][q + 2] == otherplayer:
-                other=other+ 1
-            if board[w + 2][q + 1] == otherplayer:
-                other=other+ 1
-            if board[w + 3][q] == otherplayer:
+            elif board[w + 3][q] == otherplayer:
                 other=other+ 1
             #
             if other==0:
                 if filled==4:
                     score=score+10000
-                if filled==3:
+                elif filled==3:
                     score=score+1000
-                if filled==2:
+                elif filled==2:
                     score=score+3
             elif filled==0:
                 if other==4:
                     score=score-10000
-                if other==3:
+                elif other==3:
                     score=score-100
-                if other==2:
+                elif other==2:
                     score=score-3
     return score
-    
+ 
 def genchildren(position, player):
     children = []
     boardcopy = copy.deepcopy(position)
