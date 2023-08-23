@@ -658,7 +658,10 @@ public:
 
     std::vector<std::vector<int>> mctser(std::vector<std::vector<int>>& board) {
         mcts_counter = 0;
+        //
         mcts(board);
+        //
+        std::cout <<"COUNTER: ";
         std::cout << mcts_counter << std::endl;
         //
         std::vector<std::vector<int>> best_move;
@@ -703,7 +706,7 @@ public:
         while (true) {
             //-----------------------------------------
             HumanPlayer player_1(1);
-            MCTSPlayer player_2(-1, this->board);
+            MinimaxPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             printboard(this->board);
