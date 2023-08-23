@@ -5,7 +5,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <chrono>
+#include <cmath>
 #include <sstream>
+
+//
 
 bool is_int(int value) {
     std::string input = std::to_string(value);
@@ -516,20 +519,167 @@ public:
 
 //
 
+double c=std::sqrt(2);
+int number_of_simulations=30;
+int depth=2;
+
+int mcts_counter=0;
+
 class MCTSNode {
 public:
-    MCTSNode() : value(0), value_not_none(false), children(), board(), player_am_zug(0), token(0), depth(0), expanded(false) {}
+    MCTSNode() : value(0), children(),parent(nullptr), visits(0), board(), player_am_zug(0), token(0), expanded(false) {}
 
     int value;
-    bool value_not_none;
     std::vector<MCTSNode> children;
+    MCTSNode* parent;
+    int visits;
     std::vector<std::vector<int>> board;
     int player_am_zug;
     int token;
-    int depth;
     bool expanded;
 
+    double calculate_ubc() {
+        MCTSNode* par = this->parent;
+        if (this->visits == 0) {
+            return std::numeric_limits<double>::infinity();
+        }
+        else {
+            double ubc = (static_cast<double>(this->value) / this->visits) +c * (std::sqrt(std::log(static_cast<double>(par->visits) / this->visits)));
+            return ubc;
+        }
+    }
+
+    std::vector<MCTSNode> expand_node() {
+        std::vector<MCTSNode> new_children;
+        std::list<std::vector<std::vector<int>>> list_of_positions = generate_children(this->board, this->player_am_zug);
+        for (const std::vector<std::vector<int>>& board_position : list_of_positions) {
+            MCTSNode child;
+            child.value=0;
+            child.children;
+            child.parent=this;
+            child.visits=0;
+            child.board=board_position;
+            child.player_am_zug=-this->player_am_zug;
+            child.token=this->token;
+            child.expanded=false;
+            //
+            new_children.push_back(child);
+
+        }
+        return new_children;//vielleicht kein return sondern this->children=new_children?
+    }
+
+    MCTSNode* select_leaf_node() {
+        double best_value = -std::numeric_limits<double>::infinity();
+        MCTSNode* selected_node = nullptr;
+
+        for (MCTSNode& child : this->children) {
+            double ucb_of_child = child.calculate_ubc();
+            if (ucb_of_child > best_value) {
+                best_value = ucb_of_child;
+                selected_node = &child;
+            }
+        }
+
+        if (!selected_node->expanded) {return selected_node;}
+        else {return selected_node->select_leaf_node();}
+    }
+
+    void backpropagate(double new_value, int number_of_simulations) {
+        this->value += new_value;
+        this->visits += number_of_simulations;
+        //
+        if (this->parent != nullptr) {
+            parent->backpropagate(new_value, number_of_simulations);
+        }
+    }
+
+    double simulate() {
+        double value = 0.0;
+        std::vector<double> values;
+        //
+        for (int j = 0; j < number_of_simulations; ++j) {
+            std::vector<std::vector<int>> pos = this->board;
+            int player = this->player_am_zug;
+
+            for (int i = 0; i < depth; ++i) {
+                std::vector<std::vector<int>> next_pos = generate_one_random_child(pos, player);
+                pos = next_pos;
+                if (player== -1) {player= 1;}
+                else if (player== 1) {player= -1;}
+            }
+            values.push_back(evaluate_position(pos, this->token));
+        }
+        for (double val : values) {value += val;}
+        if (!values.empty()) {value /= values.size();}
+        //
+        return value;
+    }
+
 };
+
+class MCTSPlayer {
+public:
+    MCTSPlayer(int token, std::vector<std::vector<int>> board) : token(token), board(board) {
+        root_node.value=0;
+        root_node.children;
+        root_node.parent=nullptr;
+        root_node.visits=0;
+        root_node.board=board;
+        root_node.player_am_zug=token;
+        root_node.token=token;
+        root_node.expanded=false;
+    }
+    MCTSNode root_node;
+    int token;
+    std::vector<std::vector<int>> board;
+    int max_time=1;
+
+    void mcts(std::vector<std::vector<int>>& board) {
+        root_node.children=root_node.expand_node();
+        std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+        //
+        while (true) {
+            mcts_counter += 1;
+            MCTSNode* selected_node = root_node.select_leaf_node();
+            if (selected_node->children.empty()) {
+                double new_score = selected_node->simulate();
+                selected_node->backpropagate(new_score, number_of_simulations);
+            }
+            else {selected_node->expand_node();}
+            //
+            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+            double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
+            if (elapsed_seconds > this->max_time) {
+                break;
+            }
+        }
+}
+
+    std::vector<std::vector<int>> mctser(std::vector<std::vector<int>>& board) {
+        mcts_counter = 0;
+        mcts(board);
+        std::cout << mcts_counter << std::endl;
+        //
+        std::vector<std::vector<int>> best_move;
+        int highest_number_of_visits = -1;
+        //
+        for (MCTSNode& root_node_child : root_node.children) {
+            if (root_node_child.visits > highest_number_of_visits) {
+                best_move = root_node_child.board;
+                highest_number_of_visits = root_node_child.visits;
+            }
+        }
+
+        return best_move;
+    }
+
+    std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
+        return mctser(board);
+    }
+
+};
+
 
 //
 
@@ -553,7 +703,7 @@ public:
         while (true) {
             //-----------------------------------------
             HumanPlayer player_1(1);
-            MinimaxPlayer player_2(-1, this->board);
+            MCTSPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             printboard(this->board);
@@ -616,4 +766,4 @@ int main() {
 }
 
 //sort?
-//can incomplete depth searches be trusted?
+//can incomplete depth searches be trusted? (here no but in chess and checkers yes)
