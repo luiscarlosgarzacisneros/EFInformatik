@@ -285,6 +285,7 @@ public:
 
             if (board[0][x] == 0) {
                 board[0][x] = this->token;
+                fall(board, 0, x, this->token);
                 return board;
             }
             else {
@@ -515,6 +516,23 @@ public:
 
 //
 
+class MCTSNode {
+public:
+    MCTSNode() : value(0), value_not_none(false), children(), board(), player_am_zug(0), token(0), depth(0), expanded(false) {}
+
+    int value;
+    bool value_not_none;
+    std::vector<MCTSNode> children;
+    std::vector<std::vector<int>> board;
+    int player_am_zug;
+    int token;
+    int depth;
+    bool expanded;
+
+};
+
+//
+
 class VierGewinnt {
 public:
     VierGewinnt() : board(), turn(1) {
@@ -598,3 +616,4 @@ int main() {
 }
 
 //sort?
+//can incomplete depth searches be trusted?
