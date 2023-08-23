@@ -5,7 +5,14 @@
 #include <cstdlib>
 #include <ctime>
 #include <chrono>
+#include <sstream>
 
+bool is_int(int value) {
+    std::string input = std::to_string(value);
+    std::istringstream iss(input);
+    int extractedValue;
+    return (iss >> extractedValue) && (iss.eof());
+}
 
 void printboard(const std::vector<std::vector<int>>& board) {
     std::cout<<"  1   2   3   4   5   6   7"<<std::endl;
@@ -265,21 +272,26 @@ public:
     std::vector<std::vector<int>> player(std::vector<std::vector<int>>& board) {
         try {
             int x;
-            std::cout<<"x: ";
-            std::cin>>x;
-            x -= 1;
+            std::cout << "x: ";
             //
-            if (board[0][x]==0) {
-                board[0][x]=this->token;
-                fall(board, 0, x, this->token);
+            if (!(std::cin >> x) || !is_int(x) || x < 1 || x > 8) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "EINGABE NICHT KORREKT2" << std::endl;
+                return player(board);
+            }
+
+            x -= 1;
+
+            if (board[0][x] == 0) {
+                board[0][x] = this->token;
                 return board;
             }
             else {
                 std::cout << "EINGABE NICHT KORREKT2" << std::endl;
                 return player(board);
             }
-        }
-        catch (...) {
+        } catch (...) {
             std::cout << "EINGABE NICHT KORREKT1" << std::endl;
             return player(board);
         }
@@ -419,7 +431,7 @@ public:
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time=3;
+    int max_time=1;
     int max_depth=10;
     int starting_depth=1;
 
@@ -441,7 +453,7 @@ public:
             //
             auto now = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
-            if (vergangene_zeit2.count() >= max_time) {std::cout<<" NICHT FERTIG"; break;}
+            if (vergangene_zeit2.count() >= max_time) {std::cout<<" NICHT FERTIG"; std::cout << std::endl; break;}
         }
         //
         for (MinimaxNode& child : root_node_children) {values.push_back(child.value);}
@@ -449,11 +461,15 @@ public:
         for (MinimaxNode& child : root_node_children) {if (child.value==best_value) {best_moves.push_back(child);}}
         //
         //output---------
-        std::cout << std::endl;
-        std::cout << best_value << std::endl;
-        std::cout<<"COUNTER: "; std::cout<<minimax_counter<<std::endl;
-        for (int value : values) {std::cout<<value; std::cout<<", ";}
-        std::cout << std::endl;
+        auto now = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
+        if (vergangene_zeit2.count() <= max_time) {
+            std::cout << std::endl;
+            std::cout << best_value << std::endl;
+            std::cout<<"COUNTER: "; std::cout<<minimax_counter<<std::endl;
+            for (int value : values) {std::cout<<value; std::cout<<", ";}
+            std::cout << std::endl;
+        }
         //---------------
         best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
         return_board=deepcopy(best_move.board);
@@ -476,7 +492,7 @@ public:
             std::cout<<"---DEPTH: ";
             std::cout<<depth<<std::endl;
             //
-            move=minimaxer(depth,vergangene_zeit);
+            std::vector<std::vector<int>> new_move=minimaxer(depth,vergangene_zeit);
             //break2
             now = std::chrono::high_resolution_clock::now();
             vergangene_zeit = now - start;
@@ -484,6 +500,7 @@ public:
             else if (depth>max_depth) {break;}
             //sort+depth
             //else {this->root_node.sort(true);}
+            move=new_move;
             for (MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
             std::cout<<std::endl;
             depth+=1;
@@ -500,7 +517,8 @@ public:
 
 class VierGewinnt {
 public:
-    VierGewinnt() : board({
+    VierGewinnt() : board(), turn(1) {
+            board={
             {0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0},
@@ -508,7 +526,8 @@ public:
             {0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0}
-        }), turn(1) {}
+        };
+        }
 
     int play() {
         int current = 1;
@@ -554,12 +573,12 @@ private:
 
 void spielen(int z) {
     std::cout<<"NEUES SPIEL"<<std::endl;
-    VierGewinnt game;
     int x_wins=0;
     int o_wins=0;
     int unentschieden=0;
     //
     for (int i=0; i<z; ++i) {
+        VierGewinnt game;
         int r = game.play();
         if (r==1) {x_wins+=1;}
         else if (r== -1) {o_wins+=1;}
@@ -576,10 +595,6 @@ void spielen(int z) {
 int main() {
     srand(time(0)); //seed
     spielen(3);
-
 }
 
-//MCTS
-//eingabe Human
-//reset board after game is over
 //sort?
