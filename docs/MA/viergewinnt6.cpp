@@ -368,31 +368,35 @@ public:
     }
 
     void sort(bool max_player) {
-        //reserve?
-        std::vector<MinimaxNode> not_none_children;
-        std::list<MinimaxNode> none_children;
-        std::vector<MinimaxNode> sorted_children;
-        //
-        for (const MinimaxNode& child : this->children) {
-            if (!child.value_not_none) {none_children.push_back(child);}
-            else if (child.value_not_none) {not_none_children.push_back(child);}
-        }
-        //
-        if (max_player) {
-            std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode& a, const MinimaxNode& b) {return a.value > b.value;});
+        if (this->expanded) {
             //
-            sorted_children.insert(sorted_children.end(), none_children.begin(), none_children.end());
-            this->children=sorted_children;
+            std::vector<MinimaxNode> not_none_children;
+            std::list<MinimaxNode> none_children;
+            std::vector<MinimaxNode> sorted_children;
             //
-            for (MinimaxNode& child : not_none_children) {child.sort(false);}
-        }
-        else if (!max_player) {
-            std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode& a, const MinimaxNode& b) {return a.value < b.value;});
+            for (const MinimaxNode& child : this->children) {
+                if (!child.value_not_none) {none_children.push_back(child);}
+                else if (child.value_not_none) {not_none_children.push_back(child);}
+            }
             //
-            sorted_children.insert(sorted_children.end(), none_children.begin(), none_children.end());
-            this->children=sorted_children;
-            //
-            for (MinimaxNode& child : not_none_children) {child.sort(true);}
+            if (max_player) {
+                std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode& a, const MinimaxNode& b) {return a.value > b.value;});
+                //
+                sorted_children.insert(sorted_children.end(), not_none_children.begin(), not_none_children.end());
+                sorted_children.insert(sorted_children.end(), none_children.begin(), none_children.end());
+                this->children=sorted_children;
+                //
+                for (MinimaxNode& child : not_none_children) {child.sort(false);}
+            }
+            else if (!max_player) {
+                std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode& a, const MinimaxNode& b) {return a.value < b.value;});
+                //
+                sorted_children.insert(sorted_children.end(), not_none_children.begin(), not_none_children.end());
+                sorted_children.insert(sorted_children.end(), none_children.begin(), none_children.end());
+                this->children=sorted_children;
+                //
+                for (MinimaxNode& child : not_none_children) {child.sort(true);}
+            }
         }
     }
 
@@ -408,11 +412,14 @@ public:
         root_node.value = 0;
         root_node.depth = 0;
         root_node.children = root_node.expand_node();
+        root_node.expanded=true;
+        //
+        minimax_counter=0;
     }
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time=7;
+    int max_time=3;
     int max_depth=10;
     int starting_depth=1;
 
@@ -443,11 +450,10 @@ public:
         //
         //output---------
         std::cout << std::endl;
+        std::cout << best_value << std::endl;
+        std::cout<<"COUNTER: "; std::cout<<minimax_counter<<std::endl;
         for (int value : values) {std::cout<<value; std::cout<<", ";}
         std::cout << std::endl;
-        std::cout << best_value << std::endl;
-        std::cout<<"COUNTER: ";
-        std::cout<<minimax_counter<<std::endl;
         //---------------
         best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
         return_board=deepcopy(best_move.board);
@@ -457,12 +463,11 @@ public:
 
     std::vector<std::vector<int>> minimaxerer(const std::vector<std::vector<int>> board_0) {
         auto start = std::chrono::high_resolution_clock::now();
-        int minimax_counter=0;
         //
         int depth=this->starting_depth;
         std::vector<std::vector<int>> move;
         while (true) {
-            //break
+            //break1
             auto now = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> vergangene_zeit = now - start;
             if (vergangene_zeit.count() >= max_time) {break;}
@@ -472,8 +477,15 @@ public:
             std::cout<<depth<<std::endl;
             //
             move=minimaxer(depth,vergangene_zeit);
+            //break2
+            now = std::chrono::high_resolution_clock::now();
+            vergangene_zeit = now - start;
+            if (vergangene_zeit.count() >= max_time) {break;}
+            else if (depth>max_depth) {break;}
             //sort+depth
-            //else {root_node.sort(true);}
+            //else {this->root_node.sort(true);}
+            for (MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
+            std::cout<<std::endl;
             depth+=1;
         }
         return move;
@@ -567,7 +579,7 @@ int main() {
 
 }
 
-//MCTS +reserve?
+//MCTS
 //eingabe Human
 //reset board after game is over
-//sort geht nicht!!!!!
+//sort?
