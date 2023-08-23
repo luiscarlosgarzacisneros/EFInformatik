@@ -313,8 +313,8 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(Minimax4Player(1))
-        self.players.append(Minimax4Player(-1))
+        self.players.append(MinimaxPlayer(1))
+        self.players.append(MinimaxPlayer(-1))
         #
         current=0
         while True:
@@ -502,7 +502,7 @@ class MCTSNode(MCTSPlayer):
 
 #
 
-class Minimax4Player(Player):
+class MinimaxPlayer(Player):
     #sucht bis max zeit erreicht ist, depth =+1, move sorting
     def __init__(self, token):
         super().__init__(token)
@@ -539,7 +539,7 @@ class Minimax4Player(Player):
         global minimax_counter4
         minimax_counter4=0
         #rootnode
-        self.rootnode=Minimax4Node()
+        self.rootnode=MinimaxNode()
         self.rootnode.position=board
         self.rootnode.playeramzug=self.token
         self.rootnode.value=None
@@ -560,7 +560,7 @@ class Minimax4Player(Player):
         print("---",minimax_counter4)
         return bestmove
 
-class Minimax4Node():
+class MinimaxNode():
     def __init__(self):
         self.value=None
         self.children=[]
@@ -573,7 +573,7 @@ class Minimax4Node():
     def expandnode(self):
         children=genchildren(self.position,self.playeramzug)
         for i in range(len(children)):
-            instance=Minimax4Node()
+            instance=MinimaxNode()
             instance.position=children[i]
             instance.playeramzug = -self.playeramzug
             instance.value=None
