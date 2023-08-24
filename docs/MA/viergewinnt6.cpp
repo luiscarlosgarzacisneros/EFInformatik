@@ -9,6 +9,17 @@
 #include <sstream>
 
 //
+std::vector<std::vector<int>> deepcopy(const std::vector<std::vector<int>>& board) {
+    std::vector<std::vector<int>> board_copy;
+    for (const std::vector<int>& row : board){
+        std::vector<int> new_y;
+        for (const int& x : row){
+            new_y.push_back(x);
+        }
+        board_copy.push_back(new_y);
+    }
+    return board_copy;
+}
 
 bool is_int(int value) {
     std::string input = std::to_string(value);
@@ -221,18 +232,6 @@ int evaluate_position(const std::vector<std::vector<int>>& board, int player) {
     return score;
 }
 
-std::vector<std::vector<int>> deepcopy(const std::vector<std::vector<int>>& board) {
-    std::vector<std::vector<int>> board_copy;
-    for (const std::vector<int>& row : board){
-        std::vector<int> new_y;
-        for (const int& x : row){
-            new_y.push_back(x);
-        }
-        board_copy.push_back(new_y);
-    }
-    return board_copy;
-}
-
 void fall(std::vector<std::vector<int>>& board, int y, int x, const int player) {
     while (y<5 && board[y+1][x]==0) {
         board[y+1][x] = player;
@@ -241,10 +240,10 @@ void fall(std::vector<std::vector<int>>& board, int y, int x, const int player) 
     }
 }
 
-std::list<std::vector<std::vector<int>>> generate_children(const std::vector<std::vector<int>>& board, const int player) {
+std::list<std::vector<std::vector<int>>> generate_children(const std::vector<std::vector<int>> board, const int player) {
     std::list<std::vector<std::vector<int>>> children;
     for (int x = 0; x < 7; ++x) {
-        std::vector<std::vector<int>> board_copy = deepcopy(board);
+        std::vector<std::vector<int>> board_copy = board;
         if (board_copy[0][x] == 0) {
             board_copy[0][x] = player;
             fall(board_copy, 0, x, player);
@@ -254,8 +253,8 @@ std::list<std::vector<std::vector<int>>> generate_children(const std::vector<std
     return children;
 }
 
-std::vector<std::vector<int>> generate_one_random_child(const std::vector<std::vector<int>>& board, const int player) {
-    std::vector<std::vector<int>> board_copy=deepcopy(board);
+std::vector<std::vector<int>> generate_one_random_child(const std::vector<std::vector<int>> board, const int player) {
+    std::vector<std::vector<int>> board_copy=board;
     int x=generate_random_int(0, 6);
     while (true) {
         if (board_copy[0][x]==0) {break;}
@@ -770,4 +769,3 @@ int main() {
 
 //sort?
 //can incomplete depth searches be trusted? (here no but in chess and checkers yes)
-//deepcopy
