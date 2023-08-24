@@ -24,8 +24,8 @@ std::vector<std::vector<int>> deepcopy(const std::vector<std::vector<int>>& boar
 bool is_int(int value) {
     std::string input = std::to_string(value);
     std::istringstream iss(input);
-    int extractedValue;
-    return (iss >> extractedValue) && (iss.eof());
+    int extracted_value;
+    return (iss >> extracted_value) && (iss.eof());
 }
 
 void printboard(const std::vector<std::vector<int>>& board) {
