@@ -770,3 +770,4 @@ int main() {
 
 //sort?
 //can incomplete depth searches be trusted? (here no but in chess and checkers yes)
+//deepcopy

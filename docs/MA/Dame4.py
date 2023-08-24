@@ -1548,17 +1548,7 @@ def gorcXO(y,x,boardc,player):
 
 def gorcWM(y,x,boardc,player):
     childrenWM=[]
-    if player==2:
-        pass
-    elif player==-2:
-        pass
-    #
-    if childrenWM==[]:
-        return []
-    else:
-        n=random.choice(childrenWM)
-
-
+    
 class MCTSPlayer(Player):#ist auch schwach
     def __init__(self, token):
         super().__init__(token)
