@@ -500,12 +500,12 @@ public:
             now = std::chrono::high_resolution_clock::now();
             vergangene_zeit = now - start;
             if (vergangene_zeit.count() >= max_time) {break;}
-            else if (depth>max_depth) {break;}
             //sort+depth
             //else {this->root_node.sort(true);}
             move=new_move;
             for (MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
             std::cout<<std::endl;
+            if (depth>max_depth) {break;}
             depth+=1;
         }
         return move;
