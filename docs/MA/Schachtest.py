@@ -1149,7 +1149,7 @@ def gcBb(y,x,pos,player):
                 boardc=copy.deepcopy(pos)
     return childrenB
 
-#Gorc Variante1
+#Gorc Variante2
 
 class GorcMove():
     def __init__(self):
@@ -1432,7 +1432,7 @@ class GorcMove():
                 boardc[y][x+1]=0
                 return boardc
 
-def generate_one_random_child(position, playerk):#für MCTS Simulation
+def generate_one_random_child2(position, playerk):#für MCTS Simulation
     #gen alle moves für alle Spielfiguren, move random auswählen -> all moves are equal, langsam
     boardcopy = copy.deepcopy(position)
     moves=[]
@@ -2210,9 +2210,9 @@ def gorcBb1(y,x,boardc,player):
     #
     return moves
 
-#Gorc Variante2
+#Gorc Variante1
 
-def generate_one_random_child2(position, playerk):#für MCTS Simulation
+def generate_one_random_child(position, playerk):#für MCTS Simulation
     #wählt random Spielfigur aus, gen moves für Figur, wählt random move -> not all moves are equal, schneller
     boardcopy = copy.deepcopy(position)
     #
