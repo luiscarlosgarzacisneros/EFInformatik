@@ -1491,6 +1491,7 @@ def gorcXO(y,x,boardc,player):
                 delete=gorc_XO_schlagen_children_delete[gorc_XO_schlagen_children.index(n)]
                 for feld in delete:
                     boardc[feld[0]][feld[1]]=0
+                return boardc
 
 def gorcWMschlagen(y,x,boardc,player,delete_list):
     if player==2:
@@ -1762,6 +1763,7 @@ def gorcWM(y,x,boardc,player):
             delete=gorc_WM_schlagen_children_delete[gorc_WM_schlagen_children.index(n)]
             for feld in delete:
                 boardc[feld[0]][feld[1]]=0
+            return boardc
     
 def generate_one_random_child(position,player):#pick rand piece, then pick rand move
     boardcopy = copy.deepcopy(position)
@@ -1810,6 +1812,8 @@ def generate_one_random_child(position,player):#pick rand piece, then pick rand 
         #
         if child!=[]: 
             return child 
+        else:
+            continue
 
 #
 
