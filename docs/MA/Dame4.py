@@ -649,7 +649,7 @@ class Dame():
         # X spielt immer zuerst
         self.players.clear()
         self.players.append(HumanPlayer(1))
-        self.players.append(Minimax4Player(-1))
+        self.players.append(MCTSPlayer(-1))
         #
         current=0
         while True:
@@ -1374,54 +1374,6 @@ class HumanPlayer(Player):
 
 #--------------------nicht fertig
 
-def generate_one_random_child(position,player):#pick rand piece, then pick rand move
-    boardcopy = copy.deepcopy(position)
-    #
-    piecesy=[]
-    piecesx=[]
-    if player==1:
-        for y in range(8):
-            for x in range(8):
-                if boardcopy[y][x]==1:
-                    piecesy.append(y)
-                    piecesx.append(x)
-                elif boardcopy[y][x]==2:
-                    for i in range(5):
-                        piecesy.append(y)
-                        piecesx.append(x)
-    elif player==-1:
-        for y in range(8):
-            for x in range(8):
-                if boardcopy[y][x]==-1:
-                    piecesy.append(y)
-                    piecesx.append(x)
-                elif boardcopy[y][x]==-2:
-                    for i in range(5):
-                        piecesy.append(y)
-                        piecesx.append(x)
-    #
-    if piecesx==[]:
-        return []
-    #
-    while True:
-        n = random.randint(0, len(piecesy) - 1)
-        y = piecesy[n]
-        x = piecesx[n]
-        #
-        if player==1:
-            if boardcopy[y][x]==1:
-                child=gorcXO(y,x,position,1)
-            elif boardcopy[y][x]==2:
-                pass
-        elif player==-1:
-            if boardcopy[y][x]==1:
-                child=gorcXO(y,x,position,-1)
-            elif boardcopy[y][x]==2:
-                pass
-        #
-        if child!=[]: 
-            return child 
-
 gorc_XO_schlagen_children=[]
 gorc_XO_schlagen_children_delete=[]
 gorc_WM_schlagen_children=[]
@@ -1541,7 +1493,7 @@ def gorcXO(y,x,boardc,player):
                     boardc[feld[0]][feld[1]]=0
 
 def gorcWMschlagen(y,x,boardc,player,delete_list):
-    if player==1:
+    if player==2:
         #1: ur
         for i in range(7):
             if y+1+i>7 or x+1+i>7:
@@ -1594,7 +1546,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         gorcWMschlagen(y-2-i,x-2-i,boardc,player,delete_list)
                 else:
                     break
-    elif player==-1:
+    elif player==-2:
         #1: ur
         for i in range(7):
             if y+1+i>7 or x+1+i>7:
@@ -1648,12 +1600,12 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                 else:
                     break
     #
-    gorc_WM_schlagen_children.append(y * 10 + x)
+    gorc_WM_schlagen_children.append(y * 10 + x +100)
     gorc_WM_schlagen_children_delete.append(delete_list)
 
 def gorcWM(y,x,boardc,player):
     childrenWM=[]
-    if player==1:
+    if player==2:
         #1: ur
         for i in range(7):
             if y+1+i>7 or x+1+i>7:
@@ -1714,7 +1666,7 @@ def gorcWM(y,x,boardc,player):
                         childrenWM.extend(gorc_WM_schlagen_children)
                 else:
                     break
-    elif player==-1:
+    elif player==-2:
         #1: ur
         for i in range(7):
             if y+1+i>7 or x+1+i>7:
@@ -1780,11 +1732,87 @@ def gorcWM(y,x,boardc,player):
         return []
     else:
         n=random.choice(childrenWM)
-        if player==1:
-            pass
-        elif player==-1:
-            pass
+        #ur
+        if n>20:
+            boardc[y][x]=0
+            boardc[y+(n-10)][x+(n-10)]=2
+            return boardc
+        #ul
+        elif n>20 and n<30:
+            boardc[y][x]=0
+            boardc[y+(n-20)][x-(n-20)]=2
+            return boardc
+        #or
+        elif n>30 and n<40:
+            boardc[y][x]=0
+            boardc[y-(n-30)][x+(n-30)]=2
+            return boardc
+        #ol
+        elif n>40 and n<50:
+            boardc[y][x]=0
+            boardc[y-(n-40)][x-(n-40)]=2
+            return boardc
+        #schlagen
+        elif n>100:
+            n_str = str(n-100)
+            n_y = int(n_str[0])
+            n_x = int(n_str[1])
+            #
+            boardc[n_y][n_x]=2
+            delete=gorc_WM_schlagen_children_delete[gorc_WM_schlagen_children.index(n)]
+            for feld in delete:
+                boardc[feld[0]][feld[1]]=0
     
+def generate_one_random_child(position,player):#pick rand piece, then pick rand move
+    boardcopy = copy.deepcopy(position)
+    #
+    piecesy=[]
+    piecesx=[]
+    if player==1:
+        for y in range(8):
+            for x in range(8):
+                if boardcopy[y][x]==1:
+                    piecesy.append(y)
+                    piecesx.append(x)
+                elif boardcopy[y][x]==2:
+                    for i in range(5):
+                        piecesy.append(y)
+                        piecesx.append(x)
+    elif player==-1:
+        for y in range(8):
+            for x in range(8):
+                if boardcopy[y][x]==-1:
+                    piecesy.append(y)
+                    piecesx.append(x)
+                elif boardcopy[y][x]==-2:
+                    for i in range(5):
+                        piecesy.append(y)
+                        piecesx.append(x)
+    #
+    if piecesx==[]:
+        return []
+    #
+    while True:
+        n = random.randint(0, len(piecesy) - 1)
+        y = piecesy[n]
+        x = piecesx[n]
+        #
+        if player==1:
+            if boardcopy[y][x]==1:
+                child=gorcXO(y,x,position,1)
+            elif boardcopy[y][x]==2:
+                child=gorcWM(y,x,position,2)
+        elif player==-1:
+            if boardcopy[y][x]==1:
+                child=gorcXO(y,x,position,-1)
+            elif boardcopy[y][x]==2:
+                child=gorcWM(y,x,position,-2)
+        #
+        if child!=[]: 
+            return child 
+
+#
+
 class MCTSPlayer(Player):
     def __init__(self, token):
         super().__init__(token)
@@ -1909,7 +1937,7 @@ class MCTSNode(MCTSPlayer):
 
 minimax_counter4=0
 
-class Minimax4Player(Player):
+class MinimaxPlayer(Player):
     #sucht bis max zeit erreicht ist, depth =+1, move sorting
     def __init__(self, token):
         super().__init__(token)
@@ -1946,7 +1974,7 @@ class Minimax4Player(Player):
         global minimax_counter4
         minimax_counter4=0
         #rootnode
-        self.rootnode=Minimax4Node()
+        self.rootnode=MinimaxNode()
         self.rootnode.position=board
         self.rootnode.playeramzug=self.token
         self.rootnode.value=None
@@ -1967,7 +1995,7 @@ class Minimax4Player(Player):
         print("---",minimax_counter4)
         return bestmove
 
-class Minimax4Node():
+class MinimaxNode():
     def __init__(self):
         self.value=None
         self.children=[]
@@ -1980,7 +2008,7 @@ class Minimax4Node():
     def expandnode(self):
         children=genchildren(self.position,self.playeramzug)
         for i in range(len(children)):
-            instance=Minimax4Node()
+            instance=MinimaxNode()
             instance.position=children[i]
             instance.playeramzug = -self.playeramzug
             instance.value=None
