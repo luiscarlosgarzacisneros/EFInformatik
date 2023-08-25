@@ -741,8 +741,9 @@ class HumanPlayer {
 public:
     HumanPlayer(int token) : token(token) {}
 
+    int token=token;
+
     std::vector<int> eingabe() {
-    while (true) {
         try {
             int vx, vy, zx, zy;
             std::cout <<"von x: ";
@@ -763,142 +764,160 @@ public:
                     return {vy, vx, zy, zx};
             }
             else {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "EINGABE NICHT KORREKT1" << std::endl;
-                continue;
+                return eingabe();
             }
         }
         catch (...) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "EINGABE NICHT KORREKT1" << std::endl;
-            continue;
+            return eingabe();
         }
     }
-}
 
     std::vector<int> eingabe_schlagen_XO(int vy, int vx, const std::vector<std::vector<int>>& pos, int token) {
         std::vector<int> result;
         //
-        while (true) {
-            bool korrekt = false;
-            try {
-                int zx, zy;
-                std::cout << "zu x: ";
-                std::cin >> zx;
-                std::cout << "zu y: ";
-                std::cin >> zy;
-                zx -= 1;
-                zy -= 1;
-                //
-                if (!is_int(zy) || !is_int(zx)) {
-                    std::cout << "EINGABE NICHT KORREKT3" << std::endl;
-                    continue;
-                }
-                //
-                if (zx == vx && zy == vy) {korrekt = true;}
-                if (zy < 8 && zy > -1 && zx < 8 && zx > -1) {
-                    if (token == 1) {
-                        if (zy == vy - 2 && zx == vx - 2 && pos[vy][vx] == 1 && pos[zy][zx] == 0 && pos[vy - 1][vx - 1] < 0) {korrekt = true;}
-                        else if (zy == vy - 2 && zx == vx + 2 && pos[vy][vx] == 1 && pos[zy][zx] == 0 && pos[vy - 1][vx + 1] < 0) {korrekt = true;}
-                    }
-                    else if (token ==-1) {
-                        if (zy == vy + 2 && zx == vx - 2 && pos[vy][vx] == -1 && pos[zy][zx] == 0 && pos[vy + 1][vx - 1] > 0) {korrekt = true;}
-                        else if (zy == vy + 2 && zx == vx + 2 && pos[vy][vx] == -1 && pos[zy][zx] == 0 && pos[vy + 1][vx + 1] > 0) {korrekt = true;}
-                    }
-                }
-                //
-                if (korrekt) {result = {zy, zx}; return result;}
-                else {std::cout << "EINGABE NICHT KORREKT3" << std::endl; continue;}
-                //
-            }
-            catch (...) {
+        bool korrekt = false;
+        //
+        try {
+            int zx, zy;
+            std::cout << "zu x: ";
+            std::cin >> zx;
+            std::cout << "zu y: ";
+            std::cin >> zy;
+            zx -= 1;
+            zy -= 1;
+            //
+            if (!is_int(zy) || !is_int(zx)) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "EINGABE NICHT KORREKT3" << std::endl;
-                continue;
+                return eingabe_schlagen_XO(vy, vx, pos, token);
             }
+            //
+            if (zx == vx && zy == vy) {korrekt = true;}
+            if (zy < 8 && zy > -1 && zx < 8 && zx > -1) {
+                if (token == 1) {
+                    if (zy == vy - 2 && zx == vx - 2 && pos[vy][vx] == 1 && pos[zy][zx] == 0 && pos[vy - 1][vx - 1] < 0) {korrekt = true;}
+                    else if (zy == vy - 2 && zx == vx + 2 && pos[vy][vx] == 1 && pos[zy][zx] == 0 && pos[vy - 1][vx + 1] < 0) {korrekt = true;}
+                }
+                else if (token ==-1) {
+                    if (zy == vy + 2 && zx == vx - 2 && pos[vy][vx] == -1 && pos[zy][zx] == 0 && pos[vy + 1][vx - 1] > 0) {korrekt = true;}
+                    else if (zy == vy + 2 && zx == vx + 2 && pos[vy][vx] == -1 && pos[zy][zx] == 0 && pos[vy + 1][vx + 1] > 0) {korrekt = true;}
+                }
+            }
+            //
+            if (korrekt) {result = {zy, zx}; return result;}
+            else {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "EINGABE NICHT KORREKT3" << std::endl;
+                return eingabe_schlagen_XO(vy, vx, pos, token);}
+            //
+        }
+        catch (...) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "EINGABE NICHT KORREKT3" << std::endl;
+            return eingabe_schlagen_XO(vy, vx, pos, token);
         }
     }
 
     std::vector<int> eingabe_schlagen_WM(int vy, int vx, const std::vector<std::vector<int>>& pos, int token) {
         std::vector<int> result;
         //
-        while (true) {
-            bool korrekt = false;
-            try {
-                int zx, zy;
-                std::cout << "zu x: ";
-                std::cin >> zx;
-                std::cout << "zu y: ";
-                std::cin >> zy;
-                zx -= 1;
-                zy -= 1;
-                //
-                if (!is_int(zy) || !is_int(zx)) {
-                    std::cout << "EINGABE NICHT KORREKT4" << std::endl;
-                    continue;
-                }
-                if (zx == vx && zy == vy) {korrekt = true;}
-                if (zy<8 && zy>-1 && zx<8 && zx>-1) {
-                    if (token==1) {
-                        //
-                        for (int i = 0; i < 7; ++i) {
-                            if (vy + 2 + i > 7 || vx + 2 + i > 7) {break;}
-                            if (pos[vy + 1 + i][vx + 1 + i] > 0) {break;}
-                            if (pos[vy + 1 + i][vx + 1 + i] < 0 && pos[vy + 2 + i][vx + 2 + i] == 0 && vy + 2 + i == zy && vx + 2 + i == zx) {
-                                korrekt = true; break;}
-                        }
-                        //
-                        for (int i = 0; i < 7; ++i) {
-                            if (vy + 2 + i > 7 || vx - 2 - i < 0) {break;}
-                            if (pos[vy + 1 + i][vx - 1 - i] > 0) {break;}
-                            if (pos[vy + 1 + i][vx - 1 - i] < 0 && pos[vy + 2 + i][vx - 2 - i] == 0 && vy + 2 + i == zy && vx - 2 - i == zx) {korrekt = true; break; }
-                        }
-                        //
-                        for (int i = 0; i < 7; ++i) {
-                            if (vy - 2 - i < 0 || vx - 2 - i < 0) {break;}
-                            if (pos[vy - 1 - i][vx - 1 - i] > 0) {break;}
-                            if (pos[vy - 1 - i][vx - 1 - i] < 0 && pos[vy - 2 - i][vx - 2 - i] == 0 && vy - 2 - i == zy && vx - 2 - i == zx) {korrekt = true; break;}
-                        }
-                        //
-                        for (int i = 0; i < 7; ++i) {
-                            if (vy - 2 - i < 0 || vx + 2 + i > 7) {break;}
-                            if (pos[vy - 1 - i][vx + 1 + i] > 0) {break;}
-                            if (pos[vy - 1 - i][vx + 1 + i] < 0 && pos[vy - 2 - i][vx + 2 + i] == 0 && vy - 2 - i == zy && vx + 2 + i == zx) {korrekt = true; break;}
-                        }
+        bool korrekt = false;
+        //
+        try {
+            int zx, zy;
+            std::cout << "zu x: ";
+            std::cin >> zx;
+            std::cout << "zu y: ";
+            std::cin >> zy;
+            zx -= 1;
+            zy -= 1;
+            //
+            if (!is_int(zy) || !is_int(zx)) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "EINGABE NICHT KORREKT4" << std::endl;
+                return eingabe_schlagen_WM(vy, vx, pos, token);
+            }
+            if (zx == vx && zy == vy) {korrekt = true;}
+            if (zy<8 && zy>-1 && zx<8 && zx>-1) {
+                if (token==1) {
+                    //
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy + 2 + i > 7 || vx + 2 + i > 7) {break;}
+                        if (pos[vy + 1 + i][vx + 1 + i] > 0) {break;}
+                        if (pos[vy + 1 + i][vx + 1 + i] < 0 && pos[vy + 2 + i][vx + 2 + i] == 0 && vy + 2 + i == zy && vx + 2 + i == zx) {
+                            korrekt = true; break;}
                     }
-                    else if (token == -1) {
-                        //
-                        for (int i = 0; i < 7; ++i) {
-                            if (vy + 2 + i > 7 || vx + 2 + i > 7) {break;}
-                            if (pos[vy + 1 + i][vx + 1 + i] < 0) {break;}
-                            if (pos[vy + 1 + i][vx + 1 + i] > 0 && pos[vy + 2 + i][vx + 2 + i] == 0 && vy + 2 + i == zy && vx + 2 + i == zx) {korrekt = true; break;}
-                        }
-                        //
-                        for (int i = 0; i < 7; ++i) {
-                            if (vy + 2 + i > 7 || vx - 2 - i < 0) {break;}
-                            if (pos[vy + 1 + i][vx - 1 - i] < 0) {break;}
-                            if (pos[vy + 1 + i][vx - 1 - i] > 0 && pos[vy + 2 + i][vx - 2 - i] == 0 && vy + 2 + i == zy && vx - 2 - i == zx) {korrekt = true; break;}
-                        }
-                        //
-                        for (int i = 0; i < 7; ++i) {
-                            if (vy - 2 - i < 0 || vx - 2 - i < 0) {break;}
-                            if (pos[vy - 1 - i][vx - 1 - i] < 0) {break;}
-                            if (pos[vy - 1 - i][vx - 1 - i] > 0 && pos[vy - 2 - i][vx - 2 - i] == 0 && vy - 2 - i == zy && vx - 2 - i == zx) {korrekt = true; break;}
-                        }
-                        //
-                        for (int i = 0; i < 7; ++i) {
-                            if (vy - 2 - i < 0 || vx + 2 + i > 7) {break;}
-                            if (pos[vy - 1 - i][vx + 1 + i] < 0) {break;}
-                            if (pos[vy - 1 - i][vx + 1 + i] > 0 && pos[vy - 2 - i][vx + 2 + i] == 0 && vy - 2 - i == zy && vx + 2 + i == zx) {korrekt = true; break;}
-                        }
+                    //
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy + 2 + i > 7 || vx - 2 - i < 0) {break;}
+                        if (pos[vy + 1 + i][vx - 1 - i] > 0) {break;}
+                        if (pos[vy + 1 + i][vx - 1 - i] < 0 && pos[vy + 2 + i][vx - 2 - i] == 0 && vy + 2 + i == zy && vx - 2 - i == zx) {korrekt = true; break; }
+                    }
+                    //
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy - 2 - i < 0 || vx - 2 - i < 0) {break;}
+                        if (pos[vy - 1 - i][vx - 1 - i] > 0) {break;}
+                        if (pos[vy - 1 - i][vx - 1 - i] < 0 && pos[vy - 2 - i][vx - 2 - i] == 0 && vy - 2 - i == zy && vx - 2 - i == zx) {korrekt = true; break;}
+                    }
+                    //
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy - 2 - i < 0 || vx + 2 + i > 7) {break;}
+                        if (pos[vy - 1 - i][vx + 1 + i] > 0) {break;}
+                        if (pos[vy - 1 - i][vx + 1 + i] < 0 && pos[vy - 2 - i][vx + 2 + i] == 0 && vy - 2 - i == zy && vx + 2 + i == zx) {korrekt = true; break;}
                     }
                 }
-                //
-                if (korrekt) {result = {zy, zx}; return result;}
-                else {std::cout << "EINGABE NICHT KORREKT4" << std::endl; continue; }
+                else if (token == -1) {
+                    //
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy + 2 + i > 7 || vx + 2 + i > 7) {break;}
+                        if (pos[vy + 1 + i][vx + 1 + i] < 0) {break;}
+                        if (pos[vy + 1 + i][vx + 1 + i] > 0 && pos[vy + 2 + i][vx + 2 + i] == 0 && vy + 2 + i == zy && vx + 2 + i == zx) {korrekt = true; break;}
+                    }
+                    //
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy + 2 + i > 7 || vx - 2 - i < 0) {break;}
+                        if (pos[vy + 1 + i][vx - 1 - i] < 0) {break;}
+                        if (pos[vy + 1 + i][vx - 1 - i] > 0 && pos[vy + 2 + i][vx - 2 - i] == 0 && vy + 2 + i == zy && vx - 2 - i == zx) {korrekt = true; break;}
+                    }
+                    //
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy - 2 - i < 0 || vx - 2 - i < 0) {break;}
+                        if (pos[vy - 1 - i][vx - 1 - i] < 0) {break;}
+                        if (pos[vy - 1 - i][vx - 1 - i] > 0 && pos[vy - 2 - i][vx - 2 - i] == 0 && vy - 2 - i == zy && vx - 2 - i == zx) {korrekt = true; break;}
+                    }
+                    //
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy - 2 - i < 0 || vx + 2 + i > 7) {break;}
+                        if (pos[vy - 1 - i][vx + 1 + i] < 0) {break;}
+                        if (pos[vy - 1 - i][vx + 1 + i] > 0 && pos[vy - 2 - i][vx + 2 + i] == 0 && vy - 2 - i == zy && vx + 2 + i == zx) {korrekt = true; break;}
+                    }
+                }
             }
             //
-            catch (...) {
+            if (korrekt) {result = {zy, zx}; return result;}
+            else {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "EINGABE NICHT KORREKT4" << std::endl;
-                continue;
+                return eingabe_schlagen_WM(vy, vx, pos, token);
             }
+        }
+        //
+        catch (...) {
+            std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "EINGABE NICHT KORREKT4" << std::endl;
+                return eingabe_schlagen_WM(vy, vx, pos, token);
         }
     }
 
@@ -1027,7 +1046,7 @@ public:
         if (schlagen_moeglich_XO(vy, vx, pos, token)) {
             print_board(pos);
             //
-            std::vector<int> input_move = eingabe_schlagen_XO(vy, vx, pos, this->token);
+            std::vector<int> input_move = eingabe_schlagen_XO(vy, vx, pos, token);
             int zy=input_move[0];
             int zx=input_move[1];
             //
@@ -1082,17 +1101,16 @@ public:
                     return player_schlagen_chain_XO(vy, vx, pos, token);
                 }
             }
+        }
         //
-        return pos;
+        else {return pos;}
     }
 
-};
-
     std::vector<std::vector<int>> player_schlagen_chain_WM(int vy, int vx, std::vector<std::vector<int>>& pos, int token) {
-        if (schlagen_moeglich_WM(vy, vx, pos, this->token)) {
+        if (schlagen_moeglich_WM(vy, vx, pos, token)) {
             print_board(pos);
             //
-            std::vector<int> input_move = eingabe_schlagen_WM(vy, vx, pos, this->token);
+            std::vector<int> input_move = eingabe_schlagen_WM(vy, vx, pos, token);
             int zy=input_move[0];
             int zx=input_move[1];
             //
@@ -1183,11 +1201,270 @@ public:
                 }
             }
         }
-        return pos;
+        else {return pos;}
     }
 
-private:
-    int token;
+    //
+
+    std::vector<std::vector<int>> player(std::vector<std::vector<int>>& pos) {
+        while (true) {
+            std::vector<int> input_move = eingabe();
+            int vy=input_move[0];
+            int vx=input_move[1];
+            int zy=input_move[2];
+            int zx=input_move[3];
+            //
+            if (token == 1) {
+                //X normal
+                if (zy == vy - 1 && zx == vx - 1 && pos[vy][vx] == 1 && pos[zy][zx] == 0) {
+                    pos[vy][vx] = 0;
+                    pos[zy][zx] = 1;
+                    if (zy == 0) {pos[zy][zx] = 2;}
+                    return pos;
+                }
+                else if (zy == vy - 1 && zx == vx + 1 && pos[vy][vx] == 1 && pos[zy][zx] == 0) {
+                    pos[vy][vx] = 0;
+                    pos[zy][zx] = 1;
+                    if (zy == 0) {pos[zy][zx] = 2;}
+                    return pos;
+                }
+                //schlagen
+                else if (zy == vy - 2 && zx == vx - 2 && pos[vy][vx] == 1 && pos[zy][zx] == 0 && pos[vy - 1][vx - 1] < 0) {
+                    pos[vy][vx] = 0;
+                    pos[zy][zx] = 1;
+                    if (zy == 0) {pos[zy][zx] = 2;}
+                    pos[vy - 1][vx - 1] = 0;
+                    return player_schlagen_chain_XO(zy, zx, pos, this->token);
+                }
+                else if (zy == vy - 2 && zx == vx + 2 && pos[vy][vx] == 1 && pos[zy][zx] == 0 && pos[vy - 1][vx + 1] < 0) {
+                    pos[vy][vx] = 0;
+                    pos[zy][zx] = 1;
+                    if (zy == 0) {pos[zy][zx] = 2;}
+                    pos[vy - 1][vx + 1] = 0;
+                    return player_schlagen_chain_XO(zy, zx, pos, this->token);
+                }
+                // M normal + erstes Mal schlagen
+                else if (pos[vy][vx] == 2 && pos[zy][zx] == 0 && zy < vy && zx < vx) {
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy - i - 1 < 0 || vx - i - 1 < 0) {break;}
+                        if (vy - i - 1 == zy && vx - i - 1 == zx) {
+                            pos[vy][vx] = 0;
+                            pos[zy][zx] = 2;
+                            return pos;
+                        }
+                        if (pos[vy - i - 1][vx - i - 1] > 0) {break;}
+                        if (pos[vy - i - 1][vx - i - 1] < 0) {
+                            if (!(vy - i - 2 < 0 || vx - i - 2 < 0)) {
+                                if (vy - i - 2 == zy && vx - i - 2 == zx) {
+                                    pos[vy][vx] = 0;
+                                    pos[zy][zx] = 2;
+                                    pos[vy - i - 1][vx - i - 1] = 0;
+                                    return player_schlagen_chain_WM(zy, zx, pos, this->token);
+                                }
+                                else {break;}
+                            }
+                            else {break;}
+                        }
+                    }
+                }
+                else if (pos[vy][vx] == 2 && pos[zy][zx] == 0 && zy > vy && zx < vx) {
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy + i + 1 > 7 || vx - i - 1 < 0) {break;}
+                        if (vy + i + 1 == zy && vx - i - 1 == zx) {
+                            pos[vy][vx] = 0;
+                            pos[zy][zx] = 2;
+                            return pos;
+                        }
+                        if (pos[vy + i + 1][vx - i - 1] > 0) {break;}
+                        if (pos[vy + i + 1][vx - i - 1] < 0) {
+                            if (!(vy + i + 2 > 7 || vx - i - 2 < 0)) {
+                                if (vy + i + 2 == zy && vx - i - 2 == zx) {
+                                    pos[vy][vx] = 0;
+                                    pos[zy][zx] = 2;
+                                    pos[vy + i + 1][vx - i - 1] = 0;
+                                    return player_schlagen_chain_WM(zy, zx, pos, this->token);
+                                }
+                                else {break;}
+                            }
+                            else {break;}
+                        }
+                    }
+                }
+                else if (pos[vy][vx] == 2 && pos[zy][zx] == 0 && zy < vy && zx > vx) {
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy - i - 1 < 0 || vx + i + 1 > 7) {break;}
+                        if (vy - i - 1 == zy && vx + i + 1 == zx) {
+                            pos[vy][vx] = 0;
+                            pos[zy][zx] = 2;
+                            return pos;
+                        }
+                        if (pos[vy - i - 1][vx + i + 1] > 0) {break;}
+                        if (pos[vy - i - 1][vx + i + 1] < 0) {
+                            if (!(vy - i - 2 < 0 || vx + i + 2 > 7)) {
+                                if (vy - i - 2 == zy && vx + i + 2 == zx) {
+                                    pos[vy][vx] = 0;
+                                    pos[zy][zx] = 2;
+                                    pos[vy - i - 1][vx + i + 1] = 0;
+                                    return player_schlagen_chain_WM(zy, zx, pos, this->token);
+                                }
+                                else {break;}
+                            }
+                            else {break;}
+                        }
+                    }
+                }
+                else if (pos[vy][vx] == 2 && pos[zy][zx] == 0 && zy > vy && zx > vx) {
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy + i + 1 > 7 || vx + i + 1 > 7) {break;}
+                        if (vy + i + 1 == zy && vx + i + 1 == zx) {
+                            pos[vy][vx] = 0;
+                            pos[zy][zx] = 2;
+                            return pos;
+                        }
+                        if (pos[vy + i + 1][vx + i + 1] > 0) {break;}
+                        if (pos[vy + i + 1][vx + i + 1] < 0) {
+                            if (!(vy + i + 2 > 7 || vx + i + 2 > 7)) {
+                                if (vy + i + 2 == zy && vx + i + 2 == zx) {
+                                    pos[vy][vx] = 0;
+                                    pos[zy][zx] = 2;
+                                    pos[vy + i + 1][vx + i + 1] = 0;
+                                    return player_schlagen_chain_WM(zy, zx, pos, this->token);
+                                }
+                                else {break;}
+                            }
+                            else {break;}
+                        }
+                    }
+                }
+            }
+            //
+            else if (token == -1) {
+                if (zy == vy + 1 && zx == vx - 1 && pos[vy][vx] == -1 && pos[zy][zx] == 0) {
+                    pos[vy][vx] = 0;
+                    pos[zy][zx] = -1;
+                    if (zy == 7) {pos[zy][zx] = -2;}
+                    return pos;
+                }
+                else if (zy == vy + 1 && zx == vx + 1 && pos[vy][vx] == -1 && pos[zy][zx] == 0) {
+                    pos[vy][vx] = 0;
+                    pos[zy][zx] = -1;
+                    if (zy == 7) {pos[zy][zx] = -2;}
+                    return pos;
+                }
+                else if (zy == vy + 2 && zx == vx - 2 && pos[vy][vx] == -1 && pos[zy][zx] == 0 && pos[vy + 1][vx - 1] > 0) {
+                    pos[vy][vx] = 0;
+                    pos[zy][zx] = -1;
+                    if (zy == 0) {pos[zy][zx] = -2;}
+                    pos[vy + 1][vx - 1] = 0;
+                    return player_schlagen_chain_XO(zy, zx, pos, this->token);
+                }
+                else if (zy == vy + 2 && zx == vx + 2 && pos[vy][vx] == -1 && pos[zy][zx] == 0 && pos[vy + 1][vx + 1] > 0) {
+                    pos[vy][vx] = 0;
+                    pos[zy][zx] = -1;
+                    if (zy == 0) {pos[zy][zx] = -2;}
+                    pos[vy + 1][vx + 1] = 0;
+                    return player_schlagen_chain_XO(zy, zx, pos, this->token);
+                }
+                else if (pos[vy][vx] == -2 && pos[zy][zx] == 0 && zy < vy && zx < vx) {
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy - i - 1 < 0 || vx - i - 1 < 0) {break;}
+                        if (vy - i - 1 == zy && vx - i - 1 == zx) {
+                            pos[vy][vx] = 0;
+                            pos[zy][zx] = -2;
+                            return pos;
+                        }
+                        if (pos[vy - i - 1][vx - i - 1] < 0) {break;}
+                        if (pos[vy - i - 1][vx - i - 1] > 0) {
+                            if (!(vy - i - 2 < 0 || vx - i - 2 < 0)) {
+                                if (vy - i - 2 == zy && vx - i - 2 == zx) {
+                                    pos[vy][vx] = 0;
+                                    pos[zy][zx] = -2;
+                                    pos[vy - i - 1][vx - i - 1] = 0;
+                                    return player_schlagen_chain_WM(zy, zx, pos, this->token);
+                                }
+                                else {break;}
+                            }
+                            else {break;}
+                        }
+                    }
+                }
+                else if (pos[vy][vx] == -2 && pos[zy][zx] == 0 && zy > vy && zx < vx) {
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy + i + 1 > 7 || vx - i - 1 < 0) {break;}
+                        if (vy + i + 1 == zy && vx - i - 1 == zx) {
+                            pos[vy][vx] = 0;
+                            pos[zy][zx] = -2;
+                            return pos;
+                        }
+                        if (pos[vy + i + 1][vx - i - 1] < 0) {break;}
+                        if (pos[vy + i + 1][vx - i - 1] > 0) {
+                            if (!(vy + i + 2 > 7 || vx - i - 2 < 0)) {
+                                if (vy + i + 2 == zy && vx - i - 2 == zx) {
+                                    pos[vy][vx] = 0;
+                                    pos[zy][zx] = -2;
+                                    pos[vy + i + 1][vx - i - 1] = 0;
+                                    return player_schlagen_chain_WM(zy, zx, pos, this->token);
+                                }
+                                else {break;}
+                            }
+                            else {break;}
+                        }
+                    }
+                }
+                else if (pos[vy][vx] == -2 && pos[zy][zx] == 0 && zy < vy && zx > vx) {
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy - i - 1 < 0 || vx + i + 1 > 7) {break;}
+                        if (vy - i - 1 == zy && vx + i + 1 == zx) {
+                            pos[vy][vx] = 0;
+                            pos[zy][zx] = -2;
+                            return pos;
+                        }
+                        if (pos[vy - i - 1][vx + i + 1] < 0) {break;}
+                        if (pos[vy - i - 1][vx + i + 1] > 0) {
+                            if (!(vy - i - 2 < 0 || vx + i + 2 > 7)) {
+                                if (vy - i - 2 == zy && vx + i + 2 == zx) {
+                                    pos[vy][vx] = 0;
+                                    pos[zy][zx] = -2;
+                                    pos[vy - i - 1][vx + i + 1] = 0;
+                                    return player_schlagen_chain_WM(zy, zx, pos, this->token);
+                                }
+                                else {break;}
+                            }
+                            else {break;}
+                        }
+                    }
+                }
+                else if (pos[vy][vx] == -2 && pos[zy][zx] == 0 && zy > vy && zx > vx) {
+                    for (int i = 0; i < 7; ++i) {
+                        if (vy + i + 1 > 7 || vx + i + 1 > 7) {break;}
+                        if (vy + i + 1 == zy && vx + i + 1 == zx) {
+                            pos[vy][vx] = 0;
+                            pos[zy][zx] = -2;
+                            return pos;
+                        }
+                        if (pos[vy + i + 1][vx + i + 1] < 0) {break;}
+                        if (pos[vy + i + 1][vx + i + 1] > 0) {
+                            if (!(vy + i + 2 > 7 || vx + i + 2 > 7)) {
+                                if (vy + i + 2 == zy && vx + i + 2 == zx) {
+                                    pos[vy][vx] = 0;
+                                    pos[zy][zx] = -2;
+                                    pos[vy + i + 1][vx + i + 1] = 0;
+                                    return player_schlagen_chain_WM(zy, zx, pos, this->token);
+                                }
+                                else {break;}
+                            }
+                            else {break;}
+                        }
+                    }
+                }
+            }
+            std::cout << "EINGABE NICHT KORREKT2" << std::endl;
+        }
+    }
+
+    std::vector<std::vector<int>> get_move(std::vector<std::vector<int>>& board) {
+        return player(board);
+    }
 };
 
 //
@@ -1419,7 +1696,7 @@ public:
 
         while (true) {
             //-----------------------------------------
-            MinimaxPlayer player_1(1, this->board);
+            HumanPlayer player_1(1);
             MinimaxPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;

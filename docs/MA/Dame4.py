@@ -633,14 +633,14 @@ class Dame():
     
     def play(self):
         self.board = [
-        [0,-1,0,-1,0,-1,0,-1],
-        [-1,0,-1,0,-1,0,-1,0],
-        [0,-1,0,-1,0,-1,0,-1],
-        [0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0],
-        [1,0,1,0,1,0,1,0],
-        [0,1,0,1,0,1,0,1],
-        [1,0,1,0,1,0,1,0],
+            [0,-1,0,-1,0,-1,0,-1],
+            [-1,0,-1,0,-1,0,-1,0],
+            [0,-1,0,-1,0,-1,0,-1],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [1,0,1,0,1,0,1,0],
+            [0,1,0,1,0,1,0,1],
+            [1,0,1,0,1,0,1,0]
         ]
         #
         self.turn=0
@@ -891,6 +891,11 @@ class HumanPlayer(Player):
             if not moeglich:
                 for i in range(7):
                     if y-2-i<0 or x-2-i<0:
+                        print(y)
+                        print(x)
+                        print(y-2-i)
+                        print(x-2-i)
+                        print("jk")
                         break
                     if pos[y-1-i][x-1-i]>0:
                         break
@@ -1145,9 +1150,7 @@ class HumanPlayer(Player):
                         pos[zy][zx]=2
                     pos[vy-1][vx-1]=0
                     #
-                    vy = zy
-                    vx = zx
-                    return self.player_schlagen_chain_XO(vy,vx,pos)
+                    return self.player_schlagen_chain_XO(zy,zx,pos)
                 elif zy==vy-2 and zx==vx+2 and pos[vy][vx]==1 and pos[zy][zx]==0 and pos[vy-1][vx+1]<0:
                     pos[vy][vx]=0
                     pos[zy][zx]=1
@@ -1155,9 +1158,7 @@ class HumanPlayer(Player):
                         pos[zy][zx]=2
                     pos[vy-1][vx+1]=0
                     #
-                    vy = zy
-                    vx = zx
-                    return self.player_schlagen_chain_XO(vy,vx,pos)
+                    return self.player_schlagen_chain_XO(zy,zx,pos)
                 #W normal+erstes Mal schlagen------------------------------
                 elif pos[vy][vx]==2 and pos[zy][zx]==0 and zy<vy and zx<vx:
                     for i in range(7):
@@ -1175,7 +1176,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=2
                                     pos[vy-i-1][vx-i-1]=0
-                                    return self.player_schlagen_chain_WM(vy,vx,pos)
+                                    return self.player_schlagen_chain_WM(zy,zx,pos)
                                 else:
                                     break
                             else:
@@ -1196,7 +1197,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=2
                                     pos[vy+i+1][vx-i-1]=0
-                                    return self.player_schlagen_chain_WM(vy,vx,pos)
+                                    return self.player_schlagen_chain_WM(zy,zx,pos)
                                 else:
                                     break
                             else:
@@ -1217,7 +1218,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=2
                                     pos[vy-i-1][vx+i+1]=0
-                                    return self.player_schlagen_chain_WM(vy,vx,pos)
+                                    return self.player_schlagen_chain_WM(zy,zx,pos)
                                 else:
                                     break
                             else:
@@ -1238,7 +1239,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=2
                                     pos[vy+i+1][vx+i+1]=0
-                                    return self.player_schlagen_chain_WM(vy,vx,pos)
+                                    return self.player_schlagen_chain_WM(zy,zx,pos)
                                 else:
                                     break
                             else:
@@ -1266,9 +1267,7 @@ class HumanPlayer(Player):
                         pos[zy][zx]=-2
                     pos[vy+1][vx-1]=0
                     #
-                    vy = zy
-                    vx = zx
-                    return self.player_schlagen_chain_XO(vy,vx,pos)
+                    return self.player_schlagen_chain_XO(zy,zx,pos)
                 elif zy==vy+2 and zx==vx+2 and pos[vy][vx]==-1 and pos[zy][zx]==0 and pos[vy+1][vx+1]>0:
                     pos[vy][vx]=0
                     pos[zy][zx]=-1
@@ -1276,9 +1275,7 @@ class HumanPlayer(Player):
                         pos[zy][zx]=-2
                     pos[vy+1][vx+1]=0
                     #
-                    vy = zy
-                    vx = zx
-                    return self.player_schlagen_chain_XO(vy,vx,pos)
+                    return self.player_schlagen_chain_XO(zy,zx,pos)
                 #M normal+erstes Mal schlagen------------------------------
                 elif pos[vy][vx]==-2 and pos[zy][zx]==0 and zy<vy and zx<vx:
                     for i in range(7):
@@ -1296,7 +1293,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=-2
                                     pos[vy-i-1][vx-i-1]=0
-                                    return self.player_schlagen_chain_WM(vy,vx,pos)
+                                    return self.player_schlagen_chain_WM(zy,zx,pos)
                                 else:
                                     break
                             else:
@@ -1317,7 +1314,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=-2
                                     pos[vy+i+1][vx-i-1]=0
-                                    return self.player_schlagen_chain_WM(vy,vx,pos)
+                                    return self.player_schlagen_chain_WM(zy,zx,pos)
                                 else:
                                     break
                             else:
@@ -1338,7 +1335,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=-2
                                     pos[vy-i-1][vx+i+1]=0
-                                    return self.player_schlagen_chain_WM(vy,vx,pos)
+                                    return self.player_schlagen_chain_WM(zy,zx,pos)
                                 else:
                                     break
                             else:
@@ -1359,7 +1356,7 @@ class HumanPlayer(Player):
                                     pos[vy][vx]=0
                                     pos[zy][zx]=-2
                                     pos[vy+i+1][vx+i+1]=0
-                                    return self.player_schlagen_chain_WM(vy,vx,pos)
+                                    return self.player_schlagen_chain_WM(zy,zx,pos)
                                 else:
                                     break
                             else:
