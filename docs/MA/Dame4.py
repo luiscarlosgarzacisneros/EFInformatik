@@ -1792,6 +1792,7 @@ def generate_one_random_child(position,player):#pick rand piece, then pick rand 
                         piecesx.append(x)
     #
     if piecesx==[]:
+        print("jnkbjkjbk")
         return []
     #
     while True:
@@ -1801,20 +1802,22 @@ def generate_one_random_child(position,player):#pick rand piece, then pick rand 
         #
         if player==1:
             if boardcopy[y][x]==1:
+                print("1")
                 child=gorcXO(y,x,position,1)
             elif boardcopy[y][x]==2:
                 child=gorcWM(y,x,position,2)
         elif player==-1:
             if boardcopy[y][x]==1:
+                print("-1")
                 child=gorcXO(y,x,position,-1)
             elif boardcopy[y][x]==2:
                 child=gorcWM(y,x,position,-2)
         #
+        print(child)
         if child!=[]: 
-            return child 
-        else:
-            continue
-
+            break
+    #
+    return child
 #
 
 class MCTSPlayer(Player):
