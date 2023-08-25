@@ -464,10 +464,7 @@ class MCTSNode(MCTSPlayer):
                 if nextpos==[]:
                     break
                 pos=nextpos
-                if player==-1:
-                    player=1
-                elif player==1:
-                    player=-1
+                player=-player
             values.append(inarow(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
         value=sum(values)/len(values)
         return value
