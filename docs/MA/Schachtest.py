@@ -3618,7 +3618,7 @@ class Schach():
         #
         self.players.clear()
         self.players.append(HumanPlayer(6))#k
-        self.players.append(MinimaxPlayer(-6))#K
+        self.players.append(MCTSPlayer(-6))#K
         #
         current=0
         while True:
@@ -3860,7 +3860,7 @@ class MCTSPlayer(Player):
         while True:
             self.counter+=1
             selectednode=self.rootnode.selectleafnode()
-            if selectednode.is_it_a_new_node():
+            if selectednode.children==[]:
                 selectednode.backpropagate(selectednode.simulate(),selectednode.numberofsimulations)
             else:
                 selectednode.expand()
@@ -3966,12 +3966,6 @@ class MCTSNode(MCTSPlayer):
         value=sum(values)/len(values)
         return value
     
-    def is_it_a_new_node(self):
-        if self.children==[]:
-            return True
-        else:
-            return False
-
     def selectleafnode(self):
         children = self.children
         bestvalue = -math.inf

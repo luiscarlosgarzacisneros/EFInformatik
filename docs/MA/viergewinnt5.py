@@ -461,6 +461,8 @@ class MCTSNode(MCTSPlayer):
             player=self.playeramzug
             for i in range(self.depth):
                 nextpos=generate_one_random_child(pos,player)
+                if nextpos==[]:
+                    break
                 pos=nextpos
                 if player==-1:
                     player=1

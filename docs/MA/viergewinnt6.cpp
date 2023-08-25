@@ -256,6 +256,7 @@ std::list<std::vector<std::vector<int>>> generate_children(const std::vector<std
 std::vector<std::vector<int>> generate_one_random_child(const std::vector<std::vector<int>> board, const int player) {
     std::vector<std::vector<int>> board_copy=board;
     int x=generate_random_int(0, 6);
+    if (game_over(board)) {return {{0}};}
     while (true) {
         if (board_copy[0][x]==0) {break;}
         x=generate_random_int(0,6);
@@ -603,6 +604,13 @@ public:
 
             for (int i = 0; i < depth; ++i) {
                 std::vector<std::vector<int>> next_pos = generate_one_random_child(pos, player);
+                bool all_zero = true;
+                for (const std::vector<int>& row : next_pos) {
+                    for (int value : row) {
+                        if (value != 0) {all_zero = false; break;}
+                    }
+                    if (!all_zero) {break;}}
+                if (all_zero) {break;}
                 pos = next_pos;
                 if (player== -1) {player= 1;}
                 else if (player== 1) {player= -1;}
@@ -705,7 +713,7 @@ public:
         while (true) {
             //-----------------------------------------
             HumanPlayer player_1(1);
-            MinimaxPlayer player_2(-1, this->board);
+            MCTSPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             printboard(this->board);
