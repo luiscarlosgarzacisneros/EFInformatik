@@ -310,7 +310,7 @@ def gorcWM(y,x,boardc,player):
             if boardc[y+1+i][x+1+i]==0:
                 childrenWM.append(11+i)
             if boardc[y+1+i][x+1+i]<0:
-                if not y+2+i>7 and not x+1+i>7:
+                if not y+2+i>7 and not x+2+i>7:
                     if boardc[y+2+i][x+2+i]==0:
                         gorcWMschlagen(y,x,boardc,player,[])
                         break
@@ -327,7 +327,7 @@ def gorcWM(y,x,boardc,player):
             if boardc[y+1+i][x-1-i]==0:
                 childrenWM.append(21+i)
             if boardc[y+1+i][x-1+i]<0:
-                if not y+2+i>7 and not x-1-i<0:
+                if not y+2+i>7 and not x-2-i<0:
                     if boardc[y+2+i][x-2-i]==0:
                         gorcWMschlagen(y,x,boardc,player,[])
                         break
@@ -344,7 +344,7 @@ def gorcWM(y,x,boardc,player):
             if boardc[y-1-i][x+1+i]==0:
                 childrenWM.append(31+i)
             if boardc[y-1-i][x+1+i]<0:
-                if not y-2-i<0 and not x+1+i>7:
+                if not y-2-i<0 and not x+2+i>7:
                     if boardc[y-2-i][x+2+i]==0:
                         gorcWMschlagen(y,x,boardc,player,[])
                         break
@@ -361,7 +361,7 @@ def gorcWM(y,x,boardc,player):
             if boardc[y-1-i][x-1-i]==0:
                 childrenWM.append(41+i)
             if boardc[y-1-i][x-1-i]<0:
-                if not y-2-i<0 and not x-1-i<0:
+                if not y-2-i<0 and not x-2-i<0:
                     if boardc[y-2-i][x-2-i]==0:
                         gorcWMschlagen(y,x,boardc,player,[])
                         break
@@ -379,7 +379,7 @@ def gorcWM(y,x,boardc,player):
             if boardc[y+1+i][x+1+i]==0:
                 childrenWM.append(11+i)
             if boardc[y+1+i][x+1+i]>0:
-                if not y+2+i>7 and not x+1+i>7:
+                if not y+2+i>7 and not x+2+i>7:
                     if boardc[y+2+i][x+2+i]==0:
                         gorcWMschlagen(y,x,boardc,player,[])
                         break
@@ -396,7 +396,7 @@ def gorcWM(y,x,boardc,player):
             if boardc[y+1+i][x-1-i]==0:
                 childrenWM.append(21+i)
             if boardc[y+1+i][x-1+i]>0:
-                if not y+2+i>7 and not x-1-i<0:
+                if not y+2+i>7 and not x-2-i<0:
                     if boardc[y+2+i][x-2-i]==0:
                         gorcWMschlagen(y,x,boardc,player,[])
                         break
@@ -413,7 +413,7 @@ def gorcWM(y,x,boardc,player):
             if boardc[y-1-i][x+1+i]==0:
                 childrenWM.append(31+i)
             if boardc[y-1-i][x+1+i]>0:
-                if not y-2-i<0 and not x+1+i>7:
+                if not y-2-i<0 and not x+2+i>7:
                     if boardc[y-2-i][x+2+i]==0:
                         gorcWMschlagen(y,x,boardc,player,[])
                         break
@@ -430,7 +430,7 @@ def gorcWM(y,x,boardc,player):
             if boardc[y-1-i][x-1-i]==0:
                 childrenWM.append(41+i)
             if boardc[y-1-i][x-1-i]>0:
-                if not y-2-i<0 and not x-1-i<0:
+                if not y-2-i<0 and not x-2-i<0:
                     if boardc[y-2-i][x-2-i]==0:
                         gorcWMschlagen(y,x,boardc,player,[])
                         break
