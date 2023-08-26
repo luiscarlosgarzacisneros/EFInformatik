@@ -159,8 +159,10 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1+i][x+1+i]>0:
                 break
             if boardc[y+1+i][x+1+i]<0:
+                for piece in delete_list: #um or/ul inf recursion zu verhindern
+                    if piece[0]==y+1+i and piece[1]==x+1+i:
+                        break
                 if not y+2+i>7 and not x+2+i>7 and boardc[y+2+i][x+2+i]==0:
-                    print("ok 1")
                     geschlagen=True
                     delete_list.append([y+1+i, x+1+i])
                     gorcWMschlagen(y+2+i,x+2+i,boardc,player,delete_list)#
@@ -174,8 +176,10 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1+i][x-1-i]>0:
                 break
             if boardc[y+1+i][x-1-i]<0:
+                for piece in delete_list: #um or/ul inf recursion zu verhindern
+                    if piece[0]==y+1+i and piece[1]==x-1-i:
+                        break
                 if not y+2+i>7 and not x-2-i<0 and boardc[y+2+i][x-2-i]==0:
-                    print("ok 2")
                     geschlagen=True
                     delete_list.append([y+1+i, x-1-i])
                     gorcWMschlagen(y+2+i,x-2-i,boardc,player,delete_list)#
@@ -189,8 +193,10 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1-i][x+1+i]>0:
                 break
             if boardc[y-1-i][x+1+i]<0:
+                for piece in delete_list: #um or/ul inf recursion zu verhindern
+                    if piece[0]==y-1-i and piece[1]==x+1+i:
+                        break
                 if not y-2-i<0 and not x+2+i>7 and boardc[y-2-i][x+2+i]==0:
-                    print("ok 3")
                     geschlagen=True
                     delete_list.append([y-1-i, x+1+i])
                     gorcWMschlagen(y-2-i,x+2+i,boardc,player,delete_list)#
@@ -204,8 +210,10 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1-i][x-1-i]>0:
                 break
             if boardc[y-1-i][x-1-i]<0:
+                for piece in delete_list: #um or/ul inf recursion zu verhindern
+                    if piece[0]==y-1-i and piece[1]==x-1-i:
+                        break
                 if not y-2-i<0 and not x-2-i<0 and boardc[y-2-i][x-2-i]==0:
-                    print("ok 4")
                     geschlagen=True
                     delete_list.append([y-1-i, x-1-i])
                     gorcWMschlagen(y-2-i,x-2-i,boardc,player,delete_list)#
@@ -221,6 +229,9 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1+i][x+1+i]<0:
                 break
             if boardc[y+1+i][x+1+i]>0:
+                for piece in delete_list: #um or/ul inf recursion zu verhindern
+                    if piece[0]==y+1+i and piece[1]==x+1+i:
+                        break
                 if not y+2+i>7 and not x+2+i>7 and boardc[y+2+i][x+2+i]==0:
                     geschlagen=True
                     delete_list.append([y+1+i, x+1+i])
@@ -235,6 +246,9 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1+i][x-1-i]<0:
                 break
             if boardc[y+1+i][x-1-i]>0:
+                for piece in delete_list: #um or/ul inf recursion zu verhindern
+                    if piece[0]==y+1+i and piece[1]==x-1-i:
+                        break
                 if not y+2+i>7 and not x-2-i<0 and boardc[y+2+i][x-2-i]==0:
                     geschlagen=True
                     delete_list.append([y+1+i, x-1-i])
@@ -249,6 +263,9 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1-i][x+1+i]<0:
                 break
             if boardc[y-1-i][x+1+i]>0:
+                for piece in delete_list: #um or/ul inf recursion zu verhindern
+                    if piece[0]==y-1-i and piece[1]==x+1+i:
+                        break
                 if not y-2-i<0 and not x+2+i>7 and boardc[y-2-i][x+2+i]==0:
                     geschlagen=True
                     delete_list.append([y-1-i, x+1+i])
@@ -263,6 +280,9 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1-i][x-1-i]<0:
                 break
             if boardc[y-1-i][x-1-i]>0:
+                for piece in delete_list: #um or/ul inf recursion zu verhindern
+                    if piece[0]==y-1-i and piece[1]==x-1-i:
+                        break
                 if not y-2-i<0 and not x-2-i<0 and boardc[y-2-i][x-2-i]==0:
                     geschlagen=True
                     delete_list.append([y-1-i, x-1-i])
