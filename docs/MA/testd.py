@@ -6,12 +6,12 @@ import math
 board = [
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,-2,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
-            [0,0,-1,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
-            [2,0,0,0,0,0,0,0]
+            [0,0,0,0,-2,0,0,0],
+            [0,0,0,1,0,0,0,0],
+            [0,0,0,0,0,0,0,0]
         ]
 
 #--------------------nicht fertig
@@ -25,28 +25,29 @@ gorc_WM_schlagen_children=[]
 gorc_WM_schlagen_children_delete=[]
 
 def gorcXOschlagen(y,x,boardc,player,delete_list):
+    geschlagen=False
     if player==1:
-        if y-2>-1 and x-2>-1 and boardc[y-2][x-2]==0:
-            if boardc[y-1][x-1]<0:
-                delete_list.append([y-1,x-1])
-                gorcXOschlagen(y-2,x-2,boardc,player,delete_list)
-        if y-2>-1 and x+ 2<8 and  boardc[y-2][x+2]==0:
-            if boardc[y-1][x+1]<0:
-                delete_list.append([y-1,x+1])
-                gorcXOschlagen(y-2,x+2,boardc,player,delete_list)
-        else:
+        if y-2>-1 and x-2>-1 and boardc[y-2][x-2]==0 and boardc[y-1][x-1]<0:
+            geschlagen=True
+            delete_list.append([y-1,x-1])
+            gorcXOschlagen(y-2,x-2,boardc,player,delete_list)
+        if y-2>-1 and x+2<8 and  boardc[y-2][x+2]==0 and boardc[y-1][x+1]<0:
+            geschlagen=True
+            delete_list.append([y-1,x+1])
+            gorcXOschlagen(y-2,x+2,boardc,player,delete_list)
+        if not geschlagen:
             gorc_XO_schlagen_children.append((y+1) * 10 + (x+1))
             gorc_XO_schlagen_children_delete.append(delete_list)
     elif player==-1:
-        if y+2<8 and x-2>-1 and boardc[y+2][x-2]==0:
-            if boardc[y+1][x-1]>0:
-                delete_list.append([y+1,x-1])
-                gorcXOschlagen(y+2,x-2,boardc,player,delete_list)
-        if y+2<8 and x+ 2<8 and boardc[y+2][x+2]==0:
-            if boardc[y+1][x+1]>0:
-                delete_list.append([y+1,x+1])
-                gorcXOschlagen(y+2,x+2,boardc,player,delete_list)
-        else:
+        if y+2<8 and x-2>-1 and boardc[y+2][x-2]==0 and boardc[y+1][x-1]>0:
+            geschlagen=True
+            delete_list.append([y+1,x-1])
+            gorcXOschlagen(y+2,x-2,boardc,player,delete_list)
+        if y+2<8 and x+2<8 and boardc[y+2][x+2]==0 and boardc[y+1][x+1]>0:
+            geschlagen=True
+            delete_list.append([y+1,x+1])
+            gorcXOschlagen(y+2,x+2,boardc,player,delete_list)
+        if not geschlagen:
             gorc_XO_schlagen_children.append((y+1) * 10 + (x+1))
             gorc_XO_schlagen_children_delete.append(delete_list)
 
@@ -65,10 +66,10 @@ def gorcXO(y,x,boardc,player):
         #schlagen
         if y-2>-1 and x-2>-1 and  boardc[y-2][x-2]==0:
             if boardc[y-1][x-1]<0:
-                gorcXOschlagen(y-2,x-2,boardc,player,[[y-1,x-1]])
+                gorcXOschlagen(y,x,boardc,player,[])
         if y-2>-1 and x+ 2<8 and  boardc[y-2][x+2]==0:
             if boardc[y-1][x+1]<0:
-                gorcXOschlagen(y-2,x+2,boardc,player,[[y-1,x+1]])
+                gorcXOschlagen(y,x,boardc,player,[])
     elif player==-1:
         #normal
         if y+1<8 and x-1>-1 and  boardc[y+1][x-1]==0:
@@ -78,10 +79,10 @@ def gorcXO(y,x,boardc,player):
         #schlagen
         if y+2<8 and x-2>-1 and boardc[y+2][x-2]==0:
             if boardc[y+1][x-1]>0:
-                gorcXOschlagen(y+2,x-2,boardc,player,[[y+1,x-1]])
+                gorcXOschlagen(y,x,boardc,player,[])
         if y+2<8 and x+ 2<8 and boardc[y+2][x+2]==0:
             if boardc[y+1][x+1]>0:
-                gorcXOschlagen(y+2,x+2,boardc,player,[[y+1,x+1]])
+                gorcXOschlagen(y,x,boardc,player,[])
     #
     for i in range(schlagen_c):
         childrenXO.extend(gorc_XO_schlagen_children)
@@ -229,6 +230,8 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
         if not geschlagen:
             gorc_WM_schlagen_children.append(((y+1) * 10) + (((x+1) + 100)))
             gorc_WM_schlagen_children_delete.append(delete_list)
+        else:
+            pass
     #
     elif player==-2:
         #1: ur
@@ -302,6 +305,8 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
         if not geschlagen:
             gorc_WM_schlagen_children.append(((y+1) * 10) + (((x+1) + 100)))
             gorc_WM_schlagen_children_delete.append(delete_list)
+        else:
+            pass
                   
 def gorcWM(y,x,boardc,player):
     #
