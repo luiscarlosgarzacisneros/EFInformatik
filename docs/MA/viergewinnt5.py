@@ -314,7 +314,7 @@ class VierGewinnt():
         # X spielt immer zuerst
         self.players.clear()
         self.players.append(MinimaxPlayer(1))
-        self.players.append(MCTSPlayer(-1))
+        self.players.append(MinimaxPlayer(-1))
         #
         current=0
         while True:
