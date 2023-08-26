@@ -171,6 +171,8 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         delete_list.append([y+1+i, x+1+i])
                         gorcWMschlagen(y+2+i,x+2+i,boardc,player,delete_list)
                         break
+                    else:
+                        break
                 else:
                     break
         #2: ul
@@ -184,7 +186,9 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                     if boardc[y+2+i][x-2-i]==0:
                         geschlagen=True
                         delete_list.append([y+1+i, x-1-i])
-                        gorcWMschlagen(y+2+i,x-2-i,boardc,player,delete_list)
+                        gorcWMschlagen(y+2+i,x-2-i,boardc,player,delete_list)#
+                        break
+                    else:
                         break
                 else:
                     break
@@ -199,7 +203,9 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                     if boardc[y-2-i][x+2+i]==0:
                         geschlagen=True
                         delete_list.append([y-1-i, x+1+i])
-                        gorcWMschlagen(y-2-i,x+2+i,boardc,player,delete_list)
+                        gorcWMschlagen(y-2-i,x+2+i,boardc,player,delete_list)#
+                        break
+                    else:
                         break
                 else:
                     break
@@ -215,6 +221,8 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         geschlagen=True
                         delete_list.append([y-1-i, x-1-i])
                         gorcWMschlagen(y-2-i,x-2-i,boardc,player,delete_list)
+                        break
+                    else:
                         break
                 else:
                     break
@@ -236,6 +244,8 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         delete_list.append([y+1+i, x+1+i])
                         gorcWMschlagen(y+2+i,x+2+i,boardc,player,delete_list)
                         break
+                    else:
+                        break
                 else:
                     break
         #2: ul
@@ -250,6 +260,8 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         geschlagen=True
                         delete_list.append([y+1+i, x-1-i])
                         gorcWMschlagen(y+2+i,x-2-i,boardc,player,delete_list)
+                        break
+                    else:
                         break
                 else:
                     break
@@ -266,6 +278,8 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         delete_list.append([y-1-i, x+1+i])
                         gorcWMschlagen(y-2-i,x+2+i,boardc,player,delete_list)
                         break
+                    else:
+                        break
                 else:
                     break
         #4: ol
@@ -281,11 +295,14 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         delete_list.append([y-1-i, x-1-i])
                         gorcWMschlagen(y-2-i,x-2-i,boardc,player,delete_list)
                         break
+                    else:
+                        break
                 else:
                     break
         if not geschlagen:
             gorc_WM_schlagen_children.append(((y+1) * 10) + (((x+1) + 100)))
             gorc_WM_schlagen_children_delete.append(delete_list)
+        
                 
 def gorcWM(y,x,boardc,player):
     #
@@ -307,6 +324,8 @@ def gorcWM(y,x,boardc,player):
                     if boardc[y+2+i][x+2+i]==0:
                         gorcWMschlagen(y,x,boardc,player,[[y+1+i,x+1+i]])
                         break
+                    else:
+                        break
                 else:
                     break
         #2: ul
@@ -321,6 +340,8 @@ def gorcWM(y,x,boardc,player):
                 if not y+2+i>7 or x-1-i<0:
                     if boardc[y+2+i][x-2-i]==0:
                         gorcWMschlagen(y,x,boardc,player,[[y+1+i,x-1+i]])
+                        break
+                    else:
                         break
                 else:
                     break
@@ -337,6 +358,8 @@ def gorcWM(y,x,boardc,player):
                     if boardc[y-2-i][x+2+i]==0:
                         gorcWMschlagen(y,x,boardc,player,[[y-1-i,x+1+i]])
                         break
+                    else:
+                        break
                 else:
                     break
         #4: ol
@@ -351,6 +374,8 @@ def gorcWM(y,x,boardc,player):
                 if not y-2-i<0 or x-1-i<0:
                     if boardc[y-2-i][x-2-i]==0:
                         gorcWMschlagen(y,x,boardc,player,[[y-1-i,x-1-i]])
+                        break
+                    else:
                         break
                 else:
                     break
@@ -368,6 +393,8 @@ def gorcWM(y,x,boardc,player):
                     if boardc[y+2+i][x+2+i]==0:
                         gorcWMschlagen(y,x,boardc,player,[[y+1+i,x+1+i]])
                         break
+                    else:
+                        break
                 else:
                     break
         #2: ul
@@ -382,6 +409,8 @@ def gorcWM(y,x,boardc,player):
                 if not y+2+i>7 or x-1-i<0:
                     if boardc[y+2+i][x-2-i]==0:
                         gorcWMschlagen(y,x,boardc,player,[[y+1+i,x-1+i]])
+                        break
+                    else:
                         break
                 else:
                     break
@@ -398,6 +427,8 @@ def gorcWM(y,x,boardc,player):
                     if boardc[y-2-i][x+2+i]==0:
                         gorcWMschlagen(y,x,boardc,player,[[y-1-i,x+1+i]])
                         break
+                    else:
+                        break
                 else:
                     break
         #4: ol
@@ -412,6 +443,8 @@ def gorcWM(y,x,boardc,player):
                 if not y-2-i<0 or x-1-i<0:
                     if boardc[y-2-i][x-2-i]==0:
                         gorcWMschlagen(y,x,boardc,player,[[y-1-i,x-1-i]])
+                        break
+                    else:
                         break
                 else:
                     break
