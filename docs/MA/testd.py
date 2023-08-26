@@ -7,7 +7,7 @@ board = [
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,-1,0,0,0],
             [0,0,0,0,0,0,0,0],
-            [0,0,0,0,-1,0,0,0],
+            [0,0,0,0,-2,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,-1,0,0,0],
             [0,0,0,1,0,0,0,0],
@@ -15,6 +15,9 @@ board = [
         ]
 
 #--------------------nicht fertig
+
+schlagen_c=2
+WM_c=5
 
 gorc_XO_schlagen_children=[]
 gorc_XO_schlagen_children_delete=[]
@@ -80,7 +83,8 @@ def gorcXO(y,x,boardc,player):
             if boardc[y+1][x+1]>0:
                 gorcXOschlagen(y+2,x+2,boardc,player,[[y+1,x+1]])
     #
-    childrenXO.extend(gorc_XO_schlagen_children)
+    for i in range(schlagen_c):
+        childrenXO.extend(gorc_XO_schlagen_children)
     #
     if childrenXO==[]:
         return []
@@ -164,7 +168,7 @@ def generate_one_random_child(position, player):#pick rand piece, then pick rand
                     piecesx.append(x)
                 elif boardcopy[y][x]==2:
                     pass
-                    #for i in range(5):
+                    #for i in range(WM_c):
                         #piecesy.append(y)
                         #piecesx.append(x)
     elif player==-1:
@@ -175,7 +179,7 @@ def generate_one_random_child(position, player):#pick rand piece, then pick rand
                     piecesx.append(x)
                 elif boardcopy[y][x]==-2:
                     pass
-                    #for i in range(5):
+                    #for i in range(WM_c):
                         #piecesy.append(y)
                         #piecesx.append(x)
     #
