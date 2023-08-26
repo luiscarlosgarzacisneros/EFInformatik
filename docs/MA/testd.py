@@ -16,7 +16,7 @@ board = [
 
 #--------------------nicht fertig
 
-schlagen_XO_c=2
+schlagen_XO_c=3
 schlagen_WM_c=5
 WM_c=5
 
@@ -551,7 +551,7 @@ def generate_one_random_child(position, player):#pick rand piece, then pick rand
     if piecesx==[]:
         return []
     #
-    for i in range(30):
+    for i in range(30): #für wenn figuren vorhanden sind, aber keinen zug
         child=[]
         n = random.randint(0, len(piecesy) - 1)
         y = piecesy[n]
@@ -575,9 +575,9 @@ def generate_one_random_child(position, player):#pick rand piece, then pick rand
     #
     if child!=[]: 
         return child
-    else: 
+    else:
         return []
-
+    
 #
 
 def printboard(board):
@@ -603,9 +603,12 @@ def printboard(board):
 ne=[]
 printboard(board)
 while True:
-    ne=generate_one_random_child(board, 1)
+    ne=generate_one_random_child(board, -1)
     if ne!=[]:
+        printboard(ne)
         break
-printboard(ne)
+    else:
+        print("F")
 
-#was wenn figuren vorhanden sind, aber keinen zug?
+
+#fertig
