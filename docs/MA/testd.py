@@ -158,7 +158,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1+i][x+1+i]>0:
                 break
             if boardc[y+1+i][x+1+i]<0:
-                if not y+2+i>7 or x+2+i>7:
+                if not y+2+i>7 and not x+2+i>7:
                     if boardc[y+2+i][x+2+i]==0:
                         geschlagen=True
                         delete_list.append([y+1+i, x+1+i])
@@ -175,7 +175,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1+i][x-1-i]>0:
                 break
             if boardc[y+1+i][x-1+i]<0:
-                if not y+2+i>7 or x-2-i<0:
+                if not y+2+i>7 and not x-2-i<0:
                     if boardc[y+2+i][x-2-i]==0:
                         geschlagen=True
                         delete_list.append([y+1+i, x-1-i])
@@ -192,7 +192,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1-i][x+1+i]>0:
                 break
             if boardc[y-1-i][x+1+i]<0:
-                if not y-2-i<0 or x+2+i>7:
+                if not y-2-i<0 and not x+2+i>7:
                     if boardc[y-2-i][x+2+i]==0:
                         geschlagen=True
                         delete_list.append([y-1-i, x+1+i])
@@ -209,7 +209,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1-i][x-1-i]>0:
                 break
             if boardc[y-1-i][x-1-i]<0:
-                if not y-2-i<0 or x-2-i<0:
+                if not y-2-i<0 and not x-2-i<0:
                     if boardc[y-2-i][x-2-i]==0:
                         geschlagen=True
                         delete_list.append([y-1-i, x-1-i])
@@ -228,7 +228,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1+i][x+1+i]<0:
                 break
             if boardc[y+1+i][x+1+i]>0:
-                if not y+2+i>7 or x+2+i>7:
+                if not y+2+i>7 and not x+2+i>7:
                     if boardc[y+2+i][x+2+i]==0:
                         geschlagen=True
                         delete_list.append([y+1+i, x+1+i])
@@ -245,7 +245,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1+i][x-1-i]<0:
                 break
             if boardc[y+1+i][x-1+i]>0:
-                if not y+2+i>7 or x-2-i<0:
+                if not y+2+i>7 and not x-2-i<0:
                     if boardc[y+2+i][x-2-i]==0:
                         geschlagen=True
                         delete_list.append([y+1+i, x-1-i])
@@ -262,7 +262,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1-i][x+1+i]<0:
                 break
             if boardc[y-1-i][x+1+i]>0:
-                if not y-2-i<0 or x+2+i>7:
+                if not y-2-i<0 and not x+2+i>7:
                     if boardc[y-2-i][x+2+i]==0:
                         geschlagen=True
                         delete_list.append([y-1-i, x+1+i])
@@ -279,7 +279,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1-i][x-1-i]<0:
                 break
             if boardc[y-1-i][x-1-i]>0:
-                if not y-2-i<0 or x-2-i<0:
+                if not y-2-i<0 and not x-2-i<0:
                     if boardc[y-2-i][x-2-i]==0:
                         geschlagen=True
                         delete_list.append([y-1-i, x-1-i])
