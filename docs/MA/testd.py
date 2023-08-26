@@ -21,8 +21,8 @@ WM_c=5
 
 gorc_XO_schlagen_children=[]
 gorc_XO_schlagen_children_delete=[]
-#gorc_WM_schlagen_children=[]
-#gorc_WM_schlagen_children_delete=[]
+gorc_WM_schlagen_children=[]
+gorc_WM_schlagen_children_delete=[]
 
 def gorcXOschlagen(y,x,boardc,player,delete_list):
     if player==1:
@@ -154,7 +154,298 @@ def gorcXO(y,x,boardc,player):
                 for feld in delete:
                     boardc[feld[0]][feld[1]]=0
                 return boardc   
-            
+
+def gorcWMschlagen(y,x,boardc,player,delete_list):
+    geschlagen=False
+    if player==2:
+        #1: ur
+        for i in range(7):
+            if y+1+i>7 or x+1+i>7:
+                break
+            if boardc[y+1+i][x+1+i]>0:
+                break
+            if boardc[y+1+i][x+1+i]<0:
+                if not y+2+i>7 or x+1+i>7:
+                    if boardc[y+2+i][x+2+i]==0:
+                        geschlagen=True
+                        delete_list.append([y+1+i, x+1+i])
+                        gorcWMschlagen(y+2+i,x+2+i,boardc,player,delete_list)
+                else:
+                    break
+        #2: ul
+        for i in range(7):
+            if y+1+i>7 or x-1-i<0:
+                break
+            if boardc[y+1+i][x-1-i]>0:
+                break
+            if boardc[y+1+i][x-1+i]<0:
+                if not y+2+i>7 or x-1-i<0:
+                    if boardc[y+2+i][x-2-i]==0:
+                        geschlagen=True
+                        delete_list.append([y+1+i, x-1-i])
+                        gorcWMschlagen(y+2+i,x-2-i,boardc,player,delete_list)
+                else:
+                    break
+        #3: or 
+        for i in range(7):
+            if y-1-i<0 or x+1+i>7:
+                break
+            if boardc[y-1-i][x+1+i]>0:
+                break
+            if boardc[y-1-i][x+1+i]<0:
+                if not y-2-i<0 or x+1+i>7:
+                    if boardc[y-2-i][x+2+i]==0:
+                        geschlagen=True
+                        delete_list.append([y-1-i, x+1+i])
+                        gorcWMschlagen(y-2-i,x+2+i,boardc,player,delete_list)
+                else:
+                    break
+        #4: ol
+        for i in range(7):
+            if y-1-i<0 or x-1-i<0:
+                break
+            if boardc[y-1-i][x-1-i]>0:
+                break
+            if boardc[y-1-i][x-1-i]<0:
+                if not y-2-i<0 or x-1-i<0:
+                    if boardc[y-2-i][x-2-i]==0:
+                        geschlagen=True
+                        delete_list.append([y-1-i, x-1-i])
+                        gorcWMschlagen(y-2-i,x-2-i,boardc,player,delete_list)
+                else:
+                    break
+        if not geschlagen:
+            gorc_WM_schlagen_children.append(((y+1) * 10) + (((x+1) + 100)))
+            gorc_WM_schlagen_children_delete.append(delete_list)
+    #
+    elif player==-2:
+        #1: ur
+        for i in range(7):
+            if y+1+i>7 or x+1+i>7:
+                break
+            if boardc[y+1+i][x+1+i]<0:
+                break
+            if boardc[y+1+i][x+1+i]>0:
+                if not y+2+i>7 or x+1+i>7:
+                    if boardc[y+2+i][x+2+i]==0:
+                        geschlagen=True
+                        delete_list.append([y+1+i, x+1+i])
+                        gorcWMschlagen(y+2+i,x+2+i,boardc,player,delete_list)
+                else:
+                    break
+        #2: ul
+        for i in range(7):
+            if y+1+i>7 or x-1-i<0:
+                break
+            if boardc[y+1+i][x-1-i]<0:
+                break
+            if boardc[y+1+i][x-1+i]>0:
+                if not y+2+i>7 or x-1-i<0:
+                    if boardc[y+2+i][x-2-i]==0:
+                        geschlagen=True
+                        delete_list.append([y+1+i, x-1-i])
+                        gorcWMschlagen(y+2+i,x-2-i,boardc,player,delete_list)
+                else:
+                    break
+        #3: or 
+        for i in range(7):
+            if y-1-i<0 or x+1+i>7:
+                break
+            if boardc[y-1-i][x+1+i]<0:
+                break
+            if boardc[y-1-i][x+1+i]>0:
+                if not y-2-i<0 or x+1+i>7:
+                    if boardc[y-2-i][x+2+i]==0:
+                        geschlagen=True
+                        delete_list.append([y-1-i, x+1+i])
+                        gorcWMschlagen(y-2-i,x+2+i,boardc,player,delete_list)
+                else:
+                    break
+        #4: ol
+        for i in range(7):
+            if y-1-i<0 or x-1-i<0:
+                break
+            if boardc[y-1-i][x-1-i]<0:
+                break
+            if boardc[y-1-i][x-1-i]>0:
+                if not y-2-i<0 or x-1-i<0:
+                    if boardc[y-2-i][x-2-i]==0:
+                        geschlagen=True
+                        delete_list.append([y-1-i, x-1-i])
+                        gorcWMschlagen(y-2-i,x-2-i,boardc,player,delete_list)
+                else:
+                    break
+        if not geschlagen:
+            gorc_WM_schlagen_children.append(((y+1) * 10) + (((x+1) + 100)))
+            gorc_WM_schlagen_children_delete.append(delete_list)
+                
+
+def gorcWM(y,x,boardc,player):
+    #
+    childrenWM=[]
+    gorc_WM_schlagen_children.clear()
+    gorc_WM_schlagen_children_delete.clear()
+    #
+    if player==2:
+        #1: ur
+        for i in range(7):
+            if y+1+i>7 or x+1+i>7:
+                break
+            if boardc[y+1+i][x+1+i]>0:
+                break
+            if boardc[y+1+i][x+1+i]==0:
+                childrenWM.append(11+i)
+            if boardc[y+1+i][x+1+i]<0:
+                if not y+2+i>7 or x+1+i>7:
+                    if boardc[y+2+i][x+2+i]==0:
+                        gorcWMschlagen(y,x,boardc,player,[[y+1+i,x+1+i]])
+                        childrenWM.extend(gorc_WM_schlagen_children)
+                else:
+                    break
+        #2: ul
+        for i in range(7):
+            if y+1+i>7 or x-1-i<0:
+                break
+            if boardc[y+1+i][x-1-i]>0:
+                break
+            if boardc[y+1+i][x-1-i]==0:
+                childrenWM.append(21+i)
+            if boardc[y+1+i][x-1+i]<0:
+                if not y+2+i>7 or x-1-i<0:
+                    if boardc[y+2+i][x-2-i]==0:
+                        gorcWMschlagen(y,x,boardc,player,[[y+1+i,x-1+i]])
+                        childrenWM.extend(gorc_WM_schlagen_children)
+                else:
+                    break
+        #3: or 
+        for i in range(7):
+            if y-1-i<0 or x+1+i>7:
+                break
+            if boardc[y-1-i][x+1+i]>0:
+                break
+            if boardc[y-1-i][x+1+i]==0:
+                childrenWM.append(31+i)
+            if boardc[y-1-i][x+1+i]<0:
+                if not y-2-i<0 or x+1+i>7:
+                    if boardc[y-2-i][x+2+i]==0:
+                        gorcWMschlagen(y,x,boardc,player,[[y-1-i,x+1+i]])
+                        childrenWM.extend(gorc_WM_schlagen_children)
+                else:
+                    break
+        #4: ol
+        for i in range(7):
+            if y-1-i<0 or x-1-i<0:
+                break
+            if boardc[y-1-i][x-1-i]>0:
+                break
+            if boardc[y-1-i][x-1-i]==0:
+                childrenWM.append(41+i)
+            if boardc[y-1-i][x-1-i]<0:
+                if not y-2-i<0 or x-1-i<0:
+                    if boardc[y-2-i][x-2-i]==0:
+                        gorcWMschlagen(y,x,boardc,player,[[y-1-i,x-1-i]])
+                        childrenWM.extend(gorc_WM_schlagen_children)
+                else:
+                    break
+    elif player==-2:
+        #1: ur
+        for i in range(7):
+            if y+1+i>7 or x+1+i>7:
+                break
+            if boardc[y+1+i][x+1+i]<0:
+                break
+            if boardc[y+1+i][x+1+i]==0:
+                childrenWM.append(11+i)
+            if boardc[y+1+i][x+1+i]>0:
+                if not y+2+i>7 or x+1+i>7:
+                    if boardc[y+2+i][x+2+i]==0:
+                        gorcWMschlagen(y,x,boardc,player,[[y+1+i,x+1+i]])
+                        childrenWM.extend(gorc_WM_schlagen_children)
+                else:
+                    break
+        #2: ul
+        for i in range(7):
+            if y+1+i>7 or x-1-i<0:
+                break
+            if boardc[y+1+i][x-1-i]<0:
+                break
+            if boardc[y+1+i][x-1-i]==0:
+                childrenWM.append(21+i)
+            if boardc[y+1+i][x-1+i]>0:
+                if not y+2+i>7 or x-1-i<0:
+                    if boardc[y+2+i][x-2-i]==0:
+                        gorcWMschlagen(y,x,boardc,player,[[y+1+i,x-1+i]])
+                        childrenWM.extend(gorc_WM_schlagen_children)
+                else:
+                    break
+        #3: or 
+        for i in range(7):
+            if y-1-i<0 or x+1+i>7:
+                break
+            if boardc[y-1-i][x+1+i]<0:
+                break
+            if boardc[y-1-i][x+1+i]==0:
+                childrenWM.append(31+i)
+            if boardc[y-1-i][x+1+i]>0:
+                if not y-2-i<0 or x+1+i>7:
+                    if boardc[y-2-i][x+2+i]==0:
+                        gorcWMschlagen(y,x,boardc,player,[[y-1-i,x+1+i]])
+                        childrenWM.extend(gorc_WM_schlagen_children)
+                else:
+                    break
+        #4: ol
+        for i in range(7):
+            if y-1-i<0 or x-1-i<0:
+                break
+            if boardc[y-1-i][x-1-i]<0:
+                break
+            if boardc[y-1-i][x-1-i]==0:
+                childrenWM.append(41+i)
+            if boardc[y-1-i][x-1-i]>0:
+                if not y-2-i<0 or x-1-i<0:
+                    if boardc[y-2-i][x-2-i]==0:
+                        gorcWMschlagen(y,x,boardc,player,[[y-1-i,x-1-i]])
+                        childrenWM.extend(gorc_WM_schlagen_children)
+                else:
+                    break
+    #
+    if childrenWM==[]:
+        return []
+    else:
+        n=random.choice(childrenWM)
+        #ur
+        if n>20:
+            boardc[y][x]=0
+            boardc[y+(n-10)][x+(n-10)]=2
+            return boardc
+        #ul
+        elif n>20 and n<30:
+            boardc[y][x]=0
+            boardc[y+(n-20)][x-(n-20)]=2
+            return boardc
+        #or
+        elif n>30 and n<40:
+            boardc[y][x]=0
+            boardc[y-(n-30)][x+(n-30)]=2
+            return boardc
+        #ol
+        elif n>40 and n<50:
+            boardc[y][x]=0
+            boardc[y-(n-40)][x-(n-40)]=2
+            return boardc
+        #schlagen
+        elif n>100:
+            n_str = str(n-100)
+            n_y = int(n_str[0])-1
+            n_x = int(n_str[1])-1
+            #
+            boardc[y][x]=0
+            boardc[n_y][n_x]=player
+            delete=gorc_WM_schlagen_children_delete[gorc_WM_schlagen_children.index(n)]
+            for feld in delete:
+                boardc[feld[0]][feld[1]]=0
+            return boardc
+    
 def generate_one_random_child(position, player):#pick rand piece, then pick rand move
     boardcopy = copy.deepcopy(position)
     #
