@@ -654,9 +654,8 @@ def gorcXO(y,x,boardc,player):
                     boardc[y-1][x+1]=1
                 return boardc
             else: #schlagen
-                n_str = str(n)
-                n_y = int(n_str[0])-1
-                n_x = int(n_str[1])-1
+                n_y = n//10
+                n_x = n%10
                 boardc[y][x]=0
                 if n_y==0:
                     boardc[n_y][n_x]=2
@@ -682,9 +681,8 @@ def gorcXO(y,x,boardc,player):
                     boardc[y+1][x+1]=-1
                 return boardc
             else: #schlagen
-                n_str = str(n)
-                n_y = int(n_str[0])-1
-                n_x = int(n_str[1])-1
+                n_y = n//10
+                n_x = n%10
                 boardc[y][x]=0
                 if n_y==0:
                     boardc[n_y][n_x]=-2
@@ -1047,9 +1045,8 @@ def gorcWM(y,x,boardc,player):
             return boardc
         #schlagen
         elif n>100:
-            n_str = str(n-100)
-            n_y = int(n_str[0])-1
-            n_x = int(n_str[1])-1
+            n_y = (n-100)//10
+            n_x = (n-100)%10
             #
             boardc[y][x]=0
             boardc[n_y][n_x]=player
