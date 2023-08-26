@@ -7,6 +7,7 @@
 #include <chrono>
 #include <cmath>
 #include <sstream>
+#include <string>
 
 //
 
@@ -629,6 +630,10 @@ std::list<std::vector<std::vector<int>>> generate_children(const std::vector<std
     children_list.insert(children_list.end(), children2.begin(), children2.end());
     return children_list;
 }
+
+//
+
+
 
 //
 
