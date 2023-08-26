@@ -492,7 +492,7 @@ public:
             //
             std::vector<std::vector<int>> new_move=minimaxer(depth,vergangene_zeit);
             //
-            //sort+depth
+            //sort+ depth
             //
             //PRINT CHILD.VALUE FUER ALLE ROOTNODE CHILDREN
             for (MinimaxNode& child : root_node.children) {std::cout<<child.value; std::cout<<", ";}
