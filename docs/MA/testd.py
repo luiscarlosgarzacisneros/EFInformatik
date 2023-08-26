@@ -31,6 +31,9 @@ def gorcXOschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1][x+1]<0:
                 delete_list.append([y-1,x+1])
                 gorcXOschlagen(y-2,x+2,boardc,player,delete_list)
+        else:
+            gorc_XO_schlagen_children.append((y+1) * 10 + (x+1))
+            gorc_XO_schlagen_children_delete.append(delete_list)
     elif player==-1:
         if y+2<8 and x-2>-1 and boardc[y+2][x-2]==0:
             if boardc[y+1][x-1]>0:
@@ -40,9 +43,9 @@ def gorcXOschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1][x+1]>0:
                 delete_list.append([y+1,x+1])
                 gorcXOschlagen(y+2,x+2,boardc,player,delete_list)
-    #
-    gorc_XO_schlagen_children.append((y+1) * 10 + (x+1))
-    gorc_XO_schlagen_children_delete.append(delete_list)
+        else:
+            gorc_XO_schlagen_children.append((y+1) * 10 + (x+1))
+            gorc_XO_schlagen_children_delete.append(delete_list)
 
 def gorcXO(y,x,boardc,player):
     #
@@ -108,6 +111,10 @@ def gorcXO(y,x,boardc,player):
                 else:
                     boardc[n_y][n_x]=1
                 delete=gorc_XO_schlagen_children_delete[gorc_XO_schlagen_children.index(n)]
+                print(delete)
+                print(gorc_XO_schlagen_children_delete)
+                print(gorc_XO_schlagen_children)
+                print(len(childrenXO))
                 for feld in delete:
                     boardc[feld[0]][feld[1]]=0
                 return boardc
@@ -136,6 +143,10 @@ def gorcXO(y,x,boardc,player):
                 else:
                     boardc[n_y][n_x]=-1
                 delete=gorc_XO_schlagen_children_delete[gorc_XO_schlagen_children.index(n)]
+                print(delete)
+                print(gorc_XO_schlagen_children_delete)
+                print(gorc_XO_schlagen_children)
+                print(len(childrenXO))
                 for feld in delete:
                     boardc[feld[0]][feld[1]]=0
                 return boardc   
