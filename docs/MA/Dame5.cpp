@@ -1615,7 +1615,7 @@ public:
             //
             auto now = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
-            if (vergangene_zeit2.count() >= max_time) {std::cout<<" NICHT FERTIG"; std::cout << std::endl; break;}
+            if (vergangene_zeit2.count() >= max_time) {std::cout<<" NICHT FERTIG"; break;}
         }
         //
         for (MinimaxNode& child : root_node_children) {values.push_back(child.value);}
@@ -1623,15 +1623,9 @@ public:
         for (MinimaxNode& child : root_node_children) {if (child.value==best_value) {best_moves.push_back(child);}}
         //
         //output---------
-        auto now = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
-        if (vergangene_zeit2.count() <= max_time) {
-            std::cout << std::endl;
-            std::cout << best_value << std::endl;
-            std::cout<<"COUNTER: "; std::cout<<minimax_counter<<std::endl;
-            for (int value : values) {std::cout<<value; std::cout<<", ";}
-            std::cout << std::endl;
-        }
+        std::cout << std::endl;
+        std::cout << best_value << std::endl;
+        std::cout<<"COUNTER: "; std::cout<<minimax_counter<<std::endl;
         //---------------
         best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
         return_board=deepcopy(best_move.board);
@@ -1645,7 +1639,7 @@ public:
         int depth=this->starting_depth;
         std::vector<std::vector<int>> move;
         while (true) {
-            //break1
+            //break
             auto now = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> vergangene_zeit = now - start;
             if (vergangene_zeit.count() >= max_time) {break;}
@@ -1655,9 +1649,13 @@ public:
             std::cout<<depth<<std::endl;
             //
             std::vector<std::vector<int>> new_move=minimaxer(depth,vergangene_zeit);
+            //
+            for (MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
+            std::cout<<std::endl;
             //sort+depth
-            //else {this->root_node.sort(true);}
+            //this->root_node.sort(true);
             move=new_move;
+            //
             for (MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
             std::cout<<std::endl;
             if (depth>max_depth) {break;}
