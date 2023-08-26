@@ -6,10 +6,10 @@ import math
 board = [
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,-2,0,0],
             [0,0,0,0,0,0,0,0],
-            [0,0,0,2,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
+            [0,-1,0,0,0,-1,0,0],
+            [0,0,-1,0,-1,0,0,0],
+            [0,0,0,1,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0]
         ]
@@ -17,7 +17,7 @@ board = [
 #--------------------nicht fertig
 
 schlagen_XO_c=2
-schlagen_WM_c=10
+schlagen_WM_c=5
 WM_c=5
 
 gorc_XO_schlagen_children=[]
@@ -551,7 +551,7 @@ def generate_one_random_child(position, player):#pick rand piece, then pick rand
     if piecesx==[]:
         return []
     #
-    while True:
+    for i in range(30):
         child=[]
         n = random.randint(0, len(piecesy) - 1)
         y = piecesy[n]
@@ -573,7 +573,10 @@ def generate_one_random_child(position, player):#pick rand piece, then pick rand
         if child!=[]: 
             break
     #
-    return child
+    if child!=[]: 
+        return child
+    else: 
+        return []
 
 #
 
