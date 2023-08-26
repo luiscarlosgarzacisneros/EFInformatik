@@ -499,7 +499,7 @@ public:
             std::cout << std::endl;
             //
             //MOVE SORTING:-------------------
-            //this->root_node.sort(true);
+            this->root_node.sort(true);
             //--------------------------------
             //
             //break2, damit nicht move=new_move wenn depth nicht fertig
