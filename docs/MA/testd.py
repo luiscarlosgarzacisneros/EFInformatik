@@ -159,6 +159,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1+i][x+1+i]>0:
                 break
             if boardc[y+1+i][x+1+i]<0:
+                r=False
                 for piece in delete_list: #um or/ul inf recursion zu verhindern
                     if piece[0]==y+1+i and piece[1]==x+1+i:
                         r=True
@@ -180,6 +181,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1+i][x-1-i]>0:
                 break
             if boardc[y+1+i][x-1-i]<0:
+                r=False
                 for piece in delete_list: #um or/ul inf recursion zu verhindern
                     if piece[0]==y+1+i and piece[1]==x-1-i:
                         r=True
@@ -201,6 +203,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1-i][x+1+i]>0:
                 break
             if boardc[y-1-i][x+1+i]<0:
+                r=False
                 for piece in delete_list: #um or/ul inf recursion zu verhindern
                     if piece[0]==y-1-i and piece[1]==x+1+i:
                         r=True
@@ -222,6 +225,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1-i][x-1-i]>0:
                 break
             if boardc[y-1-i][x-1-i]<0:
+                r=False
                 for piece in delete_list: #um or/ul inf recursion zu verhindern
                     if piece[0]==y-1-i and piece[1]==x-1-i:
                         r=True
@@ -245,6 +249,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1+i][x+1+i]<0:
                 break
             if boardc[y+1+i][x+1+i]>0:
+                r=False
                 for piece in delete_list: #um or/ul inf recursion zu verhindern
                     if piece[0]==y+1+i and piece[1]==x+1+i:
                         r=True
@@ -265,6 +270,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y+1+i][x-1-i]<0:
                 break
             if boardc[y+1+i][x-1-i]>0:
+                r=False
                 for piece in delete_list: #um or/ul inf recursion zu verhindern
                     if piece[0]==y+1+i and piece[1]==x-1-i:
                         r=True
@@ -285,6 +291,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1-i][x+1+i]<0:
                 break
             if boardc[y-1-i][x+1+i]>0:
+                r=False
                 for piece in delete_list: #um or/ul inf recursion zu verhindern
                     if piece[0]==y-1-i and piece[1]==x+1+i:
                         r=True
@@ -305,6 +312,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
             if boardc[y-1-i][x-1-i]<0:
                 break
             if boardc[y-1-i][x-1-i]>0:
+                r=False
                 for piece in delete_list: #um or/ul inf recursion zu verhindern
                     if piece[0]==y-1-i and piece[1]==x-1-i:
                         r=True
