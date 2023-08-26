@@ -435,7 +435,7 @@ public:
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time=1;
+    int max_time=2;
     int max_depth=10;
     int starting_depth=1;
 
@@ -457,7 +457,7 @@ public:
             //
             auto now = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
-            if (vergangene_zeit2.count() >= max_time) {std::cout<<" NICHT FERTIG"; std::cout << std::endl; break;}
+            if (vergangene_zeit2.count() >= max_time) {std::cout<<" NICHT FERTIG"; break;}
         }
         //
         for (MinimaxNode& child : root_node_children) {values.push_back(child.value);}
@@ -465,15 +465,9 @@ public:
         for (MinimaxNode& child : root_node_children) {if (child.value==best_value) {best_moves.push_back(child);}}
         //
         //output---------
-        auto now = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
-        if (vergangene_zeit2.count() <= max_time) {
-            std::cout << std::endl;
-            std::cout << best_value << std::endl;
-            std::cout<<"COUNTER: "; std::cout<<minimax_counter<<std::endl;
-            for (int value : values) {std::cout<<value; std::cout<<", ";}
-            std::cout << std::endl;
-        }
+        std::cout << ""<< std::endl;
+        std::cout << best_value << std::endl;
+        std::cout<<"COUNTER: "; std::cout<<minimax_counter<<std::endl;
         //---------------
         best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
         return_board=deepcopy(best_move.board);
@@ -497,14 +491,27 @@ public:
             std::cout<<depth<<std::endl;
             //
             std::vector<std::vector<int>> new_move=minimaxer(depth,vergangene_zeit);
-            //break2
+            //
+            //sort+depth
+            //
+            //PRINT CHILD.VALUE FUER ALLE ROOTNODE CHILDREN
+            for (MinimaxNode& child : root_node.children) {std::cout<<child.value; std::cout<<", ";}
+            std::cout << std::endl;
+            //
+            //MOVE SORTING:-------------------
+            //this->root_node.sort(true);
+            //--------------------------------
+            //
+            //break2, damit nicht move=new_move wenn depth nicht fertig
             now = std::chrono::high_resolution_clock::now();
             vergangene_zeit = now - start;
             if (vergangene_zeit.count() >= max_time) {break;}
-            //sort+depth
-            //else {this->root_node.sort(true);}
+            //
             move=new_move;
-            for (MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
+            //
+            //PRINT CHILD.VALUE FUER ALLE ROOTNODE CHILDREN NACH SORTIEREN
+            for (MinimaxNode& child : root_node.children) {std::cout<<child.value; std::cout<<", ";}
+            //
             std::cout<<std::endl;
             if (depth>max_depth) {break;}
             depth+=1;
@@ -713,8 +720,9 @@ public:
         while (true) {
             //-----------------------------------------
             HumanPlayer player_1(1);
-            MCTSPlayer player_2(-1, this->board);
+            MinimaxPlayer player_2(-1, this->board);
             //-----------------------------------------
+            std::cout<<""<<std::endl;;
             std::cout<<this->turn<<std::endl;
             printboard(this->board);
 
@@ -776,4 +784,4 @@ int main() {
 }
 
 //sort?
-//can incomplete depth searches be trusted? (here no but in chess and checkers yes)
+
