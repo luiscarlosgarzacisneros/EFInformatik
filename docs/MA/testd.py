@@ -5,13 +5,13 @@ import math
 
 board = [
             [0,0,0,0,0,0,0,0],
-            [0,0,0,0,-1,0,0,0],
             [0,0,0,0,0,0,0,0],
-            [0,0,0,0,-2,0,0,0],
+            [0,0,0,0,0,-2,0,0],
             [0,0,0,0,0,0,0,0],
-            [0,0,0,0,-1,0,0,0],
-            [0,0,0,1,0,0,0,0],
-            [0,0,0,0,0,0,0,0]
+            [0,0,0,0,0,0,0,0],
+            [0,0,-1,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [2,0,0,0,0,0,0,0]
         ]
 
 #--------------------nicht fertig
@@ -170,6 +170,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         geschlagen=True
                         delete_list.append([y+1+i, x+1+i])
                         gorcWMschlagen(y+2+i,x+2+i,boardc,player,delete_list)
+                        break
                 else:
                     break
         #2: ul
@@ -184,6 +185,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         geschlagen=True
                         delete_list.append([y+1+i, x-1-i])
                         gorcWMschlagen(y+2+i,x-2-i,boardc,player,delete_list)
+                        break
                 else:
                     break
         #3: or 
@@ -198,6 +200,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         geschlagen=True
                         delete_list.append([y-1-i, x+1+i])
                         gorcWMschlagen(y-2-i,x+2+i,boardc,player,delete_list)
+                        break
                 else:
                     break
         #4: ol
@@ -212,6 +215,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         geschlagen=True
                         delete_list.append([y-1-i, x-1-i])
                         gorcWMschlagen(y-2-i,x-2-i,boardc,player,delete_list)
+                        break
                 else:
                     break
         if not geschlagen:
@@ -231,6 +235,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         geschlagen=True
                         delete_list.append([y+1+i, x+1+i])
                         gorcWMschlagen(y+2+i,x+2+i,boardc,player,delete_list)
+                        break
                 else:
                     break
         #2: ul
@@ -245,6 +250,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         geschlagen=True
                         delete_list.append([y+1+i, x-1-i])
                         gorcWMschlagen(y+2+i,x-2-i,boardc,player,delete_list)
+                        break
                 else:
                     break
         #3: or 
@@ -259,6 +265,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         geschlagen=True
                         delete_list.append([y-1-i, x+1+i])
                         gorcWMschlagen(y-2-i,x+2+i,boardc,player,delete_list)
+                        break
                 else:
                     break
         #4: ol
@@ -273,13 +280,13 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         geschlagen=True
                         delete_list.append([y-1-i, x-1-i])
                         gorcWMschlagen(y-2-i,x-2-i,boardc,player,delete_list)
+                        break
                 else:
                     break
         if not geschlagen:
             gorc_WM_schlagen_children.append(((y+1) * 10) + (((x+1) + 100)))
             gorc_WM_schlagen_children_delete.append(delete_list)
                 
-
 def gorcWM(y,x,boardc,player):
     #
     childrenWM=[]
@@ -459,9 +466,9 @@ def generate_one_random_child(position, player):#pick rand piece, then pick rand
                     piecesx.append(x)
                 elif boardcopy[y][x]==2:
                     pass
-                    #for i in range(WM_c):
-                        #piecesy.append(y)
-                        #piecesx.append(x)
+                    for i in range(WM_c):
+                        piecesy.append(y)
+                        piecesx.append(x)
     elif player==-1:
         for y in range(8):
             for x in range(8):
@@ -470,9 +477,9 @@ def generate_one_random_child(position, player):#pick rand piece, then pick rand
                     piecesx.append(x)
                 elif boardcopy[y][x]==-2:
                     pass
-                    #for i in range(WM_c):
-                        #piecesy.append(y)
-                        #piecesx.append(x)
+                    for i in range(WM_c):
+                        piecesy.append(y)
+                        piecesx.append(x)
     #
     if piecesx==[]:
         return []
@@ -488,13 +495,13 @@ def generate_one_random_child(position, player):#pick rand piece, then pick rand
                 child=gorcXO(y,x,position,1)
             elif boardcopy[y][x]==2:
                 pass
-                #child=gorcWM(y,x,position,2)
+                child=gorcWM(y,x,position,2)
         elif player==-1:
             if boardcopy[y][x]==-1:
                 child=gorcXO(y,x,position,-1)
             elif boardcopy[y][x]==-2:
                 pass
-                #child=gorcWM(y,x,position,-2)
+                child=gorcWM(y,x,position,-2)
         #
         if child!=[]: 
             break
