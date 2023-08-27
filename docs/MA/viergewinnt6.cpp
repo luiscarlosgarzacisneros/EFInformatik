@@ -714,7 +714,7 @@ public:
         while (true) {
             //-----------------------------------------
             HumanPlayer player_1(1);
-            MCTSPlayer player_2(-1, this->board);
+            MinimaxPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<""<<std::endl;;
             std::cout<<this->turn<<std::endl;
