@@ -33,7 +33,7 @@ void print_board(const std::vector<std::vector<int>>& board) {
     }
 }
 
-//& or not?
+//+1!!!!!! für schlagen
 
 int schlagen_XO_c=3;
 int schlagen_WM_c=5;
