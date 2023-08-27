@@ -130,8 +130,8 @@ std::vector<std::vector<int>> gorc_XO(int y, int x, std::vector<std::vector<int>
                 return boardc;
             }
             else {// schlagen
-                int n_y= n/10;
-                int n_x= n%10;
+                int n_y= (n/10)-1;
+                int n_x= (n%10)-1;
                 boardc[y][x]= 0;
                 if (n_y==0) {boardc[n_y][n_x]= 2;}
                 else {boardc[n_y][n_x]= 1;}
@@ -154,8 +154,8 @@ std::vector<std::vector<int>> gorc_XO(int y, int x, std::vector<std::vector<int>
                 return boardc;
             }
             else {// schlagen
-                int n_y= n/10;
-                int n_x= n%10;
+                int n_y= (n/10)-1;
+                int n_x= (n%10)-1;
                 boardc[y][x]= 0;
                 if (n_y==0) {boardc[n_y][n_x] = -2;}
                 else {boardc[n_y][n_x]= -1;}
@@ -512,8 +512,8 @@ std::vector<std::vector<int>> gorc_WM(int y, int x, std::vector<std::vector<int>
             return boardc;
         }
         else if (n>100) { // schlagen
-            int n_y=(n-100)/10;
-            int n_x=(n-100)%10;
+            int n_y=((n-100)/10)-1;
+            int n_x=((n-100)%10)-1;
             boardc[y][x]=0;
             boardc[n_y][n_x]=player;
             //
