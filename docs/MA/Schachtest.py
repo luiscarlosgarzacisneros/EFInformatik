@@ -139,9 +139,6 @@ def genchildren(position, playerk):
                 if position[y][x]==1:
                     for h in gcBb(y,x,position,1):
                         children.append(h)
-                elif position[y][x]==9:
-                    for h in gcBb(y,x,position,1):
-                        children.append(h)
                 elif position[y][x]==6:
                     for h in gcKk(y,x,position,6):
                         children.append(h)
@@ -164,9 +161,6 @@ def genchildren(position, playerk):
         for y in range(8):
             for x in range(8):
                 if position[y][x]==-1:
-                    for h in gcBb(y,x,position,-1):
-                        children.append(h)
-                elif position[y][x]==-9:
                     for h in gcBb(y,x,position,-1):
                         children.append(h)
                 elif position[y][x]==-6:
@@ -1148,6 +1142,115 @@ def gcBb(y,x,pos,player):
                 childrenB.append(boardc)
                 boardc=copy.deepcopy(pos)
     return childrenB
+
+#
+
+def genchildren2(position, playerk):
+    children=[]
+    #9&-9 zu 1&-1
+    if playerk==6:
+        for y in range(len(position)):
+            for x in range(len(position[y])):
+                if position[y][x]==9:
+                    position[y][x]=1
+    elif playerk==-6:
+        for y in range(len(position)):
+            for x in range(len(position[y])):
+                if position[y][x]==-9:
+                    position[y][x]=-1
+    #
+    if playerk==6:
+        for y in range(8):
+            for x in range(8):
+                if position[y][x]==1:
+                    for h in gcBb(y,x,position,1):
+                        children.append(h)
+                elif position[y][x]==6:
+                    for h in gcKk(y,x,position,6):
+                        children.append(h)
+                elif position[y][x]==4 or position[y][x]==7:
+                    for h in gcTtXxQq(y,x,position,4,[0, 0, 1, -1], [0, 0, 1, -1]):
+                        children.append(h)
+                elif position[y][x]==3:
+                    for h in gcTtXxQq(y,x,position,3,[1, -1, -1, 1], [1, 1, -1, -1]):
+                        children.append(h)
+                elif position[y][x]==5:
+                    for h in gcTtXxQq(y,x,position,5,[1, -1, -1, 1, 0, 0, 1, -1], [1, 1, -1, -1, 0, 0, 1, -1]):
+                        children.append(h)
+                elif position[y][x]==2:
+                    for h in gcLl(y,x,position,2):
+                        children.append(h)
+                elif position[y][x]==8:
+                    for h in gcKk(y,x,position,8):
+                        children.append(h)
+    elif playerk==-6:
+        for y in range(8):
+            for x in range(8):
+                if position[y][x]==-1:
+                    for h in gcBb(y,x,position,-1):
+                        children.append(h)
+                elif position[y][x]==-6:
+                    for h in gcKk(y,x,position,-6):
+                        children.append(h)
+                elif position[y][x]==-4 or position[y][x]==-7:
+                    for h in gcTtXxQq(y,x,position,-4,[0, 0, 1, -1], [0, 0, 1, -1]):
+                        children.append(h)
+                elif position[y][x]==-3:
+                    for h in gcTtXxQq(y,x,position,-3,[1, -1, -1, 1], [1, 1, -1, -1]):
+                        children.append(h)
+                elif position[y][x]==-5:
+                    for h in gcTtXxQq(y,x,position,-5,[1, -1, -1, 1, 0, 0, 1, -1], [1, 1, -1, -1, 0, 0, 1, -1]):
+                        children.append(h)
+                elif position[y][x]==-2:
+                    for h in gcLl(y,x,position,-2):
+                        children.append(h)
+                elif position[y][x]==-8:
+                    for h in gcKk(y,x,position,-8):
+                        children.append(h)
+    #
+    global minimaxc
+    minimaxc = minimaxc + 1
+    #
+    return children
+
+def gcTtXxQq(y, x, pos, player, direction_y, direction_x):
+    children = []
+    #
+    if player < 0:
+        for dir in range(len(direction_y)):
+            for step in range(1, 8):
+                new_y = y + step * direction_y[dir]
+                new_x = x + step * direction_x[dir]
+                
+                if 0 <= new_y < 8 and 0 <= new_x < 8:
+                    if pos[new_y][new_x] >= 0:
+                        boardc = copy.deepcopy(pos)
+                        boardc[y][x] = 0
+                        boardc[new_y][new_x] = player
+                        children.append(boardc)
+                    else:
+                        break
+                else:
+                    break
+    elif player > 0:
+        for dir in range(len(direction_y)):
+            for step in range(1, 8):
+                new_y = y + step * direction_y[dir]
+                new_x = x + step * direction_x[dir]
+                
+                if 0 <= new_y < 8 and 0 <= new_x < 8:
+                    if pos[new_y][new_x] <= 0:
+                        boardc = copy.deepcopy(pos)
+                        boardc[y][x] = 0
+                        boardc[new_y][new_x] = player
+                        children.append(boardc)
+                    else:
+                        break
+                else:
+                    break
+    #
+    return children
+
 
 #Gorc Variante2
 
