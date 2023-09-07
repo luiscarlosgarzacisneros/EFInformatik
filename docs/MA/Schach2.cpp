@@ -87,9 +87,9 @@ void print_board(const std::vector<std::vector<int>>& board) {
 
 int minimax_counter=0;
 
-std::vector<std::vector<int>> generate_children(std::vector<std::vector<int>> position, int playerk);//declaration weil gcKk gc in def hat und gc gcKk in def hat.
+std::vector<std::vector<std::vector<int>>> generate_children(const std::vector<std::vector<int>> position, int playerk);//declaration weil gcKk gc in def hat und gc gcKk in def hat.
 
-std::vector<std::vector<int>> gcKk(int y, int x, std::vector<std::vector<int>> pos, int player) {
+std::vector<std::vector<std::vector<int>>> gcKk(int y, int x, const std::vector<std::vector<int>> pos, int player) {
     std::vector<std::vector<int>> boardc = pos;
     std::vector<std::vector<std::vector<int>>> childrenK;
     //
@@ -282,8 +282,220 @@ std::vector<std::vector<int>> gcKk(int y, int x, std::vector<std::vector<int>> p
     return childrenK;
 }
 
-std::vector<std::vector<int>> generate_children(std::vector<std::vector<int>> position, int playerk) {
-    std::vector<std::vector<int>> children;
+std::vector<std::vector<std::vector<int>>> gcLl(int y, int x, const std::vector<std::vector<int>> pos, int player) {
+    std::vector<std::vector<int>> boardc = pos;
+    std::vector<std::vector<std::vector<int>>> childrenL;
+    //
+    int direction_y[] = {-2, -2, 2, 2, 1, -1, 1, -1};
+    int direction_x[] = {1, -1, 1, -1, 2, 2, -2, -2};
+    //
+    if (player==-2) {
+        for (int i=0; i<8; ++i) {
+            int new_y= y+direction_y[i];
+            int new_x= x+direction_x[i];
+            if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8 && pos[new_y][new_x]>=0) {
+                boardc=pos;
+                boardc[y][x]=0;
+                boardc[new_y][new_x]=-2;
+                childrenL.push_back(boardc);
+            }
+        }
+    }
+    else if (player==2) {
+        for (int i=0; i<8; ++i) {
+            int new_y= y+direction_y[i];
+            int new_x= x+direction_x[i];
+            if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8 && pos[new_y][new_x] <= 0) {
+                boardc=pos;
+                boardc[y][x]=0;
+                boardc[new_y][new_x]=2;
+                childrenL.push_back(boardc);
+            }
+        }
+    }
+    //
+    return childrenL;
+}
+
+std::vector<std::vector<std::vector<int>>> gcBb(int y, int x, const std::vector<std::vector<int>> pos, int player) {
+    std::vector<std::vector<int>> boardc = pos;
+    std::vector<std::vector<std::vector<int>>> childrenB;
+    //
+    if (player==-1) {
+        if (y==1 && boardc[y+2][x]==0 && boardc[y+1][x]==0) {
+            boardc[y][x]=0;
+            boardc[y+2][x]=-9;
+            childrenB.push_back(boardc);
+            boardc=pos;
+        }
+        if (y+1<8) {
+            if (boardc[y+1][x]==0) {
+                boardc[y][x]=0;
+                boardc[y+1][x]=-1;
+                if (y+1==7) {boardc[y+1][x]=-5;}
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+        if (x-1>-1 && y+1<8) {
+            if (boardc[y+1][x-1]>0) {
+                boardc[y][x]=0;
+                boardc[y+1][x-1]=-1;
+                if (y+1==7) {boardc[y+1][x-1]=-5;}
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+        if (x+1<8 && y+1<8) {
+            if (boardc[y+1][x+1]>0) {
+                boardc[y][x]=0;
+                boardc[y+1][x+1]=-1;
+                if (y+1==7) {boardc[y+1][x+1]=-5;}
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+        //en passant
+        if (x-1>-1 && y+1<8) {
+            if (boardc[y][x-1]==-9 && boardc[y+1][x-1]==0) {
+                boardc[y][x]=0;
+                boardc[y+1][x-1]=-1;
+                boardc[y][x-1]=0;
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+        if (x+1<8 && y+1<8) {
+            if (boardc[y][x+1]==-9 && boardc[y+1][x+1]==0) {
+                boardc[y][x]=0;
+                boardc[y+1][x+1]=-1;
+                boardc[y][x+1]=0;
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+    }
+    else if (player==1) {
+        if (y==6 && boardc[y-2][x]==0 && boardc[y-1][x]==0) {
+            boardc[y][x]=0;
+            boardc[y-2][x]=9;
+            childrenB.push_back(boardc);
+            boardc=pos;
+        }
+        if (y-1>-1) {
+            if (boardc[y-1][x]==0) {
+                boardc[y][x]=0;
+                boardc[y-1][x]=1;
+                if (y-1==0) {boardc[y-1][x]=5;}
+                childrenB.push_back(boardc);
+                boardc = pos;
+            }
+        }
+        if (x-1>-1 && y-1>-1) {
+            if (boardc[y-1][x-1]<0) {
+                boardc[y][x]=0;
+                boardc[y-1][x-1]=1;
+                if (y-1==0) {boardc[y-1][x-1]=5;}
+                childrenB.push_back(boardc);
+                boardc = pos;
+            }
+        }
+        if (x+1<8 && y-1>-1) {
+            if (boardc[y-1][x+1]<0) {
+                boardc[y][x]=0;
+                boardc[y-1][x+1]=1;
+                if (y-1==0) {boardc[y-1][x+1]=5;}
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+        //en passant
+        if (x-1>-1 && y-1>-1) {
+            if (boardc[y][x-1]==9 && boardc[y-1][x-1]==0) {
+                boardc[y][x]=0;
+                boardc[y-1][x-1]=1;
+                boardc[y][x-1]=0;
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+        if (x+1<8 && y-1>-1) {
+            if (boardc[y][x+1]==9 && boardc[y-1][x+1]==0) {
+                boardc[y][x]=0;
+                boardc[y-1][x+1]=1;
+                boardc[y][x+1]=0;
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+    }
+    return childrenB;
+}
+
+std::vector<std::vector<std::vector<int>>> gcTtXxQq(int y, int x, const std::vector<std::vector<int>> pos, int player, std::vector<int> direction_y, std::vector<int> direction_x) {
+    std::vector<std::vector<std::vector<int>>> children;
+    std::vector<std::vector<int>> boardc;
+    //
+    if (player<0) {
+        for (int dir=0; dir<direction_y.size(); ++dir) {
+            for (int step=1; step<8; ++step) {
+                int new_y = y+step * direction_y[dir];
+                int new_x = x+step * direction_x[dir];
+                //
+                if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8) {
+                    if (pos[new_y][new_x]>=0) {
+                        if (pos[new_y][new_x]!=0) {
+                            boardc=pos;
+                            boardc[y][x]=0;
+                            boardc[new_y][new_x]=player;
+                            children.push_back(boardc);
+                        }
+                        else {
+                            boardc=pos;
+                            boardc[y][x]=0;
+                            boardc[new_y][new_x]=player;
+                            children.push_back(boardc);
+                        }
+                    }
+                    else {break;}
+                }
+                else {break;}
+            }
+        }
+    }
+    else if (player>0) {
+        for (int dir=0; dir<direction_y.size(); ++dir) {
+            for (int step = 1; step <8; ++step) {
+                int new_y = y + step * direction_y[dir];
+                int new_x = x + step * direction_x[dir];
+                //
+                if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8) {
+                    if (pos[new_y][new_x]<=0) {
+                        if (pos[new_y][new_x]!=0) {
+                            boardc=pos;
+                            boardc[y][x]=0;
+                            boardc[new_y][new_x]=player;
+                            children.push_back(boardc);
+                        }
+                        else {
+                            boardc=pos;
+                            boardc[y][x]=0;
+                            boardc[new_y][new_x]=player;
+                            children.push_back(boardc);
+                        }
+                    }
+                    else {break;}
+                }
+                else {break;}
+            }
+        }
+    }
+    //
+    return children;
+}
+
+std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::vector<int>> position, int playerk) {
+    std::vector<std::vector<std::vector<int>>> children;
     // 9&-9 zu 1&-1
     if (playerk==6) {
         for (int y=0; y<position.size(); ++y) {
@@ -304,28 +516,32 @@ std::vector<std::vector<int>> generate_children(std::vector<std::vector<int>> po
         for (int y=0; y<8; ++y) {
             for (int x=0; x<8; ++x) {
                 if (position[y][x]==1) {
-                    // Call gcBb function and add result to children
-                }
-                else if (position[y][x]==9) {
-                    // Call gcBb function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcBb(y, x, position, 1);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==6) {
-                    // Call gcKk function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcKk(y, x, position, 6);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==4 || position[y][x]==7) {
-                    // Call gcTt function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, 4, {0, 0, 1, -1}, {0, 0, 1, -1});
+                    children.insert(children.end(), new_children.begin(), new_children.end());                
                 }
                 else if (position[y][x]==3) {
-                    // Call gcXx function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, 3, {1, -1, -1, 1}, {1, 1, -1, -1});
+                    children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==5) {
-                    // Call gcQq function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, 5, {1, -1, -1, 1, 0, 0, 1, -1}, {1, 1, -1, -1, 0, 0, 1, -1});
+                    children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==2) {
-                    // Call gcLl function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcKk(y, x, position, 2);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==8) {
-                    // Call gcKk function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcKk(y, x, position, 8);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
                 }
             }
         }
@@ -334,28 +550,32 @@ std::vector<std::vector<int>> generate_children(std::vector<std::vector<int>> po
         for (int y=0; y<8; ++y) {
             for (int x=0; x<8; ++x) {
                 if (position[y][x]==-1) {
-                    // Call gcBb function and add result to children
-                }
-                else if (position[y][x]==-9) {
-                    // Call gcBb function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcBb(y, x, position, -1);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==-6) {
-                    // Call gcKk function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcKk(y, x, position, -6);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==-4 || position[y][x]==-7) {
-                    // Call gcTt function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, -4, {0, 0, 1, -1}, {0, 0, 1, -1});
+                    children.insert(children.end(), new_children.begin(), new_children.end());                
                 }
                 else if (position[y][x]==-3) {
-                    // Call gcXx function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, -3, {1, -1, -1, 1}, {1, 1, -1, -1});
+                    children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==-5) {
-                    // Call gcQq function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, -5, {1, -1, -1, 1, 0, 0, 1, -1}, {1, 1, -1, -1, 0, 0, 1, -1});
+                    children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==-2) {
-                    // Call gcLl function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcKk(y, x, position, -2);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==-8) {
-                    // Call gcKk function and add result to children
+                    std::vector<std::vector<std::vector<int>>> new_children=gcKk(y, x, position, -8);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
                 }
             }
         }
@@ -364,4 +584,4 @@ std::vector<std::vector<int>> generate_children(std::vector<std::vector<int>> po
     return children;
 }
 
-
+//
