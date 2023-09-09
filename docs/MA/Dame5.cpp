@@ -58,8 +58,8 @@ void print_board(const std::vector<std::vector<int>>& board) {
 std::list<std::vector<std::vector<int>>> children_schlagen_XO;
 std::list<std::vector<std::vector<int>>>  children_schlagen_WM;
 
-void generate_children_schlagen_XO(int y, int x, const std::vector<std::vector<int>> board, int player, bool new_flag) {
-    if (new_flag) {children_schlagen_XO.clear();}
+void generate_children_schlagen_XO(int y, int x, const std::vector<std::vector<int>> board, int player, bool new_b) {
+    if (new_b) {children_schlagen_XO.clear();}
     //
     std::vector<std::vector<int>> board_copy = board;
     //
@@ -122,8 +122,8 @@ void generate_children_schlagen_XO(int y, int x, const std::vector<std::vector<i
     std::reverse(children_schlagen_XO.begin(), children_schlagen_XO.end());
 }
 
-void generate_children_schlagen_WM(int y, int x, std::vector<std::vector<int>> board, int player, bool new_flag) {
-    if (new_flag) {children_schlagen_WM.clear();}
+void generate_children_schlagen_WM(int y, int x, std::vector<std::vector<int>> board, int player, bool new_b) {
+    if (new_b) {children_schlagen_WM.clear();}
     //
     std::vector<std::vector<int>> board_copy = board;
     //
@@ -2398,7 +2398,7 @@ public:
         while (true) {
             //-----------------------------------------
             HumanPlayer player_1(1);
-            MCTSPlayer player_2(-1, this->board);
+            MinimaxPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             print_board(this->board);

@@ -86,15 +86,17 @@ def genchildren(position, player):
                         if y-1==0:
                             boardcopy[y-1][x-1]=2
                             children1.append(boardcopy)
-                        children2.append(boardcopy)
+                        else:
+                            children2.append(boardcopy)
                         boardcopy = copy.deepcopy(position)
-                    if y-1>-1 and x+ 1<8 and boardcopy[y-1][x+ 1]==0:
+                    if y-1>-1 and x+1<8 and boardcopy[y-1][x+ 1]==0:
                         boardcopy[y-1][x+ 1]=1
                         boardcopy[y][x]=0
                         if y-1==0:
                             boardcopy[y-1][x+1]=2
                             children1.append(boardcopy)
-                        children2.append(boardcopy)
+                        else:
+                            children2.append(boardcopy)
                         boardcopy = copy.deepcopy(position)
                     else:
                         pass
@@ -113,7 +115,8 @@ def genchildren(position, player):
                         if y+1==7:
                             boardcopy[y+1][x-1]=-2
                             children1.append(boardcopy)
-                        children2.append(boardcopy)
+                        else:
+                            children2.append(boardcopy)
                         boardcopy = copy.deepcopy(position)
                     if y+ 1<8 and x+ 1<8 and boardcopy[y+ 1][x+ 1]==0:
                         boardcopy[y+ 1][x+ 1]=-1
@@ -121,7 +124,8 @@ def genchildren(position, player):
                         if y+1==7:
                             boardcopy[y+1][x+1]=-2
                             children1.append(boardcopy)
-                        children2.append(boardcopy)
+                        else:
+                            children2.append(boardcopy)
                         boardcopy = copy.deepcopy(position)
                     else:
                         pass
@@ -187,378 +191,130 @@ def genchildrenschlagen(y,x,position,player,new):
     childrens.reverse()
     return childrens
 
-def genchildrenWM(y,x,pos,player):
-    childrenWM1=[]
-    childrenWM2=[]
-    boardcopy=copy.deepcopy(pos)
-    schlagen=False
-    if player==-2:
-        for o in range(7):
-            schlagen=False
-            if y+1+o>7 or x+1+o>7:
-                break
-            if boardcopy[y+1+o][x+1+o]<0:
-                break
-            if boardcopy[y+1+o][x+1+o]>0:
-                if not y+2+o>7:
-                    if not x+2+o>7:
-                        schlagen=True
-            if boardcopy[y+1+o][x+1+o]==0:
-                boardcopy[y+1+o][x+1+o]=-2
-                boardcopy[y][x]=0
-                childrenWM2.append(boardcopy)
-                boardcopy=copy.deepcopy(pos)
-            if schlagen:
-                if boardcopy[y+2+o][x+2+o]==0:
-                    boardcopy[y+2+o][x+2+o]=-2
-                    boardcopy[y][x]=0
-                    boardcopy[y+1+o][x+1+o]=0
-                    childrenWM1.append(boardcopy)
-                    for r in genchildrenschlagenWM(y+2+o,x+2+o,boardcopy,-2,True):
-                        childrenWM1.append(r)
-                    boardcopy=copy.deepcopy(pos)
-                    schlagen=False
-                    break
-                else:
-                    break
-        for o in range(7):
-            schlagen=False
-            if y+1+o>7 or x-1-o<0:
-                break
-            if boardcopy[y+1+o][x-1-o]<0:
-                break
-            if boardcopy[y+1+o][x-1-o]>0:
-                if not y+2+o>7:
-                    if not x-2-o<0:
-                        schlagen=True
-            if boardcopy[y+1+o][x-1-o]==0:
-                boardcopy[y+1+o][x-1-o]=-2
-                boardcopy[y][x]=0
-                childrenWM2.append(boardcopy)
-                boardcopy=copy.deepcopy(pos)
-            if schlagen:
-                if boardcopy[y+2+o][x-2-o]==0:
-                    boardcopy[y+2+o][x-2-o]=-2
-                    boardcopy[y][x]=0
-                    boardcopy[y+1+o][x-1-o]=0
-                    childrenWM1.append(boardcopy)
-                    for r in genchildrenschlagenWM(y+2+o,x-2-o,boardcopy,-2,True):
-                        childrenWM1.append(r)
-                    boardcopy=copy.deepcopy(pos)
-                    schlagen=False
-                    break
-                else:
-                    break
-        for o in range(7):
-            schlagen=False
-            if y-1-o<0 or x-1-o<0:
-                break
-            if boardcopy[y-1-o][x-1-o]<0:
-                break
-            if boardcopy[y-1-o][x-1-o]>0:
-                if y-2-o>-1:
-                    if x-2-o>-1: 
-                        schlagen=True
-            if boardcopy[y-1-o][x-1-o]==0:
-                boardcopy[y-1-o][x-1-o]=-2
-                boardcopy[y][x]=0
-                childrenWM2.append(boardcopy)
-                boardcopy=copy.deepcopy(pos)
-            if schlagen:
-                if boardcopy[y-2-o][x-2-o]==0:
-                    boardcopy[y-2-o][x-2-o]=-2
-                    boardcopy[y][x]=0
-                    boardcopy[y-1-o][x-1-o]=0
-                    childrenWM1.append(boardcopy)
-                    for r in genchildrenschlagenWM(y-2-o,x-2-o,boardcopy,-2,True):
-                        childrenWM1.append(r)
-                    boardcopy=copy.deepcopy(pos)
-                    schlagen=False
-                    break
-                else:
-                    break
-        for o in range(7):
-            schlagen=False
-            if y-1-o<0 or x+1+o>7:
-                break
-            if boardcopy[y-1-o][x+1+o]<0:
-                break
-            if boardcopy[y-1-o][x+1+o]>0:
-                if y-2-o>-1:
-                    if not x+2+o>7:               
-                        schlagen=True
-            if boardcopy[y-1-o][x+1+o]==0:
-                boardcopy[y-1-o][x+1+o]=-2
-                boardcopy[y][x]=0               
-                childrenWM2.append(boardcopy)
-                boardcopy=copy.deepcopy(pos)
-            if schlagen:
-                if boardcopy[y-2-o][x+2+o]==0:
-                    boardcopy[y-2-o][x+2+o]=-2
-                    boardcopy[y][x]=0
-                    boardcopy[y-1-o][x+1+o]=0
-                    childrenWM1.append(boardcopy)
-                    for r in genchildrenschlagenWM(y-2-o,x+2+o,boardcopy,-2,True):
-                        childrenWM1.append(r)
-                    boardcopy=copy.deepcopy(pos)
-                    schlagen=False
-                    break
-                else:
-                    break
-    elif player==2:
-        schlagen=False
-        for o in range(7):
-            if y+1+o>7 or x+1+o>7:
-                break
-            if boardcopy[y+1+o][x+1+o]>0:
-                break
-            if boardcopy[y+1+o][x+1+o]<0:
-                if not y+2+o>7:
-                    if not x+2+o>7:
-                        schlagen=True
-            if boardcopy[y+1+o][x+1+o]==0:
-                boardcopy[y+1+o][x+1+o]=2
-                boardcopy[y][x]=0
-                childrenWM2.append(boardcopy)
-                boardcopy=copy.deepcopy(pos)
-            if schlagen:
-                if boardcopy[y+2+o][x+2+o]==0:
-                    boardcopy[y+2+o][x+2+o]=2
-                    boardcopy[y][x]=0
-                    boardcopy[y+1+o][x+1+o]=0
-                    childrenWM1.append(boardcopy)
-                    for r in genchildrenschlagenWM(y+2+o,x+2+o,boardcopy,2,True):
-                        childrenWM1.append(r)
-                    boardcopy=copy.deepcopy(pos)
-                    schlagen=False
-                    break
-                else:
-                    break
-        for o in range(7):
-            schlagen=False
-            if y+1+o>7 or x-1-o<0:
-                break
-            if boardcopy[y+1+o][x-1-o]>0:
-                break
-            if boardcopy[y+1+o][x-1-o]<0:
-                if not y+2+o>7:
-                    if not x-2-o<0:
-                        schlagen=True
-            if boardcopy[y+1+o][x-1-o]==0:
-                boardcopy[y+1+o][x-1-o]=2
-                boardcopy[y][x]=0
-                childrenWM2.append(boardcopy)
-                boardcopy=copy.deepcopy(pos)
-            if schlagen:
-                if boardcopy[y+2+o][x-2-o]==0:
-                    boardcopy[y+2+o][x-2-o]=2
-                    boardcopy[y][x]=0
-                    boardcopy[y+1+o][x-1-o]=0
-                    childrenWM1.append(boardcopy)
-                    for r in genchildrenschlagenWM(y+2+o,x-2-o,boardcopy,2,True):
-                        childrenWM1.append(r)
-                    boardcopy=copy.deepcopy(pos)
-                    schlagen=False
-                    break
-                else:
-                    break
-        for o in range(7):
-            schlagen=False
-            if y-1-o<0 or x-1-o<0:
-                break
-            if boardcopy[y-1-o][x-1-o]>0:
-                break
-            if boardcopy[y-1-o][x-1-o]<0:
-                if not y-2-o<0:
-                    if not x-2-o<0: 
-                        schlagen=True
-            if boardcopy[y-1-o][x-1-o]==0:
-                boardcopy[y-1-o][x-1-o]=2
-                boardcopy[y][x]=0
-                childrenWM2.append(boardcopy)
-                boardcopy=copy.deepcopy(pos)
-            if schlagen:
-                if boardcopy[y-2-o][x-2-o]==0:
-                    boardcopy[y-2-o][x-2-o]=2
-                    boardcopy[y][x]=0
-                    boardcopy[y-1-o][x-1-o]=0
-                    childrenWM1.append(boardcopy)
-                    for r in genchildrenschlagenWM(y-2-o,x-2-o,boardcopy,2,True):
-                        childrenWM1.append(r)
-                    boardcopy=copy.deepcopy(pos)
-                    schlagen=False
-                    break
-                else:
-                    break
-        for o in range(7):
-            schlagen=False
-            if y-1-o<0 or x+1+o>7:
-                break
-            if boardcopy[y-1-o][x+1+o]>0:
-                break
-            if boardcopy[y-1-o][x+1+o]<0:
-                if not y-2-o<0:
-                    if not x+2+o>7:
-                        schlagen=True
-            if boardcopy[y-1-o][x+1+o]==0:
-                boardcopy[y-1-o][x+1+o]=2
-                boardcopy[y][x]=0
-                childrenWM2.append(boardcopy)
-                boardcopy=copy.deepcopy(pos)
-            if schlagen:
-                if boardcopy[y-2-o][x+2+o]==0:
-                    boardcopy[y-2-o][x+2+o]=2
-                    boardcopy[y][x]=0
-                    boardcopy[y-1-o][x+1+o]=0
-                    childrenWM1.append(boardcopy)
-                    for r in genchildrenschlagenWM(y-2-o,x+2+o,boardcopy,2,True):
-                        childrenWM1.append(r)
-                    boardcopy=copy.deepcopy(pos)
-                    schlagen=False
-                    break
-                else:
-                    break
-    childrenWM1.extend(childrenWM2)
-    return childrenWM1
-
 def genchildrenschlagenWM(y,x,pos,player,new):
     global childrensWM
     if new:
         childrensWM=[]
     #
+    directions=[(1,1), (-1,1), (1,-1), (-1,-1)]
+    #
     boardcopy=copy.deepcopy(pos)
     if player==-2:
-        for o in range(7):
-            if y+2+o>7 or x+2+o>7:
-                break
-            if boardcopy[y+1+o][x+1+o]<0:
-                break
-            if boardcopy[y+1+o][x+1+o]>0:
-                if boardcopy[y+2+o][x+2+o]==0:
-                    boardcopy[y+2+o][x+2+o]=-2
-                    boardcopy[y+1+o][x+1+o]=0
-                    boardcopy[y][x]=0
-                    childrensWM.append(boardcopy)
-                    genchildrenschlagenWM(y+2+o,x+2+o,boardcopy,-2,False)
-                    boardcopy=copy.deepcopy(pos)
+        for direction in directions:
+            dy=direction[0]
+            dx=direction[1]
+            for o in range(1,8):
+                if y+(1+o)*dy>7 or x+(1+o)*dx>7 or y+(1+o)*dy<0 or x+(1+o)*dx<0:
                     break
-                else:
+                if boardcopy[y+o*dy][x+o*dx]<0:
                     break
-        for o in range(7):
-            if y-2-o<0 or x+2+o>7:
-                break
-            if boardcopy[y-1-o][x+1+o]<0:
-                break
-            if boardcopy[y-1-o][x+1+o]>0:
-                if boardcopy[y-2-o][x+2+o]==0:
-                    boardcopy[y-2-o][x+2+o]=-2
-                    boardcopy[y-1-o][x+1+o]=0
-                    boardcopy[y][x]=0
-                    childrensWM.append(boardcopy)
-                    genchildrenschlagenWM(y-2-o,x+2+o,boardcopy,-2,False)
-                    boardcopy=copy.deepcopy(pos)
-                    break
-                else:
-                    break
-        for o in range(7):
-            if y-2-o<0 or x-2-o<0:
-                break
-            if boardcopy[y-1-o][x-1-o]<0:
-                break
-            if boardcopy[y-1-o][x-1-o]>0:
-                if boardcopy[y-2-o][x-2-o]==0:
-                    boardcopy[y-2-o][x-2-o]=-2
-                    boardcopy[y-1-o][x-1-o]=0
-                    boardcopy[y][x]=0
-                    childrensWM.append(boardcopy)
-                    genchildrenschlagenWM(y-2-o,x-2-o,boardcopy,-2,False)
-                    boardcopy=copy.deepcopy(pos)
-                    break
-                else:
-                    break
-        for o in range(7):
-            if y+2+o>7 or x-2-o<0:
-                break
-            if boardcopy[y+1+o][x-1-o]<0:
-                break
-            if boardcopy[y+1+o][x-1-o]>0:
-                if boardcopy[y+2+o][x-2-o]==0:
-                    boardcopy[y+2+o][x-2-o]=-2
-                    boardcopy[y+1+o][x-1-o]=0
-                    boardcopy[y][x]=0
-                    childrensWM.append(boardcopy)
-                    genchildrenschlagenWM(y+2+o,x-2-o,boardcopy,-2,False)
-                    boardcopy=copy.deepcopy(pos)
-                    break
-                else:
-                    break
+                if boardcopy[y+o*dy][x+o*dx]>0:
+                    if boardcopy[y+(1+o)*dy][x+(1+o)*dx]==0:
+                        boardcopy[y+(1+o)*dy][x+(1+o)*dx]=-2
+                        boardcopy[y+o*dy][x+o*dx]=0
+                        boardcopy[y][x]=0
+                        childrensWM.append(boardcopy)
+                        genchildrenschlagenWM(y+(1+o)*dy,x+(1+o)*dx,boardcopy,-2,False)
+                        boardcopy=copy.deepcopy(pos)
+                        break
+                    else:
+                        break
+    #
     if player==2:
-        for o in range(7):
-            if y+2+o>7 or x+2+o>7:
-                break
-            if boardcopy[y+1+o][x+1+o]>0:
-                break
-            if boardcopy[y+1+o][x+1+o]<0:
-                if boardcopy[y+2+o][x+2+o]==0:
-                    boardcopy[y+2+o][x+2+o]=2
-                    boardcopy[y+1+o][x+1+o]=0
-                    boardcopy[y][x]=0
-                    childrensWM.append(boardcopy)
-                    genchildrenschlagenWM(y+2+o,x+2+o,boardcopy,2,False)
-                    boardcopy=copy.deepcopy(pos)
+        for direction in directions:
+            dy=direction[0]
+            dx=direction[1]
+            for o in range(1,8):
+                if y+(1+o)*dy>7 or x+(1+o)*dx>7 or y+(1+o)*dy<0 or x+(1+o)*dx<0:
                     break
-                else:
+                if boardcopy[y+o*dy][x+o*dx]>0:
                     break
-        for o in range(7):
-            if y-2-o<0 or x+2+o>7:
-                break
-            if boardcopy[y-1-o][x+1+o]>0:
-                break
-            if boardcopy[y-1-o][x+1+o]<0:
-                if boardcopy[y-2-o][x+2+o]==0:
-                    boardcopy[y-2-o][x+2+o]=2
-                    boardcopy[y-1-o][x+1+o]=0
-                    boardcopy[y][x]=0
-                    childrensWM.append(boardcopy)
-                    genchildrenschlagenWM(y-2-o,x+2+o,boardcopy,2,False)
-                    boardcopy=copy.deepcopy(pos)
-                    break
-                else:
-                    break
-        for o in range(7):
-            if y-2-o<0 or x-2-o<0:
-                break
-            if boardcopy[y-1-o][x-1-o]>0:
-                break
-            if boardcopy[y-1-o][x-1-o]<0:
-                if boardcopy[y-2-o][x-2-o]==0:
-                    boardcopy[y-2-o][x-2-o]=2
-                    boardcopy[y-1-o][x-1-o]=0
-                    boardcopy[y][x]=0
-                    childrensWM.append(boardcopy)
-                    genchildrenschlagenWM(y-2-o,x-2-o,boardcopy,2,False)
-                    boardcopy=copy.deepcopy(pos)
-                    break
-                else:
-                    break
-        for o in range(7):
-            if y+2+o>7 or x-2-o<0:
-                break
-            if boardcopy[y+1+o][x-1-o]>0:
-                break
-            if boardcopy[y+1+o][x-1-o]<0:
-                if boardcopy[y+2+o][x-2-o]==0:
-                    boardcopy[y+2+o][x-2-o]=2
-                    boardcopy[y+1+o][x-1-o]=0
-                    boardcopy[y][x]=0
-                    childrensWM.append(boardcopy)
-                    genchildrenschlagenWM(y+2+o,x-2-o,boardcopy,2,False)
-                    boardcopy=copy.deepcopy(pos)
-                    break
-                else:
-                    break
+                if boardcopy[y+o*dy][x+o*dx]<0:
+                    if boardcopy[y+(1+o)*dy][x+(1+o)*dx]==0:
+                        boardcopy[y+(1+o)*dy][x+(1+o)*dx]=2
+                        boardcopy[y+o*dy][x+o*dx]=0
+                        boardcopy[y][x]=0
+                        childrensWM.append(boardcopy)
+                        genchildrenschlagenWM(y+(1+o)*dy,x+(1+o)*dx,boardcopy,2,False)
+                        boardcopy=copy.deepcopy(pos)
+                        break
+                    else:
+                        break
+    #
     childrensWM.reverse()
     return childrensWM
+
+def genchildrenWM(y,x,pos,player):
+    directions=[(1,1), (-1,1), (1,-1), (-1,-1)]
+    childrenWM1=[]
+    childrenWM2=[]
+    boardcopy=copy.deepcopy(pos)
+    schlagen=False
+    if player==-2:
+        for direction in directions:
+            dy=direction[0]
+            dx=direction[1]
+            for o in range(1,8):
+                schlagen=False
+                if y+o*dy>7 or x+o*dx>7 or y+o*dy<0 or x+o*dx<0:
+                    break
+                if boardcopy[y+o*dy][x+o*dx]<0:
+                    break
+                if boardcopy[y+o*dy][x+o*dx]>0:
+                    if not y+(o+1)*dy>7 and not x+(o+1)*dx>7 and not y+(o+1)*dy<0 and not x+(o+1)*dx<0:
+                        schlagen=True
+                if boardcopy[y+o*dy][x+o*dx]==0:
+                    boardcopy[y+o*dy][x+o*dx]=-2
+                    boardcopy[y][x]=0
+                    childrenWM2.append(boardcopy)
+                    boardcopy=copy.deepcopy(pos)
+                if schlagen:
+                    if boardcopy[y+(o+1)*dy][x+(o+1)*dx]==0:
+                        boardcopy[y+(o+1)*dy][x+(o+1)*dx]=-2
+                        boardcopy[y][x]=0
+                        boardcopy[y+o*dy][x+o*dx]=0
+                        childrenWM1.append(boardcopy)
+                        for r in genchildrenschlagenWM(y+(o+1)*dy,x+(o+1)*dx,boardcopy,-2,True):
+                            childrenWM1.append(r)
+                        boardcopy=copy.deepcopy(pos)
+                        schlagen=False
+                        break
+                    else:
+                        break
+    elif player==2:
+        for direction in directions:
+            dy=direction[0]
+            dx=direction[1]
+            for o in range(1,8):
+                schlagen=False
+                if y+o*dy>7 or x+o*dx>7 or y+o*dy<0 or x+o*dx<0:
+                    break
+                if boardcopy[y+o*dy][x+o*dx]>0:
+                    break
+                if boardcopy[y+o*dy][x+o*dx]<0:
+                    if not y+(o+1)*dy>7 and not x+(o+1)*dx>7 and not y+(o+1)*dy<0 and not x+(o+1)*dx<0:
+                        schlagen=True
+                if boardcopy[y+o*dy][x+o*dx]==0:
+                    boardcopy[y+o*dy][x+o*dx]=2
+                    boardcopy[y][x]=0
+                    childrenWM2.append(boardcopy)
+                    boardcopy=copy.deepcopy(pos)
+                if schlagen:
+                    if boardcopy[y+(o+1)*dy][x+(o+1)*dx]==0:
+                        boardcopy[y+(o+1)*dy][x+(o+1)*dx]=2
+                        boardcopy[y][x]=0
+                        boardcopy[y+o*dy][x+o*dx]=0
+                        childrenWM1.append(boardcopy)
+                        for r in genchildrenschlagenWM(y+(o+1)*dy,x+(o+1)*dx,boardcopy,2,True):
+                            childrenWM1.append(r)
+                        boardcopy=copy.deepcopy(pos)
+                        schlagen=False
+                        break
+                    else:
+                        break
+    #
+    childrenWM1.extend(childrenWM2)
+    return childrenWM1
 
 #
 
@@ -692,329 +448,114 @@ def gorcXO(y,x,boardc,player):
                 for feld in delete:
                     boardc[feld[0]][feld[1]]=0
                 return boardc   
-
+ 
 def gorcWMschlagen(y,x,boardc,player,delete_list):
     geschlagen=False
+    directions=[(1,1), (-1,1), (1,-1), (-1,-1)]
     if player==2:
-        #1: ur
-        for i in range(7):
-            if y+1+i>7 or x+1+i>7:
-                break
-            if boardc[y+1+i][x+1+i]>0:
-                break
-            if boardc[y+1+i][x+1+i]<0:
-                r=False
-                for piece in delete_list: #um or/ul inf recursion zu verhindern
-                    if piece[0]==y+1+i and piece[1]==x+1+i:
-                        r=True
+        for direction in directions:
+            dy=direction[0]
+            dx=direction[1]
+            for i in range(1,8):
+                if y+i*dy>7 or x+i*dx>7 or y+i*dy<0 or x+i*dx<0:
+                    break
+                if boardc[y+i*dy][x+i*dx]>0:
+                    break
+                if boardc[y+i*dy][x+i*dx]<0:
+                    r=False
+                    for piece in delete_list: #um or/ul inf recursion zu verhindern
+                        if piece[0]==y+i*dy and piece[1]==x+i*dx:
+                            r=True
+                            break
+                    if r:
                         break
-                if r:
-                    break
-                if not y+2+i>7 and not x+2+i>7 and boardc[y+2+i][x+2+i]==0:
-                    geschlagen=True
-                    delete_list.append([y+1+i, x+1+i])
-                    gorcWMschlagen(y+2+i,x+2+i,boardc,player,delete_list)#
-                    break
-                else:
-                    break
-        #2: ul
-        for i in range(7):
-            if y+1+i>7 or x-1-i<0:
-                break
-            if boardc[y+1+i][x-1-i]>0:
-                break
-            if boardc[y+1+i][x-1-i]<0:
-                r=False
-                for piece in delete_list: #um or/ul inf recursion zu verhindern
-                    if piece[0]==y+1+i and piece[1]==x-1-i:
-                        r=True
+                    if not y+(i+1)*dy>7 and not x+(i+1)*dx>7 and not y+(i+1)*dy<0 and not x+(i+1)*dx<0 and boardc[y+(i+1)*dy][x+(i+1)*dx]==0:
+                        geschlagen=True
+                        delete_list.append([y+i*dy, x+i*dx])
+                        gorcWMschlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list)#
                         break
-                if r:
-                    break
-                if not y+2+i>7 and not x-2-i<0 and boardc[y+2+i][x-2-i]==0:
-                    geschlagen=True
-                    delete_list.append([y+1+i, x-1-i])
-                    gorcWMschlagen(y+2+i,x-2-i,boardc,player,delete_list)#
-                    break
-                else:
-                    break
-        #3: or 
-        for i in range(7):
-            if y-1-i<0 or x+1+i>7:
-                break
-            if boardc[y-1-i][x+1+i]>0:
-                break
-            if boardc[y-1-i][x+1+i]<0:
-                r=False
-                for piece in delete_list: #um or/ul inf recursion zu verhindern
-                    if piece[0]==y-1-i and piece[1]==x+1+i:
-                        r=True
+                    else:
                         break
-                if r:
-                    break
-                if not y-2-i<0 and not x+2+i>7 and boardc[y-2-i][x+2+i]==0:
-                    geschlagen=True
-                    delete_list.append([y-1-i, x+1+i])
-                    gorcWMschlagen(y-2-i,x+2+i,boardc,player,delete_list)#
-                    break
-                else:
-                    break
-        #4: ol
-        for i in range(7):
-            if y-1-i<0 or x-1-i<0:
-                break
-            if boardc[y-1-i][x-1-i]>0:
-                break
-            if boardc[y-1-i][x-1-i]<0:
-                r=False
-                for piece in delete_list: #um or/ul inf recursion zu verhindern
-                    if piece[0]==y-1-i and piece[1]==x-1-i:
-                        r=True
-                        break
-                if r:
-                    break
-                if not y-2-i<0 and not x-2-i<0 and boardc[y-2-i][x-2-i]==0:
-                    geschlagen=True
-                    delete_list.append([y-1-i, x-1-i])
-                    gorcWMschlagen(y-2-i,x-2-i,boardc,player,delete_list)#
-                    break
-                else:
-                    break
     #
     elif player==-2:
-        #1: ur
-        for i in range(7):
-            if y+1+i>7 or x+1+i>7:
-                break
-            if boardc[y+1+i][x+1+i]<0:
-                break
-            if boardc[y+1+i][x+1+i]>0:
-                r=False
-                for piece in delete_list: #um or/ul inf recursion zu verhindern
-                    if piece[0]==y+1+i and piece[1]==x+1+i:
-                        r=True
+        for direction in directions:
+            dy=direction[0]
+            dx=direction[1]
+            for i in range(1,8):
+                if y+i*dy>7 or x+i*dx>7 or y+i*dy<0 or x+i*dx<0:
+                    break
+                if boardc[y+i*dy][x+i*dx]<0:
+                    break
+                if boardc[y+i*dy][x+i*dx]>0:
+                    r=False
+                    for piece in delete_list: #um or/ul inf recursion zu verhindern
+                        if piece[0]==y+i*dy and piece[1]==x+i*dx:
+                            r=True
+                            break
+                    if r:
                         break
-                if r:
-                    break
-                if not y+2+i>7 and not x+2+i>7 and boardc[y+2+i][x+2+i]==0:
-                    geschlagen=True
-                    delete_list.append([y+1+i, x+1+i])
-                    gorcWMschlagen(y+2+i,x+2+i,boardc,player,delete_list)
-                    break
-                else:
-                    break
-        #2: ul
-        for i in range(7):
-            if y+1+i>7 or x-1-i<0:
-                break
-            if boardc[y+1+i][x-1-i]<0:
-                break
-            if boardc[y+1+i][x-1-i]>0:
-                r=False
-                for piece in delete_list: #um or/ul inf recursion zu verhindern
-                    if piece[0]==y+1+i and piece[1]==x-1-i:
-                        r=True
+                    if not y+(i+1)*dy>7 and not x+(i+1)*dx>7 and not y+(i+1)*dy<0 and not x+(i+1)*dx<0 and boardc[y+(i+1)*dy][x+(i+1)*dx]==0:
+                        geschlagen=True
+                        delete_list.append([y+i*dy, x+i*dx])
+                        gorcWMschlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list)#
                         break
-                if r:
-                    break
-                if not y+2+i>7 and not x-2-i<0 and boardc[y+2+i][x-2-i]==0:
-                    geschlagen=True
-                    delete_list.append([y+1+i, x-1-i])
-                    gorcWMschlagen(y+2+i,x-2-i,boardc,player,delete_list)
-                    break
-                else:
-                    break
-        #3: or 
-        for i in range(7):
-            if y-1-i<0 or x+1+i>7:
-                break
-            if boardc[y-1-i][x+1+i]<0:
-                break
-            if boardc[y-1-i][x+1+i]>0:
-                r=False
-                for piece in delete_list: #um or/ul inf recursion zu verhindern
-                    if piece[0]==y-1-i and piece[1]==x+1+i:
-                        r=True
+                    else:
                         break
-                if r:
-                    break
-                if not y-2-i<0 and not x+2+i>7 and boardc[y-2-i][x+2+i]==0:
-                    geschlagen=True
-                    delete_list.append([y-1-i, x+1+i])
-                    gorcWMschlagen(y-2-i,x+2+i,boardc,player,delete_list)
-                    break
-                else:
-                    break
-        #4: ol
-        for i in range(7):
-            if y-1-i<0 or x-1-i<0:
-                break
-            if boardc[y-1-i][x-1-i]<0:
-                break
-            if boardc[y-1-i][x-1-i]>0:
-                r=False
-                for piece in delete_list: #um or/ul inf recursion zu verhindern
-                    if piece[0]==y-1-i and piece[1]==x-1-i:
-                        r=True
-                        break
-                if r:
-                    break
-                if not y-2-i<0 and not x-2-i<0 and boardc[y-2-i][x-2-i]==0:
-                    geschlagen=True
-                    delete_list.append([y-1-i, x-1-i])
-                    gorcWMschlagen(y-2-i,x-2-i,boardc,player,delete_list)
-                    break
-                else:
-                    break
     #
     if not geschlagen:
         gorc_WM_schlagen_children.append(((y+1) * 10) + (((x+1) + 100)))
         gorc_WM_schlagen_children_delete.append(delete_list)
-                  
+
 def gorcWM(y,x,boardc,player):
     #
     childrenWM=[]
+    directions=[(1,1,10), (1,-1,20), (-1,1,30), (-1,-1,40)]
     gorc_WM_schlagen_children.clear()
     gorc_WM_schlagen_children_delete.clear()
     #
     if player==2:
-        #1: ur
-        for i in range(7):
-            if y+1+i>7 or x+1+i>7:
-                break
-            if boardc[y+1+i][x+1+i]>0:
-                break
-            if boardc[y+1+i][x+1+i]==0:
-                childrenWM.append(11+i)
-            if boardc[y+1+i][x+1+i]<0:
-                if not y+2+i>7 and not x+2+i>7:
-                    if boardc[y+2+i][x+2+i]==0:
-                        gorcWMschlagen(y,x,boardc,player,[])
-                        break
+        for direction in directions:
+            dy=direction[0]
+            dx=direction[1]
+            d=direction[2]
+            for i in range(1,8):
+                if y+i*dy>7 or x+i*dx>7 or y+i*dy<0 or x+i*dx<0:
+                    break
+                if boardc[y+i*dy][x+i*dx]>0:
+                    break
+                if boardc[y+i*dy][x+i*dx]==0:
+                    childrenWM.append(d+i)
+                if boardc[y+i*dy][x+i*dx]<0:
+                    if not y+(i+1)*dy>7 and not x+(i+1)*dx>7 and not y+(i+1)*dy<0 and not x+(i+1)*dx<0:
+                        if boardc[y+(i+1)*dy][x+(i+1)*dx]==0:
+                            gorcWMschlagen(y,x,boardc,player,[])
+                            break
+                        else:
+                            break
                     else:
                         break
-                else:
-                    break
-        #2: ul
-        for i in range(7):
-            if y+1+i>7 or x-1-i<0:
-                break
-            if boardc[y+1+i][x-1-i]>0:
-                break
-            if boardc[y+1+i][x-1-i]==0:
-                childrenWM.append(21+i)
-            if boardc[y+1+i][x-1-i]<0:
-                if not y+2+i>7 and not x-2-i<0:
-                    if boardc[y+2+i][x-2-i]==0:
-                        gorcWMschlagen(y,x,boardc,player,[])
-                        break
-                    else:
-                        break
-                else:
-                    break
-        #3: or 
-        for i in range(7):
-            if y-1-i<0 or x+1+i>7:
-                break
-            if boardc[y-1-i][x+1+i]>0:
-                break
-            if boardc[y-1-i][x+1+i]==0:
-                childrenWM.append(31+i)
-            if boardc[y-1-i][x+1+i]<0:
-                if not y-2-i<0 and not x+2+i>7:
-                    if boardc[y-2-i][x+2+i]==0:
-                        gorcWMschlagen(y,x,boardc,player,[])
-                        break
-                    else:
-                        break
-                else:
-                    break
-        #4: ol
-        for i in range(7):
-            if y-1-i<0 or x-1-i<0:
-                break
-            if boardc[y-1-i][x-1-i]>0:
-                break
-            if boardc[y-1-i][x-1-i]==0:
-                childrenWM.append(41+i)
-            if boardc[y-1-i][x-1-i]<0:
-                if not y-2-i<0 and not x-2-i<0:
-                    if boardc[y-2-i][x-2-i]==0:
-                        gorcWMschlagen(y,x,boardc,player,[])
-                        break
-                    else:
-                        break
-                else:
-                    break
+    #
     elif player==-2:
-        #1: ur
-        for i in range(7):
-            if y+1+i>7 or x+1+i>7:
-                break
-            if boardc[y+1+i][x+1+i]<0:
-                break
-            if boardc[y+1+i][x+1+i]==0:
-                childrenWM.append(11+i)
-            if boardc[y+1+i][x+1+i]>0:
-                if not y+2+i>7 and not x+2+i>7:
-                    if boardc[y+2+i][x+2+i]==0:
-                        gorcWMschlagen(y,x,boardc,player,[])
-                        break
-                    else:
-                        break
-                else:
+        for direction in directions:
+            dy=direction[0]
+            dx=direction[1]
+            d=direction[2]
+            for i in range(1,8):
+                if y+i*dy>7 or x+i*dx>7 or y+i*dy<0 or x+i*dx<0:
                     break
-        #2: ul
-        for i in range(7):
-            if y+1+i>7 or x-1-i<0:
-                break
-            if boardc[y+1+i][x-1-i]<0:
-                break
-            if boardc[y+1+i][x-1-i]==0:
-                childrenWM.append(21+i)
-            if boardc[y+1+i][x-1-i]>0:
-                if not y+2+i>7 and not x-2-i<0:
-                    if boardc[y+2+i][x-2-i]==0:
-                        gorcWMschlagen(y,x,boardc,player,[])
-                        break
-                    else:
-                        break
-                else:
+                if boardc[y+i*dy][x+i*dx]<0:
                     break
-        #3: or 
-        for i in range(7):
-            if y-1-i<0 or x+1+i>7:
-                break
-            if boardc[y-1-i][x+1+i]<0:
-                break
-            if boardc[y-1-i][x+1+i]==0:
-                childrenWM.append(31+i)
-            if boardc[y-1-i][x+1+i]>0:
-                if not y-2-i<0 and not x+2+i>7:
-                    if boardc[y-2-i][x+2+i]==0:
-                        gorcWMschlagen(y,x,boardc,player,[])
-                        break
+                if boardc[y+i*dy][x+i*dx]==0:
+                    childrenWM.append(d+i)
+                if boardc[y+i*dy][x+i*dx]>0:
+                    if not y+(i+1)*dy>7 and not x+(i+1)*dx>7 and not y+(i+1)*dy<0 and not x+(i+1)*dx<0:
+                        if boardc[y+(i+1)*dy][x+(i+1)*dx]==0:
+                            gorcWMschlagen(y,x,boardc,player,[])
+                            break
+                        else:
+                            break
                     else:
-                        break
-                else:
-                    break
-        #4: ol
-        for i in range(7):
-            if y-1-i<0 or x-1-i<0:
-                break
-            if boardc[y-1-i][x-1-i]<0:
-                break
-            if boardc[y-1-i][x-1-i]==0:
-                childrenWM.append(41+i)
-            if boardc[y-1-i][x-1-i]>0:
-                if not y-2-i<0 and not x-2-i<0:
-                    if boardc[y-2-i][x-2-i]==0:
-                        gorcWMschlagen(y,x,boardc,player,[])
-                        break
-                    else:
-                        break
-                else:
-                    break
+                        break   
     #
     for i in range(schlagen_WM_c):
         childrenWM.extend(gorc_WM_schlagen_children)
@@ -1045,8 +586,8 @@ def gorcWM(y,x,boardc,player):
             return boardc
         #schlagen
         elif n>100:
-            n_y = (n-100)//10
-            n_x = (n-100)%10
+            n_y = ((n-100)//10)-1
+            n_x = ((n-100)%10)-1
             #
             boardc[y][x]=0
             boardc[n_y][n_x]=player
@@ -1054,7 +595,7 @@ def gorcWM(y,x,boardc,player):
             for feld in delete:
                 boardc[feld[0]][feld[1]]=0
             return boardc
-    
+
 def generate_one_random_child(position, player):#pick rand piece, then pick rand move
     boardcopy = copy.deepcopy(position)
     #
@@ -1112,7 +653,7 @@ def generate_one_random_child(position, player):#pick rand piece, then pick rand
         return child
     else:
         return []
-   
+
 #
 
 X_matrix=[2,0,0,1,2,3,4,5]
@@ -2219,5 +1760,23 @@ def spielen(z):
     print('FERTIG')
 
 spielen(20)
+
+
+#------------------------------------------------------
+board = [
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,1,0,0,0,0],
+            [0,0,0,0,-1,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,2]
+        ]
+
+#printboard(board)
+#printboard(generate_one_random_child(board,1))
+
+#------------------------------------------------------
 
 #evaluatepos: open v closed?
