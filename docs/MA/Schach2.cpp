@@ -58,170 +58,59 @@ std::vector<std::vector<int>> deepcopy(const std::vector<std::vector<int>>& boar
 //
 
 void print_board(const std::vector<std::vector<int>>& board) {
-    std::cout << "  1   2   3   4   5   6   7   8\n";
-    std::cout << "---------------------------------\n";
+    std::cout <<"  1   2   3   4   5   6   7   8\n";
+    std::cout <<"---------------------------------\n";
     for (int i=0; i<8; ++i) {
-        std::cout << i+1 << " ";
+        std::cout << i+1 <<" ";
         for (int j=0; j<8; ++j) {
             if (board[i][j]==1 || board[i][j]==9) {std::cout << 'b';}
-            else if (board[i][j]==2) {std::cout << 'l';}
-            else if (board[i][j]==3) {std::cout << 'x';}
-            else if (board[i][j]==4 || board[i][j]==7) {std::cout << 't';}
-            else if (board[i][j]==5) {std::cout << 'q';}
-            else if (board[i][j]==6 || board[i][j]==8) {std::cout << 'k';}
-            else if (board[i][j]==-1 || board[i][j]==-9) {std::cout << 'B';}
-            else if (board[i][j]==-2) {std::cout << 'L';}
-            else if (board[i][j]==-3) {std::cout << 'X';}
-            else if (board[i][j]==-4 || board[i][j]==-7) {std::cout << 'T';}
-            else if (board[i][j]==-5) {std::cout << 'Q';}
-            else if (board[i][j]==-6 || board[i][j]==-8) {std::cout << 'K';}
-            else if (board[i][j]==0) {std::cout << ' ';}
+            else if (board[i][j]==2) {std::cout <<'l';}
+            else if (board[i][j]==3) {std::cout <<'x';}
+            else if (board[i][j]==4 || board[i][j]==7) {std::cout <<'t';}
+            else if (board[i][j]==5) {std::cout <<'q';}
+            else if (board[i][j]==6 || board[i][j]==8) {std::cout <<'k';}
+            else if (board[i][j]==-1 || board[i][j]==-9) {std::cout <<'B';}
+            else if (board[i][j]==-2) {std::cout <<'L';}
+            else if (board[i][j]==-3) {std::cout <<'X';}
+            else if (board[i][j]==-4 || board[i][j]==-7) {std::cout <<'T';}
+            else if (board[i][j]==-5) {std::cout <<'Q';}
+            else if (board[i][j]==-6 || board[i][j]==-8) {std::cout <<'K';}
+            else if (board[i][j]==0) {std::cout <<' ';}
             std::cout << " ";
         }
-        std::cout << '\n';
-        std::cout << "---------------------------------\n";
+        std::cout <<'\n';
+        std::cout <<"---------------------------------\n";
     }
 }
 
 //
 
-int minimax_counter=0;
-
-std::vector<std::vector<std::vector<int>>> generate_children(const std::vector<std::vector<int>> position, int playerk);//declaration weil gcKk gc in def hat und gc gcKk in def hat.
+std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::vector<int>> position, int playerk);//declaration weil gcKk gc in def hat und gc gcKk in def hat.
 
 std::vector<std::vector<std::vector<int>>> gcKk(int y, int x, const std::vector<std::vector<int>> pos, int player) {
     std::vector<std::vector<int>> boardc = pos;
     std::vector<std::vector<std::vector<int>>> childrenK;
-    //
-    if (player==-6 || player==-8) {
-        if (y+1<8 && x+1<8) {
-            if (boardc[y+1][x+1]>=0) {
+
+    // Define relative positions for king moves
+    int direction_y[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+    int direction_x[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+    for (int i=0; i<8; ++i) {
+        int new_y = y + direction_y[i];
+        int new_x = x + direction_x[i];
+
+        if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8) {
+            if ((player==-6 || player==-8) && boardc[new_y][new_x]>=0) {
                 boardc[y][x]=0;
-                boardc[y+1][x+1]=-6;
+                boardc[new_y][new_x]=-6;
                 childrenK.push_back(boardc);
-                boardc = pos;
+                boardc=pos;
             }
-        }
-        if (y+1<8 && x-1>-1) {
-            if (boardc[y+1][x-1]>=0) {
+            else if ((player==6 || player==8) && boardc[new_y][new_x]<=0) {
                 boardc[y][x]=0;
-                boardc[y+1][x-1]=-6;
+                boardc[new_y][new_x]=6;
                 childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (y-1>-1 && x+1<8) {
-            if (boardc[y-1][x+1]>=0) {
-                boardc[y][x]=0;
-                boardc[y-1][x+1]=-6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (y-1>-1 && x+1<8) {
-            if (boardc[y-1][x-1]>=0) {
-                boardc[y][x]=0;
-                boardc[y-1][x-1]=-6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (x+1<8) {
-            if (boardc[y][x+1]>=0) {
-                boardc[y][x]=0;
-                boardc[y][x+1]=-6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (x-1>-1) {
-            if (boardc[y][x-1]>=0) {
-                boardc[y][x]=0;
-                boardc[y][x-1]=-6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (y+1<8) {
-            if (boardc[y+1][x]>=0) {
-                boardc[y][x]=0;
-                boardc[y+1][x]=-6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (y-1>-1) {
-            if (boardc[y-1][x]>=0) {
-                boardc[y][x]=0;
-                boardc[y-1][x]=-6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-    }
-    else if (player==6 || player==8) {
-        if (y+1<8 && x+1<8) {
-            if (boardc[y+1][x+1]<=0) {
-                boardc[y][x]=0;
-                boardc[y+1][x+1]=6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (y+1<8 && x-1>-1) {
-            if (boardc[y+1][x-1]<=0) {
-                boardc[y][x]=0;
-                boardc[y+1][x-1]=6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (y-1>-1 && x+1<8) {
-            if (boardc[y-1][x+1]<=0) {
-                boardc[y][x]=0;
-                boardc[y-1][x+1]=6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (y-1>-1 && x+1<8) {
-            if (boardc[y-1][x-1]<=0) {
-                boardc[y][x]=0;
-                boardc[y-1][x-1]=6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (x+1<8) {
-            if (boardc[y][x+1]<=0) {
-                boardc[y][x]=0;
-                boardc[y][x+1]=6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (x-1>-1) {
-            if (boardc[y][x-1]<=0) {
-                boardc[y][x]=0;
-                boardc[y][x-1]=6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (y+1<8) {
-            if (boardc[y+1][x]<=0) {
-                boardc[y][x]=0;
-                boardc[y+1][x]=6;
-                childrenK.push_back(boardc);
-                boardc = pos;
-            }
-        }
-        if (y-1>-1) {
-            if (boardc[y-1][x]<=0) {
-                boardc[y][x]=0;
-                boardc[y-1][x]=6;
-                childrenK.push_back(boardc);
-                boardc = pos;
+                boardc=pos;
             }
         }
     }
@@ -558,7 +447,7 @@ std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::ve
                     children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==-4 || position[y][x]==-7) {
-                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, -4, {0, 0, 1, -1}, {0, 0, 1, -1});
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, -4, {0, 0, 1, -1}, {1, -1, 0, 0});
                     children.insert(children.end(), new_children.begin(), new_children.end());                
                 }
                 else if (position[y][x]==-3) {
@@ -566,7 +455,7 @@ std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::ve
                     children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==-5) {
-                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, -5, {1, -1, -1, 1, 0, 0, 1, -1}, {1, 1, -1, -1, 0, 0, 1, -1});
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, -5, {1, -1, -1, 1, 0, 0, 1, -1}, {1, 1, -1, -1, 1, -1, 0, 0});
                     children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==-2) {
@@ -580,7 +469,6 @@ std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::ve
             }
         }
     }
-    minimax_counter+=1;
     return children;
 }
 

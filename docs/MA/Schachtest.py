@@ -23,9 +23,6 @@ import math
 #8:y not moved kingk
 #9:f en passant b (just moved 2 forw)
 
-#
-minimaxc=0
-#
 
 #
 
@@ -143,13 +140,13 @@ def genchildren(position, playerk):
                     for h in gcKk(y,x,position,6):
                         children.append(h)
                 elif position[y][x]==4 or position[y][x]==7:
-                    for h in gcTt(y,x,position,4):
+                    for h in gcTtXxQq(y,x,position,4,[0, 0, 1, -1], [1, -1, 0, 0]):
                         children.append(h)
                 elif position[y][x]==3:
-                    for h in gcXx(y,x,position,3):
+                    for h in gcTtXxQq(y,x,position,3,[1, -1, -1, 1], [1, 1, -1, -1]):
                         children.append(h)
                 elif position[y][x]==5:
-                    for h in gcQq(y,x,position,5):
+                    for h in gcTtXxQq(y,x,position,5,[1, -1, -1, 1, 0, 0, 1, -1], [1, 1, -1, -1, 1, -1, 0, 0]):
                         children.append(h)
                 elif position[y][x]==2:
                     for h in gcLl(y,x,position,2):
@@ -167,13 +164,13 @@ def genchildren(position, playerk):
                     for h in gcKk(y,x,position,-6):
                         children.append(h)
                 elif position[y][x]==-4 or position[y][x]==-7:
-                    for h in gcTt(y,x,position,-4):
+                    for h in gcTtXxQq(y,x,position,-4,[0, 0, 1, -1], [1, -1, 0, 0]):
                         children.append(h)
                 elif position[y][x]==-3:
-                    for h in gcXx(y,x,position,-3):
+                    for h in gcTtXxQq(y,x,position,-3,[1, -1, -1, 1], [1, 1, -1, -1]):
                         children.append(h)
                 elif position[y][x]==-5:
-                    for h in gcQq(y,x,position,-5):
+                    for h in gcTtXxQq(y,x,position,-5,[1, -1, -1, 1, 0, 0, 1, -1], [1, 1, -1, -1, 1, -1, 0, 0]):
                         children.append(h)
                 elif position[y][x]==-2:
                     for h in gcLl(y,x,position,-2):
@@ -182,110 +179,106 @@ def genchildren(position, playerk):
                     for h in gcKk(y,x,position,-8):
                         children.append(h)
     #
-    global minimaxc
-    minimaxc = minimaxc + 1
+    return children
+
+def gcTtXxQq(y, x, pos, player, direction_y, direction_x):
+    children = []
+    #
+    if player<0:
+        for dir in range(len(direction_y)):
+            for step in range(1, 8):
+                new_y = y + step * direction_y[dir]
+                new_x = x + step * direction_x[dir]
+                #
+                if -1<new_y<8 and -1<new_x<8:
+                    if pos[new_y][new_x]==0:
+                        boardc=copy.deepcopy(pos)
+                        boardc[y][x]=0
+                        boardc[new_y][new_x]=player
+                        children.append(boardc)
+                    elif pos[new_y][new_x]<0:
+                        break
+                    elif pos[new_y][new_x]>0:
+                        boardc=copy.deepcopy(pos)
+                        boardc[y][x]=0
+                        boardc[new_y][new_x]=player
+                        children.append(boardc)
+                        break
+                else:
+                    break
+    elif player>0:
+        for dir in range(len(direction_y)):
+            for step in range(1, 8):
+                new_y = y + step * direction_y[dir]
+                new_x = x + step * direction_x[dir]
+                #
+                if -1<new_y<8 and -1<new_x<8:
+                    if pos[new_y][new_x]==0:
+                        boardc=copy.deepcopy(pos)
+                        boardc[y][x]=0
+                        boardc[new_y][new_x]=player
+                        children.append(boardc)
+                    elif pos[new_y][new_x]>0:
+                        break
+                    elif pos[new_y][new_x]<0:
+                        boardc=copy.deepcopy(pos)
+                        boardc[y][x]=0
+                        boardc[new_y][new_x]=player
+                        children.append(boardc)
+                        break
+                else:
+                    break
     #
     return children
 
-def gcKk(y,x,pos,player):
+def gcLl(y, x, pos, player):
+    boardc = copy.deepcopy(pos)
+    childrenL = []
+    #
+    direction_y = [-2, -2, 2, 2, 1, -1, 1, -1]
+    direction_x = [1, -1, 1, -1, 2, 2, -2, -2]
+    #
+    if player==-2:
+        for i in range(8):
+            new_y = y + direction_y[i]
+            new_x = x + direction_x[i]
+            if -1<new_y<8 and -1<new_x<8 and pos[new_y][new_x]>=0:
+                boardc = copy.deepcopy(pos)
+                boardc[y][x]=0
+                boardc[new_y][new_x]=-2
+                childrenL.append(boardc)
+    #
+    elif player==2:
+        for i in range(8):
+            new_y = y + direction_y[i]
+            new_x = x + direction_x[i]
+            if -1<new_y<8 and -1<new_x<8 and pos[new_y][new_x]<=0:
+                boardc = copy.deepcopy(pos)
+                boardc[y][x]=0
+                boardc[new_y][new_x]=2
+                childrenL.append(boardc)
+    #
+    return childrenL
+
+def gcKk(y, x, pos, player):
+    childrenK = []
     boardc=copy.deepcopy(pos)
-    childrenK= []
-    if player==-6 or player==-8:
-        if y+1<8 and x+1<8:
-            if boardc[y+1][x+1]>=0:
+    #
+    direction_y = [-1, -1, -1, 0, 0, 1, 1, 1]
+    direction_x = [-1, 0, 1, -1, 1, -1, 0, 1]
+    #
+    for i in range(8):
+        new_y = y + direction_y[i]
+        new_x = x + direction_x[i]
+        if -1<new_y<8 and -1<new_x<8:
+            if (player==-6 or player==-8) and boardc[new_y][new_x]>=0:
                 boardc[y][x]=0
-                boardc[y+1][x+1]=-6
+                boardc[new_y][new_x]=-6
                 childrenK.append(boardc)
                 boardc=copy.deepcopy(pos)
-        if y+1<8 and x-1>-1:
-            if boardc[y+1][x-1]>=0:
+            elif (player==6 or player==8) and boardc[new_y][new_x]<=0:
                 boardc[y][x]=0
-                boardc[y+1][x-1]=-6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y-1>-1 and x+1<8:
-            if boardc[y-1][x+1]>=0:
-                boardc[y][x]=0
-                boardc[y-1][x+1]=-6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y-1>-1 and x+1<8:
-            if boardc[y-1][x-1]>=0:
-                boardc[y][x]=0
-                boardc[y-1][x-1]=-6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if x+1<8:
-            if boardc[y][x+1]>=0:
-                boardc[y][x]=0
-                boardc[y][x+1]=-6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if x-1>-1:
-            if boardc[y][x-1]>=0:
-                boardc[y][x]=0
-                boardc[y][x-1]=-6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y+1<8:
-            if boardc[y+1][x]>=0:
-                boardc[y][x]=0
-                boardc[y+1][x]=-6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y-1>-1:
-            if boardc[y-1][x]>=0:
-                boardc[y][x]=0
-                boardc[y-1][x]=-6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-    elif player==6 or player==8:
-        if y+1<8 and x+1<8:
-            if boardc[y+1][x+1]<=0:
-                boardc[y][x]=0
-                boardc[y+1][x+1]=6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y+1<8 and x-1>-1:
-            if boardc[y+1][x-1]<=0:
-                boardc[y][x]=0
-                boardc[y+1][x-1]=6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y-1>-1 and x+1<8:
-            if boardc[y-1][x+1]<=0:
-                boardc[y][x]=0
-                boardc[y-1][x+1]=6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y-1>-1 and x+1<8:
-            if boardc[y-1][x-1]<=0:
-                boardc[y][x]=0
-                boardc[y-1][x-1]=6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if x+1<8:
-            if boardc[y][x+1]<=0:
-                boardc[y][x]=0
-                boardc[y][x+1]=6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if x-1>-1:
-            if boardc[y][x-1]<=0:
-                boardc[y][x]=0
-                boardc[y][x-1]=6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y+1<8:
-            if boardc[y+1][x]<=0:
-                boardc[y][x]=0
-                boardc[y+1][x]=6
-                childrenK.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y-1>-1:
-            if boardc[y-1][x]<=0:
-                boardc[y][x]=0
-                boardc[y-1][x]=6
+                boardc[new_y][new_x]=6
                 childrenK.append(boardc)
                 boardc=copy.deepcopy(pos)
     #rochade
@@ -344,708 +337,6 @@ def gcKk(y,x,pos,player):
                 childrenK.append(boardc)
             boardc=copy.deepcopy(pos)
     return childrenK
-
-def gcLl(y,x,pos,player):
-    boardc=copy.deepcopy(pos)
-    childrenL= []
-    if player==-2:
-        if y-2>-1 and x+1<8:
-            if boardc[y-2][x+1]>=0:
-                boardc[y][x]=0
-                boardc[y-2][x+1]=-2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y-2>-1 and x-1>-1:
-            if boardc[y-2][x-1]>=0:
-                boardc[y][x]=0
-                boardc[y-2][x-1]=-2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y+2<8 and x+1<8:
-            if boardc[y+2][x+1]>=0:
-                boardc[y][x]=0
-                boardc[y+2][x+1]=-2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y+2<8 and x-1>-1:
-            if boardc[y+2][x-1]>=0:
-                boardc[y][x]=0
-                boardc[y+2][x-1]=-2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y+1<8 and x+2<8:
-            if boardc[y+1][x+2]>=0:
-                boardc[y][x]=0
-                boardc[y+1][x+2]=-2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y-1>-1 and x+2<8:
-            if boardc[y-1][x+2]>=0:
-                boardc[y][x]=0
-                boardc[y-1][x+2]=-2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y+1<8 and x-2>-1:
-            if boardc[y+1][x-2]>=0:
-                boardc[y][x]=0
-                boardc[y+1][x-2]=-2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y-1>-1 and x-2>-1:
-            if boardc[y-1][x-2]>=0:
-                boardc[y][x]=0
-                boardc[y-1][x-2]=-2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-    if player==2:
-        if y-2>-1 and x+1<8:
-            if boardc[y-2][x+1]<=0:
-                boardc[y][x]=0
-                boardc[y-2][x+1]=2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y-2>-1 and x-1>-1:
-            if boardc[y-2][x-1]<=0:
-                boardc[y][x]=0
-                boardc[y-2][x-1]=2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y+2<8 and x+1<8:
-            if boardc[y+2][x+1]<=0:
-                boardc[y][x]=0
-                boardc[y+2][x+1]=2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y+2<8 and x-1>-1:
-            if boardc[y+2][x-1]<=0:
-                boardc[y][x]=0
-                boardc[y+2][x-1]=2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y+1<8 and x+2<8:
-            if boardc[y+1][x+2]<=0:
-                boardc[y][x]=0
-                boardc[y+1][x+2]=2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y-1>-1 and x+2<8:
-            if boardc[y-1][x+2]<=0:
-                boardc[y][x]=0
-                boardc[y-1][x+2]=2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y+1<8 and x-2>-1:
-            if boardc[y+1][x-2]<=0:
-                boardc[y][x]=0
-                boardc[y+1][x-2]=2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-        if y-1>-1 and x-2>-1:
-            if boardc[y-1][x-2]<=0:
-                boardc[y][x]=0
-                boardc[y-1][x-2]=2
-                childrenL.append(boardc)
-                boardc=copy.deepcopy(pos)
-    return childrenL
-
-def gcTt(y,x,pos,player):
-    boardc=copy.deepcopy(pos)
-    childrenT= []
-    if player==-4:
-        for i in range(7):
-            if x+i+1<8:
-                if boardc[y][x+i+1]>=0:
-                    if boardc[y][x+i+1]!=0:
-                        boardc[y][x]=0
-                        boardc[y][x+i+1]=-4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y][x+i+1]=-4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y+i+1<8:
-                if boardc[y+i+1][x]>=0:
-                    if boardc[y+i+1][x]!=0:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x]=-4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x]=-4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if x-i-1>-1:
-                if boardc[y][x-i-1]>=0:
-                    if boardc[y][x-i-1]!=0:
-                        boardc[y][x]=0
-                        boardc[y][x-i-1]=-4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y][x-i-1]=-4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y-i-1>-1:
-                if boardc[y-i-1][x]>=0:
-                    if boardc[y-i-1][x]!=0:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x]=-4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x]=-4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-    elif player==4:
-        for i in range(7):
-            if x+i+1<8:
-                if boardc[y][x+i+1]<=0:
-                    if boardc[y][x+i+1]!=0:
-                        boardc[y][x]=0
-                        boardc[y][x+i+1]=4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y][x+i+1]=4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y+i+1<8:
-                if boardc[y+i+1][x]<=0:
-                    if boardc[y+i+1][x]!=0:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x]=4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x]=4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if x-i-1>-1:
-                if boardc[y][x-i-1]<=0:
-                    if boardc[y][x-i-1]!=0:
-                        boardc[y][x]=0
-                        boardc[y][x-i-1]=4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y][x-i-1]=4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y-i-1>-1:
-                if boardc[y-i-1][x]<=0:
-                    if boardc[y-i-1][x]!=0:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x]=4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x]=4
-                        childrenT.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-    return childrenT
-
-def gcXx(y,x,pos,player):
-    boardc=copy.deepcopy(pos)
-    childrenX= []
-    if player==-3:
-        for i in range(7):
-            if x+i+1<8 and y+i+1<8:
-                if boardc[y+i+1][x+i+1]>=0:
-                    if boardc[y+i+1][x+i+1]!=0:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x+i+1]=-3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x+i+1]=-3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y-i-1>-1 and x-i-1>-1:
-                if boardc[y-i-1][x-i-1]>=0:
-                    if boardc[y-i-1][x-i-1]!=0:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x-i-1]=-3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x-i-1]=-3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y+i+1<8 and x-i-1>-1:
-                if boardc[y+i+1][x-i-1]>=0:
-                    if boardc[y+i+1][x-i-1]!=0:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x-i-1]=-3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x-i-1]=-3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y-i-1>-1 and x+i+1<8:
-                if boardc[y-i-1][x+i+1]>=0:
-                    if boardc[y-i-1][x+i+1]!=0:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x+i+1]=-3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x+i+1]=-3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-    if player==3:
-        for i in range(7):
-            if x+i+1<8 and y+i+1<8:
-                if boardc[y+i+1][x+i+1]<=0:
-                    if boardc[y+i+1][x+i+1]!=0:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x+i+1]=3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x+i+1]=3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y-i-1>-1 and x-i-1>-1:
-                if boardc[y-i-1][x-i-1]<=0:
-                    if boardc[y-i-1][x-i-1]!=0:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x-i-1]=3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x-i-1]=3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y+i+1<8 and x-i-1>-1:
-                if boardc[y+i+1][x-i-1]<=0:
-                    if boardc[y+i+1][x-i-1]!=0:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x-i-1]=3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x-i-1]=3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y-i-1>-1 and x+i+1<8:
-                if boardc[y-i-1][x+i+1]<=0:
-                    if boardc[y-i-1][x+i+1]!=0:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x+i+1]=3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x+i+1]=3
-                        childrenX.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-    return childrenX
-
-def gcQq(y,x,pos,player):
-    boardc=copy.deepcopy(pos)
-    childrenQ= []
-    if player==-5:
-        for i in range(7):
-            if x+i+1<8:
-                if boardc[y][x+i+1]>=0:
-                    if boardc[y][x+i+1]!=0:
-                        boardc[y][x]=0
-                        boardc[y][x+i+1]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y][x+i+1]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y+i+1<8:
-                if boardc[y+i+1][x]>=0:
-                    if boardc[y+i+1][x]!=0:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if x-i-1>-1:
-                if boardc[y][x-i-1]>=0:
-                    if boardc[y][x-i-1]!=0:
-                        boardc[y][x]=0
-                        boardc[y][x-i-1]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y][x-i-1]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y-i-1>-1:
-                if boardc[y-i-1][x]>=0:
-                    if boardc[y-i-1][x]!=0:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-    if player==5:
-        for i in range(7):
-            if x+i+1<8:
-                if boardc[y][x+i+1]<=0:
-                    if boardc[y][x+i+1]!=0:
-                        boardc[y][x]=0
-                        boardc[y][x+i+1]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y][x+i+1]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y+i+1<8:
-                if boardc[y+i+1][x]<=0:
-                    if boardc[y+i+1][x]!=0:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if x-i-1>-1:
-                if boardc[y][x-i-1]<=0:
-                    if boardc[y][x-i-1]!=0:
-                        boardc[y][x]=0
-                        boardc[y][x-i-1]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y][x-i-1]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y-i-1>-1:
-                if boardc[y-i-1][x]<=0:
-                    if boardc[y-i-1][x]!=0:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-    if player==-5:
-        for i in range(7):
-            if x+i+1<8 and y+i+1<8:
-                if boardc[y+i+1][x+i+1]>=0:
-                    if boardc[y+i+1][x+i+1]!=0:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x+i+1]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x+i+1]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y-i-1>-1 and x-i-1>-1:
-                if boardc[y-i-1][x-i-1]>=0:
-                    if boardc[y-i-1][x-i-1]!=0:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x-i-1]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x-i-1]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y+i+1<8 and x-i-1>-1:
-                if boardc[y+i+1][x-i-1]>=0:
-                    if boardc[y+i+1][x-i-1]!=0:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x-i-1]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x-i-1]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y-i-1>-1 and x+i+1<8:
-                if boardc[y-i-1][x+i+1]>=0:
-                    if boardc[y-i-1][x+i+1]!=0:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x+i+1]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x+i+1]=-5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-    if player==5:
-        for i in range(7):
-            if x+i+1<8 and y+i+1<8:
-                if boardc[y+i+1][x+i+1]<=0:
-                    if boardc[y+i+1][x+i+1]!=0:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x+i+1]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x+i+1]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y-i-1>-1 and x-i-1>-1:
-                if boardc[y-i-1][x-i-1]<=0:
-                    if boardc[y-i-1][x-i-1]!=0:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x-i-1]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x-i-1]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y+i+1<8 and x-i-1>-1:
-                if boardc[y+i+1][x-i-1]<=0:
-                    if boardc[y+i+1][x-i-1]!=0:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x-i-1]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y+i+1][x-i-1]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-        for i in range(7):
-            if y-i-1>-1 and x+i+1<8:
-                if boardc[y-i-1][x+i+1]<=0:
-                    if boardc[y-i-1][x+i+1]!=0:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x+i+1]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                        break
-                    else:
-                        boardc[y][x]=0
-                        boardc[y-i-1][x+i+1]=5
-                        childrenQ.append(boardc)
-                        boardc=copy.deepcopy(pos)
-                else:
-                    break
-            else:
-                break
-    return childrenQ
 
 def gcBb(y,x,pos,player):
     boardc=copy.deepcopy(pos)
@@ -1143,1179 +434,9 @@ def gcBb(y,x,pos,player):
                 boardc=copy.deepcopy(pos)
     return childrenB
 
-#
-
-def genchildren2(position, playerk):
-    children=[]
-    #9&-9 zu 1&-1
-    if playerk==6:
-        for y in range(len(position)):
-            for x in range(len(position[y])):
-                if position[y][x]==9:
-                    position[y][x]=1
-    elif playerk==-6:
-        for y in range(len(position)):
-            for x in range(len(position[y])):
-                if position[y][x]==-9:
-                    position[y][x]=-1
-    #
-    if playerk==6:
-        for y in range(8):
-            for x in range(8):
-                if position[y][x]==1:
-                    for h in gcBb(y,x,position,1):
-                        children.append(h)
-                elif position[y][x]==6:
-                    for h in gcKk(y,x,position,6):
-                        children.append(h)
-                elif position[y][x]==4 or position[y][x]==7:
-                    for h in gcTtXxQq(y,x,position,4,[0, 0, 1, -1], [0, 0, 1, -1]):
-                        children.append(h)
-                elif position[y][x]==3:
-                    for h in gcTtXxQq(y,x,position,3,[1, -1, -1, 1], [1, 1, -1, -1]):
-                        children.append(h)
-                elif position[y][x]==5:
-                    for h in gcTtXxQq(y,x,position,5,[1, -1, -1, 1, 0, 0, 1, -1], [1, 1, -1, -1, 0, 0, 1, -1]):
-                        children.append(h)
-                elif position[y][x]==2:
-                    for h in gcLl(y,x,position,2):
-                        children.append(h)
-                elif position[y][x]==8:
-                    for h in gcKk(y,x,position,8):
-                        children.append(h)
-    elif playerk==-6:
-        for y in range(8):
-            for x in range(8):
-                if position[y][x]==-1:
-                    for h in gcBb(y,x,position,-1):
-                        children.append(h)
-                elif position[y][x]==-6:
-                    for h in gcKk(y,x,position,-6):
-                        children.append(h)
-                elif position[y][x]==-4 or position[y][x]==-7:
-                    for h in gcTtXxQq(y,x,position,-4,[0, 0, 1, -1], [0, 0, 1, -1]):
-                        children.append(h)
-                elif position[y][x]==-3:
-                    for h in gcTtXxQq(y,x,position,-3,[1, -1, -1, 1], [1, 1, -1, -1]):
-                        children.append(h)
-                elif position[y][x]==-5:
-                    for h in gcTtXxQq(y,x,position,-5,[1, -1, -1, 1, 0, 0, 1, -1], [1, 1, -1, -1, 0, 0, 1, -1]):
-                        children.append(h)
-                elif position[y][x]==-2:
-                    for h in gcLl(y,x,position,-2):
-                        children.append(h)
-                elif position[y][x]==-8:
-                    for h in gcKk(y,x,position,-8):
-                        children.append(h)
-    #
-    global minimaxc
-    minimaxc = minimaxc + 1
-    #
-    return children
-
-def gcTtXxQq(y, x, pos, player, direction_y, direction_x):
-    children = []
-    #
-    if player < 0:
-        for dir in range(len(direction_y)):
-            for step in range(1, 8):
-                new_y = y + step * direction_y[dir]
-                new_x = x + step * direction_x[dir]
-                
-                if 0 <= new_y < 8 and 0 <= new_x < 8:
-                    if pos[new_y][new_x] >= 0:
-                        boardc = copy.deepcopy(pos)
-                        boardc[y][x] = 0
-                        boardc[new_y][new_x] = player
-                        children.append(boardc)
-                    else:
-                        break
-                else:
-                    break
-    elif player > 0:
-        for dir in range(len(direction_y)):
-            for step in range(1, 8):
-                new_y = y + step * direction_y[dir]
-                new_x = x + step * direction_x[dir]
-                
-                if 0 <= new_y < 8 and 0 <= new_x < 8:
-                    if pos[new_y][new_x] <= 0:
-                        boardc = copy.deepcopy(pos)
-                        boardc[y][x] = 0
-                        boardc[new_y][new_x] = player
-                        children.append(boardc)
-                    else:
-                        break
-                else:
-                    break
-    #
-    return children
-
-
-#Gorc Variante2
-
-class GorcMove():
-    def __init__(self):
-        self.y=None
-        self.x=None
-        self.piece_type=None
-        self.move_type=None
-
-    def gorcKk2(self,boardc):
-        n=self.move_type
-        player=self.piece_type
-        y=self.y
-        x=self.x
-        #
-        if n==1:
-            boardc[y][x]=0
-            boardc[y+1][x+1]=player
-            return boardc
-        elif n==2:
-            boardc[y][x]=0
-            boardc[y+1][x-1]=player
-            return boardc
-        elif n==3:
-            boardc[y][x]=0
-            boardc[y-1][x+1]=player
-            return boardc
-        elif n==4:
-            boardc[y][x]=0
-            boardc[y-1][x-1]=player
-            return boardc
-        elif n==5:
-            boardc[y][x]=0
-            boardc[y][x+1]=player
-            return boardc
-        elif n==6:
-            boardc[y][x]=0
-            boardc[y][x-1]=player
-            return boardc
-        elif n==7:
-            boardc[y][x]=0
-            boardc[y+1][x]=player
-            return boardc
-        elif n==8:
-            boardc[y][x]=0
-            boardc[y-1][x]=player
-            return boardc
-        elif n==9:
-            boardc[0][2]=-6
-            boardc[0][3]=-4
-            boardc[0][0]=0
-            boardc[0][4]=0
-            return boardc
-        elif n==10:
-            boardc[0][6]=-6
-            boardc[0][5]=-4
-            boardc[0][7]=0
-            boardc[0][4]=0
-            return boardc
-        elif n==11:
-            boardc[7][2]=6
-            boardc[7][3]=4
-            boardc[7][0]=0
-            boardc[7][4]=0
-            return boardc
-        elif n==12:
-            boardc[7][6]=6
-            boardc[7][5]=4
-            boardc[7][7]=0
-            boardc[7][4]=0
-            return boardc
-
-    def gorcLl2(self,boardc):
-        n=self.move_type
-        player=self.piece_type
-        y=self.y
-        x=self.x
-        #
-        if n==1:
-            boardc[y][x]=0
-            boardc[y-2][x+1]=player
-            return boardc
-        elif n==2:
-            boardc[y][x]=0
-            boardc[y-2][x-1]=player
-            return boardc
-        elif n==3:
-            boardc[y][x]=0
-            boardc[y+2][x+1]=player
-            return boardc
-        elif n==4:
-            boardc[y][x]=0
-            boardc[y+2][x-1]=player
-            return boardc
-        elif n==5:
-            boardc[y][x]=0
-            boardc[y+1][x+2]=player
-            return boardc
-        elif n==6:
-            boardc[y][x]=0
-            boardc[y-1][x+2]=player
-            return boardc
-        elif n==7:
-            boardc[y][x]=0
-            boardc[y+1][x-2]=player
-            return boardc
-        elif n==8:
-            boardc[y][x]=0
-            boardc[y-1][x-2]=player
-            return boardc
-
-    def gorcTt2(self,boardc):
-        n=self.move_type
-        player=self.piece_type
-        y=self.y
-        x=self.x
-        #
-        #rechts
-        if n<10:
-            boardc[y][x]=0
-            boardc[y][x+n]=player
-            return boardc
-        #unten
-        elif n<20 and n>10:
-            boardc[y][x]=0
-            boardc[y+(n-10)][x]=player
-            return boardc
-        #links
-        elif n<30 and n>20:
-            boardc[y][x]=0
-            boardc[y][x-(n-20)]=player
-            return boardc
-        #oben
-        elif n>30:
-            boardc[y][x]=0
-            boardc[y-(n-30)][x]=player
-            return boardc
-
-    def gorcXx2(self,boardc):
-        n=self.move_type
-        player=self.piece_type
-        y=self.y
-        x=self.x
-        #
-        if n<10:
-            boardc[y][x]=0
-            boardc[y+n][x+n]=player
-            return boardc
-        #ol
-        elif n<20 and n>10:
-            boardc[y][x]=0
-            boardc[y-(n-10)][x-(n-10)]=player
-            return boardc
-        #ul
-        elif n<30 and n>20:
-            boardc[y][x]=0
-            boardc[y+(n-20)][x-(n-20)]=player
-            return boardc
-        #or
-        elif n>30:
-            boardc[y][x]=0
-            boardc[y-(n-30)][x+(n-30)]=3
-            return boardc
-
-    def gorcQq2(self,boardc):
-        n=self.move_type
-        player=self.piece_type
-        y=self.y
-        x=self.x
-        #
-        if n<10:
-            boardc[y][x]=0
-            boardc[y][x+n]=player
-            return boardc
-        #unten
-        elif n<20 and n>10:
-            boardc[y][x]=0
-            boardc[y+(n-10)][x]=player
-            return boardc
-        #links
-        elif n<30 and n>20:
-            boardc[y][x]=0
-            boardc[y][x-(n-20)]=player
-            return boardc
-        #oben
-        elif n<40 and n>30:
-            boardc[y][x]=0
-            boardc[y-(n-30)][x]=player
-            return boardc
-        #ur
-        if n<50 and n>40:
-            boardc[y][x]=0
-            boardc[y+(n-40)][x+(n-40)]=player
-            return boardc
-        #ol
-        elif n<60 and n>50:
-            boardc[y][x]=0
-            boardc[y-(n-50)][x-(n-50)]=player
-            return boardc
-        #ul
-        elif n<70 and n>60:
-            boardc[y][x]=0
-            boardc[y+(n-60)][x-(n-60)]=player
-            return boardc
-        #or
-        elif n>70:
-            boardc[y][x]=0
-            boardc[y-(n-70)][x+(n-70)]=3
-            return boardc
-
-    def gorcBb2(self,boardc):
-        n=self.move_type
-        player=self.piece_type
-        y=self.y
-        x=self.x
-        #
-        if player==-1:
-            if n==1:
-                boardc[y][x]=0
-                boardc[y+2][x]=-9
-                return boardc
-            elif n==2:
-                boardc[y][x]=0
-                boardc[y+1][x]=-1
-                if y+1==7:
-                    boardc[y+1][x]=-5
-                return boardc
-            elif n==3:
-                boardc[y][x]=0
-                boardc[y+1][x-1]=-1
-                if y+1==7:
-                    boardc[y+1][x-1]=-5
-                return boardc
-            elif n==4:
-                boardc[y][x]=0
-                boardc[y+1][x+1]=-1
-                if y+1==7:
-                    boardc[y+1][x+1]=-5
-                return boardc
-            elif n==5:
-                boardc[y][x]=0
-                boardc[y+1][x-1]=-1
-                boardc[y][x-1]=0
-                return boardc
-            elif n==6:
-                boardc[y][x]=0
-                boardc[y+1][x+1]=-1
-                boardc[y][x+1]=0
-                return boardc
-        elif player==1:
-            if n==1:
-                boardc[y][x]=0
-                boardc[y-2][x]=9
-                return boardc
-            elif n==2:
-                boardc[y][x]=0
-                boardc[y-1][x]=1
-                if y-1==0:
-                    boardc[y-1][x]=5
-                return boardc
-            elif n==3:
-                boardc[y][x]=0
-                boardc[y-1][x-1]=1
-                if y-1==0:
-                    boardc[y-1][x-1]=5
-                return boardc
-            elif n==4:
-                boardc[y][x]=0
-                boardc[y-1][x+1]=1
-                if y-1==0:
-                    boardc[y-1][x+1]=5
-                return boardc
-            elif n==5:
-                boardc[y][x]=0
-                boardc[y-1][x-1]=1
-                boardc[y][x-1]=0
-                return boardc
-            elif n==6:
-                boardc[y][x]=0
-                boardc[y-1][x+1]=1
-                boardc[y][x+1]=0
-                return boardc
+#Gorc
 
 def generate_one_random_child2(position, playerk):#für MCTS Simulation
-    #gen alle moves für alle Spielfiguren, move random auswählen -> all moves are equal, langsam
-    boardcopy = copy.deepcopy(position)
-    moves=[]
-    #
-    #9&-9 zu 1&-1
-    if playerk==6:
-        for y in range(len(boardcopy)):
-            for x in range(len(boardcopy[y])):
-                if boardcopy[y][x]==9:
-                    boardcopy[y][x]=1
-    elif playerk==-6:
-        for y in range(len(boardcopy)):
-            for x in range(len(boardcopy[y])):
-                if boardcopy[y][x]==-9:
-                    boardcopy[y][x]=-1
-    #
-    if playerk==6:
-        for y in range(8):
-            for x in range(8):
-                if boardcopy[y][x] == 1:
-                    moves.extend(gorcBb1(y, x, boardcopy, 1))
-                elif boardcopy[y][x] ==2:
-                    moves.extend(gorcLl1(y, x, boardcopy, 2))
-                elif boardcopy[y][x] == 3:
-                    moves.extend(gorcXx1(y, x, boardcopy, 3))
-                elif boardcopy[y][x] == 4 or boardcopy[y][x] == 7:
-                    moves.extend(gorcTt1(y, x, boardcopy, 4))
-                elif boardcopy[y][x] == 5:
-                    moves.extend(gorcQq1(y, x, boardcopy, 5))
-                elif boardcopy[y][x] == 6 or boardcopy[y][x] == 8:
-                    moves.extend(gorcKk1(y, x, boardcopy, boardcopy[y][x]))
-    elif playerk==-6:
-        for y in range(8):
-            for x in range(8):
-                if boardcopy[y][x] == -1:
-                    moves.extend(gorcBb1(y, x, boardcopy, -1))
-                elif boardcopy[y][x] ==-2:
-                    moves.extend(gorcLl1(y, x, boardcopy, -2))
-                elif boardcopy[y][x] == -3:
-                    moves.extend(gorcXx1(y, x, boardcopy, -3))
-                elif boardcopy[y][x] == -4 or boardcopy[y][x] == -7:
-                    moves.extend(gorcTt1(y, x, boardcopy, -4))
-                elif boardcopy[y][x] == -5:
-                    moves.extend(gorcQq1(y, x, boardcopy, -5))
-                elif boardcopy[y][x] == -6 or boardcopy[y][x] == -8:
-                    moves.extend(gorcKk1(y, x, boardcopy, boardcopy[y][x]))
-    #
-    if moves==[]:
-        return []
-    else:
-        move=random.choice(moves)
-    #
-    if move.piece_type==1 or move.piece_type==-1:
-        board_of_move=move.gorcBb2(boardcopy)
-    elif move.piece_type==2 or move.piece_type==-2:
-        board_of_move=move.gorcLl2(boardcopy)
-    elif move.piece_type==3 or move.piece_type==-3:
-        board_of_move=move.gorcXx2(boardcopy)
-    elif move.piece_type==4 or move.piece_type==-4:
-        board_of_move=move.gorcTt2(boardcopy)
-    elif move.piece_type==5 or move.piece_type==-5:
-        board_of_move=move.gorcQq2(boardcopy)
-    elif move.piece_type==6 or move.piece_type==-6:
-        board_of_move=move.gorcKk2(boardcopy)
-    #
-    return board_of_move
-    
-def gorcKk1(y,x,boardc,player):
-    childrenK= []
-    moves=[]
-    #rochade
-    if player==-8:
-        if boardc[0][0]==-7 and boardc[0][1]==0 and boardc[0][2]==0 and boardc[0][3]==0:
-            boardcc=copy.deepcopy(boardc)
-            boardcc[0][2]=-6
-            boardcc[0][3]=-4
-            boardcc[0][0]=0
-            boardcc[0][4]=0
-            legal=True
-            for child in genchildren(boardcc,6):
-                if child[0][2]>0 or child[0][3]>0 or child[0][4]>0:
-                    legal=False
-                    break
-            if legal:
-                childrenK.append(9)
-        if boardc[0][7]==-7 and boardc[0][6]==0 and boardc[0][5]==0:
-            boardcc=copy.deepcopy(boardc)
-            boardcc[0][6]=-6
-            boardcc[0][5]=-4
-            boardcc[0][7]=0
-            boardcc[0][4]=0
-            legal=True
-            for child in genchildren(boardcc,6):
-                if child[0][4]>0 or child[0][5]>0 or child[0][6]>0:
-                    legal=False
-                    break
-            if legal:
-                childrenK.append(10)
-    elif player==8:
-        if boardc[7][0]==7 and boardc[7][1]==0 and boardc[7][2]==0 and boardc[7][3]==0:
-            boardcc=copy.deepcopy(boardc)
-            boardcc[7][2]=6
-            boardcc[7][3]=4
-            boardcc[7][0]=0
-            boardcc[7][4]=0
-            legal=True
-            for child in genchildren(boardcc,-6):
-                if child[7][2]<0 or child[7][3]<0 or child[7][4]<0:
-                    legal=False
-                    break
-            if legal:
-                childrenK.append(11)
-        if boardc[7][7]==7 and boardc[7][6]==0 and boardc[7][5]==0:
-            boardcc=copy.deepcopy(boardc)
-            boardcc[7][6]=6
-            boardcc[7][5]=4
-            boardcc[7][7]=0
-            boardcc[7][4]=0
-            legal=True
-            for child in genchildren(boardcc,-6):
-                if child[7][4]<0 or child[7][5]<0 or child[7][6]<0:
-                    legal=False
-                    break
-            if legal:
-                childrenK.append(12)
-    #
-    if player==8:
-        player=6
-    elif player==-8:
-        player=-6
-    #
-    if player==-6:
-        if y+1<8 and x+1<8:
-            if boardc[y+1][x+1]>=0:
-                childrenK.append(1)
-        if y+1<8 and x-1>-1:
-            if boardc[y+1][x-1]>=0:
-                childrenK.append(2)
-        if y-1>-1 and x+1<8:
-            if boardc[y-1][x+1]>=0:
-                childrenK.append(3)
-        if y-1>-1 and x+1<8:
-            if boardc[y-1][x-1]>=0:
-                childrenK.append(4)
-        if x+1<8:
-            if boardc[y][x+1]>=0:
-                childrenK.append(5)
-        if x-1>-1:
-            if boardc[y][x-1]>=0:
-                childrenK.append(6)
-        if y+1<8:
-            if boardc[y+1][x]>=0:
-                childrenK.append(7)
-        if y-1>-1:
-            if boardc[y-1][x]>=0:
-                childrenK.append(8)
-        #
-    elif player==6:
-        if y+1<8 and x+1<8:
-            if boardc[y+1][x+1]<=0:
-                childrenK.append(1)
-        if y+1<8 and x-1>-1:
-            if boardc[y+1][x-1]<=0:
-                childrenK.append(2)
-        if y-1>-1 and x+1<8:
-            if boardc[y-1][x+1]<=0:
-                childrenK.append(3)
-        if y-1>-1 and x+1<8:
-            if boardc[y-1][x-1]<=0:
-                childrenK.append(4)
-        if x+1<8:
-            if boardc[y][x+1]<=0:
-                childrenK.append(5)
-        if x-1>-1:
-            if boardc[y][x-1]<=0:
-                childrenK.append(6)
-        if y+1<8:
-            if boardc[y+1][x]<=0:
-                childrenK.append(7)
-        if y-1>-1:
-            if boardc[y-1][x]<=0:
-                childrenK.append(8)
-    #
-    for child in childrenK:
-        instance=GorcMove()
-        instance.piece_type=player
-        instance.move_type=child
-        instance.y=y
-        instance.x=x
-        moves.append(instance)
-    #
-    return moves
-
-def gorcLl1(y,x,boardc,player):
-    childrenL= []
-    moves=[]
-    if player==-2:
-        if y-2>-1 and x+1<8:
-            if boardc[y-2][x+1]>=0:
-                childrenL.append(1)
-        if y-2>-1 and x-1>-1:
-            if boardc[y-2][x-1]>=0:
-                childrenL.append(2)
-        if y+2<8 and x+1<8:
-            if boardc[y+2][x+1]>=0:
-                childrenL.append(3)
-        if y+2<8 and x-1>-1:
-            if boardc[y+2][x-1]>=0:
-                childrenL.append(4)
-        if y+1<8 and x+2<8:
-            if boardc[y+1][x+2]>=0:
-                childrenL.append(5)
-        if y-1>-1 and x+2<8:
-            if boardc[y-1][x+2]>=0:
-                childrenL.append(6)
-        if y+1<8 and x-2>-1:
-            if boardc[y+1][x-2]>=0:
-                childrenL.append(7)
-        if y-1>-1 and x-2>-1:
-            if boardc[y-1][x-2]>=0:
-                childrenL.append(8)
-    if player==2:
-        if y-2>-1 and x+1<8:
-            if boardc[y-2][x+1]<=0:
-                childrenL.append(1)
-        if y-2>-1 and x-1>-1:
-            if boardc[y-2][x-1]<=0:
-                childrenL.append(2)
-        if y+2<8 and x+1<8:
-            if boardc[y+2][x+1]<=0:
-                childrenL.append(3)
-        if y+2<8 and x-1>-1:
-            if boardc[y+2][x-1]<=0:
-                childrenL.append(4)
-        if y+1<8 and x+2<8:
-            if boardc[y+1][x+2]<=0:
-                childrenL.append(5)
-        if y-1>-1 and x+2<8:
-            if boardc[y-1][x+2]<=0:
-                childrenL.append(6)
-        if y+1<8 and x-2>-1:
-            if boardc[y+1][x-2]<=0:
-                childrenL.append(7)
-        if y-1>-1 and x-2>-1:
-            if boardc[y-1][x-2]<=0:
-                childrenL.append(8)
-    #
-    for child in childrenL:
-        instance=GorcMove()
-        instance.piece_type=player
-        instance.move_type=child
-        instance.y=y
-        instance.x=x
-        moves.append(instance)
-    #
-    return moves
-
-def gorcTt1(y,x,boardc,player):
-    childrenT= []
-    moves=[]
-    #
-    if player==-4:
-        #rechts
-        for i in range(7):
-            if x+i+1<8:
-                if boardc[y][x+i+1]>=0:
-                    if boardc[y][x+i+1]!=0:
-                        childrenT.append(i+1)
-                        break
-                    else:
-                        childrenT.append(i+1)
-                else:
-                    break
-            else:
-                break
-        #unten
-        for i in range(7):
-            if y+i+1<8:
-                if boardc[y+i+1][x]>=0:
-                    if boardc[y+i+1][x]!=0:
-                        childrenT.append(10+i+1)
-                        break
-                    else:
-                        childrenT.append(10+i+1)
-                else:
-                    break
-            else:
-                break
-        #links
-        for i in range(7):
-            if x-i-1>-1:
-                if boardc[y][x-i-1]>=0:
-                    if boardc[y][x-i-1]!=0:
-                        childrenT.append(20+i+1)
-                        break
-                    else:
-                        childrenT.append(20+i+1)
-                else:
-                    break
-            else:
-                break
-        #oben
-        for i in range(7):
-            if y-i-1>-1:
-                if boardc[y-i-1][x]>=0:
-                    if boardc[y-i-1][x]!=0:
-                        childrenT.append(30+i+1)
-                        break
-                    else:
-                        childrenT.append(30+i+1)
-                else:
-                    break
-            else:
-                break
-    elif player==4:
-        #rechts
-        for i in range(7):
-            if x+i+1<8:
-                if boardc[y][x+i+1]<=0:
-                    if boardc[y][x+i+1]!=0:
-                        childrenT.append(i+1)
-                        break
-                    else:
-                        childrenT.append(i+1)
-                else:
-                    break
-            else:
-                break
-        #unten
-        for i in range(7):
-            if y+i+1<8:
-                if boardc[y+i+1][x]<=0:
-                    if boardc[y+i+1][x]!=0:
-                        childrenT.append(10+i+1)
-                        break
-                    else:
-                        childrenT.append(10+i+1)
-                else:
-                    break
-            else:
-                break
-        #links
-        for i in range(7):
-            if x-i-1>-1:
-                if boardc[y][x-i-1]<=0:
-                    if boardc[y][x-i-1]!=0:
-                        childrenT.append(20+i+1)
-                        break
-                    else:
-                        childrenT.append(20+i+1)
-                else:
-                    break
-            else:
-                break
-        #oben
-        for i in range(7):
-            if y-i-1>-1:
-                if boardc[y-i-1][x]<=0:
-                    if boardc[y-i-1][x]!=0:
-                        childrenT.append(30+i+1)
-                        break
-                    else:
-                        childrenT.append(30+i+1)
-                else:
-                    break
-            else:
-                break
-    #
-    for child in childrenT:
-        instance=GorcMove()
-        instance.piece_type=player
-        instance.move_type=child
-        instance.y=y
-        instance.x=x
-        moves.append(instance)
-    #
-    return moves
-
-def gorcXx1(y,x,boardc,player):
-    childrenX= []
-    moves=[]
-    if player==-3:
-        #ur
-        for i in range(7):
-            if x+i+1<8 and y+i+1<8:
-                if boardc[y+i+1][x+i+1]>=0:
-                    if boardc[y+i+1][x+i+1]!=0:
-                        childrenX.append(i+1)
-                        break
-                    else:
-                        childrenX.append(i+1)
-                else:
-                    break
-            else:
-                break
-        #ol
-        for i in range(7):
-            if y-i-1>-1 and x-i-1>-1:
-                if boardc[y-i-1][x-i-1]>=0:
-                    if boardc[y-i-1][x-i-1]!=0:
-                        childrenX.append(10+i+1)
-                        break
-                    else:
-                        childrenX.append(10+i+1)
-                else:
-                    break
-            else:
-                break
-        #ul
-        for i in range(7):
-            if y+i+1<8 and x-i-1>-1:
-                if boardc[y+i+1][x-i-1]>=0:
-                    if boardc[y+i+1][x-i-1]!=0:
-                        childrenX.append(20+i+1)
-                        break
-                    else:
-                        childrenX.append(20+i+1)
-                else:
-                    break
-            else:
-                break
-        #or
-        for i in range(7):
-            if y-i-1>-1 and x+i+1<8:
-                if boardc[y-i-1][x+i+1]>=0:
-                    if boardc[y-i-1][x+i+1]!=0:
-                        childrenX.append(30+i+1)
-                        break
-                    else:
-                        childrenX.append(30+i+1)
-                else:
-                    break
-            else:
-                break
-    elif player==3:
-        #ur
-        for i in range(7):
-            if x+i+1<8 and y+i+1<8:
-                if boardc[y+i+1][x+i+1]<=0:
-                    if boardc[y+i+1][x+i+1]!=0:
-                        childrenX.append(i+1)
-                        break
-                    else:
-                        childrenX.append(i+1)
-                else:
-                    break
-            else:
-                break
-        #ol
-        for i in range(7):
-            if y-i-1>-1 and x-i-1>-1:
-                if boardc[y-i-1][x-i-1]<=0:
-                    if boardc[y-i-1][x-i-1]!=0:
-                        childrenX.append(10+i+1)
-                        break
-                    else:
-                        childrenX.append(10+i+1)
-                else:
-                    break
-            else:
-                break
-        #ul
-        for i in range(7):
-            if y+i+1<8 and x-i-1>-1:
-                if boardc[y+i+1][x-i-1]<=0:
-                    if boardc[y+i+1][x-i-1]!=0:
-                        childrenX.append(20+i+1)
-                        break
-                    else:
-                        childrenX.append(20+i+1)
-                else:
-                    break
-            else:
-                break
-        #or
-        for i in range(7):
-            if y-i-1>-1 and x+i+1<8:
-                if boardc[y-i-1][x+i+1]<=0:
-                    if boardc[y-i-1][x+i+1]!=0:
-                        childrenX.append(30+i+1)
-                        break
-                    else:
-                        childrenX.append(30+i+1)
-                else:
-                    break
-            else:
-                break
-    #
-    for child in childrenX:
-        instance=GorcMove()
-        instance.piece_type=player
-        instance.move_type=child
-        instance.y=y
-        instance.x=x
-        moves.append(instance)
-    #
-    return moves
-
-def gorcQq1(y,x,boardc,player):
-    childrenQ=[]
-    moves=[]
-    if player==-5:
-        #rechts
-        for i in range(7):
-            if x+i+1<8:
-                if boardc[y][x+i+1]>=0:
-                    if boardc[y][x+i+1]!=0:
-                        childrenQ.append(i+1)
-                        break
-                    else:
-                        childrenQ.append(i+1)
-                else:
-                    break
-            else:
-                break
-        #unten
-        for i in range(7):
-            if y+i+1<8:
-                if boardc[y+i+1][x]>=0:
-                    if boardc[y+i+1][x]!=0:
-                        childrenQ.append(10+i+1)
-                        break
-                    else:
-                        childrenQ.append(10+i+1)
-                else:
-                    break
-            else:
-                break
-        #links
-        for i in range(7):
-            if x-i-1>-1:
-                if boardc[y][x-i-1]>=0:
-                    if boardc[y][x-i-1]!=0:
-                        childrenQ.append(20+i+1)
-                        break
-                    else:
-                        childrenQ.append(20+i+1)
-                else:
-                    break
-            else:
-                break
-        #oben
-        for i in range(7):
-            if y-i-1>-1:
-                if boardc[y-i-1][x]>=0:
-                    if boardc[y-i-1][x]!=0:
-                        childrenQ.append(30+i+1)
-                        break
-                    else:
-                        childrenQ.append(30+i+1)
-                else:
-                    break
-            else:
-                break
-    elif player==5:
-        #rechts
-        for i in range(7):
-            if x+i+1<8:
-                if boardc[y][x+i+1]<=0:
-                    if boardc[y][x+i+1]!=0:
-                        childrenQ.append(i+1)
-                        break
-                    else:
-                        childrenQ.append(i+1)
-                else:
-                    break
-            else:
-                break
-        #unten
-        for i in range(7):
-            if y+i+1<8:
-                if boardc[y+i+1][x]<=0:
-                    if boardc[y+i+1][x]!=0:
-                        childrenQ.append(10+i+1)
-                        break
-                    else:
-                        childrenQ.append(10+i+1)
-                else:
-                    break
-            else:
-                break
-        #links
-        for i in range(7):
-            if x-i-1>-1:
-                if boardc[y][x-i-1]<=0:
-                    if boardc[y][x-i-1]!=0:
-                        childrenQ.append(20+i+1)
-                        break
-                    else:
-                        childrenQ.append(20+i+1)
-                else:
-                    break
-            else:
-                break
-        #oben
-        for i in range(7):
-            if y-i-1>-1:
-                if boardc[y-i-1][x]<=0:
-                    if boardc[y-i-1][x]!=0:
-                        childrenQ.append(30+i+1)
-                        break
-                    else:
-                        childrenQ.append(30+i+1)
-                else:
-                    break
-            else:
-                break
-    #
-    if player==-5:
-        #ur
-        for i in range(7):
-            if x+i+1<8 and y+i+1<8:
-                if boardc[y+i+1][x+i+1]>=0:
-                    if boardc[y+i+1][x+i+1]!=0:
-                        childrenQ.append(40+i+1)
-                        break
-                    else:
-                        childrenQ.append(40+i+1)
-                else:
-                    break
-            else:
-                break
-        #ol
-        for i in range(7):
-            if y-i-1>-1 and x-i-1>-1:
-                if boardc[y-i-1][x-i-1]>=0:
-                    if boardc[y-i-1][x-i-1]!=0:
-                        childrenQ.append(50+i+1)
-                        break
-                    else:
-                        childrenQ.append(50+i+1)
-                else:
-                    break
-            else:
-                break
-        #ul
-        for i in range(7):
-            if y+i+1<8 and x-i-1>-1:
-                if boardc[y+i+1][x-i-1]>=0:
-                    if boardc[y+i+1][x-i-1]!=0:
-                        childrenQ.append(60+i+1)
-                        break
-                    else:
-                        childrenQ.append(60+i+1)
-                else:
-                    break
-            else:
-                break
-        #or
-        for i in range(7):
-            if y-i-1>-1 and x+i+1<8:
-                if boardc[y-i-1][x+i+1]>=0:
-                    if boardc[y-i-1][x+i+1]!=0:
-                        childrenQ.append(70+i+1)
-                        break
-                    else:
-                        childrenQ.append(70+i+1)
-                else:
-                    break
-            else:
-                break
-    elif player==5:
-        #ur
-        for i in range(7):
-            if x+i+1<8 and y+i+1<8:
-                if boardc[y+i+1][x+i+1]<=0:
-                    if boardc[y+i+1][x+i+1]!=0:
-                        childrenQ.append(40+i+1)
-                        break
-                    else:
-                        childrenQ.append(40+i+1)
-                else:
-                    break
-            else:
-                break
-        #ol
-        for i in range(7):
-            if y-i-1>-1 and x-i-1>-1:
-                if boardc[y-i-1][x-i-1]<=0:
-                    if boardc[y-i-1][x-i-1]!=0:
-                        childrenQ.append(50+i+1)
-                        break
-                    else:
-                        childrenQ.append(50+i+1)
-                else:
-                    break
-            else:
-                break
-        #ul
-        for i in range(7):
-            if y+i+1<8 and x-i-1>-1:
-                if boardc[y+i+1][x-i-1]<=0:
-                    if boardc[y+i+1][x-i-1]!=0:
-                        childrenQ.append(60+i+1)
-                        break
-                    else:
-                        childrenQ.append(60+i+1)
-                else:
-                    break
-            else:
-                break
-        #or
-        for i in range(7):
-            if y-i-1>-1 and x+i+1<8:
-                if boardc[y-i-1][x+i+1]<=0:
-                    if boardc[y-i-1][x+i+1]!=0:
-                        childrenQ.append(70+i+1)
-                        break
-                    else:
-                        childrenQ.append(70+i+1)
-                else:
-                    break
-            else:
-                break
-    #
-    for child in childrenQ:
-        instance=GorcMove()
-        instance.piece_type=player
-        instance.move_type=child
-        instance.y=y
-        instance.x=x
-        moves.append(instance)
-    #
-    return moves
-
-def gorcBb1(y,x,boardc,player):
-    childrenB= []
-    moves=[]
-    if player==-1:
-        if y==1 and boardc[y+2][x]==0 and boardc[y+1][x]==0:
-            childrenB.append(1)
-        if y+1<8:
-            if boardc[y+1][x]==0:
-                childrenB.append(2)
-        if x-1>-1 and y+1<8:
-            if boardc[y+1][x-1]>0:
-                childrenB.append(3)
-        if x+1<8 and y+1<8:
-            if boardc[y+1][x+1]>0:
-                childrenB.append(4)
-        #en passant
-        if x-1>-1 and y+1<8:
-            if boardc[y][x-1]==9 and boardc[y+1][x-1]==0:
-                childrenB.append(5)
-        if x+1<8 and y+1<8:
-            if boardc[y][x+1]==9 and boardc[y+1][x+1]==0:
-                childrenB.append(6)
-    if player==1:
-        if y==6 and boardc[y-2][x]==0 and boardc[y-1][x]==0:
-            childrenB.append(1)
-        if y-1>-1:
-            if boardc[y-1][x]==0:
-                childrenB.append(2)
-        if x-1>-1 and y-1>-1:
-            if boardc[y-1][x-1]<0:
-                childrenB.append(3)
-        if x+1<8 and y-1>-1:
-            if boardc[y-1][x+1]<0:
-                childrenB.append(4)
-        #en passant
-        if x-1>-1 and y-1>-1:
-            if boardc[y][x-1]==-9 and boardc[y-1][x-1]==0:
-                childrenB.append(5)
-        if x+1<8 and y-1>-1:
-            if boardc[y][x+1]==-9 and boardc[y-1][x+1]==0:
-                childrenB.append(6)
-    #
-    for child in childrenB:
-        instance=GorcMove()
-        instance.piece_type=player
-        instance.move_type=child
-        instance.y=y
-        instance.x=x
-        moves.append(instance)
-    #
-    return moves
-
-#Gorc Variante1
-
-def generate_one_random_child(position, playerk):#für MCTS Simulation
     #wählt random Spielfigur aus, gen moves für Figur, wählt random move -> not all moves are equal, schneller
     boardcopy = copy.deepcopy(position)
     #
@@ -2370,7 +491,7 @@ def generate_one_random_child(position, playerk):#für MCTS Simulation
         if child!=[]: 
             return child
 
-def gorcKk(y,x,boardc,player):
+def gorcKk2(y,x,boardc,player):
     childrenK= []
     if player==-6 or player==-8:
         if y+1<8 and x+1<8:
@@ -2541,7 +662,7 @@ def gorcKk(y,x,boardc,player):
             boardc[7][4]=0
             return boardc
 
-def gorcLl(y,x,boardc,player):
+def gorcLl2(y,x,boardc,player):
     childrenL= []
     if player==-2:
         if y-2>-1 and x+1<8:
@@ -3165,6 +1286,199 @@ def gorcQq(y,x,boardc,player):
             boardc[y-(n-70)][x+(n-70)]=3
             return boardc
 
+def gorcBb2(y,x,boardc,player):
+    childrenB= []
+    if player==-1:
+        if y==1 and boardc[y+2][x]==0 and boardc[y+1][x]==0:
+            childrenB.append(1)
+        if y+1<8:
+            if boardc[y+1][x]==0:
+                childrenB.append(2)
+        if x-1>-1 and y+1<8:
+            if boardc[y+1][x-1]>0:
+                childrenB.append(3)
+        if x+1<8 and y+1<8:
+            if boardc[y+1][x+1]>0:
+                childrenB.append(4)
+        #en passant
+        if x-1>-1 and y+1<8:
+            if boardc[y][x-1]==9 and boardc[y+1][x-1]==0:
+                childrenB.append(5)
+        if x+1<8 and y+1<8:
+            if boardc[y][x+1]==9 and boardc[y+1][x+1]==0:
+                childrenB.append(6)
+    if player==1:
+        if y==6 and boardc[y-2][x]==0 and boardc[y-1][x]==0:
+            childrenB.append(1)
+        if y-1>-1:
+            if boardc[y-1][x]==0:
+                childrenB.append(2)
+        if x-1>-1 and y-1>-1:
+            if boardc[y-1][x-1]<0:
+                childrenB.append(3)
+        if x+1<8 and y-1>-1:
+            if boardc[y-1][x+1]<0:
+                childrenB.append(4)
+        #en passant
+        if x-1>-1 and y-1>-1:
+            if boardc[y][x-1]==-9 and boardc[y-1][x-1]==0:
+                childrenB.append(5)
+        if x+1<8 and y-1>-1:
+            if boardc[y][x+1]==-9 and boardc[y-1][x+1]==0:
+                childrenB.append(6)
+    if player==-1:
+        if childrenB==[]:
+            return []
+        else:
+            n=random.choice(childrenB)
+            if n==1:
+                boardc[y][x]=0
+                boardc[y+2][x]=-9
+                return boardc
+            elif n==2:
+                boardc[y][x]=0
+                boardc[y+1][x]=-1
+                if y+1==7:
+                    boardc[y+1][x]=-5
+                return boardc
+            elif n==3:
+                boardc[y][x]=0
+                boardc[y+1][x-1]=-1
+                if y+1==7:
+                    boardc[y+1][x-1]=-5
+                return boardc
+            elif n==4:
+                boardc[y][x]=0
+                boardc[y+1][x+1]=-1
+                if y+1==7:
+                    boardc[y+1][x+1]=-5
+                return boardc
+            elif n==5:
+                boardc[y][x]=0
+                boardc[y+1][x-1]=-1
+                boardc[y][x-1]=0
+                return boardc
+            elif n==6:
+                boardc[y][x]=0
+                boardc[y+1][x+1]=-1
+                boardc[y][x+1]=0
+                return boardc
+    elif player==1:
+        if childrenB==[]:
+            return []
+        else:
+            n=random.choice(childrenB)
+            if n==1:
+                boardc[y][x]=0
+                boardc[y-2][x]=9
+                return boardc
+            elif n==2:
+                boardc[y][x]=0
+                boardc[y-1][x]=1
+                if y-1==0:
+                    boardc[y-1][x]=5
+                return boardc
+            elif n==3:
+                boardc[y][x]=0
+                boardc[y-1][x-1]=1
+                if y-1==0:
+                    boardc[y-1][x-1]=5
+                return boardc
+            elif n==4:
+                boardc[y][x]=0
+                boardc[y-1][x+1]=1
+                if y-1==0:
+                    boardc[y-1][x+1]=5
+                return boardc
+            elif n==5:
+                boardc[y][x]=0
+                boardc[y-1][x-1]=1
+                boardc[y][x-1]=0
+                return boardc
+            elif n==6:
+                boardc[y][x]=0
+                boardc[y-1][x+1]=1
+                boardc[y][x+1]=0
+                return boardc
+
+#gorc simpl
+
+def generate_one_random_child(position, playerk):#für MCTS Simulation
+    #wählt random Spielfigur aus, gen moves für Figur, wählt random move -> not all moves are equal, schneller
+    boardcopy = copy.deepcopy(position)
+    #
+    #9&-9 zu 1&-1
+    if playerk==6:
+        for y in range(len(boardcopy)):
+            for x in range(len(boardcopy[y])):
+                if boardcopy[y][x]==9:
+                    boardcopy[y][x]=1
+    elif playerk==-6:
+        for y in range(len(boardcopy)):
+            for x in range(len(boardcopy[y])):
+                if boardcopy[y][x]==-9:
+                    boardcopy[y][x]=-1
+    #
+    piecesy=[]
+    piecesx=[]
+    if playerk==6:
+        for y in range(8):
+            for x in range(8):
+                if boardcopy[y][x]>0:
+                    piecesy.append(y)
+                    piecesx.append(x)
+    elif playerk==-6:
+        for y in range(8):
+            for x in range(8):
+                if boardcopy[y][x]<0:
+                    piecesy.append(y)
+                    piecesx.append(x)
+    #
+    if piecesx==[]:
+        return []
+    #
+    while True:
+        n = random.randint(0, len(piecesy) - 1)
+        y = piecesy[n]
+        x = piecesx[n]
+
+        if boardcopy[y][x] == 1 or boardcopy[y][x] == -1:
+            child = gorcBb(y, x, boardcopy, boardcopy[y][x])
+        elif boardcopy[y][x] == 2 or boardcopy[y][x] == -2:
+            child = gorcLl(y, x, boardcopy, boardcopy[y][x])
+        elif boardcopy[y][x] == 3 or boardcopy[y][x] == -3:
+            child = gorcXx(y, x, boardcopy, boardcopy[y][x])
+        elif boardcopy[y][x] == 4 or boardcopy[y][x] == -4 or boardcopy[y][x] == -7 or boardcopy[y][x] == 7:
+            child = gorcTt(y, x, boardcopy, boardcopy[y][x])
+        elif boardcopy[y][x] == 5 or boardcopy[y][x] == -5:
+            child = gorcQq(y, x, boardcopy, boardcopy[y][x])
+        elif boardcopy[y][x] == 6 or boardcopy[y][x] == -6 or boardcopy[y][x] == -8 or boardcopy[y][x] == 8:
+            child = gorcKk(y, x, boardcopy, boardcopy[y][x])
+        #
+        if child!=[]: 
+            return child
+
+def gorcLl(y, x, boardc, player):
+    childrenL=[]
+    moves=[(-2, 1), (-2, -1), (2, 1), (2, -1), (1, 2), (-1, 2), (1, -2), (-1, -2)]
+    #
+    for move in moves:
+        new_y= y+move[0]
+        new_x= x+move[1]
+        if -1<new_y<8 and -1<new_x<8:
+            if (player==-2 and boardc[new_y][new_x]>=0) or (player==2 and boardc[new_y][new_x]<=0):
+                childrenL.append((new_y, new_x))
+    #
+    if childrenL!=[]:
+        chosen_move=random.choice(childrenL)
+        new_y=chosen_move[0]
+        new_x=chosen_move[1]
+        boardc[y][x]=0
+        boardc[new_y][new_x]=player
+        return boardc
+    else:
+        return []
+
 def gorcBb(y,x,boardc,player):
     childrenB= []
     if player==-1:
@@ -3279,6 +1593,153 @@ def gorcBb(y,x,boardc,player):
                 boardc[y-1][x+1]=1
                 boardc[y][x+1]=0
                 return boardc
+
+def gorcKk(y,x,boardc,player):
+    childrenK= []
+    #
+    moves = [(1, 1), (1, -1), (-1, 1), (-1, -1), (0, 1), (0, -1), (1, 0), (-1, 0)]
+    counter=0
+    for move in moves:
+        dy=move[0]
+        dx=move[1]
+        new_y=y+dy
+        new_x=x+dx
+        if -1<new_y<8 and -1<new_x<8:
+            if (player==-6 or player==-8) and boardc[new_y][new_x]>=0:
+                childrenK.append(counter)
+            elif (player==6 or player==8) and boardc[new_y][new_x]<=0:
+                childrenK.append(counter)
+        counter+=1
+    #
+    #rochade
+    if player==-8:
+        if boardc[0][0]==-7 and boardc[0][1]==0 and boardc[0][2]==0 and boardc[0][3]==0:
+            boardcc=copy.deepcopy(boardc)
+            boardcc[0][2]=-6
+            boardcc[0][3]=-4
+            boardcc[0][0]=0
+            boardcc[0][4]=0
+            legal=True
+            for child in genchildren(boardcc,6):
+                if child[0][2]>0 or child[0][3]>0 or child[0][4]>0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(8)
+        if boardc[0][7]==-7 and boardc[0][6]==0 and boardc[0][5]==0:
+            boardcc=copy.deepcopy(boardc)
+            boardcc[0][6]=-6
+            boardcc[0][5]=-4
+            boardcc[0][7]=0
+            boardcc[0][4]=0
+            legal=True
+            for child in genchildren(boardcc,6):
+                if child[0][4]>0 or child[0][5]>0 or child[0][6]>0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(9)
+    elif player==8:
+        if boardc[7][0]==7 and boardc[7][1]==0 and boardc[7][2]==0 and boardc[7][3]==0:
+            boardcc=copy.deepcopy(boardc)
+            boardcc[7][2]=6
+            boardcc[7][3]=4
+            boardcc[7][0]=0
+            boardcc[7][4]=0
+            legal=True
+            for child in genchildren(boardcc,-6):
+                if child[7][2]<0 or child[7][3]<0 or child[7][4]<0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(10)
+        if boardc[7][7]==7 and boardc[7][6]==0 and boardc[7][5]==0:
+            boardcc=copy.deepcopy(boardc)
+            boardcc[7][6]=6
+            boardcc[7][5]=4
+            boardcc[7][7]=0
+            boardcc[7][4]=0
+            legal=True
+            for child in genchildren(boardcc,-6):
+                if child[7][4]<0 or child[7][5]<0 or child[7][6]<0:
+                    legal=False
+                    break
+            if legal:
+                childrenK.append(11)
+    #
+    if childrenK==[]:
+        return []
+    else:
+        n=random.choice(childrenK)
+        if n<8:
+            boardc[y][x]=0
+            move=moves[n]
+            dy=move[0]
+            dx=move[1]
+            boardc[y+dy][x+dx]=player
+            return boardc
+        #rochade
+        elif n==8:
+            boardc[0][2]=-6
+            boardc[0][3]=-4
+            boardc[0][0]=0
+            boardc[0][4]=0
+            return boardc
+        elif n==9:
+            boardc[0][6]=-6
+            boardc[0][5]=-4
+            boardc[0][7]=0
+            boardc[0][4]=0
+            return boardc
+        elif n==10:
+            boardc[7][2]=6
+            boardc[7][3]=4
+            boardc[7][0]=0
+            boardc[7][4]=0
+            return boardc
+        elif n==11:
+            boardc[7][6]=6
+            boardc[7][5]=4
+            boardc[7][7]=0
+            boardc[7][4]=0
+            return boardc
+
+def gorcTtXxQq(y, x, boardc, player, directions):
+    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    if player==-7:
+        player=-4
+    elif player==7:
+        player=4
+
+    children=[]
+
+    for direction in directions:
+        for i in range(1, 8):
+            dy=direction[0]
+            dx=direction[1]
+            new_y = y+i*dy
+            new_x = x+i*dx
+            if -1<new_x<8 and -1<new_y<8:
+                if (player==-4 and boardc[new_y][new_x]>=0) or (player==4 and boardc[new_y][new_x]<=0):
+                    if boardc[new_y][new_x]==0:
+                        children.append((y+i*dy, x+i*dx))
+                    else:
+                        children.append((y+i*dy, x+i*dx))
+                        break
+                else:
+                    break
+            else:
+                break
+
+    if children!=[]:
+        move=random.choice(children)
+        new_y=move[0]
+        new_x=move[1]
+        boardc[y][x]=0
+        boardc[new_y][new_x]=player
+        return boardc
+    else:
+        return []
 
 #
 
@@ -3721,7 +2182,7 @@ class Schach():
         #
         self.players.clear()
         self.players.append(HumanPlayer(6))#k
-        self.players.append(MCTSPlayer(-6))#K
+        self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
         while True:
@@ -4300,18 +2761,18 @@ spielen(3)
 
 #----------------------------------------------------------------test
 board=[
-    [-7, -2, -3, -5, -8, -3, -2, -7],
-    [-1, -1, -1, -1, -1, -1, -1, -1],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
+    [0,0,-1,1,-1,0,0,0],
+    [0,0,1,-6,1,0,0,0],
+    [0,0,-1,1,-1,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [1, 1, 1, 1, 1, 1, 1, 1],
-    [7, 2, 3, 5, 8, 3, 2, 7]
+    [0,0,0,0,0,0,0,0]
 ]
 
 def test():
-    for child in genchildren(board,6):
+    for child in genchildren(board,-6):
         printboard(child)
 
 #test()
@@ -4321,4 +2782,4 @@ def test():
 #----------------------------------------------------------------test
 
 #evaluatepos verbessern mobility?
-#tk board
+#board
