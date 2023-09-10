@@ -53,7 +53,6 @@ void print_board(const std::vector<std::vector<int>>& board) {
 
 //
 
-
 std::list<std::vector<std::vector<int>>> children_schlagen_XO;
 std::list<std::vector<std::vector<int>>>  children_schlagen_WM;
 
@@ -181,6 +180,7 @@ std::list<std::vector<std::vector<int>>> generate_children_WM(int y, int x, std:
     std::list<std::vector<std::vector<int>>> childrenWM2;
     std::vector<std::vector<int>> board_copy = board;
     bool schlagen = false;
+    
     //
     if (player==-2) {
         for (const auto& direction : directions) {
@@ -207,8 +207,10 @@ std::list<std::vector<std::vector<int>>> generate_children_WM(int y, int x, std:
                         board_copy[y][x] = 0;
                         board_copy[y+o*dy][x+o*dx] = 0;
                         childrenWM1.push_back(board_copy);
+                        children_schlagen_WM.clear();
                         generate_children_schlagen_WM(y+(o+1)*dy, x+(o+1)*dx, board_copy, -2, true);
-                        for (const auto& r : children_schlagen_WM) {childrenWM1.push_back(r);}
+                        std::list<std::vector<std::vector<int>>> children_s = children_schlagen_WM;
+                        childrenWM1.insert(childrenWM1.end(), children_s.begin(), children_s.end());
                         board_copy = board;
                         schlagen = false;
                         break;
@@ -242,10 +244,10 @@ std::list<std::vector<std::vector<int>>> generate_children_WM(int y, int x, std:
                         board_copy[y][x] = 0;
                         board_copy[y+o*dy][x+o*dx] = 0;
                         childrenWM1.push_back(board_copy);
-                        generate_children_schlagen_WM(y+(o+1)*dy, x+(o+1)*dx, board_copy, 2, true);
-                        for (const auto& r : children_schlagen_WM) {
-                            childrenWM1.push_back(r);
-                        }
+                        children_schlagen_WM.clear();
+                        generate_children_schlagen_WM(y+(o+1)*dy, x+(o+1)*dx, board_copy, -2, true);
+                        std::list<std::vector<std::vector<int>>> children_s = children_schlagen_WM;
+                        childrenWM1.insert(childrenWM1.end(), children_s.begin(), children_s.end());
                         board_copy = board;
                         schlagen = false;
                         break;
@@ -256,13 +258,14 @@ std::list<std::vector<std::vector<int>>> generate_children_WM(int y, int x, std:
         }
     }
     childrenWM1.insert(childrenWM1.end(), childrenWM2.begin(), childrenWM2.end());
+    return childrenWM1;
 }
 
 std::list<std::vector<std::vector<int>>> generate_children(const std::vector<std::vector<int>> board, int player) {
     std::list<std::vector<std::vector<int>>> children1;
     std::list<std::vector<std::vector<int>>> children2;
     std::vector<std::vector<int>> board_copy = board;
-
+    
     for (int y=0; y<8; ++y) {
         for (int x=0; x <8; ++x) {
             if (player==1) {
@@ -347,19 +350,25 @@ std::list<std::vector<std::vector<int>>> generate_children(const std::vector<std
 
 //
 
+
+
+//
+
 std::vector<std::vector<int>> board={
-            {0,-1,0,-1,0,-1,0,-1},
-            {-1,0,-1,0,-1,0,-1,0},
-            {0,-1,0,-1,0,-1,0,-1},
             {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,2,0,0},
+            {0,0,0,0,0,0,-1,0},
+            {0,0,0,0,0,1,0,0},
             {0,0,0,0,0,0,0,0},
-            {1,0,1,0,1,0,1,0},
-            {0,1,0,1,0,1,0,1},
-            {1,0,1,0,1,0,1,0},
+            {0,0,0,0,0,1,0,0},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,-2}
 
         };
 
 main() {
-    std::list<std::vector<std::vector<int>>> children=generate_children(board, 1);
+    std::cout<<"jhk"<<std::endl;
+    std::list<std::vector<std::vector<int>>> children=generate_children(board, -1);
     for (auto child : children) {print_board(child);}
+    std::cout<<"jhk"<<std::endl;
 }
