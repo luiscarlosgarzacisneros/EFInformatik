@@ -410,8 +410,8 @@ def gorcXO(y,x,boardc,player):
                     boardc[y-1][x+1]=1
                 return boardc
             else: #schlagen
-                n_y = n//10
-                n_x = n%10
+                n_y = n//10-1
+                n_x = n%10-1
                 boardc[y][x]=0
                 if n_y==0:
                     boardc[n_y][n_x]=2
@@ -437,8 +437,8 @@ def gorcXO(y,x,boardc,player):
                     boardc[y+1][x+1]=-1
                 return boardc
             else: #schlagen
-                n_y = n//10
-                n_x = n%10
+                n_y = n//10-1
+                n_x = n%10-1
                 boardc[y][x]=0
                 if n_y==0:
                     boardc[n_y][n_x]=-2

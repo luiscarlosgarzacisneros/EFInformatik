@@ -799,6 +799,7 @@ std::vector<std::vector<int>> gorc_WM(int y, int x, std::vector<std::vector<int>
     for (int i=0; i<schlagen_WM_c; ++i) {
     childrenWM.insert(childrenWM.end(), gorc_WM_schlagen_children.begin(), gorc_WM_schlagen_children.end());
     }
+    std::cout<<gorc_WM_schlagen_children.size()<<std::endl;//---------
     //
     if (childrenWM.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
     else {
@@ -838,6 +839,165 @@ std::vector<std::vector<int>> gorc_WM(int y, int x, std::vector<std::vector<int>
         }
     }
 }
+
+
+
+void gorc_WM_schlagen1(int y, int x, std::vector<std::vector<int>>& boardc, int player, std::vector<std::vector<int>>& delete_list) {
+    bool geschlagen = false;
+    std::vector<std::pair<int, int>> directions = {{1, 1}, {-1, 1}, {1, -1}, {-1, -1}};
+    //
+    if (player == 2) {
+        for (const auto& direction : directions) {
+            int dy = direction.first;
+            int dx = direction.second;
+            for (int i= 1; i<8; ++i) {
+                if (y+i*dy>7 ||x+i*dx>7 || y+i*dy<0 || x+i*dx<0) {break;}
+                if (boardc[y+i*dy][x+i*dx]>0) {break;}
+                if (boardc[y+i*dy][x+i*dx]<0) {
+                    bool r = false;
+                    for (const auto& piece : delete_list) {
+                        if (piece[0]==y+i*dy && piece[1]==x+i*dx) {r=true; break;}
+                    }
+                    if (r) {break;}
+                    if (!(y+(i+1)*dy>7) && !(x+(i+1)*dx>7) && !(y+(i+1)*dy<0) && !(x+(i+1)*dx<0) && boardc[y+(i+1)*dy][x+(i+1)*dx]==0) {
+                        geschlagen = true;
+                        delete_list.push_back({y+i*dy, x+i*dx});
+                        gorc_WM_schlagen(y+(i+1)*dy, x+(i+1)*dx, boardc, player, delete_list);
+                        break;
+                    }
+                    else {break;}
+                }
+            }
+        }
+    }
+    //
+    else if (player==-2) {
+        for (const auto& direction : directions) {
+            int dy = direction.first;
+            int dx = direction.second;
+            for (int i=1; i<8; ++i) {
+                if (y+i*dy>7 || x+i*dx>7 || y+i*dy<0 || x+i*dx<0) {break;}
+                if (boardc[y+i*dy][x+i*dx]<0) {break;}
+                if (boardc[y+i*dy][x+i*dx]>0) {
+                    bool r = false;
+                    for (const auto& piece : delete_list) {
+                        if (piece[0]==y+i*dy && piece[1]==x+i*dx) {r=true; break;}
+                    }
+                    if (r) {break;}
+                    if (!(y+(i+1)*dy>7) && !(x+(i+1)*dx>7) && !(y+(i+1)*dy<0) && !(x+(i+1)*dx<0) && boardc[y+(i+1)*dy][x+(i+1)*dx]==0) {
+                        geschlagen = true;
+                        delete_list.push_back({y+i*dy, x+i*dx});
+                        gorc_WM_schlagen(y+(i+1)*dy, x+(i+1)*dx, boardc, player, delete_list);
+                        break;
+                    }
+                    else {break;}
+                }
+            }
+        }
+    }
+    //
+    if (!geschlagen) {
+        gorc_WM_schlagen_children.push_back(((y+1)*10) + ((x+1) +100));
+        gorc_WM_schlagen_children_delete.push_back(delete_list);
+    }
+}
+
+std::vector<std::vector<int>> gorc_WM1(int y, int x, std::vector<std::vector<int>>& boardc, int player) {
+    std::vector<int> children_WM;
+    std::vector<std::vector<int>> directions = {{1, 1, 10}, {1, -1, 20}, {-1, 1, 30}, {-1, -1, 40}};
+    gorc_WM_schlagen_children.clear();
+    gorc_WM_schlagen_children_delete.clear();
+    //
+    if (player == 2) {
+        for (const auto& direction : directions) {
+            int dy = direction[0];
+            int dx = direction[1];
+            int d = direction[2];
+            for (int i = 1; i < 8; ++i) {
+                if (y + i * dy > 7 || x + i * dx > 7 || y + i * dy < 0 || x + i * dx < 0) {break;}
+                if (boardc[y + i * dy][x + i * dx] > 0) {break;}
+                if (boardc[y + i * dy][x + i * dx] == 0) {children_WM.push_back(d + i);}
+                if (boardc[y + i * dy][x + i * dx] < 0) {
+                    if (!((y+(i+1)*dy)>7) && !((x+(i+1)*dx)>7) && !((y+(i+1)*dy)<0) && !((x+(i+1)*dx)<0)) {
+                        if (boardc[y + (i + 1) * dy][x + (i + 1) * dx] == 0) {
+                            std::vector<std::vector<int>> delete_list={};
+                            gorc_WM_schlagen(y, x, boardc, player, delete_list);
+                            break;
+                        }
+                        else {break;}
+                    }
+                    else {break;}
+                }
+            }
+        }
+    } else if (player == -2) {
+        for (const auto& direction : directions) {
+            int dy = direction[0];
+            int dx = direction[1];
+            int d = direction[2];
+            for (int i = 1; i < 8; ++i) {
+                if (y + i * dy > 7 || x + i * dx > 7 || y + i * dy < 0 || x + i * dx < 0) {break;}
+                if (boardc[y + i * dy][x + i * dx] < 0) {break;}
+                if (boardc[y + i * dy][x + i * dx] == 0) {children_WM.push_back(d + i);}
+                if (boardc[y + i * dy][x + i * dx] > 0) {
+                    if (!((y+(i+1)*dy)>7) && !((x+(i+1)*dx)>7) && !((y+(i+1)*dy)<0) && !((x+(i+1)*dx)<0)) {
+                        if (boardc[y + (i + 1) * dy][x + (i + 1) * dx] == 0) {
+                            std::vector<std::vector<int>> delete_list={};
+                            gorc_WM_schlagen(y, x, boardc, player, delete_list);
+                            break;
+                        }
+                        else {break;}
+                    }
+                    else {break;}
+                }
+            }
+        }
+    }
+    //
+    for (int i=0; i<schlagen_WM_c; ++i) {
+    children_WM.insert(children_WM.end(), gorc_WM_schlagen_children.begin(), gorc_WM_schlagen_children.end());
+    }
+    //
+    if (children_WM.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
+    else {
+        //
+        int r=generate_random_int(0, children_WM.size()-1);
+        int n=children_WM[r];
+        //
+        if (n>10 && n<20) { //ur
+            boardc[y][x]=0;
+            boardc[y+(n-10)][x+(n-10)]=2;
+            return boardc;
+        }
+        else if (n>20 && n<30) { //ul
+            boardc[y][x]=0;
+            boardc[y+(n-20)][x-(n-20)]=2;
+            return boardc;
+        }
+        else if (n>30 && n<40) { //or
+            boardc[y][x]=0;
+            boardc[y-(n-30)][x+(n-30)]=2;
+            return boardc;
+        }
+        else if (n>40 && n<50) { //ol
+            boardc[y][x]=0;
+            boardc[y-(n-40)][x-(n-40)]=2;
+            return boardc;
+        }
+        else if (n>100) { //schlagen
+            int n_y=((n-100)/10)-1;
+            int n_x=((n-100)%10)-1;
+            boardc[y][x]=0;
+            boardc[n_y][n_x]=player;
+            //
+            std::vector<std::vector<int>> delete_list = gorc_WM_schlagen_children_delete[std::find(gorc_WM_schlagen_children.begin(), gorc_WM_schlagen_children.end(), n) - gorc_WM_schlagen_children.begin()];
+            for (const auto& feld : delete_list) {boardc[feld[0]][feld[1]]= 0;}
+            return boardc;
+        }
+    }
+}
+
+
 
 std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<int>> boardcopy, int player) {
     //
@@ -898,8 +1058,11 @@ std::vector<std::vector<int>> board={
         };
 
 main() {
-    std::cout<<"jhk"<<std::endl;
-    std::list<std::vector<std::vector<int>>> children=generate_children(board, -1);
-    for (auto child : children) {print_board(child);}
-    std::cout<<"jhk"<<std::endl;
+    for (int i=0; i<8; ++i) {
+        std::cout<<"jhk"<<std::endl;
+        std::vector<std::vector<int>> child=generate_one_random_child(board, -2);
+        print_board(child);
+        std::cout<<"jhk"<<std::endl;
+
+    }
 }
