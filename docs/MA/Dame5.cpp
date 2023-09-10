@@ -56,7 +56,7 @@ void print_board(const std::vector<std::vector<int>>& board) {
 //
 
 std::list<std::vector<std::vector<int>>> children_schlagen_XO;
-std::list<std::vector<std::vector<int>>>  children_schlagen_WM;
+std::list<std::vector<std::vector<int>>> children_schlagen_WM;
 
 void generate_children_schlagen_XO(int y, int x, const std::vector<std::vector<int>> board, int player, bool new_b) {
     if (new_b) {children_schlagen_XO.clear();}
@@ -124,422 +124,141 @@ void generate_children_schlagen_XO(int y, int x, const std::vector<std::vector<i
 
 void generate_children_schlagen_WM(int y, int x, std::vector<std::vector<int>> board, int player, bool new_b) {
     if (new_b) {children_schlagen_WM.clear();}
-    //
+    std::vector<std::pair<int, int>> directions = {{1, 1}, {-1, 1}, {1, -1}, {-1, -1}};
     std::vector<std::vector<int>> board_copy = board;
     //
     if (player==-2) {
-        //
-        for (int o=0; o<7; ++o) {
-            if (y + 2 + o > 7 || x + 2 + o > 7) {break;}
-            if (board_copy[y + 1 + o][x + 1 + o] < 0) {break;}
-            if (board_copy[y + 1 + o][x + 1 + o] > 0) {
-                if (board_copy[y + 2 + o][x + 2 + o] == 0) {
-                    board_copy[y + 2 + o][x + 2 + o] = -2;
-                    board_copy[y + 1 + o][x + 1 + o] = 0;
-                    board_copy[y][x] = 0;
-                    children_schlagen_WM.push_back(board_copy);
-                    generate_children_schlagen_WM(y + 2 + o, x + 2 + o, board_copy, -2, false);
-                    board_copy = board;
-                    break;
+        for (const auto& direction : directions) {
+            int dy = direction.first;
+            int dx = direction.second;
+            for (int o=1; o<8; ++o) {
+                if (y+(1+o)*dy>7 || x+(1+o)*dx>7 || y+(1+o)*dy<0 || x+(1+o)*dx<0) {break;}
+                if (board_copy[y+o*dy][x+o*dx]<0) {break;}
+                if (board_copy[y+o*dy][x+o*dx]>0) {
+                    if (board_copy[y+(1+o)*dy][x+(1+o)*dx]==0) {
+                        board_copy[y+(1+o)*dy][x+(1+o)*dx]=-2;
+                        board_copy[y+o*dy][x+o*dx]=0;
+                        board_copy[y][x]=0;
+                        children_schlagen_WM.push_back(board_copy);
+                        generate_children_schlagen_WM(y+(1+o)*dy, x+(1+o)*dx, board_copy, -2, false);
+                        board_copy=board;
+                        break;
+                    }
+                    else {break;}
                 }
-                else {break;}
-            }
-        }
-        //
-        for (int o=0; o<7; ++o) {
-            if (y - 2 - o < 0 || x + 2 + o > 7) {break;}
-            if (board_copy[y - 1 - o][x + 1 + o] < 0) {break;}
-            if (board_copy[y - 1 - o][x + 1 + o] > 0) {
-                if (board_copy[y - 2 - o][x + 2 + o] == 0) {
-                    board_copy[y - 2 - o][x + 2 + o] = -2;
-                    board_copy[y - 1 - o][x + 1 + o] = 0;
-                    board_copy[y][x] = 0;
-                    children_schlagen_WM.push_back(board_copy);
-                    generate_children_schlagen_WM(y - 2 - o, x + 2 + o, board_copy, -2, false);
-                    board_copy = board;
-                    break;
-                }
-                else {break;}
-            }
-        }
-        //
-        for (int o=0; o<7; ++o) {
-            if (y - 2 - o < 0 || x - 2 - o < 0) {break;}
-            if (board_copy[y - 1 - o][x - 1 - o] < 0) {break;}
-            if (board_copy[y - 1 - o][x - 1 - o] > 0) {
-                if (board_copy[y - 2 - o][x - 2 - o] == 0) {
-                    board_copy[y - 2 - o][x - 2 - o] = -2;
-                    board_copy[y - 1 - o][x - 1 - o] = 0;
-                    board_copy[y][x] = 0;
-                    children_schlagen_WM.push_back(board_copy);
-                    generate_children_schlagen_WM(y - 2 - o, x - 2 - o, board_copy, -2, false);
-                    board_copy = board;
-                    break;
-                }
-                else {break;}
-            }
-        }
-        //
-        for (int o=0; o<7; ++o) {
-            if (y + 2 + o > 7 || x - 2 - o < 0) {break;}
-            if (board_copy[y + 1 + o][x - 1 - o] < 0) {break;}
-            if (board_copy[y + 1 + o][x - 1 - o] > 0) {
-                if (board_copy[y + 2 + o][x - 2 - o] == 0) {
-                    board_copy[y + 2 + o][x - 2 - o] = -2;
-                    board_copy[y + 1 + o][x - 1 - o] = 0;
-                    board_copy[y][x] = 0;
-                    children_schlagen_WM.push_back(board_copy);
-                    generate_children_schlagen_WM(y + 2 + o, x - 2 - o, board_copy, -2, false);
-                    board_copy = board;
-                    break;
-                }
-                else {break;}
-            }
-        }
-
-    }
-    //
-    else if (player == 2) {
-        //
-        for (int o=0; o<7; ++o) {
-            if (y + 2 + o > 7 || x + 2 + o > 7) {break;}
-            if (board_copy[y + 1 + o][x + 1 + o] > 0) {break;}
-            if (board_copy[y + 1 + o][x + 1 + o] < 0) {
-                if (board_copy[y + 2 + o][x + 2 + o] == 0) {
-                    board_copy[y + 2 + o][x + 2 + o] = 2;
-                    board_copy[y + 1 + o][x + 1 + o] = 0;
-                    board_copy[y][x] = 0;
-                    children_schlagen_WM.push_back(board_copy);
-                    generate_children_schlagen_WM(y + 2 + o, x + 2 + o, board_copy, 2, false);
-                    board_copy = board;
-                    break;
-                }
-                else {break;}
-            }
-        }
-        //
-        for (int o=0; o<7; ++o) {
-            if (y - 2 - o < 0 || x + 2 + o > 7) {break;}
-            if (board_copy[y - 1 - o][x + 1 + o] > 0) {break;}
-            if (board_copy[y - 1 - o][x + 1 + o] < 0) {
-                if (board_copy[y - 2 - o][x + 2 + o] == 0) {
-                    board_copy[y - 2 - o][x + 2 + o] = 2;
-                    board_copy[y - 1 - o][x + 1 + o] = 0;
-                    board_copy[y][x] = 0;
-                    children_schlagen_WM.push_back(board_copy);
-                    generate_children_schlagen_WM(y - 2 - o, x + 2 + o, board_copy, 2, false);
-                    board_copy = board;
-                    break;
-                }
-                else {break;}
-            }
-        }
-        //
-        for (int o = 0; o < 7; ++o) {
-            if (y - 2 - o < 0 || x - 2 - o < 0) {break;}
-            if (board_copy[y - 1 - o][x - 1 - o] > 0) {break;}
-            if (board_copy[y - 1 - o][x - 1 - o] < 0) {
-                if (board_copy[y - 2 - o][x - 2 - o] == 0) {
-                    board_copy[y - 2 - o][x - 2 - o] = 2;
-                    board_copy[y - 1 - o][x - 1 - o] = 0;
-                    board_copy[y][x] = 0;
-                    children_schlagen_WM.push_back(board_copy);
-                    generate_children_schlagen_WM(y - 2 - o, x - 2 - o, board_copy, 2, false);
-                    board_copy = board;
-                    break;
-                }
-                else {break;}
-            }
-        }
-        //
-        for (int o=0; o<7; ++o) {
-            if (y + 2 + o > 7 || x - 2 - o < 0) {break;}
-            if (board_copy[y + 1 + o][x - 1 - o] > 0) {break;}
-            if (board_copy[y + 1 + o][x - 1 - o] < 0) {
-                if (board_copy[y + 2 + o][x - 2 - o] == 0) {
-                    board_copy[y + 2 + o][x - 2 - o] = 2;
-                    board_copy[y + 1 + o][x - 1 - o] = 0;
-                    board_copy[y][x] = 0;
-                    children_schlagen_WM.push_back(board_copy);
-                    generate_children_schlagen_WM(y + 2 + o, x - 2 - o, board_copy, 2, false);
-                    board_copy = board;
-                    break;
-                }
-                else {break;}
             }
         }
     }
     //
-    std::reverse(children_schlagen_WM.begin(), children_schlagen_WM.end());
+    else if (player==2) {
+        for (const auto& direction : directions) {
+            int dy = direction.first;
+            int dx = direction.second;
+            for (int o=1; o<8; ++o) {
+                if (y+(1+o)*dy>7 || x+(1+o)*dx>7 || y+(1+o)*dy<0 || x+(1+o)*dx<0) {break;}
+                if (board_copy[y+o*dy][x+o*dx]>0) {break;}
+                if (board_copy[y+o*dy][x+o*dx]<0) {
+                    if (board_copy[y+(1+o)*dy][x+(1+o)*dx]==0) {
+                        board_copy[y+(1+o)*dy][x+(1+o)*dx]=2;
+                        board_copy[y+o*dy][x+o*dx]=0;
+                        board_copy[y][x]=0;
+                        children_schlagen_WM.push_back(board_copy);
+                        generate_children_schlagen_WM(y+(1+o)*dy, x+(1+o)*dx, board_copy, 2, false);
+                        board_copy=board;
+                        break;
+                    }
+                    else {break;}
+                }
+            }
+        }
+    }
+    //
+    children_schlagen_WM.reverse();
 }
 
 std::list<std::vector<std::vector<int>>> generate_children_WM(int y, int x, std::vector<std::vector<int>> board, int player) {
+    std::vector<std::pair<int, int>> directions = {{1, 1}, {-1, 1}, {1, -1}, {-1, -1}};
     std::list<std::vector<std::vector<int>>> childrenWM1;
     std::list<std::vector<std::vector<int>>> childrenWM2;
     std::vector<std::vector<int>> board_copy = board;
     bool schlagen = false;
+    
+    //
+    if (player==-2) {
+        for (const auto& direction : directions) {
+            int dy = direction.first;
+            int dx = direction.second;
 
-    if (player == -2) {
-        for (int o=0; o<7; ++o) {
-            schlagen = false;
-            if (y + 1 + o > 7 || x + 1 + o > 7) {break;}
-            if (board_copy[y + 1 + o][x+ 1 + o] < 0) {break;}
-            if (board_copy[y + 1 + o][x + 1 + o] > 0) {
-                if (!(y + 2 + o > 7) && !(x + 2 + o > 7)) {schlagen = true;}
-            }
-            if (board_copy[y + 1 + o][x + 1 + o]==0) {
-                board_copy[y + 1 + o][x + 1 + o]=-2;
-                board_copy[y][x] = 0;
-                childrenWM2.push_back(board_copy);
-                board_copy = board;
-            }
-            if (schlagen) {
-                if (board_copy[y + 2 + o][x + 2 + o]==0) {
-                    board_copy[y + 2 + o][x + 2 + o]=-2;
-                    board_copy[y][x] = 0;
-                    board_copy[y + 1 + o][x + 1 + o]=0;
-                    childrenWM1.push_back(board_copy);
-                    //
-                    children_schlagen_WM.clear();
-                    generate_children_schlagen_WM(y + 2 + o, x + 2 + o, board_copy, -2, true);
-                    std::list<std::vector<std::vector<int>>> r_children = children_schlagen_WM;
-                    childrenWM1.insert(childrenWM1.end(), r_children.begin(), r_children.end());
-                    board_copy = board;
-                    schlagen = false;
-                    break;
+            for (int o=1; o<8; ++o) {
+                schlagen = false;
+                if (y+o*dy>7 || x+o*dx>7 || y+o*dy<0 || x+o*dx<0) {break;}
+                if (board_copy[y+o*dy][x+o*dx] < 0) {break;}
+                if (board_copy[y+o*dy][x+o*dx] > 0) {
+                    if (!(y+(o+1)*dy>7) && !(x+(o+1)*dx>7) && !(y+(o+1)*dy<0) && !(x+(o+1)*dx<0)) {
+                        schlagen = true;}
                 }
-                else {break;}
-            }
-        }
-        //
-        for (int o=0; o<7; ++o) {
-            schlagen = false;
-            if (y + 1 + o > 7 || x - 1 - o < 0) {break;}
-            if (board_copy[y + 1 + o][x - 1 - o] < 0) {break;}
-            if (board_copy[y + 1 + o][x - 1 - o] > 0) {
-                if (!(y + 2 + o > 7) && !(x - 2 - o < 0)) {schlagen = true;}
-            }
-            if (board_copy[y + 1 + o][x - 1 - o]==0) {
-                board_copy[y + 1 + o][x - 1 - o]=-2;
-                board_copy[y][x] = 0;
-                childrenWM2.push_back(board_copy);
-                board_copy = board;
-            }
-            if (schlagen) {
-                if (board_copy[y + 2 + o][x - 2 - o]==0) {
-                    board_copy[y + 2 + o][x - 2 - o]=-2;
+                if (board_copy[y+o*dy][x+o*dx] == 0) {
+                    board_copy[y+o*dy][x+o*dx] = -2;
                     board_copy[y][x] = 0;
-                    board_copy[y + 1 + o][x - 1 - o]=0;
-                    childrenWM1.push_back(board_copy);
-                    //
-                    children_schlagen_WM.clear();
-                    generate_children_schlagen_WM(y + 2 + o, x - 2 - o, board_copy, -2, true);
-                    std::list<std::vector<std::vector<int>>> r_children = children_schlagen_WM;
-                    childrenWM1.insert(childrenWM1.end(), r_children.begin(), r_children.end());
+                    childrenWM2.push_back(board_copy);
                     board_copy = board;
-                    schlagen = false;
-                    break;
                 }
-                else {break;}
-            }
-        }
-        //
-        for (int o=0; o<7; ++o) {
-            schlagen = false;
-            if (y - 1 - o < 0 || x - 1 - o < 0) {break;}
-            if (board_copy[y - 1 - o][x - 1 - o] < 0) {break;}
-            if (board_copy[y - 1 - o][x - 1 - o] > 0) {
-                if (!(y - 2 - o < 0) && !(x - 2 - o < 0)) {schlagen = true;}
-            }
-            if (board_copy[y - 1 - o][x - 1 - o]==0) {
-                board_copy[y - 1 - o][x - 1 - o]=-2;
-                board_copy[y][x] = 0;
-                childrenWM2.push_back(board_copy);
-                board_copy = board;
-            }
-            if (schlagen) {
-                if (board_copy[y - 2 - o][x - 2 - o]==0) {
-                    board_copy[y - 2 - o][x - 2 - o]=-2;
-                    board_copy[y][x] = 0;
-                    board_copy[y - 1 - o][x - 1 - o]=0;
-                    childrenWM1.push_back(board_copy);
-                    //
-                    children_schlagen_WM.clear();
-                    generate_children_schlagen_WM(y - 2 - o, x - 2 - o, board_copy, -2, true);
-                    std::list<std::vector<std::vector<int>>> r_children = children_schlagen_WM;
-                    childrenWM1.insert(childrenWM1.end(), r_children.begin(), r_children.end());
-                    board_copy = board;
-                    schlagen = false;
-                    break;
+                if (schlagen) {
+                    if (board_copy[y+(o+1)*dy][x+(o+1)*dx] == 0) {
+                        board_copy[y+(o+1)*dy][x+(o+1)*dx] = -2;
+                        board_copy[y][x] = 0;
+                        board_copy[y+o*dy][x+o*dx] = 0;
+                        childrenWM1.push_back(board_copy);
+                        children_schlagen_WM.clear();
+                        generate_children_schlagen_WM(y+(o+1)*dy, x+(o+1)*dx, board_copy, -2, true);
+                        std::list<std::vector<std::vector<int>>> children_s = children_schlagen_WM;
+                        childrenWM1.insert(childrenWM1.end(), children_s.begin(), children_s.end());
+                        board_copy = board;
+                        schlagen = false;
+                        break;
+                    }
+                    else {break;}
                 }
-                else {break;}
-            }
-        }
-        //
-        for (int o=0; o<7; ++o) {
-            schlagen = false;
-            if (y - 1 - o < 0 || x + 1 + o > 7) {break;}
-            if (board_copy[y - 1 - o][x + 1 + o] < 0) {break;}
-            if (board_copy[y - 1 - o][x + 1 + o] > 0) {
-                if (!(y - 2 - o < 0) && !(x + 2 + o > 7)) {schlagen = true;}
-            }
-            if (board_copy[y - 1 - o][x + 1 + o]==0) {
-                board_copy[y - 1 - o][x + 1 + o]=-2;
-                board_copy[y][x] = 0;
-                childrenWM2.push_back(board_copy);
-                board_copy = board;
-            }
-            if (schlagen) {
-                if (board_copy[y - 2 - o][x + 2 + o]==0) {
-                    board_copy[y - 2 - o][x + 2 + o]=-2;
-                    board_copy[y][x] = 0;
-                    board_copy[y - 1 - o][x + 1 + o]=0;
-                    childrenWM1.push_back(board_copy);
-                    //
-                    children_schlagen_WM.clear();
-                    generate_children_schlagen_WM(y - 2 - o, x + 2 + o, board_copy,-2, true);
-                    std::list<std::vector<std::vector<int>>> r_children = children_schlagen_WM;
-                    childrenWM1.insert(childrenWM1.end(), r_children.begin(), r_children.end());
-                    board_copy = board;
-                    schlagen = false;
-                    break;
-                }
-                else {break;}
             }
         }
     }
-    //
-    else if (player == 2) {
-        //
-        for (int o = 0; o < 7; ++o) {
-            schlagen = false;
-            if (y + 1 + o > 7 || x + 1 + o > 7) {break;}
-            if (board_copy[y + 1 + o][x + 1 + o] > 0) {break;}
-            if (board_copy[y + 1 + o][x + 1 + o] < 0) {
-                if (!(y + 2 + o > 7) && !(x + 2 + o > 7)) {schlagen = true;}
-            }
-            if (board_copy[y + 1 + o][x + 1 + o] == 0) {
-                board_copy[y + 1 + o][x + 1 + o] = 2;
-                board_copy[y][x] = 0;
-                childrenWM2.push_back(board_copy);
-                board_copy = board;
-            }
-            if (schlagen) {
-                if (board_copy[y + 2 + o][x + 2 + o] == 0) {
-                    board_copy[y + 2 + o][x + 2 + o] = 2;
-                    board_copy[y][x] = 0;
-                    board_copy[y + 1 + o][x + 1 + o] = 0;
-                    childrenWM1.push_back(board_copy);
-                    //
-                    children_schlagen_WM.clear();
-                    generate_children_schlagen_WM(y + 2 + o, x + 2 + o, board_copy, 2, true);
-                    std::list<std::vector<std::vector<int>>> r_children = children_schlagen_WM;
-                    childrenWM1.insert(childrenWM1.end(), r_children.begin(), r_children.end());
-                    board_copy = board;
-                    schlagen = false;
-                    break;
+    else if (player==2) {
+        for (const auto& direction : directions) {
+            int dy = direction.first;
+            int dx = direction.second;
+            for (int o=1; o<8; ++o) {
+                schlagen = false;
+                if (y+o*dy>7 || x+o*dx>7 || y+o*dy<0 || x+o*dx<0) {break;}
+                if (board_copy[y+o*dy][x+o*dx] > 0) {break;}
+                if (board_copy[y+o*dy][x+o*dx] < 0) {
+                    if (!(y+(o+1)*dy>7) && !(x+(o+1)*dx>7) && !(y+(o+1)*dy<0) && !(x+(o+1)*dx<0)) {
+                        schlagen = true;}
                 }
-                else {break;}
-            }
-        }
-        //
-        for (int o = 0; o < 7; ++o) {
-            schlagen = false;
-            if (y + 1 + o > 7 || x - 1 - o < 0) {break;}
-            if (board_copy[y + 1 + o][x - 1 - o] > 0) {break;}
-            if (board_copy[y + 1 + o][x - 1 - o] < 0) {
-                if (!(y + 2 + o > 7) && !(x - 2 - o < 0)) {schlagen = true;}
-            }
-            if (board_copy[y + 1 + o][x - 1 - o] == 0) {
-                board_copy[y + 1 + o][x - 1 - o] = 2;
-                board_copy[y][x] = 0;
-                childrenWM2.push_back(board_copy);
-                board_copy = board;
-            }
-            if (schlagen) {
-                if (board_copy[y + 2 + o][x - 2 - o] == 0) {
-                    board_copy[y + 2 + o][x - 2 - o] = 2;
+                if (board_copy[y+o*dy][x+o*dx] == 0) {
+                    board_copy[y+o*dy][x+o*dx] = 2;
                     board_copy[y][x] = 0;
-                    board_copy[y + 1 + o][x - 1 - o] = 0;
-                    childrenWM1.push_back(board_copy);
-                    //
-                    children_schlagen_WM.clear();
-                    generate_children_schlagen_WM(y + 2 + o, x - 2 - o, board_copy, 2, true);
-                    std::list<std::vector<std::vector<int>>> r_children = children_schlagen_WM;
-                    childrenWM1.insert(childrenWM1.end(), r_children.begin(), r_children.end());
+                    childrenWM2.push_back(board_copy);
                     board_copy = board;
-                    schlagen = false;
-                    break;
                 }
-                else {break;}
-            }
-        }
-        //
-        for (int o = 0; o < 7; ++o) {
-            schlagen = false;
-            if (y - 1 - o < 0 || x - 1 - o < 0) {break;}
-            if (board_copy[y - 1 - o][x - 1 - o] > 0) {break;}
-            if (board_copy[y - 1 - o][x - 1 - o] < 0) {
-                if (!(y - 2 - o < 0) && !(x - 2 - o < 0)) {schlagen = true;}
-            }
-            if (board_copy[y - 1 - o][x - 1 - o] == 0) {
-                board_copy[y - 1 - o][x - 1 - o] = 2;
-                board_copy[y][x] = 0;
-                childrenWM2.push_back(board_copy);
-                board_copy = board;
-            }
-            if (schlagen) {
-                if (board_copy[y - 2 - o][x - 2 - o] == 0) {
-                    board_copy[y - 2 - o][x - 2 - o] = 2;
-                    board_copy[y][x] = 0;
-                    board_copy[y - 1 - o][x - 1 - o] = 0;
-                    childrenWM1.push_back(board_copy);
-                    //
-                    children_schlagen_WM.clear();
-                    generate_children_schlagen_WM(y - 2 - o, x - 2 - o, board_copy, 2, true);
-                    std::list<std::vector<std::vector<int>>> r_children = children_schlagen_WM;
-                    childrenWM1.insert(childrenWM1.end(), r_children.begin(), r_children.end());
-                    board_copy = board;
-                    schlagen = false;
-                    break;
+                if (schlagen) {
+                    if (board_copy[y+(o+1)*dy][x+(o+1)*dx] == 0) {
+                        board_copy[y+(o+1)*dy][x+(o+1)*dx] = 2;
+                        board_copy[y][x] = 0;
+                        board_copy[y+o*dy][x+o*dx] = 0;
+                        childrenWM1.push_back(board_copy);
+                        children_schlagen_WM.clear();
+                        generate_children_schlagen_WM(y+(o+1)*dy, x+(o+1)*dx, board_copy, -2, true);
+                        std::list<std::vector<std::vector<int>>> children_s = children_schlagen_WM;
+                        childrenWM1.insert(childrenWM1.end(), children_s.begin(), children_s.end());
+                        board_copy = board;
+                        schlagen = false;
+                        break;
+                    }
+                    else {break;}
                 }
-                else {break;}
-            }
-        }
-        //
-        for (int o = 0; o < 7; ++o) {
-            schlagen = false;
-            if (y - 1 - o < 0 || x + 1 + o > 7) {break;}
-            if (board_copy[y - 1 - o][x + 1 + o] > 0) {break;}
-            if (board_copy[y - 1 - o][x + 1 + o] < 0) {
-                if (!(y - 2 - o < 0) && !(x + 2 + o > 7)) {schlagen = true;}
-            }
-            if (board_copy[y - 1 - o][x + 1 + o] == 0) {
-                board_copy[y - 1 - o][x + 1 + o] = 2;
-                board_copy[y][x] = 0;
-                childrenWM2.push_back(board_copy);
-                board_copy = board;
-            }
-            if (schlagen) {
-                if (board_copy[y - 2 - o][x + 2 + o] == 0) {
-                    board_copy[y - 2 - o][x + 2 + o] = 2;
-                    board_copy[y][x] = 0;
-                    board_copy[y - 1 - o][x + 1 + o] = 0;
-                    childrenWM1.push_back(board_copy);
-                    //
-                    children_schlagen_WM.clear();
-                    generate_children_schlagen_WM(y - 2 - o, x + 2 + o, board_copy, 2, true);
-                    std::list<std::vector<std::vector<int>>> r_children = children_schlagen_WM;
-                    childrenWM1.insert(childrenWM1.end(), r_children.begin(), r_children.end());
-                    board_copy = board;
-                    schlagen = false;
-                    break;
-                }
-                else {break;}
             }
         }
     }
-    //
     childrenWM1.insert(childrenWM1.end(), childrenWM2.begin(), childrenWM2.end());
     return childrenWM1;
 }
@@ -548,7 +267,7 @@ std::list<std::vector<std::vector<int>>> generate_children(const std::vector<std
     std::list<std::vector<std::vector<int>>> children1;
     std::list<std::vector<std::vector<int>>> children2;
     std::vector<std::vector<int>> board_copy = board;
-
+    
     for (int y=0; y<8; ++y) {
         for (int x=0; x <8; ++x) {
             if (player==1) {
