@@ -16,6 +16,8 @@ board = [
 
 #
 
+#
+
 schlagen_XO_c=3
 schlagen_WM_c=5
 WM_c=5
@@ -91,7 +93,6 @@ def gorcXO(y,x,boardc,player):
     if childrenXO==[]:
         return []
     else:
-        print(gorc_XO_schlagen_children_delete)#-------------
         n=random.choice(childrenXO)
         if player==1:
             if n==1:
