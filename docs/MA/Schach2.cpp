@@ -91,7 +91,6 @@ std::vector<std::vector<std::vector<int>>> gcKk(int y, int x, const std::vector<
     std::vector<std::vector<int>> boardc = pos;
     std::vector<std::vector<std::vector<int>>> childrenK;
 
-    // Define relative positions for king moves
     int direction_y[] = {-1, -1, -1, 0, 0, 1, 1, 1};
     int direction_x[] = {-1, 0, 1, -1, 1, -1, 0, 1};
 

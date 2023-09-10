@@ -669,11 +669,11 @@ def evaluatepos(pos,player):
         anz_M=0
         for l in range(len(pos)):
             for o in range(pos[l].count(1)):
-                eval+=9
+                eval+=11
                 anz_X+=1
                 eval+=X_matrix[l]
             for o in range(pos[l].count(-1)):
-                eval+=-11
+                eval+=-9
                 anz_O+=1
                 eval+=-O_matrix[l]
             for o in range(pos[l].count(2)):
@@ -694,11 +694,11 @@ def evaluatepos(pos,player):
         anz_M=0
         for l in range(len(pos)):
             for o in range(pos[l].count(1)):
-                eval+=-11
+                eval+=-9
                 anz_X=anz_X+1
                 eval+=-X_matrix[l]
             for o in range(pos[l].count(-1)):
-                eval+=9
+                eval+=11
                 anz_O+=1
                 eval+=O_matrix[l]
             for o in range(pos[l].count(2)):
@@ -1779,4 +1779,4 @@ board = [
 
 #------------------------------------------------------
 
-#evaluatepos: open v closed?
+#evaluatepos: open v closed?!!

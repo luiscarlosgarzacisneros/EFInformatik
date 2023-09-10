@@ -930,12 +930,12 @@ int evaluate_position(const std::vector<std::vector<int>>& pos, int player) {
         for (size_t l = 0; l < pos.size(); ++l) {
             for (int o = 0; o < pos[l].size(); ++o) {
                 if (pos[l][o] == 1) {
-                    eval += 9;
+                    eval += 11;
                     anz_X += 1;
                     eval += X_matrix[l];
                 }
                 else if (pos[l][o] == -1) {
-                    eval += -11;
+                    eval += -9;
                     anz_O += 1;
                     eval += -O_matrix[l];
                 }
@@ -963,12 +963,12 @@ int evaluate_position(const std::vector<std::vector<int>>& pos, int player) {
         for (size_t l = 0; l < pos.size(); ++l) {
             for (int o = 0; o < pos[l].size(); ++o) {
                 if (pos[l][o] == 1) {
-                    eval += -11;
+                    eval += -9;
                     anz_X += 1;
                     eval += -X_matrix[l];
                 }
                 else if (pos[l][o] == -1) {
-                    eval += 9;
+                    eval += 11;
                     anz_O += 1;
                     eval += O_matrix[l];
                 }
