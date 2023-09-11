@@ -448,7 +448,7 @@ def gorcXO(y,x,boardc,player):
                 n_y = n//10-1
                 n_x = n%10-1
                 boardc[y][x]=0
-                if n_y==7:
+                if n_y==0:
                     boardc[n_y][n_x]=-2
                 else:
                     boardc[n_y][n_x]=-1
