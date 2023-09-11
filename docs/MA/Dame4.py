@@ -332,24 +332,32 @@ def gorcXOschlagen(y,x,boardc,player,delete_list):
     if player==1:
         if y-2>-1 and x-2>-1 and boardc[y-2][x-2]==0 and boardc[y-1][x-1]<0:
             geschlagen=True
-            delete_list.append([y-1,x-1])
-            gorcXOschlagen(y-2,x-2,boardc,player,delete_list)
+            delete_list_1=[]
+            delete_list_1.extend(delete_list)
+            delete_list_1.append([y-1,x-1])
+            gorcXOschlagen(y-2,x-2,boardc,player,delete_list_1)
         if y-2>-1 and x+2<8 and  boardc[y-2][x+2]==0 and boardc[y-1][x+1]<0:
             geschlagen=True
-            delete_list.append([y-1,x+1])
-            gorcXOschlagen(y-2,x+2,boardc,player,delete_list)
+            delete_list_2=[]
+            delete_list_2.extend(delete_list)
+            delete_list_2.append([y-1,x+1])
+            gorcXOschlagen(y-2,x+2,boardc,player,delete_list_2)
         if not geschlagen:
             gorc_XO_schlagen_children.append((y+1) * 10 + (x+1))
             gorc_XO_schlagen_children_delete.append(delete_list)
     elif player==-1:
         if y+2<8 and x-2>-1 and boardc[y+2][x-2]==0 and boardc[y+1][x-1]>0:
             geschlagen=True
-            delete_list.append([y+1,x-1])
-            gorcXOschlagen(y+2,x-2,boardc,player,delete_list)
+            delete_list_1=[]
+            delete_list_1.extend(delete_list)
+            delete_list_1.append([y+1,x-1])
+            gorcXOschlagen(y+2,x-2,boardc,player,delete_list_1)
         if y+2<8 and x+2<8 and boardc[y+2][x+2]==0 and boardc[y+1][x+1]>0:
             geschlagen=True
-            delete_list.append([y+1,x+1])
-            gorcXOschlagen(y+2,x+2,boardc,player,delete_list)
+            delete_list_2=[]
+            delete_list_2.extend(delete_list)
+            delete_list_2.append([y+1,x+1])
+            gorcXOschlagen(y+2,x+2,boardc,player,delete_list_2)
         if not geschlagen:
             gorc_XO_schlagen_children.append((y+1) * 10 + (x+1))
             gorc_XO_schlagen_children_delete.append(delete_list)
@@ -393,6 +401,7 @@ def gorcXO(y,x,boardc,player):
     if childrenXO==[]:
         return []
     else:
+        print(gorc_XO_schlagen_children_delete)
         n=random.choice(childrenXO)
         if player==1:
             if n==1:
@@ -468,11 +477,13 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                             r=True
                             break
                     if r:
-                        break
+                        continue
                     if not y+(i+1)*dy>7 and not x+(i+1)*dx>7 and not y+(i+1)*dy<0 and not x+(i+1)*dx<0 and boardc[y+(i+1)*dy][x+(i+1)*dx]==0:
                         geschlagen=True
-                        delete_list.append([y+i*dy, x+i*dx])
-                        gorcWMschlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list)#
+                        delete_list_1=[]
+                        delete_list_1.extend(delete_list)
+                        delete_list_1.append([y+i*dy, x+i*dx])
+                        gorcWMschlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list_1)#
                         break
                     else:
                         break
@@ -493,11 +504,13 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                             r=True
                             break
                     if r:
-                        break
+                        continue
                     if not y+(i+1)*dy>7 and not x+(i+1)*dx>7 and not y+(i+1)*dy<0 and not x+(i+1)*dx<0 and boardc[y+(i+1)*dy][x+(i+1)*dx]==0:
                         geschlagen=True
-                        delete_list.append([y+i*dy, x+i*dx])
-                        gorcWMschlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list)#
+                        delete_list_1=[]
+                        delete_list_1.extend(delete_list)
+                        delete_list_1.append([y+i*dy, x+i*dx])
+                        gorcWMschlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list_1)#
                         break
                     else:
                         break
