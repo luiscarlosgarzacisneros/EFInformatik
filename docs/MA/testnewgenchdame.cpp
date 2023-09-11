@@ -477,7 +477,7 @@ std::vector<std::vector<int>> gorc_XO(int y, int x, std::vector<std::vector<int>
                 int n_y= (n/10)-1;
                 int n_x= (n%10)-1;
                 boardc[y][x]= 0;
-                if (n_y==0) {boardc[n_y][n_x] = -2;}
+                if (n_y==7) {boardc[n_y][n_x] = -2;}
                 else {boardc[n_y][n_x]= -1;}
                 std::vector<std::vector<int>> delete_list = gorc_XO_schlagen_children_delete[std::distance(gorc_XO_schlagen_children.begin(), std::find(gorc_XO_schlagen_children.begin(), gorc_XO_schlagen_children.end(), n))];
                 for (const auto& feld : delete_list) {boardc[feld[0]][feld[1]]= 0;}
@@ -496,14 +496,14 @@ void gorc_WM_schlagen(int y, int x, std::vector<std::vector<int>>& boardc, int p
             int dy = direction.first;
             int dx = direction.second;
             for (int i= 1; i<8; ++i) {
-                if (y+i*dy>7 ||x+i*dx>7 || y+i*dy<0 || x+i*dx<0) {break;}
+                if (y+i*dy>7 || x+i*dx>7 || y+i*dy<0 || x+i*dx<0) {break;}
                 if (boardc[y+i*dy][x+i*dx]>0) {break;}
                 if (boardc[y+i*dy][x+i*dx]<0) {
                     bool r = false;
                     for (const auto& piece : delete_list) {
                         if (piece[0]==y+i*dy && piece[1]==x+i*dx) {r=true; break;}
                     }
-                    if (r) {break;}
+                    if (r) {continue;}
                     if (!(y+(i+1)*dy>7) && !(x+(i+1)*dx>7) && !(y+(i+1)*dy<0) && !(x+(i+1)*dx<0) && boardc[y+(i+1)*dy][x+(i+1)*dx]==0) {
                         geschlagen = true;
                         delete_list.push_back({y+i*dy, x+i*dx});
@@ -528,7 +528,7 @@ void gorc_WM_schlagen(int y, int x, std::vector<std::vector<int>>& boardc, int p
                     for (const auto& piece : delete_list) {
                         if (piece[0]==y+i*dy && piece[1]==x+i*dx) {r=true; break;}
                     }
-                    if (r) {break;}
+                    if (r) {continue;}
                     if (!(y+(i+1)*dy>7) && !(x+(i+1)*dx>7) && !(y+(i+1)*dy<0) && !(x+(i+1)*dx<0) && boardc[y+(i+1)*dy][x+(i+1)*dx]==0) {
                         geschlagen = true;
                         delete_list.push_back({y+i*dy, x+i*dx});
@@ -612,22 +612,22 @@ std::vector<std::vector<int>> gorc_WM(int y, int x, std::vector<std::vector<int>
         //
         if (n>10 && n<20) { //ur
             boardc[y][x]=0;
-            boardc[y+(n-10)][x+(n-10)]=2;
+            boardc[y+(n-10)][x+(n-10)]=player;
             return boardc;
         }
         else if (n>20 && n<30) { //ul
             boardc[y][x]=0;
-            boardc[y+(n-20)][x-(n-20)]=2;
+            boardc[y+(n-20)][x-(n-20)]=player;
             return boardc;
         }
         else if (n>30 && n<40) { //or
             boardc[y][x]=0;
-            boardc[y-(n-30)][x+(n-30)]=2;
+            boardc[y-(n-30)][x+(n-30)]=player;
             return boardc;
         }
         else if (n>40 && n<50) { //ol
             boardc[y][x]=0;
-            boardc[y-(n-40)][x-(n-40)]=2;
+            boardc[y-(n-40)][x-(n-40)]=player;
             return boardc;
         }
         else if (n>100) { //schlagen
@@ -691,13 +691,13 @@ std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<
 
 std::vector<std::vector<int>> board={
             {0,0,0,0,0,0,0,0},
+            {0,-1,0,0,0,-1,0,0},
             {0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0},
-            {0,0,1,0,1,0,0,0},
-            {0,0,0,2,0,0,0,0},
-            {0,0,0,0,1,0,0,0},
+            {0,0,-1,0,-1,0,0,0},
             {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0}
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,2}
 
         };
 

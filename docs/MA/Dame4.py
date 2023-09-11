@@ -401,7 +401,6 @@ def gorcXO(y,x,boardc,player):
     if childrenXO==[]:
         return []
     else:
-        print(gorc_XO_schlagen_children_delete)
         n=random.choice(childrenXO)
         if player==1:
             if n==1:
@@ -449,7 +448,7 @@ def gorcXO(y,x,boardc,player):
                 n_y = n//10-1
                 n_x = n%10-1
                 boardc[y][x]=0
-                if n_y==0:
+                if n_y==7:
                     boardc[n_y][n_x]=-2
                 else:
                     boardc[n_y][n_x]=-1
@@ -580,22 +579,22 @@ def gorcWM(y,x,boardc,player):
         #ur
         if n>10 and n<20:
             boardc[y][x]=0
-            boardc[y+(n-10)][x+(n-10)]=2
+            boardc[y+(n-10)][x+(n-10)]=player
             return boardc
         #ul
         elif n>20 and n<30:
             boardc[y][x]=0
-            boardc[y+(n-20)][x-(n-20)]=2
+            boardc[y+(n-20)][x-(n-20)]=player
             return boardc
         #or
         elif n>30 and n<40:
             boardc[y][x]=0
-            boardc[y-(n-30)][x+(n-30)]=2
+            boardc[y-(n-30)][x+(n-30)]=player
             return boardc
         #ol
         elif n>40 and n<50:
             boardc[y][x]=0
-            boardc[y-(n-40)][x-(n-40)]=2
+            boardc[y-(n-40)][x-(n-40)]=player
             return boardc
         #schlagen
         elif n>100:
