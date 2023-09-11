@@ -6,12 +6,12 @@ import math
 board = [
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,-1,0,0],
             [0,0,-1,0,0,0,0,0],
-            [0,0,0,1,0,0,0,0],
             [0,0,0,0,0,0,0,0],
-            [0,0,0,1,0,1,0,0],
-            [0,0,0,0,0,0,0,0]
+            [0,0,-1,0,-1,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [2,0,0,0,0,0,0,0]
         ]
 
 #
@@ -177,11 +177,13 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                             r=True
                             break
                     if r:
-                        break
+                        continue
                     if not y+(i+1)*dy>7 and not x+(i+1)*dx>7 and not y+(i+1)*dy<0 and not x+(i+1)*dx<0 and boardc[y+(i+1)*dy][x+(i+1)*dx]==0:
                         geschlagen=True
-                        delete_list.append([y+i*dy, x+i*dx])
-                        gorcWMschlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list)#
+                        delete_list_1=[]
+                        delete_list_1.extend(delete_list)
+                        delete_list_1.append([y+i*dy, x+i*dx])
+                        gorcWMschlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list_1)#
                         break
                     else:
                         break
@@ -202,11 +204,13 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                             r=True
                             break
                     if r:
-                        break
+                        continue
                     if not y+(i+1)*dy>7 and not x+(i+1)*dx>7 and not y+(i+1)*dy<0 and not x+(i+1)*dx<0 and boardc[y+(i+1)*dy][x+(i+1)*dx]==0:
                         geschlagen=True
-                        delete_list.append([y+i*dy, x+i*dx])
-                        gorcWMschlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list)#
+                        delete_list_1=[]
+                        delete_list_1.extend(delete_list)
+                        delete_list_1.append([y+i*dy, x+i*dx])
+                        gorcWMschlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list_1)#
                         break
                     else:
                         break
@@ -388,7 +392,7 @@ def printboard(board):
 ne=[]
 printboard(board)
 while True:
-    ne=generate_one_random_child(board, -1)
+    ne=generate_one_random_child(board, 1)
     if ne!=[]:
         printboard(ne)
         break
