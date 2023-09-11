@@ -691,18 +691,18 @@ std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<
 
 std::vector<std::vector<int>> board={
             {0,0,0,0,0,0,0,0},
-            {0,0,0,-1,0,0,0,0},
             {0,0,0,0,0,0,0,0},
-            {0,0,0,-1,0,-1,0,0},
             {0,0,0,0,0,0,0,0},
-            {0,0,0,-1,0,0,0,0},
-            {0,0,1,0,0,0,0,0},
+            {0,0,1,0,1,0,0,0},
+            {0,0,0,2,0,0,0,0},
+            {0,0,0,0,1,0,0,0},
+            {0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0}
 
         };
 
 main() {
-    for (int i=0; i<8; ++i) {
+    for (int i=0; i<9; ++i) {
         std::cout<<"jhk"<<std::endl;
         std::vector<std::vector<int>> child=generate_one_random_child(board, 1);
         print_board(child);
