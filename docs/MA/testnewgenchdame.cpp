@@ -506,8 +506,12 @@ void gorc_WM_schlagen(int y, int x, std::vector<std::vector<int>>& boardc, int p
                     if (r) {continue;}
                     if (!(y+(i+1)*dy>7) && !(x+(i+1)*dx>7) && !(y+(i+1)*dy<0) && !(x+(i+1)*dx<0) && boardc[y+(i+1)*dy][x+(i+1)*dx]==0) {
                         geschlagen = true;
-                        delete_list.push_back({y+i*dy, x+i*dx});
-                        gorc_WM_schlagen(y+(i+1)*dy, x+(i+1)*dx, boardc, player, delete_list);
+                        //
+                        std::vector<std::vector<int>> delete_list_1;
+                        delete_list_1.insert(delete_list_1.end(), delete_list.begin(), delete_list.end());
+                        delete_list_1.push_back({y+i*dy, x+i*dx});
+                        //
+                        gorc_WM_schlagen(y+(i+1)*dy, x+(i+1)*dx, boardc, player, delete_list_1);
                         break;
                     }
                     else {break;}
@@ -531,7 +535,11 @@ void gorc_WM_schlagen(int y, int x, std::vector<std::vector<int>>& boardc, int p
                     if (r) {continue;}
                     if (!(y+(i+1)*dy>7) && !(x+(i+1)*dx>7) && !(y+(i+1)*dy<0) && !(x+(i+1)*dx<0) && boardc[y+(i+1)*dy][x+(i+1)*dx]==0) {
                         geschlagen = true;
-                        delete_list.push_back({y+i*dy, x+i*dx});
+                        //
+                        std::vector<std::vector<int>> delete_list_1;
+                        delete_list_1.insert(delete_list_1.end(), delete_list.begin(), delete_list.end());
+                        delete_list_1.push_back({y+i*dy, x+i*dx});
+                        //
                         gorc_WM_schlagen(y+(i+1)*dy, x+(i+1)*dx, boardc, player, delete_list);
                         break;
                     }
