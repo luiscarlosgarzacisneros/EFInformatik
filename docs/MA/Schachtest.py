@@ -785,6 +785,7 @@ def verloren(pos,player):
         for o in range(8):
             if pos[p][o]==player or pos[p][o]==player2:
                 eval=True
+                break
     if eval:
         return False
     else:
@@ -792,10 +793,21 @@ def verloren(pos,player):
 
 #
 
-Bb_matrix = [
+B_matrix = [
     [ 0,  0,  0,  0,  0,  0,  0,  0],
     [ 1,  1,  1,  1,  1,  1,  1,  1],
     [ 2,  2,  2,  2,  2,  2,  2,  2],
+    [ 3,  3,  4,  4,  4,  4,  3,  3],
+    [ 3,  3,  4,  4,  4,  4,  3,  3],
+    [ 4,  4,  4,  4,  4,  4,  4,  4],
+    [ 5,  5,  5,  5,  5,  5,  5,  5],
+    [ 0,  0,  0,  0,  0,  0,  0,  0]
+]
+
+b_matrix = [
+    [ 0,  0,  0,  0,  0,  0,  0,  0],
+    [ 5,  5,  5,  5,  5,  5,  5,  5],
+    [ 4,  4,  4,  4,  4,  4,  4,  4],
     [ 3,  3,  4,  4,  4,  4,  3,  3],
     [ 3,  3,  4,  4,  4,  4,  3,  3],
     [ 2,  2,  2,  2,  2,  2,  2,  2],
@@ -870,7 +882,8 @@ k_matrix = [
 ]
 
 
-other_Bb_matrix = [[-v for v in row] for row in Bb_matrix]
+other_B_matrix = [[-v for v in row] for row in B_matrix]
+other_b_matrix = [[-v for v in row] for row in b_matrix]
 other_Ll_matrix = [[-v for v in row] for row in Ll_matrix]
 other_Xx_matrix = [[-v for v in row] for row in Xx_matrix]
 other_Tt_matrix = [[-v for v in row] for row in Tt_matrix]
@@ -890,7 +903,7 @@ def evaluatepos(pos,playerk):
                 #
                 elif pos[p][o]==-1 or pos[p][o]==-9:
                     val+=-100
-                    val+=other_Bb_matrix[p][o]
+                    val+=other_B_matrix[p][o]
                     #pawn structure
                     if p+1<=7 and o+1<=7:
                         if pos[p+1][o+1]==-1 or pos[p+1][o+1]==-9:
@@ -907,7 +920,7 @@ def evaluatepos(pos,playerk):
                     #
                 elif pos[p][o]==1 or pos[p][o]==9:
                     val+=+100
-                    val+=Bb_matrix[p][o]
+                    val+=b_matrix[p][o]
                     #pawn structure
                     if p+1<=7 and o+1<=7:
                         if pos[p+1][o+1]==1 or pos[p+1][o+1]==9:
@@ -962,7 +975,7 @@ def evaluatepos(pos,playerk):
                 #
                 elif pos[p][o]==-1 or pos[p][o]==-9:
                     val+=+100
-                    val+=Bb_matrix[p][o]
+                    val+=B_matrix[p][o]
                     #pawn structure
                     if p+1<=7 and o+1<=7:
                         if pos[p+1][o+1]==-1 or pos[p+1][o+1]==-9:
@@ -979,7 +992,7 @@ def evaluatepos(pos,playerk):
                     #
                 elif pos[p][o]==1 or pos[p][o]==9:
                     val+=-100
-                    val+=other_Bb_matrix[p][o]
+                    val+=other_b_matrix[p][o]
                     #pawn structure
                     if p+1<=7 and o+1<=7:
                         if pos[p+1][o+1]==1 or pos[p+1][o+1]==9:
@@ -1039,10 +1052,10 @@ def evaluatepos2(pos,playerk):
                 #
                 elif pos[p][o]==-1 or pos[p][o]==-9:
                     val+=-100
-                    val+=other_Bb_matrix[p][o]
+                    val+=other_B_matrix[p][o]
                 elif pos[p][o]==1 or pos[p][o]==9:
                     val+=+100
-                    val+=Bb_matrix[p][o]
+                    val+=b_matrix[p][o]
                 #
                 elif pos[p][o]==-2:
                     val+=-300
@@ -1083,10 +1096,10 @@ def evaluatepos2(pos,playerk):
                 #
                 elif pos[p][o]==-1 or pos[p][o]==-9:
                     val+=+100
-                    val+=Bb_matrix[p][o]
+                    val+=B_matrix[p][o]
                 elif pos[p][o]==1 or pos[p][o]==9:
                     val+=-100
-                    val+=other_Bb_matrix[p][o]
+                    val+=other_b_matrix[p][o]
                 #
                 elif pos[p][o]==-2:
                     val+=+300

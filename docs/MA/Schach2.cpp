@@ -55,6 +55,29 @@ std::vector<std::vector<int>> deepcopy(const std::vector<std::vector<int>>& boar
     return board_copy;
 }
 
+bool verloren(std::vector<std::vector<int>>& board, int playerk) {
+    bool eval=false;
+    int player_2;
+    if (playerk==6) {player_2=8;}
+    else {player_2=-8;}
+    for (int i=0; i<9; ++i) {
+        for (int j=0; j<9; ++j) {
+            if (board[i][j]==playerk || board[i][j]==player_2) {eval=true; break;}
+        }
+    }
+    //
+    return eval;
+}
+
+std::vector<std::vector<int>> matrix_minus(std::vector<std::vector<int>> matrix) {
+    for (int i=0; i<matrix.size(); ++i) {
+        for (int j=0; j<matrix[i].size(); ++j) {
+            matrix[i][j]=-matrix[i][j];
+        }
+    }
+    return matrix;
+}
+
 //
 
 void print_board(const std::vector<std::vector<int>>& board) {
@@ -195,7 +218,7 @@ std::vector<std::vector<std::vector<int>>> gcLl(int y, int x, const std::vector<
         for (int i=0; i<8; ++i) {
             int new_y= y+direction_y[i];
             int new_x= x+direction_x[i];
-            if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8 && pos[new_y][new_x] <= 0) {
+            if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8 && pos[new_y][new_x]<=0) {
                 boardc=pos;
                 boardc[y][x]=0;
                 boardc[new_y][new_x]=2;
@@ -247,7 +270,7 @@ std::vector<std::vector<std::vector<int>>> gcBb(int y, int x, const std::vector<
         }
         //en passant
         if (x-1>-1 && y+1<8) {
-            if (boardc[y][x-1]==-9 && boardc[y+1][x-1]==0) {
+            if (boardc[y][x-1]==9 && boardc[y+1][x-1]==0) {
                 boardc[y][x]=0;
                 boardc[y+1][x-1]=-1;
                 boardc[y][x-1]=0;
@@ -256,7 +279,7 @@ std::vector<std::vector<std::vector<int>>> gcBb(int y, int x, const std::vector<
             }
         }
         if (x+1<8 && y+1<8) {
-            if (boardc[y][x+1]==-9 && boardc[y+1][x+1]==0) {
+            if (boardc[y][x+1]==9 && boardc[y+1][x+1]==0) {
                 boardc[y][x]=0;
                 boardc[y+1][x+1]=-1;
                 boardc[y][x+1]=0;
@@ -301,7 +324,7 @@ std::vector<std::vector<std::vector<int>>> gcBb(int y, int x, const std::vector<
         }
         //en passant
         if (x-1>-1 && y-1>-1) {
-            if (boardc[y][x-1]==9 && boardc[y-1][x-1]==0) {
+            if (boardc[y][x-1]==-9 && boardc[y-1][x-1]==0) {
                 boardc[y][x]=0;
                 boardc[y-1][x-1]=1;
                 boardc[y][x-1]=0;
@@ -310,7 +333,7 @@ std::vector<std::vector<std::vector<int>>> gcBb(int y, int x, const std::vector<
             }
         }
         if (x+1<8 && y-1>-1) {
-            if (boardc[y][x+1]==9 && boardc[y-1][x+1]==0) {
+            if (boardc[y][x+1]==-9 && boardc[y-1][x+1]==0) {
                 boardc[y][x]=0;
                 boardc[y-1][x+1]=1;
                 boardc[y][x+1]=0;
@@ -334,18 +357,11 @@ std::vector<std::vector<std::vector<int>>> gcTtXxQq(int y, int x, const std::vec
                 //
                 if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8) {
                     if (pos[new_y][new_x]>=0) {
-                        if (pos[new_y][new_x]!=0) {
-                            boardc=pos;
-                            boardc[y][x]=0;
-                            boardc[new_y][new_x]=player;
-                            children.push_back(boardc);
-                        }
-                        else {
-                            boardc=pos;
-                            boardc[y][x]=0;
-                            boardc[new_y][new_x]=player;
-                            children.push_back(boardc);
-                        }
+                        boardc=pos;
+                        boardc[y][x]=0;
+                        boardc[new_y][new_x]=player;
+                        children.push_back(boardc);
+                        if (pos[new_y][new_x]!=0) {break;}
                     }
                     else {break;}
                 }
@@ -361,18 +377,11 @@ std::vector<std::vector<std::vector<int>>> gcTtXxQq(int y, int x, const std::vec
                 //
                 if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8) {
                     if (pos[new_y][new_x]<=0) {
-                        if (pos[new_y][new_x]!=0) {
-                            boardc=pos;
-                            boardc[y][x]=0;
-                            boardc[new_y][new_x]=player;
-                            children.push_back(boardc);
-                        }
-                        else {
-                            boardc=pos;
-                            boardc[y][x]=0;
-                            boardc[new_y][new_x]=player;
-                            children.push_back(boardc);
-                        }
+                        boardc=pos;
+                        boardc[y][x]=0;
+                        boardc[new_y][new_x]=player;
+                        children.push_back(boardc);
+                        if (pos[new_y][new_x]!=0) {break;}
                     }
                     else {break;}
                 }
@@ -414,7 +423,7 @@ std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::ve
                     children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==4 || position[y][x]==7) {
-                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, 4, {0, 0, 1, -1}, {0, 0, 1, -1});
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, 4, {0, 0, 1, -1}, {1, -1, 0, 0});
                     children.insert(children.end(), new_children.begin(), new_children.end());                
                 }
                 else if (position[y][x]==3) {
@@ -422,11 +431,11 @@ std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::ve
                     children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==5) {
-                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, 5, {1, -1, -1, 1, 0, 0, 1, -1}, {1, 1, -1, -1, 0, 0, 1, -1});
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQq(y, x, position, 5, {1, -1, -1, 1, 0, 0, 1, -1}, {1, 1, -1, -1, 1, -1, 0, 0});
                     children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==2) {
-                    std::vector<std::vector<std::vector<int>>> new_children=gcKk(y, x, position, 2);
+                    std::vector<std::vector<std::vector<int>>> new_children=gcLl(y, x, position, 2);
                     children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==8) {
@@ -460,7 +469,7 @@ std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::ve
                     children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==-2) {
-                    std::vector<std::vector<std::vector<int>>> new_children=gcKk(y, x, position, -2);
+                    std::vector<std::vector<std::vector<int>>> new_children=gcLl(y, x, position, -2);
                     children.insert(children.end(), new_children.begin(), new_children.end());
                 }
                 else if (position[y][x]==-8) {
@@ -475,20 +484,101 @@ std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::ve
 
 //
 
-std::vector<std::vector<int>> board={
-            {-7, -2, -3, -5, -8, -3, -2, -7},
-            {-1, -1, -1, -1, -1, -1, -1, -1},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {1, 1, 1, 1, 1, 1, 1, 1},
-            {7, 2, 3, 5, 8, 3, 2, 7}
-        };
+std::vector<std::vector<int>> B_matrix = {
+    { 0,  0,  0,  0,  0,  0,  0,  0},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 2,  2,  2,  2,  2,  2,  2,  2},
+    { 3,  3,  4,  4,  4,  4,  3,  3},
+    { 3,  3,  4,  4,  4,  4,  3,  3},
+    { 4,  4,  4,  4,  4,  4,  4,  4},
+    { 5,  5,  5,  5,  5,  5,  5,  5},
+    { 0,  0,  0,  0,  0,  0,  0,  0}
+};
 
-main() {
-    std::cout<<"ok"<<std::endl;
-    std::vector<std::vector<std::vector<int>>> children=generate_children(board, 6);
-    for (auto& child : children) {print_board(child);}
-    std::cout<<"ok"<<std::endl;
-}
+std::vector<std::vector<int>> b_matrix = {
+    { 0,  0,  0,  0,  0,  0,  0,  0},
+    { 5,  5,  5,  5,  5,  5,  5,  5},
+    { 4,  4,  4,  4,  4,  4,  4,  4},
+    { 3,  3,  4,  4,  4,  4,  3,  3},
+    { 3,  3,  4,  4,  4,  4,  3,  3},
+    { 2,  2,  2,  2,  2,  2,  2,  2},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 0,  0,  0,  0,  0,  0,  0,  0}
+};
+
+std::vector<std::vector<int>> Ll_matrix = {
+    {-1, -3, -2, -2, -2, -2, -3, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1, -3, -2, -2, -2, -2, -3, -1}
+};
+
+std::vector<std::vector<int>> Xx_matrix = {
+    {-2, -1, -1, -1, -1, -1, -1, -2},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-2, -1, -1, -1, -1, -1, -1, -2}
+};
+
+std::vector<std::vector<int>> Tt_matrix = {
+    { 0,  0,  0,  0,  0,  0,  0,  0},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 0,  0,  0,  0,  0,  0,  0,  0}
+};
+
+std::vector<std::vector<int>> Qq_matrix = {
+    {-1, -1, -1, -1, -1, -1, -1, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1, -1, -1, -1, -1, -1, -1, -1}
+};
+
+std::vector<std::vector<int>> K_matrix = {
+    { 2,  3,  1,  0,  0,  1,  3,  2},
+    { 2,  2,  0,  0,  0,  0,  2,  2},
+    {-1, -2, -2, -2, -2, -2, -2, -1},
+    {-2, -3, -3, -4, -4, -3, -3, -2},
+    {-3, -4, -4, -5, -5, -4, -4, -3},
+    {-3, -4, -4, -5, -5, -4, -4, -3},
+    {-4, -5, -5, -6, -6, -5, -5, -4},
+    {-4, -5, -5, -6, -6, -5, -5, -4}
+};
+
+std::vector<std::vector<int>> k_matrix = {
+    { -4,  -5,  -5,  -6,  -6,  -5,  -5,  -4},
+    { -4,  -5,  -5,  -6,  -6,  -5,  -5,  -4},
+    { -3,  -4,  -4,  -5,  -5,  -4,  -4,  -3},
+    { -3,  -4,  -4,  -5,  -5,  -4,  -4,  -3},
+    { -2,  -3,  -3,  -4,  -4,  -3,  -3,  -2},
+    { -1,  -2,  -2,  -2,  -2,  -2,  -2,  -1},
+    {  2,   2,   0,   0,   0,   0,   2,   2},
+    {  2,   3,   1,   0,   0,   1,   3,   2}
+};
+
+std::vector<std::vector<int>> other_B_matrix = matrix_minus(B_matrix);
+std::vector<std::vector<int>> other_b_matrix = matrix_minus(b_matrix);
+std::vector<std::vector<int>> other_Ll_matrix = matrix_minus(Ll_matrix);
+std::vector<std::vector<int>> other_Xx_matrix = matrix_minus(Xx_matrix);
+std::vector<std::vector<int>> other_Tt_matrix = matrix_minus(Tt_matrix);
+std::vector<std::vector<int>> other_Qq_matrix = matrix_minus(Qq_matrix);
+std::vector<std::vector<int>> other_K_matrix = matrix_minus(K_matrix);
+std::vector<std::vector<int>> other_k_matrix = matrix_minus(k_matrix);
+
+//
