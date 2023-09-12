@@ -1148,7 +1148,6 @@ public:
         minimax_counter+=1;
         //
         if (this->depth==max_depth || verloren(this->board,6) || verloren(this->board,-6)) {
-            //std::cout<<"T1,5"<<std::endl;//----------------------------------
             this->value = evaluate_position(this->board, this->token);
             this->value_not_none=true;
             return this->value;
@@ -1393,8 +1392,8 @@ public:
                 std::vector<std::vector<int>> next_pos = generate_one_random_child(pos, player);
                 if (next_pos.empty()) {break;}
                 pos = next_pos;
-                if (player== -1) {player= 1;}
-                else if (player== 1) {player= -1;}
+                if (player== -6) {player= 6;}
+                else if (player== 6) {player= -6;}
             }
             values.push_back(evaluate_position(pos, this->token));
         }
@@ -1465,7 +1464,8 @@ public:
     }
 
     std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
-        return mctser(board);
+        std::vector<std::vector<int>> move=mctser(board);
+        return move;
     }
 
 };
@@ -1494,8 +1494,8 @@ public:
 
         while (true) {
             //-----------------------------------------
-            MinimaxPlayer player_1(6, this->board);
-            MinimaxPlayer player_2(-6, this->board);
+            MCTSPlayer player_1(6, this->board);
+            MCTSPlayer player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             print_board(this->board);
@@ -1505,13 +1505,11 @@ public:
                 std::cout <<"k ist am Zug"<<std::endl;
                 std::vector<std::vector<int>> board_copy = deepcopy(this->board);
                 new_board = player_1.get_move(board_copy);
-                if (!(new_board.empty())) {std::cout<<"OK"<<std::endl;}
             }
             else if (current==2) {
                 std::cout<<"K ist am Zug"<<std::endl;
                 std::vector<std::vector<int>> board_copy = deepcopy(this->board);
                 new_board = player_2.get_move(board_copy);
-                if (!(new_board.empty())) {std::cout<<"OK"<<std::endl;}
             }
             if (!(new_board.empty())) {this->board=new_board;}
             else {
@@ -1578,3 +1576,4 @@ int main() {
 //sort?
 //in minimaxerer: why board_0?
 //wieso deepc?
+//wieso board in mcts?
