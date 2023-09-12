@@ -58,11 +58,12 @@ std::vector<std::vector<int>> deepcopy(const std::vector<std::vector<int>>& boar
 //
 
 void print_board(const std::vector<std::vector<int>>& board) {
-    std::cout <<"  1   2   3   4   5   6   7   8\n";
-    std::cout <<"---------------------------------\n";
+    std::cout <<"    1   2   3   4   5   6   7   8\n";
+    std::cout <<"  ---------------------------------\n";
     for (int i=0; i<8; ++i) {
-        std::cout << i+1 <<" ";
+        std::cout << i+1 <<" I";
         for (int j=0; j<8; ++j) {
+            std::cout << " ";
             if (board[i][j]==1 || board[i][j]==9) {std::cout << 'b';}
             else if (board[i][j]==2) {std::cout <<'l';}
             else if (board[i][j]==3) {std::cout <<'x';}
@@ -77,9 +78,10 @@ void print_board(const std::vector<std::vector<int>>& board) {
             else if (board[i][j]==-6 || board[i][j]==-8) {std::cout <<'K';}
             else if (board[i][j]==0) {std::cout <<' ';}
             std::cout << " ";
+            std::cout << "I";
         }
         std::cout <<'\n';
-        std::cout <<"---------------------------------\n";
+        std::cout <<"  ---------------------------------\n";
     }
 }
 
@@ -472,3 +474,21 @@ std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::ve
 }
 
 //
+
+std::vector<std::vector<int>> board={
+            {-7, -2, -3, -5, -8, -3, -2, -7},
+            {-1, -1, -1, -1, -1, -1, -1, -1},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {1, 1, 1, 1, 1, 1, 1, 1},
+            {7, 2, 3, 5, 8, 3, 2, 7}
+        };
+
+main() {
+    std::cout<<"ok"<<std::endl;
+    std::vector<std::vector<std::vector<int>>> children=generate_children(board, 6);
+    for (auto& child : children) {print_board(child);}
+    std::cout<<"ok"<<std::endl;
+}
