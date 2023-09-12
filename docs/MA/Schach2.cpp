@@ -64,9 +64,10 @@ bool verloren(std::vector<std::vector<int>>& board, int playerk) {
         for (int j=0; j<9; ++j) {
             if (board[i][j]==playerk || board[i][j]==player_2) {eval=true; break;}
         }
+        if (eval) {break;}
     }
     //
-    return eval;
+    return eval ? false : true;
 }
 
 std::vector<std::vector<int>> matrix_minus(std::vector<std::vector<int>> matrix) {
@@ -1147,6 +1148,7 @@ public:
         minimax_counter+=1;
         //
         if (this->depth==max_depth || verloren(this->board,6) || verloren(this->board,-6)) {
+            //std::cout<<"T1,5"<<std::endl;//----------------------------------
             this->value = evaluate_position(this->board, this->token);
             this->value_not_none=true;
             return this->value;
@@ -1178,7 +1180,6 @@ public:
             this->value=min_value;
             return min_value;
         }
-
     }
 
     void sort(bool max_player) {
@@ -1233,7 +1234,7 @@ public:
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time=1;
+    int max_time=3;
     int max_depth=10;
     int starting_depth=1;
 
@@ -1270,7 +1271,6 @@ public:
         best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
         return_board=deepcopy(best_move.board);
         return return_board;
-
     }
 
     std::vector<std::vector<int>> minimaxerer(const std::vector<std::vector<int>> board_0) {
@@ -1554,8 +1554,8 @@ void spielen(int z) {
         Schach game;
         int r = game.play();
         if (r==1) {k_wins+=1;}
-        else if (r== -1) {K_wins+=1;}
-        else if (r==0) {unentschieden+= 1;}
+        else if (r==-1) {K_wins+=1;}
+        else if (r==0) {unentschieden+=1;}
         std::cout<<"k: "<<k_wins<<std::endl;
         std::cout<<"K: "<<K_wins<<std::endl;
         std::cout<<"-: "<<unentschieden<<std::endl;
@@ -1573,3 +1573,4 @@ int main() {
 //
 
 //sort?
+//in minimaxerer: why board_0?
