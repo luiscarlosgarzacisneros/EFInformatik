@@ -38,7 +38,7 @@ public:
     uint64_t black_pieces;
 
 
-    Board() : {}
+    Board() {}
 
     void print_bitboard(uint64_t bitboard) {
         for (int rank=7; rank>=0; --rank) {
