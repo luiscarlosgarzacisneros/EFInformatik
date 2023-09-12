@@ -651,29 +651,23 @@ std::vector<std::vector<int>> gorcBb(int y, int x, std::vector<std::vector<int>>
 
 std::vector<std::vector<int>> gorcKk(int y, int x, std::vector<std::vector<int>> boardc, int player) {
     std::vector<int> childrenK;
-    std::vector<std::pair<int, int>> moves = {
-        {1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0, 1}, {0, -1}, {1, 0}, {-1, 0}
-    };
-
-    for (const auto& move : moves) {
+    std::vector<std::pair<int, int>> moves = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    //
+    for (int i=0; i<8; ++i) {
+        std::pair<int, int> move=moves[i];
         int dy = move.first;
         int dx = move.second;
         int new_y = y + dy;
         int new_x = x + dx;
-
-        if (-1 < new_y && new_y < 8 && -1 < new_x && new_x < 8) {
-            if ((player == -6 || player == -8) && boardc[new_y][new_x] >= 0) {
-                childrenK.push_back(dy * 8 + dx);
-            }
-            else if ((player == 6 || player == 8) && boardc[new_y][new_x] <= 0) {
-                childrenK.push_back(dy * 8 + dx);
-            }
+        //
+        if (-1<new_y && new_y<8 && -1<new_x && new_x<8) {
+            if ((player==-6 || player==-8) && boardc[new_y][new_x]>=0) {childrenK.push_back(i);}
+            else if ((player==6 || player==8) && boardc[new_y][new_x]<=0) {childrenK.push_back(i);}
         }
     }
-
     // Rochade
-    if (player == -8) {
-        if (boardc[0][0] == -7 && boardc[0][1] == 0 && boardc[0][2] == 0 && boardc[0][3] == 0) {
+    if (player==-8) {
+        if (boardc[0][0]==-7 && boardc[0][1]==0 && boardc[0][2]==0 && boardc[0][3]==0) {
             std::vector<std::vector<int>> boardcc = boardc;
             boardcc[0][2] = -6;
             boardcc[0][3] = -4;
@@ -681,18 +675,11 @@ std::vector<std::vector<int>> gorcKk(int y, int x, std::vector<std::vector<int>>
             boardcc[0][4] = 0;
             bool legal = true;
             for (const auto& child : generate_children(boardcc, 6)) {
-                if (child[0][2] > 0 || child[0][3] > 0 || child[0][4] > 0) {
-                    legal = false;
-                    break;
-                }
+                if (child[0][2]>0 || child[0][3]>0 || child[0][4]>0) {legal=false; break;}
             }
-
-            if (legal) {
-                childrenK.push_back(8);
-            }
+            if (legal) {childrenK.push_back(8);}
         }
-
-        if (boardc[0][7] == -7 && boardc[0][6] == 0 && boardc[0][5] == 0) {
+        if (boardc[0][7]==-7 && boardc[0][6]==0 && boardc[0][5]==0) {
             std::vector<std::vector<int>> boardcc = boardc;
             boardcc[0][6] = -6;
             boardcc[0][5] = -4;
@@ -700,19 +687,13 @@ std::vector<std::vector<int>> gorcKk(int y, int x, std::vector<std::vector<int>>
             boardcc[0][4] = 0;
             bool legal = true;
             for (const auto& child : generate_children(boardcc, 6)) {
-                if (child[0][4] > 0 || child[0][5] > 0 || child[0][6] > 0) {
-                    legal = false;
-                    break;
-                }
+                if (child[0][4]>0 || child[0][5]>0 || child[0][6]>0) {legal=false; break;}
             }
-
-            if (legal) {
-                childrenK.push_back(9);
-            }
+            if (legal) {childrenK.push_back(9);}
         }
     }
-    else if (player == 8) {
-        if (boardc[7][0] == 7 && boardc[7][1] == 0 && boardc[7][2] == 0 && boardc[7][3] == 0) {
+    else if (player==8) {
+        if (boardc[7][0]==7 && boardc[7][1]==0 && boardc[7][2]==0 && boardc[7][3]==0) {
             std::vector<std::vector<int>> boardcc = boardc;
             boardcc[7][2] = 6;
             boardcc[7][3] = 4;
@@ -720,18 +701,11 @@ std::vector<std::vector<int>> gorcKk(int y, int x, std::vector<std::vector<int>>
             boardcc[7][4] = 0;
             bool legal = true;
             for (const auto& child : generate_children(boardcc, -6)) {
-                if (child[7][2] < 0 || child[7][3] < 0 || child[7][4] < 0) {
-                    legal = false;
-                    break;
-                }
+                if (child[7][2]<0 || child[7][3]<0 || child[7][4]<0) {legal=false; break;}
             }
-
-            if (legal) {
-                childrenK.push_back(10);
-            }
+            if (legal) {childrenK.push_back(10);}
         }
-
-        if (boardc[7][7] == 7 && boardc[7][6] == 0 && boardc[7][5] == 0) {
+        if (boardc[7][7]==7 && boardc[7][6]==0 && boardc[7][5]==0) {
             std::vector<std::vector<int>> boardcc = boardc;
             boardcc[7][6] = 6;
             boardcc[7][5] = 4;
@@ -739,52 +713,44 @@ std::vector<std::vector<int>> gorcKk(int y, int x, std::vector<std::vector<int>>
             boardcc[7][4] = 0;
             bool legal = true;
             for (const auto& child : generate_children(boardcc, -6)) {
-                if (child[7][4] < 0 || child[7][5] < 0 || child[7][6] < 0) {
-                    legal = false;
-                    break;
-                }
+                if (child[7][4]<0 || child[7][5]<0 || child[7][6]<0) {legal=false; break;}
             }
-
-            if (legal) {
-                childrenK.push_back(11);
-            }
+            if (legal) {childrenK.push_back(11);}
         }
     }
-
-    if (childrenK.empty()) {
-        return boardc;
-    }
+    //
+    if (childrenK.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
     else {
-        int n = rand() % childrenK.size();
-        if (n < 8) {
+        int n = generate_random_int(0, childrenK.size()-1);
+        if (n<8) {
             boardc[y][x] = 0;
             int dy = moves[n].first;
             int dx = moves[n].second;
-            boardc[y + dy][x + dx] = player;
+            boardc[y+dy][x+dx] = player;
             return boardc;
         }
-        else if (n == 8) {
+        else if (n==8) {
             boardc[0][2] = -6;
             boardc[0][3] = -4;
             boardc[0][0] = 0;
             boardc[0][4] = 0;
             return boardc;
         }
-        else if (n == 9) {
+        else if (n==9) {
             boardc[0][6] = -6;
             boardc[0][5] = -4;
             boardc[0][7] = 0;
             boardc[0][4] = 0;
             return boardc;
         }
-        else if (n == 10) {
+        else if (n==10) {
             boardc[7][2] = 6;
             boardc[7][3] = 4;
             boardc[7][0] = 0;
             boardc[7][4] = 0;
             return boardc;
         }
-        else if (n == 11) {
+        else if (n==11) {
             boardc[7][6] = 6;
             boardc[7][5] = 4;
             boardc[7][7] = 0;
@@ -794,7 +760,6 @@ std::vector<std::vector<int>> gorcKk(int y, int x, std::vector<std::vector<int>>
     }
     return boardc;
 }
-
 
 std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<int>> position, int playerk) {
     std::vector<std::vector<int>> boardcopy = position;
