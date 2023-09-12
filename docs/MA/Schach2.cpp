@@ -509,6 +509,146 @@ std::vector<std::vector<int>> gorcLl(int y, int x, std::vector<std::vector<int>>
     else {std::vector<std::vector<int>> empty_vector; return empty_vector;}
 }
 
+std::vector<std::vector<int>> gorcTtXxQq(int y, int x, std::vector<std::vector<int>> boardc, int player, std::vector<std::pair<int, int>> directions) {
+    if (player==-7) {player=-4;}
+    else if (player==7) {player=4;}
+    std::vector<std::vector<int>> children;
+    //
+    for (auto direction : directions) {
+        for (int i=1; i<8; ++i) {
+            int dy = direction.first;
+            int dx = direction.second;
+            int new_y = y+i*dy;
+            int new_x = x+i*dx;
+            //
+            if (-1<new_x && new_x<8 && -1<new_y && new_y<8) {
+                if ((player<0 && boardc[new_y][new_x]>=0) || (player>0 && boardc[new_y][new_x]<=0)) {
+                    if (boardc[new_y][new_x] == 0) {children.push_back(std::vector<int>{y+i*dy, x+i*dx});}
+                    else {children.push_back(std::vector<int>{y+i*dy, x+i*dx}); break;}
+                }
+                else {break;}
+            }
+            else {break;}
+        }
+    }
+    //
+    if (!children.empty()) {
+        int randomIndex = generate_random_int(0, children.size()-1);
+        int new_y = children[randomIndex][0];
+        int new_x = children[randomIndex][1];
+        boardc[y][x] = 0;
+        boardc[new_y][new_x] = player;
+        return boardc;
+    }
+    else {std::vector<std::vector<int>> empty_vector; return empty_vector;}
+}
+
+std::vector<std::vector<int>> gorcBb(int y, int x, std::vector<std::vector<int>> boardc, int player) {
+    std::vector<int> childrenB;
+    //
+    if (player==-1) {
+        if (y==1 && boardc[y+2][x]==0 && boardc[y+1][x]==0) {childrenB.push_back(1);}
+        if (y+1<8) {if (boardc[y+1][x]==0) {childrenB.push_back(2);}}
+        if (x-1>-1 && y+1<8) {if (boardc[y+1][x-1]>0) {childrenB.push_back(3);}}
+        if (x+1<8 && y+1<8) {if (boardc[y+1][x+1]>0) {childrenB.push_back(4);}}
+        // En passant
+        if (x-1>-1 && y+1<8) {if (boardc[y][x-1]==9 && boardc[y+1][x-1]==0) {childrenB.push_back(5);}}
+        if (x+1<8 && y+1<8) {if (boardc[y][x+1]==9 && boardc[y+1][x+1]==0) {childrenB.push_back(6);}}
+    }
+    if (player==1) {
+        if (y==6 && boardc[y-2][x]==0 && boardc[y-1][x]==0) {childrenB.push_back(1);}
+        if (y-1>-1) {if (boardc[y-1][x]==0) {childrenB.push_back(2);}}
+        if (x-1>-1 && y-1>-1) {if (boardc[y-1][x-1]<0) {childrenB.push_back(3);}}
+        if (x+1<8 && y-1>-1) {if (boardc[y-1][x+1]<0) {childrenB.push_back(4);}}
+        // En passant
+        if (x-1>-1 && y-1>-1) {if (boardc[y][x-1]==-9 && boardc[y-1][x-1]==0) {childrenB.push_back(5);}}
+        if (x+1<8 && y-1>-1) {if (boardc[y][x+1]==-9 && boardc[y-1][x+1]==0) {childrenB.push_back(6);}}
+    }
+    if (player==-1) {
+        if (childrenB.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
+        else {
+            int n = generate_random_int(0, childrenB.size()-1);
+            if (n==1) {
+                boardc[y][x]=0;
+                boardc[y+2][x]=-9;
+                return boardc;
+            }
+            else if (n==2) {
+                boardc[y][x]=0;
+                boardc[y+1][x]=-1;
+                if (y+1==7) {boardc[y+1][x]=-5;}
+                return boardc;
+            }
+            else if (n==3) {
+                boardc[y][x]=0;
+                boardc[y+1][x-1]=-1;
+                if (y+1==7) {boardc[y+1][x-1]=-5;}
+                return boardc;
+            }
+            else if (n==4) {
+                boardc[y][x]=0;
+                boardc[y+1][x+1]=-1;
+                if (y+1==7) {boardc[y+1][x+1]=-5;}
+                return boardc;
+            }
+            else if (n==5) {
+                boardc[y][x]=0;
+                boardc[y+1][x-1]=-1;
+                boardc[y][x-1]=0;
+                return boardc;
+            }
+            else if (n==6) {
+                boardc[y][x]=0;
+                boardc[y+1][x+1]=-1;
+                boardc[y][x+1]=0;
+                return boardc;
+            }
+        }
+    }
+    else if (player==1) {
+        if (childrenB.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
+        else {
+            int n = rand() % childrenB.size() + 1;
+            if (n==1) {
+                boardc[y][x]=0;
+                boardc[y-2][x]=9;
+                return boardc;
+            }
+            else if (n==2) {
+                boardc[y][x]=0;
+                boardc[y-1][x]=1;
+                if (y-1==0) {boardc[y-1][x]=5;}
+                return boardc;
+            }
+            else if (n==3) {
+                boardc[y][x]=0;
+                boardc[y-1][x-1]=1;
+                if (y-1==0) {boardc[y-1][x-1]=5;}
+                return boardc;
+            }
+            else if (n==4) {
+                boardc[y][x]=0;
+                boardc[y-1][x+1]=1;
+                if (y-1==0) {boardc[y-1][x+1]=5;}
+                return boardc;
+            }
+            else if (n==5) {
+                boardc[y][x]=0;
+                boardc[y-1][x-1]=1;
+                boardc[y][x-1]=0;
+                return boardc;
+            } 
+            else if (n==6) {
+                boardc[y][x]=0;
+                boardc[y-1][x+1]=1;
+                boardc[y][x+1]=0;
+                return boardc;
+            }
+        }
+    }
+    return boardc;
+}
+
 std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<int>> position, int playerk) {
     std::vector<std::vector<int>> boardcopy = position;
     //9 and -9 to 1 and -1
