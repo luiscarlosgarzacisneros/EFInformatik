@@ -484,9 +484,34 @@ std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::ve
 
 //
 
+std::vector<std::vector<int>> gorcLl(int y, int x, std::vector<std::vector<int>> boardc, int player) {
+    std::vector<std::pair<int, int>> childrenL;
+    std::vector<std::pair<int, int>> moves = {{-2, 1}, {-2, -1}, {2, 1}, {2, -1}, {1, 2}, {-1, 2}, {1, -2}, {-1, -2}};
+    //
+    for (const auto& move : moves) {
+        int new_y = y + move.first;
+        int new_x = x + move.second;
+        if (-1<new_y && new_y<8 && -1<new_x && new_x<8) {
+            if ((player==-2 && boardc[new_y][new_x]>=0) || (player==2 && boardc[new_y][new_x]<=0)) {
+                childrenL.push_back({new_y, new_x});
+            }
+        }
+    }
+    //
+    if (!childrenL.empty()) {
+        int chosen_index = generate_random_int(0, childrenL.size()-1);
+        int new_y = childrenL[chosen_index].first;
+        int new_x = childrenL[chosen_index].second;
+        boardc[y][x] = 0;
+        boardc[new_y][new_x] = player;
+        return boardc;
+    }
+    else {std::vector<std::vector<int>> empty_vector; return empty_vector;}
+}
+
 std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<int>> position, int playerk) {
     std::vector<std::vector<int>> boardcopy = position;
-    // Convert 9 and -9 to 1 and -1
+    //9 and -9 to 1 and -1
     if (playerk==6) {
         for (int y=0; y<8; ++y) {
             for (int x=0; x<8; ++x) {
