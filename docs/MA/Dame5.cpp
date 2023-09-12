@@ -1928,8 +1928,8 @@ public:
 
         while (true) {
             //-----------------------------------------
-            HumanPlayer player_1(1);
-            MinimaxPlayer player_2(-1, this->board);
+            MCTSPlayer player_1(1, this->board);
+            MCTSPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             print_board(this->board);
@@ -1992,3 +1992,4 @@ int main() {
 
 //sort?
 //eval nicht schlagen
+//MCTS geht nicht!!!

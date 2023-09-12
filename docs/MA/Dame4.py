@@ -751,8 +751,8 @@ class Dame():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(HumanPlayer(1))
-        self.players.append(MinimaxPlayer(-1))
+        self.players.append(MCTSPlayer(1))
+        self.players.append(MCTSPlayer(-1))
         #
         current=0
         while True:
@@ -1481,7 +1481,7 @@ class MCTSPlayer(Player):
         self.counter=0
         self.numberofiterations=0
         #-----
-        self.maxtime=3
+        self.maxtime=1
         self.c=math.sqrt(2)
         self.depth=2
         self.numberofsimulations=30

@@ -1588,3 +1588,6 @@ int main() {
 //wieso deepc?
 //wieso board in mcts?
 //MCTS simulate: wieso if (!values.empty())?
+
+
+//MCTS geht nicht!!
