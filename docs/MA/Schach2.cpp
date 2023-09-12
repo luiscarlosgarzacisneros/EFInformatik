@@ -582,3 +582,174 @@ std::vector<std::vector<int>> other_K_matrix = matrix_minus(K_matrix);
 std::vector<std::vector<int>> other_k_matrix = matrix_minus(k_matrix);
 
 //
+
+int evaluate_position(const std::vector<std::vector<int>>& pos, int playerk) {
+    int val = 0;
+    if (playerk==6) {
+        for (int p=0; p<8; ++p) {
+            for (int o=0; o<8; ++o) {
+                if (pos[p][o]==0) {;}
+                else if (pos[p][o]==-1 || pos[p][o]==-9) {
+                    val += -100;
+                    val += other_B_matrix[p][o];
+                    // Pawn structure
+                    if (p+1<=7 && o+1<=7) {
+                        if (pos[p+1][o+1]==-1 || pos[p+1][o+1]==-9) {val += -1;}
+                    }
+                    if (p-1>=0 && o-1>=0) {
+                        if (pos[p-1][o-1]==-1 || pos[p-1][o-1]==-9) {val += -1;}
+                    }
+                    if (p+1<=7 && o-1>=0) {
+                        if (pos[p+1][o-1]==-1 || pos[p+1][o-1]==-9) {val += -1;}
+                    }
+                    if (p-1>=0 && o+1<=7) {
+                        if (pos[p-1][o+1]==-1 || pos[p-1][o+1]==-9) {val += -1;}
+                    }
+                }
+                else if (pos[p][o]==1 || pos[p][o]==9) {
+                    val += 100;
+                    val += b_matrix[p][o];
+                    // Pawn structure
+                    if (p+1<=7 && o+1<=7) {
+                        if (pos[p+1][o+1]==1 || pos[p+1][o+1]==9) {val += 1;}
+                    }
+                    if (p-1>=0 && o-1>=0) {
+                        if (pos[p-1][o-1]==1 || pos[p-1][o-1]==9) {val += 1;}
+                    }
+                    if (p+1<=7 && o-1>=0) {
+                        if (pos[p+1][o-1]==1 || pos[p+1][o-1]==9) {val += 1;}
+                    }
+                    if (p-1>=0 && o+1<=7) {
+                        if (pos[p-1][o+1]==1 || pos[p-1][o+1]==9) {val += 1;}
+                    }
+                }
+                else if (pos[p][o]==-2) {
+                    val += -300;
+                    val += other_Ll_matrix[p][o];
+                }
+                else if (pos[p][o]==-3) {
+                    val += -300;
+                    val += other_Xx_matrix[o][p];
+                }
+                else if (pos[p][o]==-4 || pos[p][o]==-7) {
+                    val += -500;
+                    val += other_Tt_matrix[p][o];
+                }
+                else if (pos[p][o]==2) {
+                    val += 300;
+                    val += Ll_matrix[p][o];
+                }
+                else if (pos[p][o]==3) {
+                    val += 300;
+                    val += Xx_matrix[o][p];
+                }
+                else if (pos[p][o]==4 || pos[p][o]==7) {
+                    val += 500;
+                    val += Tt_matrix[p][o];
+                }
+                else if (pos[p][o]==-5) {
+                    val += -900;
+                    val += other_Qq_matrix[p][o];
+                }
+                else if (pos[p][o]==-6 || pos[p][o]==-8) {
+                    val += -100000;
+                    val += other_K_matrix[p][o];
+                }
+                else if (pos[p][o]==5) {
+                    val += 900;
+                    val += Qq_matrix[p][o];
+                }
+                else if (pos[p][o]==6 || pos[p][o]==8) {
+                    val += 100000;
+                    val += k_matrix[p][o];
+                }
+            }
+        }
+    }
+    else if (playerk==-6) {
+        for (int p=0; p<8; ++p) {
+            for (int o=0; o<8; ++o) {
+                if (pos[p][o]==0) {;}
+                else if (pos[p][o]==-1 || pos[p][o]==-9) {
+                    val += 100;
+                    val += B_matrix[p][o];
+                    // Pawn structure
+                    if (p+1<=7 && o+1<=7) {
+                        if (pos[p+1][o+1]==-1 || pos[p+1][o+1]==-9) {val += 1;}
+                    }
+                    if (p-1>=0 && o-1>=0) {
+                        if (pos[p-1][o-1]==-1 || pos[p-1][o-1]==-9) {val += 1;}
+                    }
+                    if (p+1<=7 && o-1>=0) {
+                        if (pos[p+1][o-1]==-1 || pos[p+1][o-1]==-9) {val += 1;}
+                    }
+                    if (p-1>=0 && o+1<=7) {
+                        if (pos[p-1][o+1]==-1 || pos[p-1][o+1]==-9) {val += 1;}
+                    }
+                }
+                else if (pos[p][o]==1 || pos[p][o]==9) {
+                    val += -100;
+                    val += other_b_matrix[p][o];
+                    // Pawn structure
+                    if (p+1<=7 && o+1<=7) {
+                        if (pos[p+1][o+1]==1 || pos[p+1][o+1]==9) {val += -1;}
+                    }
+                    if (p-1>=0 && o-1>=0) {
+                        if (pos[p-1][o-1]==1 || pos[p-1][o-1]==9) {val += -1;}
+                    }
+                    if (p+1<=7 && o-1>=0) {
+                        if (pos[p+1][o-1]==1 || pos[p+1][o-1]==9) {val += -1;}
+                    }
+                    if (p-1>=0 && o+1<=7) {
+                        if (pos[p-1][o+1]==1 || pos[p-1][o+1]==9) {val += -1;}
+                    }
+                }
+                else if (pos[p][o]==-2) {
+                    val += 300;
+                    val += Ll_matrix[p][o];
+                }
+                else if (pos[p][o]==-3) {
+                    val += 300;
+                    val += Xx_matrix[p][o];
+                }
+                else if (pos[p][o]==-4 || pos[p][o]==-7) {
+                    val += 500;
+                    val += Tt_matrix[p][o];
+                }
+                else if (pos[p][o]==2) {
+                    val += -300;
+                    val += other_Ll_matrix[p][o];
+                }
+                else if (pos[p][o]==3) {
+                    val += -300;
+                    val += other_Xx_matrix[p][o];
+                }
+                else if (pos[p][o]==4 || pos[p][o]==7) {
+                    val += -500;
+                    val += other_Tt_matrix[p][o];
+                }
+                else if (pos[p][o]==-5) {
+                    val += 900;
+                    val += other_Qq_matrix[p][o];
+                }
+                else if (pos[p][o]==-6 || pos[p][o]==-8) {
+                    val += 100000;
+                    val += other_K_matrix[p][o];
+                }
+                else if (pos[p][o]==5) {
+                    val += -900;
+                    val += Qq_matrix[p][o];
+                }
+                else if (pos[p][o]==6 || pos[p][o]==8) {
+                    val += -100000;
+                    val += other_k_matrix[p][o];
+                }
+            }
+        }
+    }
+    return val;
+}
+
+//
+
+
