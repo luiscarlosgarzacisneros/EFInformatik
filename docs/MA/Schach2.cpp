@@ -1105,4 +1105,471 @@ int evaluate_position(const std::vector<std::vector<int>>& pos, int playerk) {
 
 //
 
+//HumanPlayer
 
+//
+
+int minimax_counter=0;
+
+class MinimaxNode {
+public:
+    MinimaxNode() : value(0), value_not_none(false), children(), board(), player_am_zug(0), token(0), depth(0), expanded(false) {}
+
+    int value;
+    bool value_not_none;
+    std::vector<MinimaxNode> children;
+    std::vector<std::vector<int>> board;
+    int player_am_zug;
+    int token;
+    int depth;
+    bool expanded;
+
+    std::vector<MinimaxNode> expand_node() {
+        std::vector<MinimaxNode> new_children;
+        std::vector<std::vector<std::vector<int>>> list_of_positions = generate_children(this->board, this->player_am_zug);
+        for (const std::vector<std::vector<int>>& board_position : list_of_positions) {
+            MinimaxNode child;
+            child.board = board_position;
+            child.player_am_zug = -this->player_am_zug;
+            child.token = this->token;
+            child.depth = this->depth + 1;
+            child.value_not_none = false;
+            child.value=0;
+            child.children;
+            new_children.push_back(child);
+
+        }
+        return new_children;
+    }
+
+    int minimax(int alpha, int beta, bool max_player, const int max_depth) {
+        //
+        minimax_counter+=1;
+        //
+        if (this->depth==max_depth || verloren(this->board,6) || verloren(this->board,-6)) {
+            this->value = evaluate_position(this->board, this->token);
+            this->value_not_none=true;
+            return this->value;
+        }
+        //
+        if (!this->expanded) {this->children=this->expand_node(); this->expanded = true;}
+        //
+        if (max_player) {
+            int max_value=-1000000;
+            for (MinimaxNode& child : this->children) {
+                int eval=child.minimax(alpha,beta,false,max_depth);
+                if (eval>max_value) {max_value=eval;}
+                //pruning
+                if (eval>alpha) {alpha=eval;}
+                if (beta<=alpha) {break;}
+            }
+            this->value=max_value;
+            return max_value;
+        }
+        else if (!max_player) {
+            int min_value=1000000;
+            for (MinimaxNode& child : this->children) {
+                int eval=child.minimax(alpha,beta,true,max_depth);
+                if (eval<min_value) {min_value=eval;}
+                //pruning
+                if (eval<beta) {beta=eval;}
+                if (beta<=alpha) {break;}
+            }
+            this->value=min_value;
+            return min_value;
+        }
+
+    }
+
+    void sort(bool max_player) {
+        if (this->expanded) {
+            //
+            std::vector<MinimaxNode> not_none_children;
+            std::list<MinimaxNode> none_children;
+            std::vector<MinimaxNode> sorted_children;
+            //
+            for (const MinimaxNode& child : this->children) {
+                if (!child.value_not_none) {none_children.push_back(child);}
+                else if (child.value_not_none) {not_none_children.push_back(child);}
+            }
+            //
+            if (max_player) {
+                std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode& a, const MinimaxNode& b) {return a.value > b.value;});
+                //
+                sorted_children.insert(sorted_children.end(), not_none_children.begin(), not_none_children.end());
+                sorted_children.insert(sorted_children.end(), none_children.begin(), none_children.end());
+                this->children=sorted_children;
+                //
+                for (MinimaxNode& child : not_none_children) {child.sort(false);}
+            }
+            else if (!max_player) {
+                std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode& a, const MinimaxNode& b) {return a.value < b.value;});
+                //
+                sorted_children.insert(sorted_children.end(), not_none_children.begin(), not_none_children.end());
+                sorted_children.insert(sorted_children.end(), none_children.begin(), none_children.end());
+                this->children=sorted_children;
+                //
+                for (MinimaxNode& child : not_none_children) {child.sort(true);}
+            }
+        }
+    }
+
+};
+
+class MinimaxPlayer {
+public:
+    MinimaxPlayer(int token, std::vector<std::vector<int>> board) : token(token), board(board) {
+        root_node.board = board;
+        root_node.player_am_zug = token;
+        root_node.token=token;
+        root_node.value_not_none = false;
+        root_node.value = 0;
+        root_node.depth = 0;
+        root_node.children = root_node.expand_node();
+        root_node.expanded=true;
+        //
+        minimax_counter=0;
+    }
+    MinimaxNode root_node;
+    int token;
+    std::vector<std::vector<int>> board;
+    int max_time=1;
+    int max_depth=10;
+    int starting_depth=1;
+
+    std::vector<std::vector<int>> minimaxer(const int depth, const std::chrono::duration<double> vergangene_zeit) {
+        auto start = std::chrono::high_resolution_clock::now();
+        //
+        std::vector<int> values;
+        std::vector<MinimaxNode> best_moves;
+        MinimaxNode best_move;
+        int best_value = -1000000;
+        std::vector<MinimaxNode>& root_node_children=root_node.children;
+        std::vector<std::vector<int>> return_board;
+        //
+        for (MinimaxNode& child : root_node_children){
+            int eval;
+            eval=child.minimax(-1000000,1000000,false, depth);
+            child.value=eval;
+            std::cout<<"a ";//child wurde fertig berechnet
+            //
+            auto now = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
+            if (vergangene_zeit2.count() >= max_time) {std::cout<<" NICHT FERTIG"; break;}
+        }
+        //
+        for (MinimaxNode& child : root_node_children) {values.push_back(child.value);}
+        for (int v : values) {if (v > best_value) {best_value = v;}}
+        for (MinimaxNode& child : root_node_children) {if (child.value==best_value) {best_moves.push_back(child);}}
+        //
+        //output---------
+        std::cout << std::endl;
+        std::cout << best_value << std::endl;
+        std::cout<<"COUNTER: "; std::cout<<minimax_counter<<std::endl;
+        //---------------
+        best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
+        return_board=deepcopy(best_move.board);
+        return return_board;
+
+    }
+
+    std::vector<std::vector<int>> minimaxerer(const std::vector<std::vector<int>> board_0) {
+        auto start = std::chrono::high_resolution_clock::now();
+        //
+        int depth=this->starting_depth;
+        std::vector<std::vector<int>> move;
+        while (true) {
+            //break
+            auto now = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> vergangene_zeit = now - start;
+            if (vergangene_zeit.count() >= max_time) {break;}
+            else if (depth>max_depth) {break;}
+            //calculate move
+            std::cout<<"---DEPTH: ";
+            std::cout<<depth<<std::endl;
+            //
+            std::vector<std::vector<int>> new_move=minimaxer(depth,vergangene_zeit);
+            //
+            for (MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
+            std::cout<<std::endl;
+            //sort+depth
+            //this->root_node.sort(true);
+            move=new_move;
+            //
+            for (MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
+            std::cout<<std::endl;
+            if (depth>max_depth) {break;}
+            depth+=1;
+        }
+        return move;
+    }
+
+    std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
+        return minimaxerer(board);
+    }
+};
+
+//
+
+double c=std::sqrt(2);
+int number_of_simulations=30;
+int depth=2;
+
+int mcts_counter=0;
+
+class MCTSNode {
+public:
+    MCTSNode() : value(0), children(),parent(nullptr), visits(0), board(), player_am_zug(0), token(0), expanded(false) {}
+
+    int value;
+    std::vector<MCTSNode> children;
+    MCTSNode* parent;
+    int visits;
+    std::vector<std::vector<int>> board;
+    int player_am_zug;
+    int token;
+    bool expanded;
+
+    double calculate_ubc() {
+        MCTSNode* par = this->parent;
+        if (this->visits == 0) {return std::numeric_limits<double>::infinity();}
+        else {
+            double ubc = (static_cast<double>(this->value) / this->visits) +c * (std::sqrt(std::log(static_cast<double>(par->visits) / this->visits)));
+            return ubc;
+        }
+    }
+
+    std::vector<MCTSNode> expand_node() {
+        std::vector<MCTSNode> new_children;
+        std::vector<std::vector<std::vector<int>>> list_of_positions = generate_children(this->board, this->player_am_zug);
+        for (const std::vector<std::vector<int>>& board_position : list_of_positions) {
+            MCTSNode child;
+            child.value=0;
+            child.children;
+            child.parent=this;
+            child.visits=0;
+            child.board=board_position;
+            child.player_am_zug=-this->player_am_zug;
+            child.token=this->token;
+            child.expanded=false;
+            //
+            new_children.push_back(child);
+        }
+        return new_children;//vielleicht kein return sondern this->children=new_children?
+    }
+
+    MCTSNode* select_leaf_node() {
+        double best_value = -std::numeric_limits<double>::infinity();
+        MCTSNode* selected_node = nullptr;
+        for (MCTSNode& child : this->children) {
+            double ucb_of_child = child.calculate_ubc();
+            if (ucb_of_child > best_value) {
+                best_value = ucb_of_child;
+                selected_node = &child;
+            }
+        }
+        if (!selected_node->expanded) {return selected_node;}
+        else {return selected_node->select_leaf_node();}
+    }
+
+    void backpropagate(double new_value, int number_of_simulations) {
+        this->value += new_value;
+        this->visits += number_of_simulations;
+        //
+        if (this->parent != nullptr) {
+            parent->backpropagate(new_value, number_of_simulations);
+        }
+    }
+
+    double simulate() {
+        double value = 0.0;
+        std::vector<double> values;
+        //
+        for (int j = 0; j < number_of_simulations; ++j) {
+            std::vector<std::vector<int>> pos = this->board;
+            int player = this->player_am_zug;
+            for (int i = 0; i < depth; ++i) {
+                std::vector<std::vector<int>> next_pos = generate_one_random_child(pos, player);
+                if (next_pos.empty()) {break;}
+                pos = next_pos;
+                if (player== -1) {player= 1;}
+                else if (player== 1) {player= -1;}
+            }
+            values.push_back(evaluate_position(pos, this->token));
+        }
+        for (double val : values) {value += val;}
+        if (!values.empty()) {value /= values.size();}
+        //
+        return value;
+    }
+
+};
+
+class MCTSPlayer {
+public:
+    MCTSPlayer(int token, std::vector<std::vector<int>> board) : token(token), board(board) {
+        root_node.value=0;
+        root_node.children;
+        root_node.parent=nullptr;
+        root_node.visits=0;
+        root_node.board=board;
+        root_node.player_am_zug=token;
+        root_node.token=token;
+        root_node.expanded=false;
+    }
+    MCTSNode root_node;
+    int token;
+    std::vector<std::vector<int>> board;
+    int max_time=1;
+
+    void mcts(std::vector<std::vector<int>>& board) {
+        root_node.children=root_node.expand_node();
+        std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+        //
+        while (true) {
+            mcts_counter += 1;
+            MCTSNode* selected_node = root_node.select_leaf_node();
+            if (selected_node->children.empty()) {
+                double new_score = selected_node->simulate();
+                selected_node->backpropagate(new_score, number_of_simulations);
+            }
+            else {selected_node->expand_node();}
+            //
+            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+            double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
+            if (elapsed_seconds > this->max_time) {
+                break;
+            }
+        }
+}
+
+    std::vector<std::vector<int>> mctser(std::vector<std::vector<int>>& board) {
+        mcts_counter = 0;
+        //
+        mcts(board);
+        //
+        std::cout <<"COUNTER: ";
+        std::cout << mcts_counter << std::endl;
+        //
+        std::vector<std::vector<int>> best_move;
+        int highest_number_of_visits = -1;
+        //
+        for (MCTSNode& root_node_child : root_node.children) {
+            if (root_node_child.visits > highest_number_of_visits) {
+                best_move = root_node_child.board;
+                highest_number_of_visits = root_node_child.visits;
+            }
+        }
+        return best_move;
+    }
+
+    std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
+        return mctser(board);
+    }
+
+};
+
+//
+
+int max_turns=70;
+
+class Schach {
+public:
+    Schach() : board(), turn(1) {
+        board={
+            {-7, -2, -3, -5, -8, -3, -2, -7},
+            {-1, -1, -1, -1, -1, -1, -1, -1},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {1, 1, 1, 1, 1, 1, 1, 1},
+            {7, 2, 3, 5, 8, 3, 2, 7}
+        };
+    }
+
+    int play() {
+        int current = 1;
+
+        while (true) {
+            //-----------------------------------------
+            MinimaxPlayer player_1(6, this->board);
+            MinimaxPlayer player_2(-6, this->board);
+            //-----------------------------------------
+            std::cout<<this->turn<<std::endl;
+            print_board(this->board);
+            //
+            std::vector<std::vector<int>> new_board;
+            if (current==1) {
+                std::cout <<"k ist am Zug"<<std::endl;
+                std::vector<std::vector<int>> board_copy = deepcopy(this->board);
+                std::vector<std::vector<int>> new_board = player_1.get_move(board_copy);
+            }
+            else if (current==2) {
+                std::cout<<"K ist am Zug"<<std::endl;
+                std::vector<std::vector<int>> board_copy = deepcopy(this->board);
+                std::vector<std::vector<int>> new_board = player_2.get_move(board_copy);
+            }
+            if (!new_board.empty()) {this->board=new_board;}
+            else {
+                bool king_captured=false;
+                int other;
+                int this_players_token;
+                if (current==1) {int other=-6;}
+                else {int other=6;}
+                if (current==1) {this_players_token=6;}
+                else {this_players_token=-6;}
+                for (std::vector<std::vector<int>>& child : generate_children(this->board, other)) {
+                    if (verloren(child, this_players_token)) {king_captured=true;}
+                }
+                if (!king_captured) {print_board(this->board); std::cout<<"UNENTSCHIEDEN"<<std::endl; return 0;}
+                else {
+                    if (this_players_token==6) {print_board(this->board); std::cout<<"K HAT GEWONNEN"<<std::endl; return -1;}
+                    else {print_board(this->board); std::cout<<"k HAT GEWONNEN"<<std::endl; return 1;}
+                }
+            }
+            //
+            if (this->turn==max_turns) {print_board(this->board); std::cout<<"UNENTSCHIEDEN"<<std::endl; return 0;}
+            //
+            if (current==1) {current = 2;}
+            else {current = 1;}
+            this->turn += 1;
+        }
+    }
+
+private:
+    std::vector<std::vector<int>> board;
+    int turn;
+};
+
+//
+
+void spielen(int z) {
+    std::cout<<"NEUES SPIEL"<<std::endl;
+    int k_wins=0;
+    int K_wins=0;
+    int unentschieden=0;
+    //
+    for (int i=0; i<z; ++i) {
+        Schach game;
+        int r = game.play();
+        if (r==1) {k_wins+=1;}
+        else if (r== -1) {K_wins+=1;}
+        else if (r==0) {unentschieden+= 1;}
+        std::cout<<"k: "<<k_wins<<std::endl;
+        std::cout<<"K: "<<K_wins<<std::endl;
+        std::cout<<"-: "<<unentschieden<<std::endl;
+    }
+    std::cout<<"FERTIG"<<std::endl;
+}
+
+//
+
+int main() {
+    srand(time(0)); //seed
+    spielen(3);
+}
+
+//
+
+//sort?
