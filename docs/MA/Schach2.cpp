@@ -1105,4 +1105,24 @@ int evaluate_position(const std::vector<std::vector<int>>& pos, int playerk) {
 
 //
 
+std::vector<std::vector<int>> board={
+            {-7, -2, -3, -5, -8, -3, -2, -7},
+            {-1, -1, -1, -1, -1, -1, -1, -1},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {1, 1, 1, 1, 1, 1, 1, 1},
+            {7, 2, 3, 5, 8, 3, 2, 7}
+};
+
+main() {
+    for (int i=0; i<9; ++i) {
+        std::cout<<"jhk"<<std::endl;
+        std::vector<std::vector<int>> child=generate_one_random_child(board, 6);
+        print_board(child);
+        std::cout<<"jhk"<<std::endl;
+
+    }
+}
 
