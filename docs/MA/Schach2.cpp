@@ -1428,12 +1428,21 @@ public:
         //
         while (true) {
             mcts_counter += 1;
+            //std::cout<<"beginn"<<std::endl;
             MCTSNode* selected_node = root_node.select_leaf_node();
+            //std::cout<<"selectleafnode"<<std::endl;
             if (selected_node->children.empty()) {
+                //std::cout<<"selectednodenochildren"<<std::endl;
                 double new_score = selected_node->simulate();
+                //std::cout<<"simulate"<<std::endl;
                 selected_node->backpropagate(new_score, number_of_simulations);
+                //std::cout<<"backpropagate"<<std::endl;
             }
-            else {selected_node->expand_node();}
+            else {
+                //std::cout<<"selectednodeyeschildren"<<std::endl; 
+                selected_node->expand_node(); 
+                //std::cout<<"expandnode"<<std::endl;
+                }
             //
             std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
             double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
@@ -1441,7 +1450,7 @@ public:
                 break;
             }
         }
-}
+    }
 
     std::vector<std::vector<int>> mctser(std::vector<std::vector<int>>& board) {
         mcts_counter = 0;
@@ -1469,6 +1478,7 @@ public:
     }
 
 };
+
 
 //
 
