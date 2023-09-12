@@ -484,6 +484,82 @@ std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::ve
 
 //
 
+std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<int>> position, int playerk) {
+    std::vector<std::vector<int>> boardcopy = position;
+    // Convert 9 and -9 to 1 and -1
+    if (playerk==6) {
+        for (int y=0; y<8; ++y) {
+            for (int x=0; x<8; ++x) {
+                if (boardcopy[y][x]==9) {boardcopy[y][x]=1;}
+            }
+        }
+    }
+    else if (playerk==-6) {
+        for (int y=0; y<8; ++y) {
+            for (int x=0; x<8; ++x) {
+                if (boardcopy[y][x]==-9) {boardcopy[y][x]=-1;}
+            }
+        }
+    }
+    //
+    std::vector<int> piecesy;
+    std::vector<int> piecesx;
+    if (playerk==6) {
+        for (int y=0; y<8; ++y) {
+            for (int x=0; x<8; ++x) {
+                if (boardcopy[y][x]>0) {
+                    piecesy.push_back(y);
+                    piecesx.push_back(x);
+                }
+            }
+        }
+    }
+    else if (playerk==-6) {
+        for (int y=0; y<8; ++y) {
+            for (int x=0; x<8; ++x) {
+                if (boardcopy[y][x]<0) {
+                    piecesy.push_back(y);
+                    piecesx.push_back(x);
+                }
+            }
+        }
+    }
+    //
+    if (piecesx.empty()) {return std::vector<std::vector<int>>();}
+    //
+    while (true) {
+        int n = generate_random_int(0, piecesx.size()-1);
+        int y = piecesy[n];
+        int x = piecesx[n];
+        std::vector<std::vector<int>> child;
+        //
+        if (boardcopy[y][x]==1 || boardcopy[y][x]==-1) {
+            child = gorcBb(y, x, boardcopy, boardcopy[y][x]);
+        }
+        else if (boardcopy[y][x]==2 || boardcopy[y][x]==-2) {
+            child = gorcLl(y, x, boardcopy, boardcopy[y][x]);
+        }
+        else if (boardcopy[y][x]==3 || boardcopy[y][x]==-3) {
+            child = gorcTtXxQq(y, x, boardcopy, boardcopy[y][x], {{1, 1}, {-1, 1}, {1, -1}, {-1, -1}});
+        }
+        else if (boardcopy[y][x]==4 || boardcopy[y][x]==-4 || boardcopy[y][x]==-7 || boardcopy[y][x]==7) {
+            child = gorcTtXxQq(y, x, boardcopy, boardcopy[y][x], {{1, 0}, {-1, 0}, {0, 1}, {0, -1}});
+        }
+        else if (boardcopy[y][x]==5 || boardcopy[y][x]==-5) {
+            child = gorcTtXxQq(y, x, boardcopy, boardcopy[y][x], {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}});
+        }
+        else if (boardcopy[y][x]==6 || boardcopy[y][x]==-6 || boardcopy[y][x]==-8 || boardcopy[y][x]==8) {
+            child = gorcKk(y, x, boardcopy, boardcopy[y][x]);
+        }
+        //
+        if (!child.empty()) {
+            return child;
+        }
+    }
+}
+
+//
+
 std::vector<std::vector<int>> B_matrix = {
     { 0,  0,  0,  0,  0,  0,  0,  0},
     { 1,  1,  1,  1,  1,  1,  1,  1},
