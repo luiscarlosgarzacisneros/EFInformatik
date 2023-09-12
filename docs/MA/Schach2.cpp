@@ -1312,8 +1312,8 @@ public:
 //
 
 double c=std::sqrt(2);
-int number_of_simulations=30;
-int depth=2;
+int number_of_simulations=1;
+int depth=1;
 
 int mcts_counter=0;
 
@@ -1587,3 +1587,4 @@ int main() {
 //in minimaxerer: why board_0?
 //wieso deepc?
 //wieso board in mcts?
+//MCTS simulate: wieso if (!values.empty())?
