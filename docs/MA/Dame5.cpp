@@ -1957,7 +1957,6 @@ public:
         }
     }
 
-
 private:
     std::vector<std::vector<int>> board;
     int turn;
