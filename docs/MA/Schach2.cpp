@@ -1234,7 +1234,7 @@ public:
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time=3;
+    int max_time=10;
     int max_depth=10;
     int starting_depth=1;
 
@@ -1305,7 +1305,8 @@ public:
     }
 
     std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
-        return minimaxerer(board);
+        std::vector<std::vector<int>> move=minimaxerer(board);
+        return move;
     }
 };
 
@@ -1503,14 +1504,16 @@ public:
             if (current==1) {
                 std::cout <<"k ist am Zug"<<std::endl;
                 std::vector<std::vector<int>> board_copy = deepcopy(this->board);
-                std::vector<std::vector<int>> new_board = player_1.get_move(board_copy);
+                new_board = player_1.get_move(board_copy);
+                if (!(new_board.empty())) {std::cout<<"OK"<<std::endl;}
             }
             else if (current==2) {
                 std::cout<<"K ist am Zug"<<std::endl;
                 std::vector<std::vector<int>> board_copy = deepcopy(this->board);
-                std::vector<std::vector<int>> new_board = player_2.get_move(board_copy);
+                new_board = player_2.get_move(board_copy);
+                if (!(new_board.empty())) {std::cout<<"OK"<<std::endl;}
             }
-            if (!new_board.empty()) {this->board=new_board;}
+            if (!(new_board.empty())) {this->board=new_board;}
             else {
                 bool king_captured=false;
                 int other;
@@ -1574,3 +1577,4 @@ int main() {
 
 //sort?
 //in minimaxerer: why board_0?
+//wieso deepc?
