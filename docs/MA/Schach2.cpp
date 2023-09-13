@@ -1111,7 +1111,212 @@ int evaluate_position(const std::vector<std::vector<int>>& pos, int playerk) {
 
 //
 
-//HumanPlayer
+class HumanPlayer {
+public:
+    HumanPlayer(int token) : token(token) {}
+    int token=token;
+
+    bool do_these_two_vectors_have_the_same_elements(const std::vector<std::vector<int>>& vector1, const std::vector<std::vector<int>>& vector2) {
+        for (size_t i=0; i<vector1.size(); ++i) {
+            for (size_t j=0; j<vector1[i].size(); ++j) {
+                if (vector1[i][j] != vector2[i][j]) {return false;}
+            }
+        }
+        return true;
+    }
+
+    std::vector<int> eingabe() {
+        try {
+            int vx, vy, zx, zy;
+            std::cout <<"von x: ";
+            std::cin>> vx;
+            std::cout <<"von y: ";
+            std::cin>> vy;
+            std::cout <<"zu x: ";
+            std::cin>> zx;
+            std::cout <<"zu y: ";
+            std::cin >> zy;
+            //
+            vx -= 1;
+            vy -= 1;
+            zx -= 1;
+            zy -= 1;
+            //
+            if (vy < 8 && vy > -1 && vx < 8 && vx > -1 && zy < 8 && zy > -1 && zx < 8 && zx > -1 && is_int(vx) && is_int(vy)&& is_int(zx)&& is_int(zy)) {
+                    return {vy, vx, zy, zx};
+            }
+            else {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "EINGABE NICHT KORREKT1" << std::endl;
+                return eingabe();
+            }
+        }
+        catch (...) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "EINGABE NICHT KORREKT1" << std::endl;
+            return eingabe();
+        }
+    }
+
+    std::vector<std::vector<int>> player(std::vector<std::vector<int>>& pos) {
+        int other_player = (this->token == 6) ? -6 : 6;
+        std::vector<std::vector<std::vector<int>>> legal_moves;
+        bool legal_move_exists = false;
+        std::vector<std::vector<std::vector<int>>> all_moves = generate_children(pos, this->token);
+        //
+        for (const auto& child_of_root : all_moves) {
+            bool king_is_killed = false;
+            for (const auto& child_of_child : generate_children(child_of_root, other_player)) {
+                if (verloren(child_of_child, this->token)) {
+                    king_is_killed = true;
+                    break;
+                }
+            }
+            if (!king_is_killed) {
+                legal_move_exists = true;
+                legal_moves.push_back(child_of_root);
+            }
+        }
+        //
+        if (!legal_move_exists) {
+            std::vector<std::vector<int>> empty_vector;
+            return empty_vector;
+        }
+        //
+        while (true) {
+            std::vector<std::vector<int>> boardcopy = pos;
+            std::vector<int> input_move = this->eingabe();
+            int vy = input_move[0];
+            int vx = input_move[1];
+            int zy = input_move[2];
+            int zx = input_move[3];
+
+            //update boardcopy
+            //1 & -1 to 5 & -5
+            for (int x=0; x<boardcopy[0].size(); ++x) {
+                if (boardcopy[0][x]==1) {boardcopy[0][x]=5;}
+            }
+            for (int x=0; x<boardcopy[7].size(); ++x) {
+                if (boardcopy[7][x]==-1) {boardcopy[7][x]=-5;}
+            }
+            //9 & -9weg
+            if (this->token==-6) {
+                for (int y=0; y<boardcopy.size(); ++y) {
+                    for (int x=0; x<boardcopy[y].size(); ++x) {
+                        if (boardcopy[y][x]==9) {boardcopy[y][x] = 1;}
+                    }
+                }
+            }
+            else if (this->token==6) {
+                for (int y=0; y<boardcopy.size(); ++y) {
+                    for (int x=0; x<boardcopy[y].size(); ++x) {
+                        if (boardcopy[y][x]==-9) {boardcopy[y][x] = -1;}
+                    }
+                }
+            }
+            //special moves
+            bool special = false;
+            //rochade
+            if (vy==7 && vx==4 && zy==7 && zx==2 && this->token==6 && boardcopy[vy][vx]==8) {
+                special = true;
+                boardcopy[7][2] = 6;
+                boardcopy[7][3] = 4;
+                boardcopy[7][0] = 0;
+                boardcopy[7][4] = 0;
+            }
+            if (vy==7 && vx==4 && zy==7 && zx==6 && this->token==6 && boardcopy[vy][vx]==8) {
+                special = true;
+                boardcopy[7][6] = 6;
+                boardcopy[7][5] = 4;
+                boardcopy[7][7] = 0;
+                boardcopy[7][4] = 0;
+            }
+            if (vy==0 && vx==4 && zy==0 && zx==2 && this->token==-6 && boardcopy[vy][vx]==-8) {
+                special = true;
+                boardcopy[0][2] = -6;
+                boardcopy[0][3] = -4;
+                boardcopy[0][0] = 0;
+                boardcopy[0][4] = 0;
+            }
+            if (vy==0 && vx==4 && zy==0 && zx==6 && this->token==-6 && boardcopy[vy][vx]==-8) {
+                special = true;
+                boardcopy[0][6] = -6;
+                boardcopy[0][5] = -4;
+                boardcopy[0][7] = 0;
+                boardcopy[0][4] = 0;
+            }
+            // Bb 2 nach vorne
+            if (boardcopy[vy][vx]==1 && vy==6 && boardcopy[zy][zx]==0 && boardcopy[vy-1][vx]==0 && vx==zx && zy==vy-2) {
+                special = true;
+                boardcopy[zy][zx] = 9;
+                boardcopy[vy][vx] = 0;
+            }
+            if (boardcopy[vy][vx]==-1 && vy==1 && boardcopy[zy][zx]==0 && boardcopy[vy+1][vx]==0 && vx==zx && zy==vy+2) {
+                special = true;
+                boardcopy[zy][zx] = -9;
+                boardcopy[vy][vx] = 0;
+            }
+            // En passant
+            if (boardcopy[vy][vx]==1 && zy==vy-1 && zx==vx-1 && boardcopy[zy][zx]==0) {
+                special = true;
+                boardcopy[vy][vx] = 0;
+                boardcopy[zy][zx] = 1;
+                boardcopy[vy][zx] = 0;
+            }
+            if (boardcopy[vy][vx]==1 && zy==vy-1 && zx==vx+1 && boardcopy[zy][zx]==0) {
+                special = true;
+                boardcopy[vy][vx] = 0;
+                boardcopy[zy][zx] = 1;
+                boardcopy[vy][zx] = 0;
+            }
+            if (boardcopy[vy][vx]==-1 && zy==vy+1 && zx==vx-1 && boardcopy[zy][zx]==0) {
+                special = true;
+                boardcopy[vy][vx] = 0;
+                boardcopy[zy][zx] = -1;
+                boardcopy[vy][zx] = 0;
+            }
+            if (boardcopy[vy][vx]==-1 && zy==vy+1 && zx==vx+1 && boardcopy[zy][zx]==0) {
+                special = true;
+                boardcopy[vy][vx] = 0;
+                boardcopy[zy][zx] = -1;
+                boardcopy[vy][zx] = 0;
+            }
+            //normal
+            if (!special) {
+                if (boardcopy[vy][vx]==7) {boardcopy[zy][zx] = 4;}
+                else if (boardcopy[vy][vx]==-7) {boardcopy[zy][zx] = -4;}
+                else if (boardcopy[vy][vx]==8) {boardcopy[zy][zx] = 6;}
+                else if (boardcopy[vy][vx]==-8) {boardcopy[zy][zx] = -6;}
+                else {boardcopy[zy][zx] = boardcopy[vy][vx];}
+                boardcopy[vy][vx] = 0;
+            }
+            //
+            bool move_legal = false;
+            for (const auto& legal_move : legal_moves) {
+                if (do_these_two_vectors_have_the_same_elements(boardcopy, legal_move)) {
+                    move_legal = true;
+                    break;
+                }
+            }
+            if (move_legal) {return boardcopy;}
+            else {
+                print_board(boardcopy);
+                std::cout << "legal_children" << std::endl;
+                for (const auto& s : legal_moves) {print_board(s);}
+                std::cout << "---------------------------------" << std::endl;
+                print_board(pos);
+                std::cout << "EINGABE NICHT KORREKT2" << std::endl;
+            }
+        }
+    }
+
+    std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
+        return player(board);
+    }
+
+};
 
 //
 
@@ -1521,12 +1726,12 @@ class Schach {
 public:
     Schach() : board(), turn(1) {
         board={
-            {-7, -2, -3, -5, 0, -3, -2, -7},
+            {-7, -2, -3, -5, -8, -3, -2, -7},
             {-1, -1, -1, -1, -1, -1, -1, -1},
-            {0,0,0,0,-8,0,0,0},
             {0,0,0,0,0,0,0,0},
-            {0,0,0,5,0,5,0,0},
-            {0,0,0,5,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
             {1, 1, 1, 1, 1, 1, 1, 1},
             {7, 2, 3, 5, 8, 3, 2, 7}
         };
@@ -1537,7 +1742,7 @@ public:
 
         while (true) {
             //-----------------------------------------
-            MinimaxPlayer player_1(6, this->board);
+            HumanPlayer player_1(6);
             MinimaxPlayer player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;

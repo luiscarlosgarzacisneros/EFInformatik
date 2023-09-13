@@ -44,15 +44,13 @@ public:
         for (int rank=7; rank>=0; --rank) {
             for (int file=0; file<8; ++file) {
                 int square = rank*8+file;
-                uint64_t mask = 1ULL<<square;
-                if (bitboard & mask) {std::cout<<"1 ";}
+                uint64_t m = 1ULL<<square;
+                if (bitboard & m) {std::cout<<"1 ";}
                 else {std::cout<<"0 ";}
             }
             std::cout << std::endl;
         }
     }
-
-
 
 
 };
