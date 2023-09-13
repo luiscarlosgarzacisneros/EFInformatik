@@ -827,7 +827,7 @@ std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<
             child = gorcTtXxQq(y, x, boardcopy, boardcopy[y][x], {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}});
         }
         else if (boardcopy[y][x]==6 || boardcopy[y][x]==-6 || boardcopy[y][x]==-8 || boardcopy[y][x]==8) {
-            child = gorcKk(y, x, boardcopy, boardcopy[y][x]);
+            child = gorcKk(y, x, boardcopy, boardcopy[y][x]);//problem hier
         }
         //
         if (!child.empty()) {
@@ -1332,7 +1332,9 @@ public:
 
     double calculate_ubc() {
         MCTSNode* par = this->parent;
-        if (this->visits == 0) {return std::numeric_limits<double>::infinity();}
+        if (this->visits == 0) {
+            return std::numeric_limits<double>::infinity();
+        }
         else {
             double ubc = (static_cast<double>(this->value) / this->visits) +c * (std::sqrt(std::log(static_cast<double>(par->visits) / this->visits)));
             return ubc;
@@ -1354,6 +1356,7 @@ public:
             child.expanded=false;
             //
             new_children.push_back(child);
+
         }
         return new_children;//vielleicht kein return sondern this->children=new_children?
     }
@@ -1361,6 +1364,7 @@ public:
     MCTSNode* select_leaf_node() {
         double best_value = -std::numeric_limits<double>::infinity();
         MCTSNode* selected_node = nullptr;
+
         for (MCTSNode& child : this->children) {
             double ucb_of_child = child.calculate_ubc();
             if (ucb_of_child > best_value) {
@@ -1368,6 +1372,7 @@ public:
                 selected_node = &child;
             }
         }
+
         if (!selected_node->expanded) {return selected_node;}
         else {return selected_node->select_leaf_node();}
     }
@@ -1398,7 +1403,7 @@ public:
             values.push_back(evaluate_position(pos, this->token));
         }
         for (double val : values) {value += val;}
-        if (!values.empty()) {value /= values.size();}
+        value /= values.size();
         //
         return value;
     }
@@ -1428,21 +1433,12 @@ public:
         //
         while (true) {
             mcts_counter += 1;
-            //std::cout<<"beginn"<<std::endl;
             MCTSNode* selected_node = root_node.select_leaf_node();
-            //std::cout<<"selectleafnode"<<std::endl;
             if (selected_node->children.empty()) {
-                //std::cout<<"selectednodenochildren"<<std::endl;
-                double new_score = selected_node->simulate();
-                //std::cout<<"simulate"<<std::endl;
+                double new_score = selected_node->simulate();//problem ist hier
                 selected_node->backpropagate(new_score, number_of_simulations);
-                //std::cout<<"backpropagate"<<std::endl;
             }
-            else {
-                //std::cout<<"selectednodeyeschildren"<<std::endl; 
-                selected_node->expand_node(); 
-                //std::cout<<"expandnode"<<std::endl;
-                }
+            else {selected_node->expand_node();}
             //
             std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
             double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
@@ -1450,7 +1446,7 @@ public:
                 break;
             }
         }
-    }
+}
 
     std::vector<std::vector<int>> mctser(std::vector<std::vector<int>>& board) {
         mcts_counter = 0;
@@ -1469,16 +1465,15 @@ public:
                 highest_number_of_visits = root_node_child.visits;
             }
         }
+
         return best_move;
     }
 
     std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
-        std::vector<std::vector<int>> move=mctser(board);
-        return move;
+        return mctser(board);
     }
 
 };
-
 
 //
 

@@ -542,7 +542,7 @@ void gorc_WM_schlagen(int y, int x, std::vector<std::vector<int>>& boardc, int p
                         delete_list_1.insert(delete_list_1.end(), delete_list.begin(), delete_list.end());
                         delete_list_1.push_back({y+i*dy, x+i*dx});
                         //
-                        gorc_WM_schlagen(y+(i+1)*dy, x+(i+1)*dx, boardc, player, delete_list);
+                        gorc_WM_schlagen(y+(i+1)*dy, x+(i+1)*dx, boardc, player, delete_list_1);
                         break;
                     }
                     else {break;}
@@ -687,7 +687,7 @@ std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<
         }
         else if (player==-1) {
             if (boardcopy[y][x]==-1) {child=gorc_XO(y, x, boardcopy, -1);}
-            else if (boardcopy[y][x]==-2) {child=gorc_WM(y, x, boardcopy, -2);}
+            else if (boardcopy[y][x]==-2) {child=gorc_WM(y, x, boardcopy, -2);}//problem hier
         }
         //
         if (!child.empty()) {break;}
@@ -1822,7 +1822,7 @@ public:
             int player = this->player_am_zug;
 
             for (int i = 0; i < depth; ++i) {
-                std::vector<std::vector<int>> next_pos = generate_one_random_child(pos, player);
+                std::vector<std::vector<int>> next_pos = generate_one_random_child(pos, player);//problem ist hier
                 if (next_pos.empty()) {break;}
                 pos = next_pos;
                 if (player== -1) {player= 1;}
@@ -1831,7 +1831,7 @@ public:
             values.push_back(evaluate_position(pos, this->token));
         }
         for (double val : values) {value += val;}
-        if (!values.empty()) {value /= values.size();}
+        value /= values.size();
         //
         return value;
     }
@@ -1914,8 +1914,8 @@ public:
             {0,-1,0,-1,0,-1,0,-1},
             {-1,0,-1,0,-1,0,-1,0},
             {0,-1,0,-1,0,-1,0,-1},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
+            {0,0,-2,0,0,0,-2,0},
+            {0,2,0,0,0,2,0,0},
             {1,0,1,0,1,0,1,0},
             {0,1,0,1,0,1,0,1},
             {1,0,1,0,1,0,1,0},
