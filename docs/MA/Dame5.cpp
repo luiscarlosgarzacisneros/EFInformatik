@@ -1822,7 +1822,7 @@ public:
             int player = this->player_am_zug;
 
             for (int i = 0; i < depth; ++i) {
-                std::vector<std::vector<int>> next_pos = generate_one_random_child(pos, player);//problem ist hier
+                std::vector<std::vector<int>> next_pos = generate_one_random_child(pos, player);
                 if (next_pos.empty()) {break;}
                 pos = next_pos;
                 if (player== -1) {player= 1;}
@@ -1893,7 +1893,6 @@ public:
                 highest_number_of_visits = root_node_child.visits;
             }
         }
-
         return best_move;
     }
 
@@ -1992,4 +1991,4 @@ int main() {
 
 //sort?
 //eval nicht schlagen
-//MCTS geht nicht!!!
+

@@ -709,6 +709,10 @@ def gorcKk(y,x,boardc,player):
             move=moves[n]
             dy=move[0]
             dx=move[1]
+            if player==8:
+                player=6
+            elif player==-8:
+                player=-6
             boardc[y+dy][x+dx]=player
             return boardc
         #rochade
@@ -1457,7 +1461,7 @@ class MCTSPlayer(Player):
         self.counter=0
         self.numberofiterations=0
         #-----
-        self.maxtime=5
+        self.maxtime=1
         self.c=math.sqrt(2)
         self.depth=2
         self.numberofsimulations=30

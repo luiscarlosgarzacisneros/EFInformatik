@@ -654,8 +654,9 @@ std::vector<std::vector<int>> gorcKk(int y, int x, std::vector<std::vector<int>>
     std::vector<int> childrenK;
     std::vector<std::pair<int, int>> moves = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}, {0, 1}, {0, -1}, {1, 0}, {-1, 0}};
     //
+    std::pair<int, int> move;
     for (int i=0; i<8; ++i) {
-        std::pair<int, int> move=moves[i];
+        move=moves[i];
         int dy = move.first;
         int dx = move.second;
         int new_y = y + dy;
@@ -723,10 +724,13 @@ std::vector<std::vector<int>> gorcKk(int y, int x, std::vector<std::vector<int>>
     if (childrenK.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
     else {
         int n = generate_random_int(0, childrenK.size()-1);
-        if (n<8) {
+        if (n<8) {    
             boardc[y][x] = 0;
-            int dy = moves[n].first;
-            int dx = moves[n].second;
+            std::pair<int,int> move=moves[childrenK[n]];
+            int dy = move.first;
+            int dx = move.second;
+            if (player==8) {player=6;}
+            else if (player==-8) {player=-6;}
             boardc[y+dy][x+dx] = player;
             return boardc;
         }
@@ -759,7 +763,6 @@ std::vector<std::vector<int>> gorcKk(int y, int x, std::vector<std::vector<int>>
             return boardc;
         }
     }
-    return boardc;
 }
 
 std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<int>> position, int playerk) {
@@ -1435,7 +1438,7 @@ public:
             mcts_counter += 1;
             MCTSNode* selected_node = root_node.select_leaf_node();
             if (selected_node->children.empty()) {
-                double new_score = selected_node->simulate();//problem ist hier
+                double new_score = selected_node->simulate();
                 selected_node->backpropagate(new_score, number_of_simulations);
             }
             else {selected_node->expand_node();}
@@ -1465,7 +1468,6 @@ public:
                 highest_number_of_visits = root_node_child.visits;
             }
         }
-
         return best_move;
     }
 
