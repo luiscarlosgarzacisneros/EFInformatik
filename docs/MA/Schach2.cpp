@@ -610,7 +610,8 @@ std::vector<std::vector<int>> gorcBb(int y, int x, std::vector<std::vector<int>>
     else if (player==1) {
         if (childrenB.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
         else {
-            int n = rand() % childrenB.size() + 1;
+            int r = generate_random_int(0, childrenB.size()-1);
+            int n=childrenB[r];
             if (n==1) {
                 boardc[y][x]=0;
                 boardc[y-2][x]=9;
