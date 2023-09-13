@@ -1255,16 +1255,23 @@ public:
         //
         for (MinimaxNode& child : root_node_children){
             int eval;
-            eval=child.minimax(-1000000,1000000,false, depth);
-            child.value=eval;
-            std::cout<<"a ";//child wurde fertig berechnet
+            if (child.value>-90000) {
+                eval=child.minimax(-1000000,1000000,false, depth);
+                child.value=eval;
+                std::cout<<"a ";//child wurde fertig berechnet
+            }
             //
             auto now = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
             if (vergangene_zeit2.count() >= max_time) {std::cout<<" NICHT FERTIG"; break;}
         }
         //
-        for (MinimaxNode& child : root_node_children) {values.push_back(child.value);}
+        for (MinimaxNode& child : root_node_children) {
+            if (child.value>-90000) {
+                values.push_back(child.value);
+            }
+        }
+        if (values.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
         for (int v : values) {if (v > best_value) {best_value = v;}}
         for (MinimaxNode& child : root_node_children) {if (child.value==best_value) {best_moves.push_back(child);}}
         //
@@ -1295,6 +1302,7 @@ public:
             std::cout<<depth<<std::endl;
             //
             std::vector<std::vector<int>> new_move=minimaxer(depth,vergangene_zeit);
+            if (new_move.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
             //
             for (MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
             std::cout<<std::endl;
@@ -1513,12 +1521,12 @@ class Schach {
 public:
     Schach() : board(), turn(1) {
         board={
-            {-7, -2, -3, -5, -8, -3, -2, -7},
+            {-7, -2, -3, -5, 0, -3, -2, -7},
             {-1, -1, -1, -1, -1, -1, -1, -1},
+            {0,0,0,0,-8,0,0,0},
             {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
+            {0,0,0,5,0,5,0,0},
+            {0,0,0,5,0,0,0,0},
             {1, 1, 1, 1, 1, 1, 1, 1},
             {7, 2, 3, 5, 8, 3, 2, 7}
         };
@@ -1546,22 +1554,39 @@ public:
                 std::vector<std::vector<int>> board_copy = deepcopy(this->board);
                 new_board = player_2.get_move(board_copy);
             }
-            if (!(new_board.empty())) {this->board=new_board;}
+            if (!(new_board.empty())) {this->board = new_board;}
             else {
-                bool king_captured=false;
+                bool king_captured = false;
                 int other;
                 int this_players_token;
-                if (current==1) {int other=-6;}
-                else {int other=6;}
-                if (current==1) {this_players_token=6;}
-                else {this_players_token=-6;}
-                for (std::vector<std::vector<int>>& child : generate_children(this->board, other)) {
-                    if (verloren(child, this_players_token)) {king_captured=true;}
+                //
+                if(current == 1) {other = -6;}
+                else {other = 6;}
+                if (current == 1) {this_players_token = 6;}
+                else {this_players_token = -6;}
+                //
+                std::vector<std::vector<std::vector<int>>> children = generate_children(this->board, other);
+                for (const auto& child : children) {
+                    if (verloren(child, this_players_token)) {
+                        king_captured = true;
+                    }
                 }
-                if (!king_captured) {print_board(this->board); std::cout<<"UNENTSCHIEDEN"<<std::endl; return 0;}
+                if (!king_captured) {
+                    print_board(this->board);
+                    std::cout << "UNENTSCHIEDEN" << std::endl;
+                    return 0;
+                }
                 else {
-                    if (this_players_token==6) {print_board(this->board); std::cout<<"K HAT GEWONNEN"<<std::endl; return -1;}
-                    else {print_board(this->board); std::cout<<"k HAT GEWONNEN"<<std::endl; return 1;}
+                    if (this_players_token == 6) {
+                        print_board(this->board);
+                        std::cout << "K HAT GEWONNEN" << std::endl;
+                        return -1;
+                    }
+                    else {
+                        print_board(this->board);
+                        std::cout << "k HAT GEWONNEN" << std::endl;
+                        return 1;
+                    }
                 }
             }
             //
