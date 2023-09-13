@@ -1233,7 +1233,7 @@ public:
         root_node.value_not_none = false;
         root_node.value = 0;
         root_node.depth = 0;
-        root_node.children = root_node.expand_node();
+        root_node.children=root_node.expand_node();
         root_node.expanded=true;
         //
         minimax_counter=0;
@@ -1241,7 +1241,7 @@ public:
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time=10;
+    int max_time=1;
     int max_depth=10;
     int starting_depth=1;
 
@@ -1257,16 +1257,22 @@ public:
         //
         for (MinimaxNode& child : root_node_children){
             int eval;
-            eval=child.minimax(-1000000,1000000,false, depth);
-            child.value=eval;
-            std::cout<<"a ";//child wurde fertig berechnet
+            if (child.value>-90000) {
+                eval=child.minimax(-1000000,1000000,false, depth);
+                child.value=eval;
+                std::cout<<"a ";//child wurde fertig berechnet
+            }
             //
             auto now = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
             if (vergangene_zeit2.count() >= max_time) {std::cout<<" NICHT FERTIG"; break;}
         }
         //
-        for (MinimaxNode& child : root_node_children) {values.push_back(child.value);}
+        for (MinimaxNode& child : root_node_children) {
+            if (child.value>-90000) {values.push_back(child.value);}
+        }
+        if (values.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
+        //
         for (int v : values) {if (v > best_value) {best_value = v;}}
         for (MinimaxNode& child : root_node_children) {if (child.value==best_value) {best_moves.push_back(child);}}
         //
@@ -1280,7 +1286,7 @@ public:
         return return_board;
     }
 
-    std::vector<std::vector<int>> minimaxerer(const std::vector<std::vector<int>> board_0) {
+    std::vector<std::vector<int>> minimaxerer() {
         auto start = std::chrono::high_resolution_clock::now();
         //
         int depth=this->starting_depth;
@@ -1296,6 +1302,7 @@ public:
             std::cout<<depth<<std::endl;
             //
             std::vector<std::vector<int>> new_move=minimaxer(depth,vergangene_zeit);
+            if (new_move.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
             //
             for (MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
             std::cout<<std::endl;
@@ -1312,7 +1319,7 @@ public:
     }
 
     std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
-        std::vector<std::vector<int>> move=minimaxerer(board);
+        std::vector<std::vector<int>> move=minimaxerer();
         return move;
     }
 };
@@ -1531,8 +1538,8 @@ public:
 
         while (true) {
             //-----------------------------------------
-            MCTSPlayer player_1(6, this->board);
-            MCTSPlayer player_2(-6, this->board);
+            MinimaxPlayer player_1(6, this->board);
+            MinimaxPlayer player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             print_board(this->board);
@@ -1611,6 +1618,7 @@ int main() {
 //
 
 //sort?
-//wieso deepc?
+//wieso deepc? play
+//wieso board_0 bei minimaxerer
 //wieso get_move(BOARD)? board bei humanp als param
 

@@ -1613,15 +1613,15 @@ class MinimaxPlayer(Player):
     def minimaxer(self, depth, vergangene_zeit):
         start=time.time()
         for child in self.rootnode.children:
-            if child.value==None or child.value>-500:#illegal moves are not searched
+            if child.value==None or child.value>-90000:#illegal moves are not searched
                 child.minimax(-math.inf,math.inf,False, depth)
                 print("a ",end="") # child wurde fertig berechnet(und ist legal)
-                if ((time.time()+vergangene_zeit) - start) > self.maxtime:
-                    break
+            if ((time.time()+vergangene_zeit) - start) > self.maxtime:
+                break
         #
         values=[]
         for child in self.rootnode.children:
-            if child.value>-500:#illegal move cant be chosen
+            if child.value>-90000:#illegal move cant be chosen
                 values.append(child.value)
         #
         if values!=[]:
