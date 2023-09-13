@@ -470,7 +470,7 @@ def generate_one_random_child(position, playerk):#für MCTS Simulation
     if piecesx==[]:
         return []
     #
-    while True:
+    for i in range(40):
         n = random.randint(0, len(piecesy) - 1)
         y = piecesy[n]
         x = piecesx[n]
@@ -490,6 +490,7 @@ def generate_one_random_child(position, playerk):#für MCTS Simulation
         #
         if child!=[]: 
             return child
+    return []
 
 def gorcLl(y, x, boardc, player):
     childrenL=[]
