@@ -697,48 +697,54 @@ std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<
 
 //
 
-std::vector<std::vector<int>> board={
-            {0,0,0,0,0,0,0,0},
-            {0,-1,0,0,0,-1,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,-1,0,-1,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,2}
 
-        };
 
-main() {
-    for (int i=0; i<9; ++i) {
-        std::cout<<"jhk"<<std::endl;
-        std::vector<std::vector<int>> child=generate_one_random_child(board, 1);
-        print_board(child);
-        std::cout<<"jhk"<<std::endl;
 
+bool verloren1(std::vector<std::vector<int>>& board, int playerk) {
+    bool eval = false;
+    int player_2;
+    if (playerk == 6) {player_2 = 8;}
+    else {player_2 = -8;}
+    for (int i = 0; i < 9; ++i) {
+        for (int j = 0; j < 9; ++j) {
+            if (board[i][j] == playerk || board[i][j] == player_2) {
+                eval = true;
+                break;
+            }
+        }
+        if (eval) {break;}
     }
+    return eval ? false : true;
 }
 
 
-//test schach
-std::vector<std::vector<int>> board={
-            {-7, -2, -3, -5, -8, -3, -2, -7},
-            {-1, -1, -1, -1, -1, -1, -1, -1},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {1, 1, 1, 1, 1, 1, 1, 1},
-            {7, 2, 3, 5, 8, 3, 2, 7}
-};
-
-main() {
-    for (int i=0; i<50; ++i) {
-        std::cout<<"jhk"<<std::endl;
-        std::vector<std::vector<int>> child=generate_one_random_child(board, 6);
-        print_board(child);
-        std::cout<<"jhk"<<std::endl;
-
+bool verloren(const std::vector<std::vector<int>>& board, int playerk) {
+    int player_2 = (playerk == 6) ? 8 : -8;
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if (board[i][j] == playerk || board[i][j] == player_2) {
+                return false;
+            }
+        }
     }
+    return true;
+}
+
+
+int main() {
+    std::vector<std::vector<int>> board = {
+        {-7, -2, -3, -5, -8, -3, -2, -7},
+        {-1, -1, -1, -1, -1, -1, -1, -1},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {1, 1, 1, 1, 1, 1, 1, 1},
+        {7, 2, 3, 5, 8, 3, 2, 7}
+    };
+    std::cout << "OK" << std::endl;
+    std::cout << verloren(board, -6) << std::endl;
+    std::cout << "OK" << std::endl;
+    return 0;
 }
 
