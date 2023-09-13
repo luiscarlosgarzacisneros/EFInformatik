@@ -1435,7 +1435,7 @@ public:
     std::vector<std::vector<int>> board;
     int max_time=1;
 
-    bool mcts(std::vector<std::vector<int>>& board) {
+    bool mcts() {
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
         //filter legal moves
         std::vector<MCTSNode> legal_moves;
@@ -1477,10 +1477,10 @@ public:
         return true;
     }
 
-    std::vector<std::vector<int>> mctser(std::vector<std::vector<int>>& board) {
+    std::vector<std::vector<int>> mctser() {
         mcts_counter = 0;
         //
-        bool monte_carlo=mcts(board);
+        bool monte_carlo=mcts();
         //
         if (monte_carlo) {
             std::cout <<"COUNTER: ";
@@ -1502,7 +1502,7 @@ public:
     }
 
     std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
-        return mctser(board);
+        return mctser();
     }
 
 };
@@ -1611,10 +1611,6 @@ int main() {
 //
 
 //sort?
-//in minimaxerer: why board_0?
 //wieso deepc?
-//wieso board in mcts?
-//MCTS simulate: wieso if (!values.empty())?
+//wieso get_move(BOARD)? board bei humanp als param
 
-
-//MCTS geht nicht!!

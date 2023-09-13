@@ -1855,7 +1855,7 @@ public:
     std::vector<std::vector<int>> board;
     int max_time=1;
 
-    void mcts(std::vector<std::vector<int>>& board) {
+    void mcts() {
         root_node.children=root_node.expand_node();
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
         //
@@ -1876,10 +1876,10 @@ public:
         }
 }
 
-    std::vector<std::vector<int>> mctser(std::vector<std::vector<int>>& board) {
+    std::vector<std::vector<int>> mctser() {
         mcts_counter = 0;
         //
-        mcts(board);
+        mcts();
         //
         std::cout <<"COUNTER: ";
         std::cout << mcts_counter << std::endl;
@@ -1897,7 +1897,7 @@ public:
     }
 
     std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
-        return mctser(board);
+        return mctser();
     }
 
 };
