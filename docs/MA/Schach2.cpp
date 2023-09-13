@@ -55,19 +55,16 @@ std::vector<std::vector<int>> deepcopy(const std::vector<std::vector<int>>& boar
     return board_copy;
 }
 
-bool verloren(std::vector<std::vector<int>>& board, int playerk) {
-    bool eval=false;
-    int player_2;
-    if (playerk==6) {player_2=8;}
-    else {player_2=-8;}
-    for (int i=0; i<9; ++i) {
-        for (int j=0; j<9; ++j) {
-            if (board[i][j]==playerk || board[i][j]==player_2) {eval=true; break;}
+bool verloren(const std::vector<std::vector<int>>& board, int playerk) {
+    int player_2 = (playerk == 6) ? 8 : -8;
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if (board[i][j] == playerk || board[i][j] == player_2) {
+                return false;
+            }
         }
-        if (eval) {break;}
     }
-    //
-    return eval ? false : true;
+    return true;
 }
 
 std::vector<std::vector<int>> matrix_minus(std::vector<std::vector<int>> matrix) {
@@ -1155,7 +1152,7 @@ public:
         //
         minimax_counter+=1;
         //
-        if (this->depth==max_depth || verloren(this->board,6) || verloren(this->board,-6)) {
+        if (this->depth>=max_depth || verloren(this->board,6) || verloren(this->board,-6)) {
             this->value = evaluate_position(this->board, this->token);
             this->value_not_none=true;
             return this->value;
@@ -1282,7 +1279,7 @@ public:
 
     }
 
-    std::vector<std::vector<int>> minimaxerer(const std::vector<std::vector<int>> board_0) {
+    std::vector<std::vector<int>> minimaxerer() {
         auto start = std::chrono::high_resolution_clock::now();
         //
         int depth=this->starting_depth;
@@ -1314,7 +1311,7 @@ public:
     }
 
     std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
-        return minimaxerer(board);
+        return minimaxerer();
     }
 };
 

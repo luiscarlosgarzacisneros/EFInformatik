@@ -1927,8 +1927,8 @@ public:
 
         while (true) {
             //-----------------------------------------
-            MCTSPlayer player_1(1, this->board);
-            MCTSPlayer player_2(-1, this->board);
+            MinimaxPlayer player_1(1, this->board);
+            MinimaxPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             print_board(this->board);
