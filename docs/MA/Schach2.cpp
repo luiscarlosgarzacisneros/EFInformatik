@@ -568,7 +568,8 @@ std::vector<std::vector<int>> gorcBb(int y, int x, std::vector<std::vector<int>>
     if (player==-1) {
         if (childrenB.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
         else {
-            int n = generate_random_int(0, childrenB.size()-1);
+            int r = generate_random_int(0, childrenB.size()-1);
+            int n=childrenB[r];
             if (n==1) {
                 boardc[y][x]=0;
                 boardc[y+2][x]=-9;
@@ -723,10 +724,11 @@ std::vector<std::vector<int>> gorcKk(int y, int x, std::vector<std::vector<int>>
     //
     if (childrenK.empty()) {std::vector<std::vector<int>> empty_vector; return empty_vector;}
     else {
-        int n = generate_random_int(0, childrenK.size()-1);
+        int r = generate_random_int(0, childrenK.size()-1);
+        int n = childrenK[r];
         if (n<8) {    
             boardc[y][x] = 0;
-            std::pair<int,int> move=moves[childrenK[n]];
+            std::pair<int,int> move=moves[n];
             int dy = move.first;
             int dx = move.second;
             if (player==8) {player=6;}
@@ -1315,8 +1317,8 @@ public:
 //
 
 double c=std::sqrt(2);
-int number_of_simulations=1;
-int depth=1;
+int number_of_simulations=10;
+int depth=3;
 
 int mcts_counter=0;
 
