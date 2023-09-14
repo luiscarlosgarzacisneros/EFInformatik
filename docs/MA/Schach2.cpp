@@ -85,18 +85,24 @@ void print_board(const std::vector<std::vector<int>>& board) {
         std::cout << i+1 <<" I";
         for (int j=0; j<8; ++j) {
             std::cout << " ";
-            if (board[i][j]==1 || board[i][j]==9) {std::cout << 'b';}
+            if (board[i][j]==1) {std::cout << 'b';}
+            else if (board[i][j]==9) {std::cout <<'f';}
             else if (board[i][j]==2) {std::cout <<'l';}
             else if (board[i][j]==3) {std::cout <<'x';}
-            else if (board[i][j]==4 || board[i][j]==7) {std::cout <<'t';}
+            else if (board[i][j]==4) {std::cout <<'t';}
+            else if (board[i][j]==7) {std::cout <<'z';}
             else if (board[i][j]==5) {std::cout <<'q';}
-            else if (board[i][j]==6 || board[i][j]==8) {std::cout <<'k';}
-            else if (board[i][j]==-1 || board[i][j]==-9) {std::cout <<'B';}
+            else if (board[i][j]==6) {std::cout <<'k';}
+            else if (board[i][j]==8) {std::cout <<'y';}
+            else if (board[i][j]==-1) {std::cout <<'B';}
+            else if (board[i][j]==-9) {std::cout <<'F';}
             else if (board[i][j]==-2) {std::cout <<'L';}
             else if (board[i][j]==-3) {std::cout <<'X';}
-            else if (board[i][j]==-4 || board[i][j]==-7) {std::cout <<'T';}
+            else if (board[i][j]==-4) {std::cout <<'T';}
+            else if (board[i][j]==-7) {std::cout <<'Z';}
             else if (board[i][j]==-5) {std::cout <<'Q';}
-            else if (board[i][j]==-6 || board[i][j]==-8) {std::cout <<'K';}
+            else if (board[i][j]==-6) {std::cout <<'K';}
+            else if (board[i][j]==-8) {std::cout <<'Y';}
             else if (board[i][j]==0) {std::cout <<' ';}
             std::cout << " ";
             std::cout << "I";
@@ -1202,14 +1208,14 @@ public:
                 if (boardcopy[7][x]==-1) {boardcopy[7][x]=-5;}
             }
             //9 & -9weg
-            if (this->token==-6) {
+            if (this->token==6) {
                 for (int y=0; y<boardcopy.size(); ++y) {
                     for (int x=0; x<boardcopy[y].size(); ++x) {
                         if (boardcopy[y][x]==9) {boardcopy[y][x] = 1;}
                     }
                 }
             }
-            else if (this->token==6) {
+            else if (this->token==-6) {
                 for (int y=0; y<boardcopy.size(); ++y) {
                     for (int x=0; x<boardcopy[y].size(); ++x) {
                         if (boardcopy[y][x]==-9) {boardcopy[y][x] = -1;}
