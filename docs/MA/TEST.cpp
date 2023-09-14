@@ -52,7 +52,59 @@ public:
         }
     }
 
+    bool is_piece_at_this_index(uint64_t bitboard, int index) {
+        uint64_t m = 1ULL << index; //m=00000....001 1 wird um index rightshifted
+        return (bitboard & m) != 0;
+    }
 
+    bool is_legal_Ll_move(int von, int zu) {
+        int dx = abs((von%8) - (zu%8));
+        int dy = abs((von/8) - (zu/8));
+        return ((dx==1 && dy==2) || (dx==2 && dy==1));
+    }
+
+
+    //
+    bool is_in_board(int y, int x) {
+        return ((x>-1 && x<8) && (y>-1 && y<8));
+    }
+
+    std::vector<uint64_t> generate_knight_moves(uint64_t knight_bitboard) {
+        std::vector<uint64_t> childrenLl;
+        //
+        int dx[] = {1, 2, 2, 1, -1, -2, -2, -1};
+        int dy[] = {2, 1, -1, -2, -2, -1, 1, 2};
+        
+        //get knights current position as (x, y) coord.
+        int y;
+        int x;
+        std::vector<std::pair<int,int>> knight_positions;
+        uint64_t m=1ULL;
+        for (y=0; y<8; ++y) {
+            for (x=0; x<8; ++x) {
+                if ((m << (x + y*8)) & knight_bitboard) {knight_positions.push_back({y, x});}
+            }
+        }
+        //
+        //modify x
+        for (const auto& position : knight_positions) {
+            int y_current = position.first;
+            int x_current = position.second;
+            //
+            for (int i=0; i<8; ++i) {
+                int y_new = y_current + dy[i];
+                int x_new = x_current + dx[i];
+                //
+                if (is_in_board(y_new, x_new)) {
+                    ;
+                    //convert y_new x_ne to bitboard
+                    //add new position to childrenLL as uint64_t
+                }
+            }
+        }
+        //
+        return childrenLl;
+    }
 };
 
 
