@@ -47,6 +47,12 @@ uint64_t shift_bit(uint64_t bitboard, int vy, int vx, int zy, int zx) {//wenn (v
     return bitboard;
 }
 
+uint64_t clear_bit(uint64_t bitboard, int index) {
+    //m with a 0 bit at index and 1s everywhere else
+    uint64_t m = ~(1ULL << index);
+    return bitboard & m;
+}
+
 //
 
 std::vector<uint64_t> gcLl(int player, const uint64_t knight_bitboard, const uint64_t this_players_pieces) {
@@ -99,51 +105,59 @@ std::vector<uint64_t> gcBb(int player, const uint64_t pawn_bitboard, const uint6
         int vy = position.first;
         int vx = position.second;
         //
-        for (int i=0; i<8; ++i) {
-            if (player==1) {
-                //2 nach vorne
-                if (vy==1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+2, vx)))) {
-                    uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+2, vx);
-                    childrenBb.push_back(child);
-                }
-                //normal 1 nach vorne
-                if (vy+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx)))) {
-                    uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx);
-                    childrenBb.push_back(child);
-                }
-                //schlagen
-                if (vy+1<8 && vx-1>-1 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy+1, vx-1))) {
-                    uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx-1);
-                    childrenBb.push_back(child);
-                }
-                if (vy+1<8 && vx+1<8 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy+1, vx+1))) {
-                    uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx+1);
-                    childrenBb.push_back(child);
-                }
+        if (player==1) {
+            //2 nach vorne
+            if (vy==1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+2, vx)))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+2, vx);
+                childrenBb.push_back(child);
             }
-            //
-            else {
-                //2 nach vorne
-                if (vy==6 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-2, vx)))) {
-                    uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-2, vx);
-                    childrenBb.push_back(child);
-                }
-                //normal 1 nach vorne
-                if (vy+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx)))) {
-                    uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx);
-                    childrenBb.push_back(child);
-                }
-                //schlagen
-                if (vy-1>-1 && vx-1>-1 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy-1, vx-1))) {
-                    uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx-1);
-                    childrenBb.push_back(child);
-                }
-                if (vy-1>-1 && vx+1<8 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy-1, vx+1))) {
-                    uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx+1);
-                    childrenBb.push_back(child);
-                }
+            //normal 1 nach vorne
+            if (vy+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx)))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx);
+                childrenBb.push_back(child);
+            }
+            //schlagen
+            if (vy+1<8 && vx-1>-1 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy+1, vx-1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx-1);
+                childrenBb.push_back(child);
+            }
+            if (vy+1<8 && vx+1<8 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy+1, vx+1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx+1);
+                childrenBb.push_back(child);
+            }
+            //en passant
+            if (vy+1<8 && vx-1>-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx-1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx-1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx-1);
+                childrenBb.push_back(child);
+            }
+            if (vy+1<8 && vx+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx+1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx+1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx+1);
+                childrenBb.push_back(child);
             }
         }
+        //
+        else {
+            //2 nach vorne
+            if (vy==6 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-2, vx)))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-2, vx);
+                childrenBb.push_back(child);
+            }
+            //normal 1 nach vorne
+            if (vy+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx)))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx);
+                childrenBb.push_back(child);
+            }
+            //schlagen
+            if (vy-1>-1 && vx-1>-1 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy-1, vx-1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx-1);
+                childrenBb.push_back(child);
+            }
+            if (vy-1>-1 && vx+1<8 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy-1, vx+1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx+1);
+                childrenBb.push_back(child);
+            }
+        }
+    
     }
     //
     return childrenBb;
