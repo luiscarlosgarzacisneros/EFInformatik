@@ -52,24 +52,30 @@ public:
         }
     }
 
-    bool is_piece_at_this_index(uint64_t bitboard, int index) {
+    //
+
+    bool is_one_at_this_index(uint64_t bitboard, int index) {
         uint64_t m = 1ULL << index; //m=00000....001 1 wird um index rightshifted
         return (bitboard & m) != 0;
     }
 
-    bool is_legal_Ll_move(int von, int zu) {
-        int dx = abs((von%8) - (zu%8));
-        int dy = abs((von/8) - (zu/8));
-        return ((dx==1 && dy==2) || (dx==2 && dy==1));
+    int yx_zu_index(int y, int x) {
+        return (y*8+x); //fangt unten rechts an!
     }
 
-
-    //
     bool is_in_board(int y, int x) {
         return ((x>-1 && x<8) && (y>-1 && y<8));
     }
 
-    std::vector<uint64_t> generate_knight_moves(uint64_t knight_bitboard) {
+    uint64_t shift_bit(uint64_t bitboard, int vy, int vx, int zy, int zx) {//wenn (vy, vx)==1
+        //clear bit at (vy, vx)
+        bitboard &= ~(1ULL << (vy * 8 + vx));
+        //set bit at (zy, zx) to 1
+        bitboard |= (1ULL << (zy * 8 + zx));
+        return bitboard;
+    }
+
+    std::vector<uint64_t> gcLl(int player, uint64_t knight_bitboard) {
         std::vector<uint64_t> childrenLl;
         //
         int dx[] = {1, 2, 2, 1, -1, -2, -2, -1};
@@ -86,7 +92,18 @@ public:
             }
         }
         //
-        //modify x
+        uint64_t this_players_pieces;
+        uint64_t other_players_pieces;
+        if (player==2) {
+            this_players_pieces=this->white_pieces;
+            other_players_pieces=this->black_pieces;
+        }
+        else {
+            this_players_pieces=this->black_pieces;
+            other_players_pieces=this->white_pieces;
+        }
+        //
+        //modify boards
         for (const auto& position : knight_positions) {
             int y_current = position.first;
             int x_current = position.second;
@@ -96,15 +113,17 @@ public:
                 int x_new = x_current + dx[i];
                 //
                 if (is_in_board(y_new, x_new)) {
-                    ;
-                    //convert y_new x_ne to bitboard
-                    //add new position to childrenLL as uint64_t
+                    if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
+                        uint64_t child=shift_bit(knight_bitboard, y_current, x_current, y_new, x_new);
+                        childrenLl.push_back(child);
+                    }
                 }
             }
         }
         //
         return childrenLl;
     }
+
 };
 
 
