@@ -47,10 +47,10 @@ uint64_t shift_bit(uint64_t bitboard, int vy, int vx, int zy, int zx) {//wenn (v
     return bitboard;
 }
 
+//
+
 std::vector<uint64_t> gcLl(int player, const uint64_t knight_bitboard, const uint64_t this_players_pieces) {
     std::vector<uint64_t> childrenLl;
-    print_bitboard(knight_bitboard);
-    std::cout<<"--"<<std::endl;
     //
     int dx[] = {1, 2, 2, 1, -1, -2, -2, -1};
     int dy[] = {2, 1, -1, -2, -2, -1, 1, 2};
@@ -146,9 +146,10 @@ main() {
     root_node.black_pieces  = 0b1111111111111111000000000000000000000000000000000000000000000000ULL;
 
     print_bitboard(root_node.w_knight);
+    std::cout<<"----"<<std::endl;
     for (const auto& child : gcLl(2, root_node.w_knight, root_node.white_pieces)) {
-        //root_node.print_bitboard(child);
-        //std::cout<<"----"<<std::endl;
+        print_bitboard(child);
+        std::cout<<"----"<<std::endl;
         ;
     }
     print_bitboard(root_node.w_knight);
