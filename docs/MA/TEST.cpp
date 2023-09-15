@@ -55,7 +55,7 @@ uint64_t clear_bit(uint64_t bitboard, int index) {
 
 //
 
-std::vector<uint64_t> gcLl(int player, const uint64_t knight_bitboard, const uint64_t this_players_pieces) {
+std::vector<uint64_t> gcLl(const uint64_t knight_bitboard, const uint64_t this_players_pieces) {
     std::vector<uint64_t> childrenLl;
     //
     int dx[] = {1, 2, 2, 1, -1, -2, -2, -1};
