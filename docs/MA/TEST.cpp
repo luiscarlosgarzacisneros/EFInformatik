@@ -83,7 +83,56 @@ std::vector<uint64_t> gcLl(int player, const uint64_t knight_bitboard, const uin
     return childrenLl;
 }
 
+std::vector<uint64_t> gcBb(int player, const uint64_t pawn_bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, const uint64_t o_p_p_en) {
+    std::vector<uint64_t> childrenBb;
+    //get knights current position as (x, y) coord.
+    std::vector<std::pair<int,int>> pawn_positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(pawn_bitboard, yx_zu_index(y, x))) {pawn_positions.push_back({y, x});}
+        }
+    }
+    //
+    uint64_t all_pieces=this_players_pieces|other_players_pieces;
+    //modify boards
+    for (const auto& position : pawn_positions) {
+        int vy = position.first;
+        int vx = position.second;
+        //
+        for (int i=0; i<8; ++i) {
+            if (player==1) {
+                //2 nach vorne
+                if (vy==1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+2, vx)))) {
+                    uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+2, vx);
+                    childrenBb.push_back(child);
+                }
+                //normal 1 nach vorne
+                if (vy+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx)))) {
+                    uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx);
+                    childrenBb.push_back(child);
+                }
+                //
+            }
+            //
+            else {
+                //2 nach vorne
+                if (vy==6 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-2, vx)))) {
+                    uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-2, vx);
+                    childrenBb.push_back(child);
+                }
+                //normal 1 nach vorne
+                if (vy+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx)))) {
+                    uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx);
+                    childrenBb.push_back(child);
+                }
+            }
+        }
+    }
+    //
+    return childrenBb;
+}
 
+//
 
 class Board {
 public:
