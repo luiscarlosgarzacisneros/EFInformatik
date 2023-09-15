@@ -237,14 +237,20 @@ main() {
     root_node.white_pieces  = 0b0000000000000000000000000000000000000000000000001111111111111111ULL;
     root_node.black_pieces  = 0b1111111111111111000000000000000000000000000000000000000000000000ULL;
 
-    print_bitboard(root_node.w_knight);
+    print_bitboard(root_node.b_pawn);
     std::cout<<"----"<<std::endl;
-    for (const auto& child : gcLl(2, root_node.w_knight, root_node.white_pieces)) {
-        print_bitboard(child);
+    print_bitboard(root_node.w_pawn_ep);
+    std::cout<<"----"<<std::endl;
+    for (const auto& child : gcBb(-1, root_node.b_pawn, root_node.black_pieces, root_node.white_pieces, root_node.w_pawn_ep)) {
+        print_bitboard(child.first);
         std::cout<<"----"<<std::endl;
+        print_bitboard(child.second);
+        std::cout<<"-------------------------------"<<std::endl;
         ;
     }
-    print_bitboard(root_node.w_knight);
+    print_bitboard(root_node.b_pawn);
+    std::cout<<"----"<<std::endl;
+    print_bitboard(root_node.w_pawn_ep);
     
 
 }
