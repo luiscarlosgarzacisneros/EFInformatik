@@ -88,7 +88,7 @@ public:
         uint64_t m=1ULL;
         for (y=0; y<8; ++y) {
             for (x=0; x<8; ++x) {
-                if ((m << (x + y*8)) & knight_bitboard) {knight_positions.push_back({y, x});}
+                if (is_one_at_this_index(knight_bitboard, yx_zu_index(y, x))) {knight_positions.push_back({y, x});}
             }
         }
         //
@@ -155,6 +155,10 @@ main() {
     root_node.white_pieces  = 0b0000000000000000000000000000000000000000000000001111111111111111ULL;
     root_node.black_pieces  = 0b1111111111111111000000000000000000000000000000000000000000000000ULL;
 
-    root_node.print_bitboard(root_node.w_bishop);
+    for (const auto& child : root_node.gcLl(root_node.w_knight, 2)) {
+        root_node.print_bitboard(child);
+        std::cout<<"----"<<std::endl;
+    }
+    root_node.print_bitboard(root_node.w_knight);
 
 }
