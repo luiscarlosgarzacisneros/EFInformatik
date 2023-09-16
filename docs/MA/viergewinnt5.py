@@ -401,7 +401,7 @@ class MCTSPlayer(Player):
         while True:
             self.counter+=1
             selectednode=self.rootnode.selectleafnode()
-            if selectednode.children==[]:
+            if selectednode.visits==0:
                 selectednode.backpropagate(selectednode.simulate(),selectednode.numberofsimulations)
             else:
                 selectednode.expand()

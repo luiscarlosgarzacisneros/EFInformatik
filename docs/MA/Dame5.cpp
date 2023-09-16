@@ -1862,7 +1862,7 @@ public:
         while (true) {
             mcts_counter += 1;
             MCTSNode* selected_node = root_node.select_leaf_node();
-            if (selected_node->children.empty()) {
+            if (selected_node->visits==0) {
                 double new_score = selected_node->simulate();
                 selected_node->backpropagate(new_score, number_of_simulations);
             }

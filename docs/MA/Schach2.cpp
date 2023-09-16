@@ -1679,7 +1679,7 @@ public:
         while (true) {
             mcts_counter += 1;
             MCTSNode* selected_node = root_node.select_leaf_node();
-            if (selected_node->children.empty()) {
+            if (selected_node->visits==0) {
                 double new_score = selected_node->simulate();
                 selected_node->backpropagate(new_score, number_of_simulations);
             }
@@ -1749,7 +1749,7 @@ public:
         while (true) {
             //-----------------------------------------
             HumanPlayer player_1(6);
-            MinimaxPlayer player_2(-6, this->board);
+            MCTSPlayer player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             print_board(this->board);
