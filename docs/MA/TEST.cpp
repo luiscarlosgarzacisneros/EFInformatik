@@ -91,7 +91,7 @@ std::vector<uint64_t> gcLl(const uint64_t knight_bitboard, const uint64_t this_p
 
 std::vector<std::pair<uint64_t, uint64_t>> gcBb(int player, const uint64_t pawn_bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, const uint64_t o_p_p_en) {
     std::vector<std::pair<uint64_t, uint64_t>> childrenBb;
-    //get knights current position as (x, y) coord.
+    //get pawns current positions as (x, y) coord.
     std::vector<std::pair<int,int>> pawn_positions;
     for (int y=0; y<8; ++y) {
         for (int x=0; x<8; ++x) {
@@ -173,6 +173,42 @@ std::vector<std::pair<uint64_t, uint64_t>> gcBb(int player, const uint64_t pawn_
     }
     //
     return childrenBb; //return a pair with child_pawn_this_player and new_o_p_p_en_other_player_of_this_child: in generate_children it can be implemented.
+}
+
+std::vector<uint64_t> gcTtXxQq(const uint64_t bitboard, const uint64_t this_players_pieces, std::vector<std::pair<int,int>> directions) {
+    std::vector<uint64_t> children;
+    //get current positions as (x, y) coord.
+    std::vector<std::pair<int,int>> positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(bitboard, yx_zu_index(y, x))) {positions.push_back({y, x});}
+        }
+    }
+    //
+    //modify board
+    for (const auto& position : positions) {
+        int y_current = position.first;
+        int x_current = position.second;
+        //
+        for (const auto& direction : directions) {
+            int direction_y=direction.first;
+            int direction_x=direction.second;
+            //
+            for (int i=0; i<8; ++i) {
+                int y_new = y_current + i*direction_y;
+                int x_new = x_current + i*direction_x;
+                //
+                if (is_in_board(y_new, x_new)) {
+                    if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
+                        uint64_t child=shift_bit(bitboard, y_current, x_current, y_new, x_new);
+                        children.push_back(child);
+                    }
+                }
+            }
+        }
+    }
+    //
+    return children;
 }
 
 //
