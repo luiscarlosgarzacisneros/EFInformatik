@@ -203,6 +203,7 @@ std::vector<uint64_t> gcTtXxQq(const uint64_t bitboard, const uint64_t this_play
                         uint64_t child=shift_bit(bitboard, y_current, x_current, y_new, x_new);
                         children.push_back(child);
                     }
+                    else {break;}
                 }
             }
         }
