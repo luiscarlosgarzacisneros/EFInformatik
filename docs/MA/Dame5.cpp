@@ -1855,7 +1855,7 @@ public:
     std::vector<std::vector<int>> board;
     int max_time=1;
 
-    void mcts() {
+    void mcts2() {
         root_node.children=root_node.expand_node();
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
         //
@@ -1873,6 +1873,26 @@ public:
             if (elapsed_seconds > this->max_time) {
                 break;
             }
+        }
+}
+
+    void mcts() {
+        root_node.children=root_node.expand_node();
+        std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+        //
+        while (true) {
+            mcts_counter += 1;
+            MCTSNode* selected_node = root_node.select_leaf_node();
+            MCTSNode node= *selected_node;
+            node.expand_node();
+            for (MCTSNode& child_node : node.children) {
+                double new_score = child_node.simulate();
+                child_node.backpropagate(new_score, number_of_simulations);
+            }
+            //
+            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+            double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
+            if (elapsed_seconds > this->max_time) {break;}
         }
 }
 
@@ -1928,7 +1948,7 @@ public:
         while (true) {
             //-----------------------------------------
             MinimaxPlayer player_1(1, this->board);
-            MinimaxPlayer player_2(-1, this->board);
+            MCTSPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             print_board(this->board);

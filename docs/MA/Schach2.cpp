@@ -1652,7 +1652,7 @@ public:
     std::vector<std::vector<int>> board;
     int max_time=1;
 
-    bool mcts() {
+    bool mcts2() {
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
         //filter legal moves
         std::vector<MCTSNode> legal_moves;
@@ -1693,6 +1693,50 @@ public:
         }
         return true;
     }
+
+    bool mcts() {
+        std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+        //filter legal moves
+        std::vector<MCTSNode> legal_moves;
+        int number_of_legal_moves = 0;
+        root_node.children=root_node.expand_node();
+        for (MCTSNode& child_of_root : root_node.children) {
+            child_of_root.expand_node();
+            bool king_is_killed = false;
+            for (MCTSNode& child_of_child : child_of_root.children) {
+                if (verloren(child_of_child.board, root_node.player_am_zug)) {
+                    king_is_killed = true;
+                    break;
+                }
+            }
+            if (!king_is_killed) {
+                legal_moves.push_back(child_of_root);
+                number_of_legal_moves++;
+            }
+        }
+        root_node.children = legal_moves;
+        // No legal moves left
+        if (number_of_legal_moves == 0) {return false;}
+        //
+        while (true) {
+            mcts_counter += 1;
+            MCTSNode* selected_node = root_node.select_leaf_node();
+            MCTSNode node= *selected_node;
+            node.expand_node();
+            for (MCTSNode& child_node : node.children) {
+                double new_score = child_node.simulate();
+                child_node.backpropagate(new_score, number_of_simulations);
+            }
+            //
+            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+            double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
+            if (elapsed_seconds > this->max_time) {
+                break;
+            }
+        }
+        return true;
+    }
+
 
     std::vector<std::vector<int>> mctser() {
         mcts_counter = 0;
@@ -1748,8 +1792,8 @@ public:
 
         while (true) {
             //-----------------------------------------
-            HumanPlayer player_1(6);
-            MCTSPlayer player_2(-6, this->board);
+            MCTSPlayer player_1(6, this->board);
+            MinimaxPlayer player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             print_board(this->board);
