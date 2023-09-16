@@ -437,7 +437,7 @@ class MCTSNode(MCTSPlayer):
         if self.visits==0:
             ubc=math.inf
         else:
-            ubc=(self.score/self.visits)+self.c*(math.sqrt(math.log(par.visits/self.visits)))
+            ubc=(self.score/self.visits)+self.c*(math.sqrt(math.log(par.visits)/self.visits))
         return ubc
     
     def expand(self):

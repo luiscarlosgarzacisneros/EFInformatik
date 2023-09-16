@@ -1763,7 +1763,7 @@ public:
             return std::numeric_limits<double>::infinity();
         }
         else {
-            double ubc = (static_cast<double>(this->value) / this->visits) +c * (std::sqrt(std::log(static_cast<double>(par->visits) / this->visits)));
+            double ubc = (static_cast<double>(this->value) / this->visits) +c * (std::sqrt(std::log(static_cast<double>(par->visits)) / this->visits));
             return ubc;
         }
     }

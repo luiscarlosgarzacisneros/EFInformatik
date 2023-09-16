@@ -307,6 +307,8 @@ std::vector<uint64_t> gcKk(const uint64_t king_bitboard, const uint64_t this_pla
     return childrenKk;
 }
 
+//bei gcYy: return bitbKk und bitbTt und bitbZz
+
 //
 
 class Board {
