@@ -1231,8 +1231,8 @@ class Schach():
         ]
         #
         self.players.clear()
-        self.players.append(HumanPlayer(6))#k
-        self.players.append(MinimaxPlayer(-6))#K
+        self.players.append(MCTSPlayer(6))#k
+        self.players.append(MCTSPlayer(-6))#K
         #
         current=0
         while True:
@@ -1468,7 +1468,7 @@ class MCTSPlayer(Player):
         self.numberofsimulations=30
         #-----
         
-    def mcts(self):
+    def mcts2(self):
         start = time.time()
         #
         while True:
@@ -1478,6 +1478,21 @@ class MCTSPlayer(Player):
                 selectednode.backpropagate(selectednode.simulate(),selectednode.numberofsimulations)
             else:
                 selectednode.expand()
+            #
+            if (time.time() - start) > self.maxtime:
+                break
+    
+    def mcts(self):
+        start = time.time()
+        #
+        while True:
+            self.counter+=1
+            selectednode=self.rootnode.selectleafnode()
+            selectednode.expand()
+            for child_node in selectednode.children:
+                child_node.backpropagate(child_node.simulate(),child_node.numberofsimulations)
+                if (time.time() - start) > self.maxtime:
+                    break
             #
             if (time.time() - start) > self.maxtime:
                 break

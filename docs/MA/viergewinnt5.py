@@ -314,7 +314,7 @@ class VierGewinnt():
         # X spielt immer zuerst
         self.players.clear()
         self.players.append(MinimaxPlayer(1))
-        self.players.append(MinimaxPlayer(-1))
+        self.players.append(MCTSPlayer(-1))
         #
         current=0
         while True:
@@ -401,7 +401,7 @@ class MCTSPlayer(Player):
         while True:
             self.counter+=1
             selectednode=self.rootnode.selectleafnode()
-            if selectednode.visits==0:
+            if selectednode.is_it_a_new_node():
                 selectednode.backpropagate(selectednode.simulate(),selectednode.numberofsimulations)
             else:
                 selectednode.expand()
@@ -448,7 +448,10 @@ class MCTSNode(MCTSPlayer):
             self.children.append(instance)
             #
             instance.position=children[i]
-            instance.playeramzug=-self.playeramzug
+            if self.playeramzug==-1:
+                instance.playeramzug=1
+            elif self.playeramzug==1:
+                instance.playeramzug=-1
             instance.parent=self
             instance.score=0
             instance.visits=0
@@ -461,14 +464,21 @@ class MCTSNode(MCTSPlayer):
             player=self.playeramzug
             for i in range(self.depth):
                 nextpos=generate_one_random_child(pos,player)
-                if nextpos==[]:
-                    break
                 pos=nextpos
-                player=-player
+                if player==-1:
+                    player=1
+                elif player==1:
+                    player=-1
             values.append(inarow(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
         value=sum(values)/len(values)
         return value
     
+    def is_it_a_new_node(self):
+        if self.children==[]:
+            return True
+        else:
+            return False
+
     def selectleafnode(self):
         children = self.children
         bestvalue = -math.inf
@@ -496,7 +506,7 @@ class MinimaxPlayer(Player):
     #sucht bis max zeit erreicht ist, depth =+1, move sorting
     def __init__(self, token):
         super().__init__(token)
-        self.maxtime=5
+        self.maxtime=3
         self.starting_depth=1 #wenn suche bei layer1 nicht fertig wird: crash
 
     def minimaxer(self, depth, vergangene_zeit):
