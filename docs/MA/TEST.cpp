@@ -278,78 +278,134 @@ std::vector<std::pair<uint64_t, uint64_t>> gcZz(const uint64_t Zz_bitboard, cons
 class Board {
 public:
 
-    uint64_t w_pawn;
-    uint64_t w_knight;
-    uint64_t w_bishop;
-    uint64_t w_rook;
-    uint64_t w_queen;
-    uint64_t w_king;
-    uint64_t w_king_nm;
-    uint64_t w_rook_nm;
-    uint64_t w_pawn_ep;
+    uint64_t b;
+    uint64_t l;
+    uint64_t x;
+    uint64_t t;
+    uint64_t q;
+    uint64_t k;
+    uint64_t y;
+    uint64_t z;
+    uint64_t f;
     
-    uint64_t b_pawn;
-    uint64_t b_knight;
-    uint64_t b_bishop;
-    uint64_t b_rook;
-    uint64_t b_queen;
-    uint64_t b_king;
-    uint64_t b_king_nm;
-    uint64_t b_rook_nm;
-    uint64_t b_pawn_ep;
-
-    uint64_t white_pieces;
-    uint64_t black_pieces;
-
+    uint64_t B;
+    uint64_t L;
+    uint64_t X;
+    uint64_t T;
+    uint64_t Q;
+    uint64_t K;
+    uint64_t Y;
+    uint64_t Z;
+    uint64_t F;
 
     Board() {}
 
+    void print_board() {
+        std::vector<std::vector<std::string>> board;
+        //initialize board with spaces
+        for (int i = 0; i < 8; i++) {
+            std::vector<std::string> empty_string_vector(8, " ");
+            board.push_back(empty_string_vector);
+        }
+        //place symbols on board based on bitboards
+        for (int i=0; i<8; i++) {
+            for (int j=0; j<8; j++) {
+                uint64_t mask = 1ULL << (i*8+j);
+                if (this->b & mask) board[i][j] = 'b';
+                if (this->B & mask) board[i][j] = 'B';
+                if (this->f & mask) board[i][j] = 'f';
+                if (this->F & mask) board[i][j] = 'F';
+                if (this->l & mask) board[i][j] = 'l';
+                if (this->L & mask) board[i][j] = 'L';
+                if (this->x & mask) board[i][j] = 'x';
+                if (this->X & mask) board[i][j] = 'X';
+                if (this->t & mask) board[i][j] = 't';
+                if (this->T & mask) board[i][j] = 'T';
+                if (this->z & mask) board[i][j] = 'z';
+                if (this->Z & mask) board[i][j] = 'Z';
+                if (this->q & mask) board[i][j] = 'q';
+                if (this->Q & mask) board[i][j] = 'Q';
+                if (this->k & mask) board[i][j] = 'k';
+                if (this->K & mask) board[i][j] = 'K';
+                if (this->y & mask) board[i][j] = 'y';
+                if (this->Y & mask) board[i][j] = 'Y';
+                
+            }
+        }
+        // Print the board
+        std::cout <<"    1   2   3   4   5   6   7   8\n";
+        std::cout <<"  ---------------------------------\n";
+        for (int i=0; i<8; i++) {
+            std::cout << i+1 <<" I";
+            for (int j=0; j<8; j++) {
+                std::cout << " ";
+                std::cout << board[i][j];
+                std::cout << " ";
+                std::cout << "I";
+            }
+            std::cout <<'\n';
+            std::cout <<"  ---------------------------------\n";
+        }
+    }
+
+    bool verloren(int playerk) {
+        if (playerk==6) {
+            if (this->k==0 && this->y==0) {return true;}
+            else {return false;}
+        }
+        else {
+            if (this->K==0 && this->Y==0) {return true;}
+            else {return false;}
+        }
+    }
+
 };
 
-
+//
 
 main() {
     Board root_node;
-    root_node.w_pawn   = 0b0000000000000000000000000000000000000000000000001111111100000000ULL;
-    root_node.w_knight = 0b0000000000000000000000000000000000000000000000000000000001000010ULL;
-    root_node.w_bishop = 0b0000000000000000000000000000000000000000000000000000000000100100ULL;
-    root_node.w_rook   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.w_queen  = 0b0000000000000000000000000000000000000000000000000000000000001000ULL;
-    root_node.w_king   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.b   = 0b0000000000000000000000000000000000000000000000001111111100000000ULL;
+    root_node.l = 0b0000000000000000000000000000000000000000000000000000000001000010ULL;
+    root_node.x = 0b0000000000000000000000000000000000000000000000000000000000100100ULL;
+    root_node.t   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.q  = 0b0000000000000000000000000000000000000000000000000000000000001000ULL;
+    root_node.k   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
-    root_node.w_king_nm   = 0b0000000000000000000000000000000000000000000000000000000000010000ULL;
-    root_node.w_rook_nm   = 0b0000000000000000000000000000100000000000000000000000000010000001ULL;
-    root_node.w_pawn_ep   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.y   = 0b0000000000000000000000000000000000000000000000000000000000010000ULL;
+    root_node.z   = 0b0000000000000000000000000000000000000000000000000000000010000001ULL;
+    root_node.f   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
-    root_node.b_pawn   = 0b0000000011111111000000000000000000000000000000000000000000000000ULL;
-    root_node.b_knight = 0b0100001000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.b_bishop = 0b0010010000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.b_rook   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.b_queen  = 0b0001000000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.b_king   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.B   = 0b0000000011111111000000000000000000000000000000000000000000000000ULL;
+    root_node.L = 0b0100001000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.X = 0b0010010000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.T   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.Q  = 0b0001000000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.K   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
-    root_node.b_king_nm   = 0b0000100000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.b_rook_nm   = 0b1000000100000000000000000000000000000000000000000000000000000000ULL;
-    root_node.b_pawn_ep   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.Y   = 0b0000100000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.Z   = 0b1000000100000000000000000000000000000000000000000000000000000000ULL;
+    root_node.F   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
-    root_node.white_pieces  = 0b0000000000000000000000000000000000000000000000001111111111111111ULL;
-    root_node.black_pieces  = 0b1111111111111111000000000000000000000000000000000000000000000000ULL;
+    uint64_t white_pieces = root_node.b|root_node.l|root_node.x|root_node.t|root_node.q|root_node.k|root_node.y|root_node.z|root_node.f;
+    uint64_t black_pieces = root_node.B|root_node.L|root_node.X|root_node.T|root_node.Q|root_node.K|root_node.Y|root_node.Z|root_node.F;
 
-    print_bitboard(root_node.w_rook_nm);
+    print_bitboard(root_node.z);
     std::cout<<"----"<<std::endl;
-    print_bitboard(root_node.w_rook);
+    print_bitboard(root_node.t);
     std::cout<<"-----------------------------------------"<<std::endl;
-    for (const auto& child : gcZz(root_node.w_rook_nm, root_node.w_rook, root_node.white_pieces, root_node.black_pieces)) {
+    for (const auto& child : gcZz(root_node.z, root_node.t, white_pieces, black_pieces)) {
         print_bitboard(child.first);
         std::cout<<"----"<<std::endl;
         print_bitboard(child.second);
         std::cout<<"-------------------------------------"<<std::endl;
     }
-    print_bitboard(root_node.w_rook_nm);
+    print_bitboard(root_node.z);
     std::cout<<"----"<<std::endl;
-    print_bitboard(root_node.w_rook);
+    print_bitboard(root_node.t);
     std::cout<<"-----------------------------------------"<<std::endl;
     
+    root_node.print_board();
 
 }
 
