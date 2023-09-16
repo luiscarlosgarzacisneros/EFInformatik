@@ -273,6 +273,40 @@ std::vector<std::pair<uint64_t, uint64_t>> gcZz(const uint64_t Zz_bitboard, cons
     return children_Tt_Zz;//{child_Tt, child_Zz}
 }
 
+std::vector<uint64_t> gcKk(const uint64_t king_bitboard, const uint64_t this_players_pieces) {
+    std::vector<uint64_t> childrenKk;
+    //
+    int dx[] = {0, 0, 1, -1, 1, -1, 1, -1};
+    int dy[] = {1, -1, 0, 0, 1, 1, -1, -1};
+    
+    //get knights current position as (x, y) coord.
+    std::vector<std::pair<int,int>> knight_positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(king_bitboard, yx_zu_index(y, x))) {knight_positions.push_back({y, x});}
+        }
+    }
+    //modify boards
+    for (const auto& position : knight_positions) {
+        int y_current = position.first;
+        int x_current = position.second;
+        //
+        for (int i=0; i<8; ++i) {
+            int y_new = y_current + dy[i];
+            int x_new = x_current + dx[i];
+            //
+            if (is_in_board(y_new, x_new)) {
+                if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
+                    uint64_t child=shift_bit(king_bitboard, y_current, x_current, y_new, x_new);
+                    childrenKk.push_back(child);
+                }
+            }
+        }
+    }
+    //
+    return childrenKk;
+}
+
 //
 
 class Board {
@@ -332,7 +366,10 @@ public:
                 
             }
         }
-        // Print the board
+        //
+        std::reverse(board.begin(), board.end());
+        //
+        //print the board
         std::cout <<"    1   2   3   4   5   6   7   8\n";
         std::cout <<"  ---------------------------------\n";
         for (int i=0; i<8; i++) {
@@ -380,30 +417,27 @@ main() {
     root_node.L = 0b0100001000000000000000000000000000000000000000000000000000000000ULL;
     root_node.X = 0b0010010000000000000000000000000000000000000000000000000000000000ULL;
     root_node.T   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.Q  = 0b0001000000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.K   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.Q  = 0b0000100000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.K   = 0b0000000000000000100000000000000000000000000000000000000000000000ULL;
 
-    root_node.Y   = 0b0000100000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.Y   = 0b0001000000000000000000000000000000000000000000000000000000000000ULL;
     root_node.Z   = 0b1000000100000000000000000000000000000000000000000000000000000000ULL;
     root_node.F   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
     uint64_t white_pieces = root_node.b|root_node.l|root_node.x|root_node.t|root_node.q|root_node.k|root_node.y|root_node.z|root_node.f;
     uint64_t black_pieces = root_node.B|root_node.L|root_node.X|root_node.T|root_node.Q|root_node.K|root_node.Y|root_node.Z|root_node.F;
 
-    print_bitboard(root_node.z);
+    print_bitboard(root_node.K);
     std::cout<<"----"<<std::endl;
-    print_bitboard(root_node.t);
-    std::cout<<"-----------------------------------------"<<std::endl;
-    for (const auto& child : gcZz(root_node.z, root_node.t, white_pieces, black_pieces)) {
-        print_bitboard(child.first);
+    for (const auto& child : gcKk(root_node.K, black_pieces)) {
+        print_bitboard(child);
         std::cout<<"----"<<std::endl;
-        print_bitboard(child.second);
-        std::cout<<"-------------------------------------"<<std::endl;
     }
-    print_bitboard(root_node.z);
+    print_bitboard(root_node.K);
     std::cout<<"----"<<std::endl;
-    print_bitboard(root_node.t);
-    std::cout<<"-----------------------------------------"<<std::endl;
+    print_bitboard(root_node.Y);
+    std::cout<<"----"<<std::endl;
+    print_bitboard(root_node.y);
     
     root_node.print_board();
 
