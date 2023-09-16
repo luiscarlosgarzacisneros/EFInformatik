@@ -175,7 +175,10 @@ std::vector<std::pair<uint64_t, uint64_t>> gcBb(int player, const uint64_t pawn_
     return childrenBb; //return a pair with child_pawn_this_player and new_o_p_p_en_other_player_of_this_child: in generate_children it can be implemented.
 }
 
-std::vector<uint64_t> gcTtXxQq(const uint64_t bitboard, const uint64_t this_players_pieces, std::vector<std::pair<int,int>> directions) {
+//Tt: {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+//Xx: {{1, 1}, {-1, 1}, {1, -1}, {-1, -1}}
+//Qq: {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}}
+std::vector<uint64_t> gcTtXxQq(const uint64_t bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, std::vector<std::pair<int,int>> directions) {
     std::vector<uint64_t> children;
     //get current positions as (x, y) coord.
     std::vector<std::pair<int,int>> positions;
@@ -199,12 +202,18 @@ std::vector<uint64_t> gcTtXxQq(const uint64_t bitboard, const uint64_t this_play
                 int x_new = x_current + i*direction_x;
                 //
                 if (is_in_board(y_new, x_new)) {
-                    if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
+                    if (is_one_at_this_index(other_players_pieces, yx_zu_index(y_new, x_new))) {
+                        uint64_t child=shift_bit(bitboard, y_current, x_current, y_new, x_new);
+                        children.push_back(child);
+                        break;
+                    }
+                    else if (is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new))) {break;}
+                    else {
                         uint64_t child=shift_bit(bitboard, y_current, x_current, y_new, x_new);
                         children.push_back(child);
                     }
-                    else {break;}
                 }
+                else {break;}
             }
         }
     }
@@ -252,7 +261,7 @@ main() {
     root_node.w_pawn   = 0b0000000000000000000000000000000000000000000000001111111100000000ULL;
     root_node.w_knight = 0b0000000000000000000000000000000000000000000000000000000001000010ULL;
     root_node.w_bishop = 0b0000000000000000000000000000000000000000000000000000000000100100ULL;
-    root_node.w_rook   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.w_rook   = 0b0000000000000000000001000000000000000000000000000000000000000000ULL;
     root_node.w_queen  = 0b0000000000000000000000000000000000000000000000000000000000001000ULL;
     root_node.w_king   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
@@ -274,20 +283,13 @@ main() {
     root_node.white_pieces  = 0b0000000000000000000000000000000000000000000000001111111111111111ULL;
     root_node.black_pieces  = 0b1111111111111111000000000000000000000000000000000000000000000000ULL;
 
-    print_bitboard(root_node.b_pawn);
+    print_bitboard(root_node.w_rook);
     std::cout<<"----"<<std::endl;
-    print_bitboard(root_node.w_pawn_ep);
-    std::cout<<"----"<<std::endl;
-    for (const auto& child : gcBb(-1, root_node.b_pawn, root_node.black_pieces, root_node.white_pieces, root_node.w_pawn_ep)) {
-        print_bitboard(child.first);
+    for (const auto& child : gcTtXxQq(root_node.w_rook, root_node.white_pieces, root_node.black_pieces, {{1, 0}, {-1, 0}, {0, 1}, {0, -1}})) {
+        print_bitboard(child);
         std::cout<<"----"<<std::endl;
-        print_bitboard(child.second);
-        std::cout<<"-------------------------------"<<std::endl;
-        ;
     }
-    print_bitboard(root_node.b_pawn);
-    std::cout<<"----"<<std::endl;
-    print_bitboard(root_node.w_pawn_ep);
+    print_bitboard(root_node.w_rook);
     
 
 }
