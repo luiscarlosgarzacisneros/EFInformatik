@@ -218,7 +218,7 @@ std::vector<uint64_t> gcTtXxQq(const uint64_t bitboard, const uint64_t this_play
         }
     }
     //
-    return children;
+    return children;//für Zz:
 }
 
 //
