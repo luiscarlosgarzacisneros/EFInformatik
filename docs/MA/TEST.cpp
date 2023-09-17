@@ -67,305 +67,12 @@ uint64_t remove_common_bits(uint64_t from_this_bitboard, uint64_t by_comparing_w
 
 //
 
-std::vector<uint64_t> gcLl(const uint64_t knight_bitboard, const uint64_t this_players_pieces) {
-    std::vector<uint64_t> childrenLl;
-    //
-    int dx[] = {1, 2, 2, 1, -1, -2, -2, -1};
-    int dy[] = {2, 1, -1, -2, -2, -1, 1, 2};
-    
-    //get knights current position as (x, y) coord.
-    std::vector<std::pair<int,int>> knight_positions;
-    for (int y=0; y<8; ++y) {
-        for (int x=0; x<8; ++x) {
-            if (is_one_at_this_index(knight_bitboard, yx_zu_index(y, x))) {knight_positions.push_back({y, x});}
-        }
-    }
-    //modify boards
-    for (const auto& position : knight_positions) {
-        int y_current = position.first;
-        int x_current = position.second;
-        //
-        for (int i=0; i<8; ++i) {
-            int y_new = y_current + dy[i];
-            int x_new = x_current + dx[i];
-            //
-            if (is_in_board(y_new, x_new)) {
-                if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
-                    uint64_t child=shift_bit(knight_bitboard, y_current, x_current, y_new, x_new);
-                    childrenLl.push_back(child);
-                }
-            }
-        }
-    }
-    //
-    return childrenLl;
-}
-
-std::vector<std::pair<uint64_t, uint64_t>> gcBb(int player, const uint64_t pawn_bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, const uint64_t o_p_p_en) {
-    std::vector<std::pair<uint64_t, uint64_t>> childrenBb;
-    //get pawns current positions as (x, y) coord.
-    std::vector<std::pair<int,int>> pawn_positions;
-    for (int y=0; y<8; ++y) {
-        for (int x=0; x<8; ++x) {
-            if (is_one_at_this_index(pawn_bitboard, yx_zu_index(y, x))) {pawn_positions.push_back({y, x});}
-        }
-    }
-    //
-    uint64_t all_pieces=this_players_pieces|other_players_pieces;
-    //modify boards
-    for (const auto& position : pawn_positions) {
-        int vy = position.first;
-        int vx = position.second;
-        //
-        if (player==1) {
-            //2 nach vorne
-            if (vy==1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+2, vx)))) {
-                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+2, vx);
-                childrenBb.push_back({child, o_p_p_en});
-            }
-            //normal 1 nach vorne
-            if (vy+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx)))) {
-                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx);
-                childrenBb.push_back({child, o_p_p_en});
-            }
-            //schlagen
-            if (vy+1<8 && vx-1>-1 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy+1, vx-1))) {
-                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx-1);
-                childrenBb.push_back({child, o_p_p_en});
-            }
-            if (vy+1<8 && vx+1<8 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy+1, vx+1))) {
-                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx+1);
-                childrenBb.push_back({child, o_p_p_en});
-            }
-            //en passant
-            if (vy+1<8 && vx-1>-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx-1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx-1))) {
-                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx-1);
-                uint64_t new_o_p_p_en=clear_bit(o_p_p_en, yx_zu_index(vy, vx-1));
-                childrenBb.push_back({child, new_o_p_p_en});
-            }
-            if (vy+1<8 && vx+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx+1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx+1))) {
-                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx+1);
-                uint64_t new_o_p_p_en=clear_bit(o_p_p_en, yx_zu_index(vy, vx+1));
-                childrenBb.push_back({child, new_o_p_p_en});
-            }
-        }
-        //
-        else {
-            //2 nach vorne
-            if (vy==6 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-2, vx)))) {
-                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-2, vx);
-                childrenBb.push_back({child, o_p_p_en});
-            }
-            //normal 1 nach vorne
-            if (vy+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx)))) {
-                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx);
-                childrenBb.push_back({child, o_p_p_en});
-            }
-            //schlagen
-            if (vy-1>-1 && vx-1>-1 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy-1, vx-1))) {
-                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx-1);
-                childrenBb.push_back({child, o_p_p_en});
-            }
-            if (vy-1>-1 && vx+1<8 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy-1, vx+1))) {
-                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx+1);
-                childrenBb.push_back({child, o_p_p_en});
-            }
-            //en passant
-            if (vy-1>-1 && vx-1>-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx-1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx-1))) {
-                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx-1);
-                uint64_t new_o_p_p_en=clear_bit(o_p_p_en, yx_zu_index(vy, vx-1));
-                childrenBb.push_back({child, new_o_p_p_en});
-            }
-            if (vy-1>.1 && vx+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx+1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx+1))) {
-                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx+1);
-                uint64_t new_o_p_p_en=clear_bit(o_p_p_en, yx_zu_index(vy, vx+1));
-                childrenBb.push_back({child, new_o_p_p_en});
-            }
-        }
-    }
-    //
-    return childrenBb; //return a pair with child_pawn_this_player and new_o_p_p_en_other_player_of_this_child: in generate_children it can be implemented.
-}
-
-//Tt: {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
-//Xx: {{1, 1}, {-1, 1}, {1, -1}, {-1, -1}}
-//Qq: {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}}
-std::vector<uint64_t> gcTtXxQq(const uint64_t bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, std::vector<std::pair<int,int>> directions) {
-    std::vector<uint64_t> children_Tt_Xx_Qq;
-    //get current positions as (x, y) coord.
-    std::vector<std::pair<int,int>> positions;
-    for (int y=0; y<8; ++y) {
-        for (int x=0; x<8; ++x) {
-            if (is_one_at_this_index(bitboard, yx_zu_index(y, x))) {positions.push_back({y, x});}
-        }
-    }
-    //
-    //modify board
-    for (const auto& position : positions) {
-        int y_current = position.first;
-        int x_current = position.second;
-        //
-        for (const auto& direction : directions) {
-            int direction_y=direction.first;
-            int direction_x=direction.second;
-            //
-            for (int i=1; i<8; ++i) {
-                int y_new = y_current + i*direction_y;
-                int x_new = x_current + i*direction_x;
-                //
-                if (is_in_board(y_new, x_new)) {
-                    if (is_one_at_this_index(other_players_pieces, yx_zu_index(y_new, x_new))) {
-                        uint64_t child=shift_bit(bitboard, y_current, x_current, y_new, x_new);
-                        children_Tt_Xx_Qq.push_back(child);
-                        break;
-                    }
-                    else if (is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new))) {break;}
-                    else {
-                        uint64_t child=shift_bit(bitboard, y_current, x_current, y_new, x_new);
-                        children_Tt_Xx_Qq.push_back(child);
-                    }
-                }
-                else {break;}
-            }
-        }
-    }
-    //
-    return children_Tt_Xx_Qq;
-}
-
-std::vector<std::pair<uint64_t, uint64_t>> gcZz(const uint64_t Zz_bitboard, const uint64_t Tt_bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces) {
-    std::vector<std::pair<int,int>> directions={{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-    std::vector<std::pair<uint64_t, uint64_t>> children_Tt_Zz;
-    //
-    //position von Zz mit yx finden
-    std::vector<std::pair<int,int>> positions;
-    for (int y=0; y<8; ++y) {
-        for (int x=0; x<8; ++x) {
-            if (is_one_at_this_index(Zz_bitboard, yx_zu_index(y, x))) {positions.push_back({y, x});}
-        }
-    }
-    //
-    //modify board
-    for (const auto& position : positions) {
-        int y_current = position.first;
-        int x_current = position.second;
-        //
-        for (const auto& direction : directions) {
-            int direction_y=direction.first;
-            int direction_x=direction.second;
-            //
-            for (int i=1; i<8; ++i) {
-                int y_new = y_current + i*direction_y;
-                int x_new = x_current + i*direction_x;
-                //
-                if (is_in_board(y_new, x_new)) {
-                    if (is_one_at_this_index(other_players_pieces, yx_zu_index(y_new, x_new))) {
-                        uint64_t child_Tt=set_bit_to_one(Tt_bitboard, yx_zu_index(y_new, x_new));
-                        uint64_t child_Zz=clear_bit(Zz_bitboard, yx_zu_index(y_current, x_current));
-                        children_Tt_Zz.push_back({child_Tt, child_Zz});
-                        break;
-                    }
-                    else if (is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new))) {break;}
-                    else {
-                        uint64_t child_Tt=set_bit_to_one(Tt_bitboard, yx_zu_index(y_new, x_new));
-                        uint64_t child_Zz=clear_bit(Zz_bitboard, yx_zu_index(y_current, x_current));
-                        children_Tt_Zz.push_back({child_Tt, child_Zz});
-                    }
-                }
-                else {break;}
-            }
-        }
-    }
-    //
-    return children_Tt_Zz;//{child_Tt, child_Zz}
-}
-
-std::vector<uint64_t> gcKk(const uint64_t king_bitboard, const uint64_t this_players_pieces) {
-    std::vector<uint64_t> childrenKk;
-    //
-    int dx[] = {0, 0, 1, -1, 1, -1, 1, -1};
-    int dy[] = {1, -1, 0, 0, 1, 1, -1, -1};
-    
-    //get kings current position as (x, y) coord.
-    std::vector<std::pair<int,int>> knight_positions;
-    for (int y=0; y<8; ++y) {
-        for (int x=0; x<8; ++x) {
-            if (is_one_at_this_index(king_bitboard, yx_zu_index(y, x))) {knight_positions.push_back({y, x});}
-        }
-    }
-    //modify boards
-    for (const auto& position : knight_positions) {
-        int y_current = position.first;
-        int x_current = position.second;
-        //
-        for (int i=0; i<8; ++i) {
-            int y_new = y_current + dy[i];
-            int x_new = x_current + dx[i];
-            //
-            if (is_in_board(y_new, x_new)) {
-                if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
-                    uint64_t child=shift_bit(king_bitboard, y_current, x_current, y_new, x_new);
-                    childrenKk.push_back(child);
-                }
-            }
-        }
-    }
-    //
-    return childrenKk;
-}
-
-std::vector<std::vector<uint64_t>> gcYy(int player, const uint64_t Yy_bitboard, const uint64_t Kk_bitboard, const uint64_t Zz_bitboard, const uint64_t Tt_bitboard, const uint64_t this_players_pieces, const uint64_t all_pieces) {
-    std::vector<std::vector<uint64_t>> children;
-    //get Yy current positions as (x, y) coord.
-    std::vector<std::pair<int,int>> Yy_positions;
-    for (int y=0; y<8; ++y) {
-        for (int x=0; x<8; ++x) {
-            if (is_one_at_this_index(Yy_bitboard, yx_zu_index(y, x))) {Yy_positions.push_back({y, x});}
-        }
-    }
-    //get Zz current positions as (x, y) coord. ??????????
-    std::vector<std::pair<int,int>> Zz_positions;
-    for (int y=0; y<8; ++y) {
-        for (int x=0; x<8; ++x) {
-            if (is_one_at_this_index(Zz_bitboard, yx_zu_index(y, x))) {Zz_positions.push_back({y, x});}
-        }
-    }
-    //
-    int dx[] = {0, 0, 1, -1, 1, -1, 1, -1};
-    int dy[] = {1, -1, 0, 0, 1, 1, -1, -1};
-    //
-    //normal
-    for (const auto& position : Yy_positions) {
-        int y_current = position.first;
-        int x_current = position.second;
-        //
-        for (int i=0; i<8; ++i) {
-            int y_new = y_current + dy[i];
-            int x_new = x_current + dx[i];
-            //
-            if (is_in_board(y_new, x_new)) {
-                if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
-                    uint64_t new_Kk=set_bit_to_one(Kk_bitboard, yx_zu_index(y_new, x_new));
-                    uint64_t new_Yy=clear_bit(Yy_bitboard, yx_zu_index(y_new, x_new));
-                    std::vector<uint64_t> child;
-                    child.push_back(new_Kk);
-                    child.push_back(new_Yy);
-                    child.push_back(Tt_bitboard);
-                    child.push_back(Zz_bitboard);
-                    children.push_back(child);
-                }
-            }
-        }
-    }
-    //rochade
-    if (player==6) {
-        if (is_one_at_this_index(Yy_bitboard, 4) && is_one_at_this_index(Zz_bitboard, 0) && !(is_one_at_this_index(all_pieces, 1)) && !(is_one_at_this_index(all_pieces, 2)) && !(is_one_at_this_index(all_pieces, 3))) {
-            
-        }
-    }
-}
-
-//bei gcYy: return bitbKk und bitbTt und bitbZz
+std::vector<uint64_t> gcLl(const uint64_t knight_bitboard, const uint64_t this_players_pieces);
+std::vector<std::pair<uint64_t, uint64_t>> gcBb(int player, const uint64_t pawn_bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, const uint64_t o_p_p_en);
+std::vector<uint64_t> gcTtXxQq(const uint64_t bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, std::vector<std::pair<int,int>> directions);
+std::vector<std::pair<uint64_t, uint64_t>> gcZz(const uint64_t Zz_bitboard, const uint64_t Tt_bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces);
+std::vector<uint64_t> gcKk(const uint64_t king_bitboard, const uint64_t this_players_pieces);
+std::vector<std::vector<uint64_t>> gcYy(int player, const uint64_t Yy_bitboard, const uint64_t Kk_bitboard, const uint64_t Zz_bitboard, const uint64_t Tt_bitboard, const uint64_t this_players_pieces, const uint64_t all_pieces);
 
 //
 
@@ -838,6 +545,305 @@ public:
     }
 
 };
+
+//
+
+
+std::vector<uint64_t> gcLl(const uint64_t knight_bitboard, const uint64_t this_players_pieces) {
+    std::vector<uint64_t> childrenLl;
+    //
+    int dx[] = {1, 2, 2, 1, -1, -2, -2, -1};
+    int dy[] = {2, 1, -1, -2, -2, -1, 1, 2};
+    
+    //get knights current position as (x, y) coord.
+    std::vector<std::pair<int,int>> knight_positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(knight_bitboard, yx_zu_index(y, x))) {knight_positions.push_back({y, x});}
+        }
+    }
+    //modify boards
+    for (const auto& position : knight_positions) {
+        int y_current = position.first;
+        int x_current = position.second;
+        //
+        for (int i=0; i<8; ++i) {
+            int y_new = y_current + dy[i];
+            int x_new = x_current + dx[i];
+            //
+            if (is_in_board(y_new, x_new)) {
+                if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
+                    uint64_t child=shift_bit(knight_bitboard, y_current, x_current, y_new, x_new);
+                    childrenLl.push_back(child);
+                }
+            }
+        }
+    }
+    //
+    return childrenLl;
+}
+
+std::vector<std::pair<uint64_t, uint64_t>> gcBb(int player, const uint64_t pawn_bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, const uint64_t o_p_p_en) {
+    std::vector<std::pair<uint64_t, uint64_t>> childrenBb;
+    //get pawns current positions as (x, y) coord.
+    std::vector<std::pair<int,int>> pawn_positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(pawn_bitboard, yx_zu_index(y, x))) {pawn_positions.push_back({y, x});}
+        }
+    }
+    //
+    uint64_t all_pieces=this_players_pieces|other_players_pieces;
+    //modify boards
+    for (const auto& position : pawn_positions) {
+        int vy = position.first;
+        int vx = position.second;
+        //
+        if (player==1) {
+            //2 nach vorne
+            if (vy==1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+2, vx)))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+2, vx);
+                childrenBb.push_back({child, o_p_p_en});
+            }
+            //normal 1 nach vorne
+            if (vy+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx)))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx);
+                childrenBb.push_back({child, o_p_p_en});
+            }
+            //schlagen
+            if (vy+1<8 && vx-1>-1 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy+1, vx-1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx-1);
+                childrenBb.push_back({child, o_p_p_en});
+            }
+            if (vy+1<8 && vx+1<8 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy+1, vx+1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx+1);
+                childrenBb.push_back({child, o_p_p_en});
+            }
+            //en passant
+            if (vy+1<8 && vx-1>-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx-1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx-1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx-1);
+                uint64_t new_o_p_p_en=clear_bit(o_p_p_en, yx_zu_index(vy, vx-1));
+                childrenBb.push_back({child, new_o_p_p_en});
+            }
+            if (vy+1<8 && vx+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx+1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx+1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx+1);
+                uint64_t new_o_p_p_en=clear_bit(o_p_p_en, yx_zu_index(vy, vx+1));
+                childrenBb.push_back({child, new_o_p_p_en});
+            }
+        }
+        //
+        else {
+            //2 nach vorne
+            if (vy==6 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-2, vx)))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-2, vx);
+                childrenBb.push_back({child, o_p_p_en});
+            }
+            //normal 1 nach vorne
+            if (vy+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx)))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx);
+                childrenBb.push_back({child, o_p_p_en});
+            }
+            //schlagen
+            if (vy-1>-1 && vx-1>-1 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy-1, vx-1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx-1);
+                childrenBb.push_back({child, o_p_p_en});
+            }
+            if (vy-1>-1 && vx+1<8 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy-1, vx+1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx+1);
+                childrenBb.push_back({child, o_p_p_en});
+            }
+            //en passant
+            if (vy-1>-1 && vx-1>-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx-1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx-1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx-1);
+                uint64_t new_o_p_p_en=clear_bit(o_p_p_en, yx_zu_index(vy, vx-1));
+                childrenBb.push_back({child, new_o_p_p_en});
+            }
+            if (vy-1>.1 && vx+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx+1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx+1))) {
+                uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx+1);
+                uint64_t new_o_p_p_en=clear_bit(o_p_p_en, yx_zu_index(vy, vx+1));
+                childrenBb.push_back({child, new_o_p_p_en});
+            }
+        }
+    }
+    //
+    return childrenBb; //return a pair with child_pawn_this_player and new_o_p_p_en_other_player_of_this_child: in generate_children it can be implemented.
+}
+
+//Tt: {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+//Xx: {{1, 1}, {-1, 1}, {1, -1}, {-1, -1}}
+//Qq: {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}}
+std::vector<uint64_t> gcTtXxQq(const uint64_t bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, std::vector<std::pair<int,int>> directions) {
+    std::vector<uint64_t> children_Tt_Xx_Qq;
+    //get current positions as (x, y) coord.
+    std::vector<std::pair<int,int>> positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(bitboard, yx_zu_index(y, x))) {positions.push_back({y, x});}
+        }
+    }
+    //
+    //modify board
+    for (const auto& position : positions) {
+        int y_current = position.first;
+        int x_current = position.second;
+        //
+        for (const auto& direction : directions) {
+            int direction_y=direction.first;
+            int direction_x=direction.second;
+            //
+            for (int i=1; i<8; ++i) {
+                int y_new = y_current + i*direction_y;
+                int x_new = x_current + i*direction_x;
+                //
+                if (is_in_board(y_new, x_new)) {
+                    if (is_one_at_this_index(other_players_pieces, yx_zu_index(y_new, x_new))) {
+                        uint64_t child=shift_bit(bitboard, y_current, x_current, y_new, x_new);
+                        children_Tt_Xx_Qq.push_back(child);
+                        break;
+                    }
+                    else if (is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new))) {break;}
+                    else {
+                        uint64_t child=shift_bit(bitboard, y_current, x_current, y_new, x_new);
+                        children_Tt_Xx_Qq.push_back(child);
+                    }
+                }
+                else {break;}
+            }
+        }
+    }
+    //
+    return children_Tt_Xx_Qq;
+}
+
+std::vector<std::pair<uint64_t, uint64_t>> gcZz(const uint64_t Zz_bitboard, const uint64_t Tt_bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces) {
+    std::vector<std::pair<int,int>> directions={{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    std::vector<std::pair<uint64_t, uint64_t>> children_Tt_Zz;
+    //
+    //position von Zz mit yx finden
+    std::vector<std::pair<int,int>> positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(Zz_bitboard, yx_zu_index(y, x))) {positions.push_back({y, x});}
+        }
+    }
+    //
+    //modify board
+    for (const auto& position : positions) {
+        int y_current = position.first;
+        int x_current = position.second;
+        //
+        for (const auto& direction : directions) {
+            int direction_y=direction.first;
+            int direction_x=direction.second;
+            //
+            for (int i=1; i<8; ++i) {
+                int y_new = y_current + i*direction_y;
+                int x_new = x_current + i*direction_x;
+                //
+                if (is_in_board(y_new, x_new)) {
+                    if (is_one_at_this_index(other_players_pieces, yx_zu_index(y_new, x_new))) {
+                        uint64_t child_Tt=set_bit_to_one(Tt_bitboard, yx_zu_index(y_new, x_new));
+                        uint64_t child_Zz=clear_bit(Zz_bitboard, yx_zu_index(y_current, x_current));
+                        children_Tt_Zz.push_back({child_Tt, child_Zz});
+                        break;
+                    }
+                    else if (is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new))) {break;}
+                    else {
+                        uint64_t child_Tt=set_bit_to_one(Tt_bitboard, yx_zu_index(y_new, x_new));
+                        uint64_t child_Zz=clear_bit(Zz_bitboard, yx_zu_index(y_current, x_current));
+                        children_Tt_Zz.push_back({child_Tt, child_Zz});
+                    }
+                }
+                else {break;}
+            }
+        }
+    }
+    //
+    return children_Tt_Zz;//{child_Tt, child_Zz}
+}
+
+std::vector<uint64_t> gcKk(const uint64_t king_bitboard, const uint64_t this_players_pieces) {
+    std::vector<uint64_t> childrenKk;
+    //
+    int dx[] = {0, 0, 1, -1, 1, -1, 1, -1};
+    int dy[] = {1, -1, 0, 0, 1, 1, -1, -1};
+    
+    //get kings current position as (x, y) coord.
+    std::vector<std::pair<int,int>> knight_positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(king_bitboard, yx_zu_index(y, x))) {knight_positions.push_back({y, x});}
+        }
+    }
+    //modify boards
+    for (const auto& position : knight_positions) {
+        int y_current = position.first;
+        int x_current = position.second;
+        //
+        for (int i=0; i<8; ++i) {
+            int y_new = y_current + dy[i];
+            int x_new = x_current + dx[i];
+            //
+            if (is_in_board(y_new, x_new)) {
+                if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
+                    uint64_t child=shift_bit(king_bitboard, y_current, x_current, y_new, x_new);
+                    childrenKk.push_back(child);
+                }
+            }
+        }
+    }
+    //
+    return childrenKk;
+}
+
+std::vector<std::vector<uint64_t>> gcYy(int player, const uint64_t Yy_bitboard, const uint64_t Kk_bitboard, const uint64_t Zz_bitboard, const uint64_t Tt_bitboard, const uint64_t this_players_pieces, const uint64_t all_pieces) {
+    std::vector<std::vector<uint64_t>> children;
+    //get Yy current positions as (x, y) coord.
+    std::vector<std::pair<int,int>> Yy_positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(Yy_bitboard, yx_zu_index(y, x))) {Yy_positions.push_back({y, x});}
+        }
+    }
+    //
+    int dx[] = {0, 0, 1, -1, 1, -1, 1, -1};
+    int dy[] = {1, -1, 0, 0, 1, 1, -1, -1};
+    //
+    //normal
+    for (const auto& position : Yy_positions) {
+        int y_current = position.first;
+        int x_current = position.second;
+        //
+        for (int i=0; i<8; ++i) {
+            int y_new = y_current + dy[i];
+            int x_new = x_current + dx[i];
+            //
+            if (is_in_board(y_new, x_new)) {
+                if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
+                    uint64_t new_Kk=set_bit_to_one(Kk_bitboard, yx_zu_index(y_new, x_new));
+                    uint64_t new_Yy=clear_bit(Yy_bitboard, yx_zu_index(y_new, x_new));
+                    std::vector<uint64_t> child;
+                    child.push_back(new_Kk);
+                    child.push_back(new_Yy);
+                    child.push_back(Tt_bitboard);
+                    child.push_back(Zz_bitboard);
+                    children.push_back(child);
+                }
+            }
+        }
+    }
+    //rochade
+    if (player==6) {
+        if (is_one_at_this_index(Yy_bitboard, 4) && is_one_at_this_index(Zz_bitboard, 0) && !(is_one_at_this_index(all_pieces, 1)) && !(is_one_at_this_index(all_pieces, 2)) && !(is_one_at_this_index(all_pieces, 3))) {
+            uint64_t new_Kk=set_bit_to_one(Kk_bitboard, 2);
+            uint64_t new_Yy=clear_bit(Yy_bitboard, 4);
+            uint64_t new_Tt=set_bit_to_one(Tt_bitboard, 3);
+            uint64_t new_Zz=clear_bit(Zz_bitboard, 0);
+            bool legal=true;
+            for (Board child : g)
+        }
+    }
+}
 
 //
 
