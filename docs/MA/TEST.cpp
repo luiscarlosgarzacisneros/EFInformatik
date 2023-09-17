@@ -58,6 +58,14 @@ uint64_t set_bit_to_one(uint64_t bitboard, int index) {
     return bitboard | mask;
 }
 
+uint64_t remove_common_bits(uint64_t from_this_bitboard, uint64_t by_comparing_with_this_board) {
+    //find common bits by AND operation
+    uint64_t common_bits = from_this_bitboard & by_comparing_with_this_board;
+    //remove common bits from bitboard1
+    uint64_t result = from_this_bitboard & (~common_bits);
+    return result;
+}
+
 //
 
 std::vector<uint64_t> gcLl(const uint64_t knight_bitboard, const uint64_t this_players_pieces) {
@@ -437,9 +445,53 @@ public:
         uint64_t white_pieces = this->b|this->l|this->x|this->t|this->q|this->k|this->y|this->z|this->f;
         uint64_t black_pieces = this->B|this->L|this->X|this->T|this->Q|this->K|this->Y|this->Z|this->F;
         if (playerk==6) {
-            for (const auto& child : gcBb(1, this->b, white_pieces, black_pieces, this->F)) {
+            for (const auto& board : gcBb(1, this->b, white_pieces, black_pieces, this->F)) {
                 Board child;
-                ;
+                child.b=board.first;
+                child.l=this->l;
+                child.x=this->x;
+                child.t=this->t;
+                child.q=this->q;
+                child.k=this->k;
+                child.y=this->y;
+                child.z=this->z;
+                child.f=this->f;
+                //
+                child.B=remove_common_bits(this->B, board.first);
+                child.L=remove_common_bits(this->L, board.first);
+                child.X=remove_common_bits(this->X, board.first);
+                child.T=remove_common_bits(this->T, board.first);
+                child.Q=remove_common_bits(this->Q, board.first);
+                child.K=remove_common_bits(this->K, board.first);
+                child.Y=remove_common_bits(this->Y, board.first);
+                child.Z=remove_common_bits(this->Z, board.first);
+                child.F=remove_common_bits(board.second, board.first);
+                //
+                children.push_back(child);
+            }
+            for (const auto& board : gcLl(this->l, white_pieces)) {
+                Board child;
+                child.b=this->b;
+                child.l=board;
+                child.x=this->x;
+                child.t=this->t;
+                child.q=this->q;
+                child.k=this->k;
+                child.y=this->y;
+                child.z=this->z;
+                child.f=this->f;
+                //
+                child.B=remove_common_bits(this->B, board);
+                child.L=remove_common_bits(this->L, board);
+                child.X=remove_common_bits(this->X, board);
+                child.T=remove_common_bits(this->T, board);
+                child.Q=remove_common_bits(this->Q, board);
+                child.K=remove_common_bits(this->K, board);
+                child.Y=remove_common_bits(this->Y, board);
+                child.Z=remove_common_bits(this->Z, board);
+                child.F=remove_common_bits(this->F, board);
+                //
+                children.push_back(child);
             }
         }
         
