@@ -748,7 +748,7 @@ public:
                 child.F=this->F;
                 //
                 child.b=remove_common_bits(this->b, board.first);
-                child.l=remove_common_bits(this->L, board.first);
+                child.l=remove_common_bits(this->l, board.first);
                 child.x=remove_common_bits(this->x, board.first);
                 child.t=remove_common_bits(this->t, board.first);
                 child.q=remove_common_bits(this->q, board.first);
@@ -784,7 +784,7 @@ public:
                 children.push_back(child);
             }
         }
-        
+        return children;
     }
 
 };
@@ -809,27 +809,21 @@ main() {
     root_node.X = 0b0010010000000000000000000000000000000000000000000000000000000000ULL;
     root_node.T   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
     root_node.Q  = 0b0000100000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.K   = 0b0000000000000000100000000000000000000000000000000000000000000000ULL;
+    root_node.K   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
     root_node.Y   = 0b0001000000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.Z   = 0b1000000100000000000000000000000000000000000000000000000000000000ULL;
+    root_node.Z   = 0b1000000100000000000000010000000000000000000000000000000000000000ULL;
     root_node.F   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
     uint64_t white_pieces = root_node.b|root_node.l|root_node.x|root_node.t|root_node.q|root_node.k|root_node.y|root_node.z|root_node.f;
     uint64_t black_pieces = root_node.B|root_node.L|root_node.X|root_node.T|root_node.Q|root_node.K|root_node.Y|root_node.Z|root_node.F;
 
-    print_bitboard(root_node.K);
-    std::cout<<"----"<<std::endl;
-    for (const auto& child : gcKk(root_node.K, black_pieces)) {
-        print_bitboard(child);
-        std::cout<<"----"<<std::endl;
+    root_node.print_board();
+    std::cout<<"--------------"<<std::endl;
+    for (Board child : root_node.generate_children(-6)) {
+        child.print_board();
     }
-    print_bitboard(root_node.K);
-    std::cout<<"----"<<std::endl;
-    print_bitboard(root_node.Y);
-    std::cout<<"----"<<std::endl;
-    print_bitboard(root_node.y);
-    
+    std::cout<<"--------------"<<std::endl;
     root_node.print_board();
 
 }
