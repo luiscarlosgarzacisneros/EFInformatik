@@ -434,6 +434,15 @@ public:
             }
         }
         //
+        uint64_t white_pieces = this->b|this->l|this->x|this->t|this->q|this->k|this->y|this->z|this->f;
+        uint64_t black_pieces = this->B|this->L|this->X|this->T|this->Q|this->K|this->Y|this->Z|this->F;
+        if (playerk==6) {
+            for (const auto& child : gcBb(1, this->b, white_pieces, black_pieces, this->F)) {
+                Board child;
+                ;
+            }
+        }
+        
     }
 
 };
