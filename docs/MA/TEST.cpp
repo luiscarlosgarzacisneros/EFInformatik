@@ -27,8 +27,7 @@ void print_bitboard(const uint64_t bitboard) {
 
 bool is_one_at_this_index(const uint64_t bitboard, int index) {
     uint64_t m = 1ULL << index; //m=00000....001 1 wird um index rightshifted
-    return (((bitboard & m) != 0));
-    
+    return (((bitboard & m) != 0)); 
 }
 
 int yx_zu_index(int y, int x) {
@@ -287,7 +286,7 @@ std::vector<uint64_t> gcKk(const uint64_t king_bitboard, const uint64_t this_pla
     int dx[] = {0, 0, 1, -1, 1, -1, 1, -1};
     int dy[] = {1, -1, 0, 0, 1, 1, -1, -1};
     
-    //get knights current position as (x, y) coord.
+    //get kings current position as (x, y) coord.
     std::vector<std::pair<int,int>> knight_positions;
     for (int y=0; y<8; ++y) {
         for (int x=0; x<8; ++x) {
@@ -313,6 +312,57 @@ std::vector<uint64_t> gcKk(const uint64_t king_bitboard, const uint64_t this_pla
     }
     //
     return childrenKk;
+}
+
+std::vector<std::vector<uint64_t>> gcYy(int player, const uint64_t Yy_bitboard, const uint64_t Kk_bitboard, const uint64_t Zz_bitboard, const uint64_t Tt_bitboard, const uint64_t this_players_pieces, const uint64_t all_pieces) {
+    std::vector<std::vector<uint64_t>> children;
+    //get Yy current positions as (x, y) coord.
+    std::vector<std::pair<int,int>> Yy_positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(Yy_bitboard, yx_zu_index(y, x))) {Yy_positions.push_back({y, x});}
+        }
+    }
+    //get Zz current positions as (x, y) coord. ??????????
+    std::vector<std::pair<int,int>> Zz_positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(Zz_bitboard, yx_zu_index(y, x))) {Zz_positions.push_back({y, x});}
+        }
+    }
+    //
+    int dx[] = {0, 0, 1, -1, 1, -1, 1, -1};
+    int dy[] = {1, -1, 0, 0, 1, 1, -1, -1};
+    //
+    //normal
+    for (const auto& position : Yy_positions) {
+        int y_current = position.first;
+        int x_current = position.second;
+        //
+        for (int i=0; i<8; ++i) {
+            int y_new = y_current + dy[i];
+            int x_new = x_current + dx[i];
+            //
+            if (is_in_board(y_new, x_new)) {
+                if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
+                    uint64_t new_Kk=set_bit_to_one(Kk_bitboard, yx_zu_index(y_new, x_new));
+                    uint64_t new_Yy=clear_bit(Yy_bitboard, yx_zu_index(y_new, x_new));
+                    std::vector<uint64_t> child;
+                    child.push_back(new_Kk);
+                    child.push_back(new_Yy);
+                    child.push_back(Tt_bitboard);
+                    child.push_back(Zz_bitboard);
+                    children.push_back(child);
+                }
+            }
+        }
+    }
+    //rochade
+    if (player==6) {
+        if (is_one_at_this_index(Yy_bitboard, 4) && is_one_at_this_index(Zz_bitboard, 0) && !(is_one_at_this_index(all_pieces, 1)) && !(is_one_at_this_index(all_pieces, 2)) && !(is_one_at_this_index(all_pieces, 3))) {
+            
+        }
+    }
 }
 
 //bei gcYy: return bitbKk und bitbTt und bitbZz
