@@ -398,6 +398,44 @@ public:
         }
     }
 
+    std::vector<Board> generate_children(int playerk) {
+        std::vector<Board> children;
+        //
+        //Ff zu Bb
+        std::vector<std::pair<int,int>> positions_Ff;
+        if (playerk==6) {
+            for (int y=0; y<8; ++y) {
+                for (int x=0; x<8; ++x) {
+                    if (is_one_at_this_index(this->f, yx_zu_index(y, x))) {positions_Ff.push_back({y, x});}
+                }
+            }
+            for (const auto& position_Ff : positions_Ff) {
+                int y=position_Ff.first;
+                int x=position_Ff.second;
+                uint64_t new_f=clear_bit(this->f, yx_zu_index(y, x));
+                uint64_t new_b=set_bit_to_one(this->b, yx_zu_index(y, x));
+                this->f=new_f;
+                this->b=new_b;
+            }
+        }
+        else {
+            for (int y=0; y<8; ++y) {
+                for (int x=0; x<8; ++x) {
+                    if (is_one_at_this_index(this->F, yx_zu_index(y, x))) {positions_Ff.push_back({y, x});}
+                }
+            }
+            for (const auto& position_Ff : positions_Ff) {
+                int y=position_Ff.first;
+                int x=position_Ff.second;
+                uint64_t new_F=clear_bit(this->F, yx_zu_index(y, x));
+                uint64_t new_B=set_bit_to_one(this->B, yx_zu_index(y, x));
+                this->F=new_F;
+                this->B=new_B;
+            }
+        }
+        //
+    }
+
 };
 
 //
