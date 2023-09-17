@@ -467,8 +467,18 @@ public:
                 uint64_t new_Yy=clear_bit(Yy_bitboard, 4);
                 uint64_t new_Tt=set_bit_to_one(Tt_bitboard, 3);
                 uint64_t new_Zz=clear_bit(Zz_bitboard, 0);
+                //
+                Board simulation;
+
                 bool legal=true;
-                for (Board child : g)
+                for (Board child : simulation.generate_children(-6)) {
+                    uint64_t other_players_pieces= child.B|child.L|child.X|child.T|child.Q|child.K|child.Y|child.Z|child.F;
+                    if (is_one_at_this_index(other_players_pieces, 2) || is_one_at_this_index(other_players_pieces, 3) || is_one_at_this_index(other_players_pieces, 4)) {
+                        legal=false;
+                        break;
+                    }
+                }
+                
             }
         }
     }
