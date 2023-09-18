@@ -696,6 +696,8 @@ public:
         //
         uint64_t white_pieces = this->b|this->l|this->x|this->t|this->q|this->k|this->y|this->z|this->f;
         uint64_t black_pieces = this->B|this->L|this->X|this->T|this->Q|this->K|this->Y|this->Z|this->F;
+        uint64_t all_pieces = white_pieces|black_pieces;
+        //
         if (playerk==6) {
             if (this->b!=0) {
                 for (const auto& board : gcBb(1, this->b, white_pieces, black_pieces, this->F)) {
@@ -887,173 +889,193 @@ public:
             }
         }
         else {
-            for (const auto& board : gcBb(-1, this->B, black_pieces, white_pieces, this->f)) {
-                Board child;
-                child.B=board.first;
-                child.L=this->L;
-                child.X=this->X;
-                child.T=this->T;
-                child.Q=this->Q;
-                child.K=this->K;
-                child.Y=this->Y;
-                child.Z=this->Z;
-                child.F=this->F;
-                //
-                child.b=remove_common_bits(this->b, board.first);
-                child.l=remove_common_bits(this->l, board.first);
-                child.x=remove_common_bits(this->x, board.first);
-                child.t=remove_common_bits(this->t, board.first);
-                child.q=remove_common_bits(this->q, board.first);
-                child.k=remove_common_bits(this->k, board.first);
-                child.y=remove_common_bits(this->y, board.first);
-                child.z=remove_common_bits(this->z, board.first);
-                child.f=remove_common_bits(board.second, board.first);
-                //
-                children.push_back(child);
+            if (this->B!=0) {
+                for (const auto& board : gcBb(-1, this->B, black_pieces, white_pieces, this->f)) {
+                    Board child;
+                    child.B=board.first;
+                    child.L=this->L;
+                    child.X=this->X;
+                    child.T=this->T;
+                    child.Q=this->Q;
+                    child.K=this->K;
+                    child.Y=this->Y;
+                    child.Z=this->Z;
+                    child.F=this->F;
+                    //
+                    child.b=remove_common_bits(this->b, board.first);
+                    child.l=remove_common_bits(this->l, board.first);
+                    child.x=remove_common_bits(this->x, board.first);
+                    child.t=remove_common_bits(this->t, board.first);
+                    child.q=remove_common_bits(this->q, board.first);
+                    child.k=remove_common_bits(this->k, board.first);
+                    child.y=remove_common_bits(this->y, board.first);
+                    child.z=remove_common_bits(this->z, board.first);
+                    child.f=remove_common_bits(board.second, board.first);
+                    //
+                    children.push_back(child);
+                }
             }
-            for (const auto& board : gcLl(this->L, black_pieces)) {
-                Board child;
-                child.B=this->B;
-                child.L=board;
-                child.X=this->X;
-                child.T=this->T;
-                child.Q=this->Q;
-                child.K=this->K;
-                child.Y=this->Y;
-                child.Z=this->Z;
-                child.F=this->F;
-                //
-                child.b=remove_common_bits(this->b, board);
-                child.l=remove_common_bits(this->l, board);
-                child.x=remove_common_bits(this->x, board);
-                child.t=remove_common_bits(this->t, board);
-                child.q=remove_common_bits(this->q, board);
-                child.k=remove_common_bits(this->k, board);
-                child.y=remove_common_bits(this->y, board);
-                child.z=remove_common_bits(this->z, board);
-                child.f=remove_common_bits(this->f, board);
-                //
-                children.push_back(child);
+            //
+            if (this->L!=0) {
+                for (const auto& board : gcLl(this->L, black_pieces)) {
+                    Board child;
+                    child.B=this->B;
+                    child.L=board;
+                    child.X=this->X;
+                    child.T=this->T;
+                    child.Q=this->Q;
+                    child.K=this->K;
+                    child.Y=this->Y;
+                    child.Z=this->Z;
+                    child.F=this->F;
+                    //
+                    child.b=remove_common_bits(this->b, board);
+                    child.l=remove_common_bits(this->l, board);
+                    child.x=remove_common_bits(this->x, board);
+                    child.t=remove_common_bits(this->t, board);
+                    child.q=remove_common_bits(this->q, board);
+                    child.k=remove_common_bits(this->k, board);
+                    child.y=remove_common_bits(this->y, board);
+                    child.z=remove_common_bits(this->z, board);
+                    child.f=remove_common_bits(this->f, board);
+                    //
+                    children.push_back(child);
+                }
             }
-            for (const auto& board : gcTtXxQq(this->T, black_pieces, white_pieces, {{1, 0}, {-1, 0}, {0, 1}, {0, -1}})) {
-                Board child;
-                child.B=this->B;
-                child.L=this->L;
-                child.X=this->X;
-                child.T=board;
-                child.Q=this->Q;
-                child.K=this->K;
-                child.Y=this->Y;
-                child.Z=this->Z;
-                child.F=this->F;
-                //
-                child.b=remove_common_bits(this->b, board);
-                child.l=remove_common_bits(this->l, board);
-                child.x=remove_common_bits(this->x, board);
-                child.t=remove_common_bits(this->t, board);
-                child.q=remove_common_bits(this->q, board);
-                child.k=remove_common_bits(this->k, board);
-                child.y=remove_common_bits(this->y, board);
-                child.z=remove_common_bits(this->z, board);
-                child.f=remove_common_bits(this->f, board);
-                //
-                children.push_back(child);
+            //
+            if (this->T!=0) {
+                for (const auto& board : gcTtXxQq(this->T, black_pieces, white_pieces, {{1, 0}, {-1, 0}, {0, 1}, {0, -1}})) {
+                    Board child;
+                    child.B=this->B;
+                    child.L=this->L;
+                    child.X=this->X;
+                    child.T=board;
+                    child.Q=this->Q;
+                    child.K=this->K;
+                    child.Y=this->Y;
+                    child.Z=this->Z;
+                    child.F=this->F;
+                    //
+                    child.b=remove_common_bits(this->b, board);
+                    child.l=remove_common_bits(this->l, board);
+                    child.x=remove_common_bits(this->x, board);
+                    child.t=remove_common_bits(this->t, board);
+                    child.q=remove_common_bits(this->q, board);
+                    child.k=remove_common_bits(this->k, board);
+                    child.y=remove_common_bits(this->y, board);
+                    child.z=remove_common_bits(this->z, board);
+                    child.f=remove_common_bits(this->f, board);
+                    //
+                    children.push_back(child);
+                }
             }
-            for (const auto& board : gcTtXxQq(this->X, black_pieces, white_pieces, {{1, 1}, {-1, 1}, {1, -1}, {-1, -1}})) {
-                Board child;
-                child.B=this->B;
-                child.L=this->L;
-                child.X=board;
-                child.T=this->T;
-                child.Q=this->Q;
-                child.K=this->K;
-                child.Y=this->Y;
-                child.Z=this->Z;
-                child.F=this->F;
-                //
-                child.b=remove_common_bits(this->b, board);
-                child.l=remove_common_bits(this->l, board);
-                child.x=remove_common_bits(this->x, board);
-                child.t=remove_common_bits(this->t, board);
-                child.q=remove_common_bits(this->q, board);
-                child.k=remove_common_bits(this->k, board);
-                child.y=remove_common_bits(this->y, board);
-                child.z=remove_common_bits(this->z, board);
-                child.f=remove_common_bits(this->f, board);
-                //
-                children.push_back(child);
+            //
+            if (this->X!=0) {
+                for (const auto& board : gcTtXxQq(this->X, black_pieces, white_pieces, {{1, 1}, {-1, 1}, {1, -1}, {-1, -1}})) {
+                    Board child;
+                    child.B=this->B;
+                    child.L=this->L;
+                    child.X=board;
+                    child.T=this->T;
+                    child.Q=this->Q;
+                    child.K=this->K;
+                    child.Y=this->Y;
+                    child.Z=this->Z;
+                    child.F=this->F;
+                    //
+                    child.b=remove_common_bits(this->b, board);
+                    child.l=remove_common_bits(this->l, board);
+                    child.x=remove_common_bits(this->x, board);
+                    child.t=remove_common_bits(this->t, board);
+                    child.q=remove_common_bits(this->q, board);
+                    child.k=remove_common_bits(this->k, board);
+                    child.y=remove_common_bits(this->y, board);
+                    child.z=remove_common_bits(this->z, board);
+                    child.f=remove_common_bits(this->f, board);
+                    //
+                    children.push_back(child);
+                }
             }
-            for (const auto& board : gcTtXxQq(this->Q, black_pieces, white_pieces, {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}})) {
-                Board child;
-                child.B=this->B;
-                child.L=this->L;
-                child.X=this->X;
-                child.T=this->T;
-                child.Q=board;
-                child.K=this->K;
-                child.Y=this->Y;
-                child.Z=this->Z;
-                child.F=this->F;
-                //
-                child.b=remove_common_bits(this->b, board);
-                child.l=remove_common_bits(this->l, board);
-                child.x=remove_common_bits(this->x, board);
-                child.t=remove_common_bits(this->t, board);
-                child.q=remove_common_bits(this->q, board);
-                child.k=remove_common_bits(this->k, board);
-                child.y=remove_common_bits(this->y, board);
-                child.z=remove_common_bits(this->z, board);
-                child.f=remove_common_bits(this->f, board);
-                //
-                children.push_back(child);
+            //
+            if (this->Q!=0) {
+                for (const auto& board : gcTtXxQq(this->Q, black_pieces, white_pieces, {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}})) {
+                    Board child;
+                    child.B=this->B;
+                    child.L=this->L;
+                    child.X=this->X;
+                    child.T=this->T;
+                    child.Q=board;
+                    child.K=this->K;
+                    child.Y=this->Y;
+                    child.Z=this->Z;
+                    child.F=this->F;
+                    //
+                    child.b=remove_common_bits(this->b, board);
+                    child.l=remove_common_bits(this->l, board);
+                    child.x=remove_common_bits(this->x, board);
+                    child.t=remove_common_bits(this->t, board);
+                    child.q=remove_common_bits(this->q, board);
+                    child.k=remove_common_bits(this->k, board);
+                    child.y=remove_common_bits(this->y, board);
+                    child.z=remove_common_bits(this->z, board);
+                    child.f=remove_common_bits(this->f, board);
+                    //
+                    children.push_back(child);
+                }
             }
-            for (const auto& board : gcZz(this->Z, this->T, black_pieces, white_pieces)) {
-                Board child;
-                child.B=this->B;
-                child.L=this->L;
-                child.X=this->X;
-                child.T=board.first;
-                child.Q=this->Q;
-                child.K=this->K;
-                child.Y=this->Y;
-                child.Z=board.second;
-                child.F=this->F;
-                //
-                child.b=remove_common_bits(this->b, board.first);
-                child.l=remove_common_bits(this->l, board.first);
-                child.x=remove_common_bits(this->x, board.first);
-                child.t=remove_common_bits(this->t, board.first);
-                child.q=remove_common_bits(this->q, board.first);
-                child.k=remove_common_bits(this->k, board.first);
-                child.y=remove_common_bits(this->y, board.first);
-                child.z=remove_common_bits(this->z, board.first);
-                child.f=remove_common_bits(this->f, board.first);
-                //
-                children.push_back(child);
+            //
+            if (this->Z!=0) {
+                for (const auto& board : gcZz(this->Z, this->T, black_pieces, white_pieces)) {
+                    Board child;
+                    child.B=this->B;
+                    child.L=this->L;
+                    child.X=this->X;
+                    child.T=board.first;
+                    child.Q=this->Q;
+                    child.K=this->K;
+                    child.Y=this->Y;
+                    child.Z=board.second;
+                    child.F=this->F;
+                    //
+                    child.b=remove_common_bits(this->b, board.first);
+                    child.l=remove_common_bits(this->l, board.first);
+                    child.x=remove_common_bits(this->x, board.first);
+                    child.t=remove_common_bits(this->t, board.first);
+                    child.q=remove_common_bits(this->q, board.first);
+                    child.k=remove_common_bits(this->k, board.first);
+                    child.y=remove_common_bits(this->y, board.first);
+                    child.z=remove_common_bits(this->z, board.first);
+                    child.f=remove_common_bits(this->f, board.first);
+                    //
+                    children.push_back(child);
+                }
             }
-            for (const auto& board : gcKk(this->K, black_pieces)) {
-                Board child;
-                child.B=this->B;
-                child.L=this->L;
-                child.X=this->X;
-                child.T=this->T;
-                child.Q=this->Q;
-                child.K=board;
-                child.Y=this->Y;
-                child.Z=this->Z;
-                child.F=this->F;
-                //
-                child.b=remove_common_bits(this->b, board);
-                child.l=remove_common_bits(this->l, board);
-                child.x=remove_common_bits(this->x, board);
-                child.t=remove_common_bits(this->t, board);
-                child.q=remove_common_bits(this->q, board);
-                child.k=remove_common_bits(this->k, board);
-                child.y=remove_common_bits(this->y, board);
-                child.z=remove_common_bits(this->z, board);
-                child.f=remove_common_bits(this->f, board);
-                //
-                children.push_back(child);
+            //
+            if (this->K!=0) {
+                for (const auto& board : gcKk(this->K, black_pieces)) {
+                    Board child;
+                    child.B=this->B;
+                    child.L=this->L;
+                    child.X=this->X;
+                    child.T=this->T;
+                    child.Q=this->Q;
+                    child.K=board;
+                    child.Y=this->Y;
+                    child.Z=this->Z;
+                    child.F=this->F;
+                    //
+                    child.b=remove_common_bits(this->b, board);
+                    child.l=remove_common_bits(this->l, board);
+                    child.x=remove_common_bits(this->x, board);
+                    child.t=remove_common_bits(this->t, board);
+                    child.q=remove_common_bits(this->q, board);
+                    child.k=remove_common_bits(this->k, board);
+                    child.y=remove_common_bits(this->y, board);
+                    child.z=remove_common_bits(this->z, board);
+                    child.f=remove_common_bits(this->f, board);
+                    //
+                    children.push_back(child);
+                }
             }
         }
         return children;
