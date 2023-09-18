@@ -887,6 +887,10 @@ public:
                     children.push_back(child);
                 }
             }
+            //
+            if (this->y!=0) {
+                for (Board child_Yy : gcYy(6, white_pieces, all_pieces)) {children.push_back(child_Yy);}
+            }
         }
         else {
             if (this->B!=0) {
@@ -1076,6 +1080,10 @@ public:
                     //
                     children.push_back(child);
                 }
+            }
+            //
+            if (this->Y!=0) {
+                for (Board child_Yy : gcYy(-6, black_pieces, all_pieces)) {children.push_back(child_Yy);}
             }
         }
         return children;
