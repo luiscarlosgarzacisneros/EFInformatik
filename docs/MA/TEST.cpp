@@ -501,10 +501,10 @@ public:
         }
         //rochade
         if (player==6) {
-            if (is_one_at_this_index(Yy_bitboard, 4) && is_one_at_this_index(Zz_bitboard, 0) && !(is_one_at_this_index(all_pieces, 1)) && !(is_one_at_this_index(all_pieces, 2)) && !(is_one_at_this_index(all_pieces, 3))) {
-                uint64_t new_Kk=set_bit_to_one(Kk_bitboard, 2);
-                uint64_t new_Yy=clear_bit(Yy_bitboard, 4);
-                uint64_t new_Tt=set_bit_to_one(Tt_bitboard, 3);
+            if (is_one_at_this_index(Yy_bitboard, 3) && is_one_at_this_index(Zz_bitboard, 0) && !(is_one_at_this_index(all_pieces, 1)) && !(is_one_at_this_index(all_pieces, 2))) {
+                uint64_t new_Kk=set_bit_to_one(Kk_bitboard, 1);
+                uint64_t new_Yy=clear_bit(Yy_bitboard, 3);
+                uint64_t new_Tt=set_bit_to_one(Tt_bitboard, 2);
                 uint64_t new_Zz=clear_bit(Zz_bitboard, 0);
                 //
                 Board simulation;
@@ -531,7 +531,7 @@ public:
                 bool legal=true;
                 for (Board child : simulation.generate_children(-6)) {
                     uint64_t other_players_pieces= child.B|child.L|child.X|child.T|child.Q|child.K|child.Y|child.Z|child.F;
-                    if (is_one_at_this_index(other_players_pieces, 2) || is_one_at_this_index(other_players_pieces, 3) || is_one_at_this_index(other_players_pieces, 4)) {
+                    if (is_one_at_this_index(other_players_pieces, 1) || is_one_at_this_index(other_players_pieces, 2) || is_one_at_this_index(other_players_pieces, 3)) {
                         legal=false;
                         break;
                     }
@@ -539,10 +539,10 @@ public:
                 if (legal) {children.push_back(simulation);}
             }
             //
-            if (is_one_at_this_index(Yy_bitboard, 4) && is_one_at_this_index(Zz_bitboard, 7) && !(is_one_at_this_index(all_pieces, 6)) && !(is_one_at_this_index(all_pieces, 5))) {
-                uint64_t new_Kk=set_bit_to_one(Kk_bitboard, 6);
-                uint64_t new_Yy=clear_bit(Yy_bitboard, 4);
-                uint64_t new_Tt=set_bit_to_one(Tt_bitboard, 5);
+            if (is_one_at_this_index(Yy_bitboard, 3) && is_one_at_this_index(Zz_bitboard, 7) && !(is_one_at_this_index(all_pieces, 6)) && !(is_one_at_this_index(all_pieces, 5)) && !(is_one_at_this_index(all_pieces, 4))) {
+                uint64_t new_Kk=set_bit_to_one(Kk_bitboard, 5);
+                uint64_t new_Yy=clear_bit(Yy_bitboard, 3);
+                uint64_t new_Tt=set_bit_to_one(Tt_bitboard, 4);
                 uint64_t new_Zz=clear_bit(Zz_bitboard, 7);
                 //
                 Board simulation;
@@ -569,7 +569,7 @@ public:
                 bool legal=true;
                 for (Board child : simulation.generate_children(-6)) {
                     uint64_t other_players_pieces= child.B|child.L|child.X|child.T|child.Q|child.K|child.Y|child.Z|child.F;
-                    if (is_one_at_this_index(other_players_pieces, 4) || is_one_at_this_index(other_players_pieces, 5) || is_one_at_this_index(other_players_pieces, 6)) {
+                    if (is_one_at_this_index(other_players_pieces, 3) || is_one_at_this_index(other_players_pieces, 4) || is_one_at_this_index(other_players_pieces, 5)) {
                         legal=false;
                         break;
                     }
@@ -577,11 +577,7 @@ public:
                 if (legal) {children.push_back(simulation);}
             }
         }
-        //
-        else {
-
-        }
-        }
+        else {;}
     }
 
     std::vector<Board> generate_children(int playerk) {
