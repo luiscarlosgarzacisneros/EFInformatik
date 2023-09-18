@@ -406,8 +406,8 @@ public:
 
     std::vector<Board> generate_children(int playerk);
 
-    std::vector<std::vector<uint64_t>> gcYy(int player, const uint64_t this_players_pieces, const uint64_t all_pieces) {
-        std::vector<std::vector<uint64_t>> children;
+    std::vector<Board> gcYy(int player, const uint64_t this_players_pieces, const uint64_t all_pieces) {
+        std::vector<Board> children;
         //
         uint64_t Yy_bitboard;
         uint64_t Kk_bitboard;
@@ -450,11 +450,50 @@ public:
                     if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
                         uint64_t new_Kk=set_bit_to_one(Kk_bitboard, yx_zu_index(y_new, x_new));
                         uint64_t new_Yy=clear_bit(Yy_bitboard, yx_zu_index(y_new, x_new));
-                        std::vector<uint64_t> child;
-                        child.push_back(new_Kk);
-                        child.push_back(new_Yy);
-                        child.push_back(Tt_bitboard);
-                        child.push_back(Zz_bitboard);
+                        Board child;
+                        if (player==6) {
+                            child.b=this->b;
+                            child.l=this->l;
+                            child.x=this->x;
+                            child.t=this->t;
+                            child.q=this->q;
+                            child.k=new_Kk;
+                            child.y=new_Yy;
+                            child.z=this->z;
+                            child.f=this->f;
+                            //
+                            child.B=remove_common_bits(this->B, new_Kk);
+                            child.L=remove_common_bits(this->L, new_Kk);
+                            child.X=remove_common_bits(this->X, new_Kk);
+                            child.T=remove_common_bits(this->T, new_Kk);
+                            child.Q=remove_common_bits(this->Q, new_Kk);
+                            child.K=remove_common_bits(this->K, new_Kk);
+                            child.Y=remove_common_bits(this->Y, new_Kk);
+                            child.Z=remove_common_bits(this->Z, new_Kk);
+                            child.F=remove_common_bits(this->F, new_Kk);
+                        }
+                        else {
+                            child.B=this->B;
+                            child.L=this->L;
+                            child.X=this->X;
+                            child.T=this->T;
+                            child.Q=this->Q;
+                            child.K=new_Kk;
+                            child.Y=new_Yy;
+                            child.Z=this->Z;
+                            child.F=this->F;
+                            //
+                            child.b=remove_common_bits(this->b, new_Kk);
+                            child.l=remove_common_bits(this->l, new_Kk);
+                            child.x=remove_common_bits(this->x, new_Kk);
+                            child.t=remove_common_bits(this->t, new_Kk);
+                            child.q=remove_common_bits(this->q, new_Kk);
+                            child.k=remove_common_bits(this->k, new_Kk);
+                            child.y=remove_common_bits(this->y, new_Kk);
+                            child.z=remove_common_bits(this->z, new_Kk);
+                            child.f=remove_common_bits(this->f, new_Kk);
+                        }
+                        //
                         children.push_back(child);
                     }
                 }
@@ -478,7 +517,7 @@ public:
                         break;
                     }
                 }
-                
+
             }
         }
     }
