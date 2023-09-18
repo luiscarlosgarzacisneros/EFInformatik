@@ -508,7 +508,26 @@ public:
                 uint64_t new_Zz=clear_bit(Zz_bitboard, 0);
                 //
                 Board simulation;
-
+                simulation.b=this->b;
+                simulation.l=this->l;
+                simulation.x=this->x;
+                simulation.t=new_Tt;
+                simulation.q=this->q;
+                simulation.k=new_Kk;
+                simulation.y=new_Yy;
+                simulation.z=new_Zz;
+                simulation.f=this->f;
+                //
+                simulation.B=remove_common_bits(this->B, new_Kk);
+                simulation.L=remove_common_bits(this->L, new_Kk);
+                simulation.X=remove_common_bits(this->X, new_Kk);
+                simulation.T=remove_common_bits(this->T, new_Kk);
+                simulation.Q=remove_common_bits(this->Q, new_Kk);
+                simulation.K=remove_common_bits(this->K, new_Kk);
+                simulation.Y=remove_common_bits(this->Y, new_Kk);
+                simulation.Z=remove_common_bits(this->Z, new_Kk);
+                simulation.F=remove_common_bits(this->F, new_Kk);
+                //
                 bool legal=true;
                 for (Board child : simulation.generate_children(-6)) {
                     uint64_t other_players_pieces= child.B|child.L|child.X|child.T|child.Q|child.K|child.Y|child.Z|child.F;
@@ -517,6 +536,7 @@ public:
                         break;
                     }
                 }
+                if (legal) {children.push_back(simulation);}
 
             }
         }
@@ -928,7 +948,7 @@ main() {
     root_node.K   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
     root_node.Y   = 0b0001000000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.Z   = 0b1000000100000000000000010000000000000000000000000000000000000000ULL;
+    root_node.Z   = 0b1000000100000000000000000000000000000000000000000000000000000000ULL;
     root_node.F   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
     uint64_t white_pieces = root_node.b|root_node.l|root_node.x|root_node.t|root_node.q|root_node.k|root_node.y|root_node.z|root_node.f;
