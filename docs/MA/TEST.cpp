@@ -537,8 +537,50 @@ public:
                     }
                 }
                 if (legal) {children.push_back(simulation);}
-
             }
+            //
+            if (is_one_at_this_index(Yy_bitboard, 4) && is_one_at_this_index(Zz_bitboard, 7) && !(is_one_at_this_index(all_pieces, 6)) && !(is_one_at_this_index(all_pieces, 5))) {
+                uint64_t new_Kk=set_bit_to_one(Kk_bitboard, 6);
+                uint64_t new_Yy=clear_bit(Yy_bitboard, 4);
+                uint64_t new_Tt=set_bit_to_one(Tt_bitboard, 5);
+                uint64_t new_Zz=clear_bit(Zz_bitboard, 7);
+                //
+                Board simulation;
+                simulation.b=this->b;
+                simulation.l=this->l;
+                simulation.x=this->x;
+                simulation.t=new_Tt;
+                simulation.q=this->q;
+                simulation.k=new_Kk;
+                simulation.y=new_Yy;
+                simulation.z=new_Zz;
+                simulation.f=this->f;
+                //
+                simulation.B=remove_common_bits(this->B, new_Kk);
+                simulation.L=remove_common_bits(this->L, new_Kk);
+                simulation.X=remove_common_bits(this->X, new_Kk);
+                simulation.T=remove_common_bits(this->T, new_Kk);
+                simulation.Q=remove_common_bits(this->Q, new_Kk);
+                simulation.K=remove_common_bits(this->K, new_Kk);
+                simulation.Y=remove_common_bits(this->Y, new_Kk);
+                simulation.Z=remove_common_bits(this->Z, new_Kk);
+                simulation.F=remove_common_bits(this->F, new_Kk);
+                //
+                bool legal=true;
+                for (Board child : simulation.generate_children(-6)) {
+                    uint64_t other_players_pieces= child.B|child.L|child.X|child.T|child.Q|child.K|child.Y|child.Z|child.F;
+                    if (is_one_at_this_index(other_players_pieces, 4) || is_one_at_this_index(other_players_pieces, 5) || is_one_at_this_index(other_players_pieces, 6)) {
+                        legal=false;
+                        break;
+                    }
+                }
+                if (legal) {children.push_back(simulation);}
+            }
+        }
+        //
+        else {
+
+        }
         }
     }
 
