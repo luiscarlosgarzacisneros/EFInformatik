@@ -23,6 +23,29 @@ void print_bitboard(const uint64_t bitboard) {
     }
 }
 
+void print_bits_of_bitboard(const uint64_t bitboard) {
+    std::vector<int> bits;
+    uint64_t mask = 1ULL;
+
+    for (int i = 0; i < 64; ++i) {
+        if (bitboard & mask) {
+            bits.push_back(1);
+        } else {
+            bits.push_back(0);
+        }
+        mask <<= 1;
+    }
+
+    std::reverse(bits.begin(), bits.end());
+
+    for (int i = 0; i < bits.size(); ++i) {
+        std::cout << bits[i] << " ";
+        if ((i + 1) % 8 == 0) {
+            std::cout << std::endl;
+        }
+    }
+}
+
 //
 
 bool is_one_at_this_index(const uint64_t bitboard, int index) {
@@ -451,7 +474,7 @@ public:
                 if (is_in_board(y_new, x_new)) {
                     if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
                         uint64_t new_Kk=set_bit_to_one(Kk_bitboard, yx_zu_index(y_new, x_new));
-                        uint64_t new_Yy=clear_bit(Yy_bitboard, yx_zu_index(y_new, x_new));
+                        uint64_t new_Yy=clear_bit(Yy_bitboard, yx_zu_index(y_current, x_current));
                         Board child;
                         if (player==6) {
                             child.b=this->b;
@@ -501,6 +524,10 @@ public:
                 }
             }
         }
+        //
+        std::cout<<"-------K"<<std::endl;
+        print_bits_of_bitboard(Yy_bitboard);
+        std::cout<<"-------K"<<std::endl;
         //rochade
         if (player==6) {
             if (is_one_at_this_index(Yy_bitboard, 3) && is_one_at_this_index(Zz_bitboard, 0) && !(is_one_at_this_index(all_pieces, 1)) && !(is_one_at_this_index(all_pieces, 2))) {
@@ -1098,13 +1125,13 @@ public:
 main() {
     Board root_node;
     root_node.b   = 0b0000000000000000000000000000000000000000000000001111111100000000ULL;
-    root_node.l = 0b0000000000000000000000000000000000000000000000000000000001000010ULL;
-    root_node.x = 0b0000000000000000000000000000000000000000000000000000000000100100ULL;
+    root_node.l = 0b0000000000000000000000000000000000000000000000000000000001000000ULL;
+    root_node.x = 0b0000000000000000000000000000000000000000000000000000000000100000ULL;
     root_node.t   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.q  = 0b0000000000000000000000000000000000000000000000000000000000001000ULL;
+    root_node.q  = 0b0000000000000000000000000000000000000000000000000000000000010000ULL;
     root_node.k   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
-    root_node.y   = 0b0000000000000000000000000000000000000000000000000000000000010000ULL;
+    root_node.y   = 0b0000000000000000000000000000000000000000000000000000000000001000ULL;
     root_node.z   = 0b0000000000000000000000000000000000000000000000000000000010000001ULL;
     root_node.f   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
@@ -1112,10 +1139,10 @@ main() {
     root_node.L = 0b0100001000000000000000000000000000000000000000000000000000000000ULL;
     root_node.X = 0b0010010000000000000000000000000000000000000000000000000000000000ULL;
     root_node.T   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.Q  = 0b0000100000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.Q  = 0b0001000000000000000000000000000000000000000000000000000000000000ULL;
     root_node.K   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
-    root_node.Y   = 0b0001000000000000000000000000000000000000000000000000000000000000ULL;
+    root_node.Y   = 0b0000100000000000000000000000000000000000000000000000000000000000ULL;
     root_node.Z   = 0b1000000100000000000000000000000000000000000000000000000000000000ULL;
     root_node.F   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
 
