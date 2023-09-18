@@ -645,7 +645,7 @@ public:
                 //
                 bool legal=true;
                 for (Board child : simulation.generate_children(6)) {
-                    uint64_t other_players_pieces= child.B|child.L|child.X|child.T|child.Q|child.K|child.Y|child.Z|child.F;
+                    uint64_t other_players_pieces= child.b|child.l|child.x|child.t|child.q|child.k|child.y|child.z|child.f;
                     if (is_one_at_this_index(other_players_pieces, 59) || is_one_at_this_index(other_players_pieces, 60) || is_one_at_this_index(other_players_pieces, 61)) {
                         legal=false;
                         break;
@@ -654,6 +654,8 @@ public:
                 if (legal) {children.push_back(simulation);}
             }
         }
+        //
+        return children;
     }
 
     std::vector<Board> generate_children(int playerk) {
