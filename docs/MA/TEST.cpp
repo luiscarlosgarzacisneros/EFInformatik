@@ -317,6 +317,10 @@ std::vector<uint64_t> gcKk(const uint64_t king_bitboard, const uint64_t this_pla
 
 //
 
+//forward declarartions
+class Board;
+std::vector<Board> generate_children(int playerk);
+
 class Board {
 public:
 
@@ -403,8 +407,6 @@ public:
             else {return false;}
         }
     }
-
-    std::vector<Board> generate_children(int playerk);
 
     std::vector<Board> gcYy(int player, const uint64_t this_players_pieces, const uint64_t all_pieces) {
         std::vector<Board> children;
@@ -1119,10 +1121,10 @@ main() {
 
     uint64_t white_pieces = root_node.b|root_node.l|root_node.x|root_node.t|root_node.q|root_node.k|root_node.y|root_node.z|root_node.f;
     uint64_t black_pieces = root_node.B|root_node.L|root_node.X|root_node.T|root_node.Q|root_node.K|root_node.Y|root_node.Z|root_node.F;
-
+    
     root_node.print_board();
     std::cout<<"--------------"<<std::endl;
-    for (Board child : root_node.generate_children(-6)) {
+    for (Board child : root_node.generate_children(6)) {
         child.print_board();
     }
     std::cout<<"--------------"<<std::endl;
