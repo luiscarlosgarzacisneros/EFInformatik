@@ -12,37 +12,20 @@
 
 
 void print_bitboard(const uint64_t bitboard) {
-    for (int rank=7; rank>=0; --rank) {
-        for (int file=0; file<8; ++file) {
-            int square = rank*8+file;
-            uint64_t m = 1ULL<<square;
-            if (bitboard & m) {std::cout<<"1 ";}
-            else {std::cout<<"0 ";}
-        }
-        std::cout << std::endl;
-    }
-}
-
-void print_bits_of_bitboard(const uint64_t bitboard) {
     std::vector<int> bits;
-    uint64_t mask = 1ULL;
-
-    for (int i = 0; i < 64; ++i) {
-        if (bitboard & mask) {
-            bits.push_back(1);
-        } else {
-            bits.push_back(0);
-        }
-        mask <<= 1;
+    uint64_t m = 1ULL;
+    //
+    for (int i=0; i<64; ++i) {
+        if (bitboard & m) {bits.push_back(1);}
+        else {bits.push_back(0);}
+        m <<= 1;
     }
-
+    //
     std::reverse(bits.begin(), bits.end());
-
-    for (int i = 0; i < bits.size(); ++i) {
-        std::cout << bits[i] << " ";
-        if ((i + 1) % 8 == 0) {
-            std::cout << std::endl;
-        }
+    //
+    for (int i=0; i<bits.size(); ++i) {
+        std::cout<<bits[i]<<" ";
+        if ((i+1) % 8 == 0) {std::cout << std::endl;}
     }
 }
 
@@ -403,6 +386,7 @@ public:
         }
         //
         std::reverse(board.begin(), board.end());
+        for (int i=0; i<8; i++) {std::reverse(board[i].begin(), board[i].end());}
         //
         //print the board
         std::cout <<"    1   2   3   4   5   6   7   8\n";
@@ -525,9 +509,6 @@ public:
             }
         }
         //
-        std::cout<<"-------K"<<std::endl;
-        print_bits_of_bitboard(Yy_bitboard);
-        std::cout<<"-------K"<<std::endl;
         //rochade
         if (player==6) {
             if (is_one_at_this_index(Yy_bitboard, 3) && is_one_at_this_index(Zz_bitboard, 0) && !(is_one_at_this_index(all_pieces, 1)) && !(is_one_at_this_index(all_pieces, 2))) {
