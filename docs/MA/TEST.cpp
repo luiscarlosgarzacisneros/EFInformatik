@@ -577,7 +577,83 @@ public:
                 if (legal) {children.push_back(simulation);}
             }
         }
-        else {;}
+        else {
+            if (is_one_at_this_index(Yy_bitboard, 59) && is_one_at_this_index(Zz_bitboard, 56) && !(is_one_at_this_index(all_pieces, 57)) && !(is_one_at_this_index(all_pieces, 58))) {
+                uint64_t new_Kk=set_bit_to_one(Kk_bitboard, 57);
+                uint64_t new_Yy=clear_bit(Yy_bitboard, 59);
+                uint64_t new_Tt=set_bit_to_one(Tt_bitboard, 58);
+                uint64_t new_Zz=clear_bit(Zz_bitboard, 56);
+                //
+                Board simulation;
+                simulation.B=this->B;
+                simulation.L=this->L;
+                simulation.X=this->X;
+                simulation.T=new_Tt;
+                simulation.Q=this->Q;
+                simulation.K=new_Kk;
+                simulation.Y=new_Yy;
+                simulation.Z=new_Zz;
+                simulation.F=this->F;
+                //
+                simulation.b=remove_common_bits(this->b, new_Kk);
+                simulation.l=remove_common_bits(this->l, new_Kk);
+                simulation.x=remove_common_bits(this->x, new_Kk);
+                simulation.t=remove_common_bits(this->t, new_Kk);
+                simulation.q=remove_common_bits(this->q, new_Kk);
+                simulation.k=remove_common_bits(this->k, new_Kk);
+                simulation.y=remove_common_bits(this->y, new_Kk);
+                simulation.z=remove_common_bits(this->z, new_Kk);
+                simulation.f=remove_common_bits(this->f, new_Kk);
+                //
+                bool legal=true;
+                for (Board child : simulation.generate_children(6)) {
+                    uint64_t other_players_pieces= child.b|child.l|child.x|child.t|child.q|child.k|child.y|child.z|child.f;
+                    if (is_one_at_this_index(other_players_pieces, 59) || is_one_at_this_index(other_players_pieces, 58) || is_one_at_this_index(other_players_pieces, 57)) {
+                        legal=false;
+                        break;
+                    }
+                }
+                if (legal) {children.push_back(simulation);}
+            }
+            //
+            if (is_one_at_this_index(Yy_bitboard, 59) && is_one_at_this_index(Zz_bitboard, 63) && !(is_one_at_this_index(all_pieces, 62)) && !(is_one_at_this_index(all_pieces, 61)) && !(is_one_at_this_index(all_pieces, 60))) {
+                uint64_t new_Kk=set_bit_to_one(Kk_bitboard, 61);
+                uint64_t new_Yy=clear_bit(Yy_bitboard, 59);
+                uint64_t new_Tt=set_bit_to_one(Tt_bitboard, 60);
+                uint64_t new_Zz=clear_bit(Zz_bitboard, 63);
+                //
+                Board simulation;
+                simulation.B=this->B;
+                simulation.L=this->l;
+                simulation.X=this->X;
+                simulation.T=new_Tt;
+                simulation.Q=this->Q;
+                simulation.K=new_Kk;
+                simulation.Y=new_Yy;
+                simulation.Z=new_Zz;
+                simulation.F=this->F;
+                //
+                simulation.b=remove_common_bits(this->b, new_Kk);
+                simulation.l=remove_common_bits(this->l, new_Kk);
+                simulation.x=remove_common_bits(this->x, new_Kk);
+                simulation.t=remove_common_bits(this->t, new_Kk);
+                simulation.q=remove_common_bits(this->q, new_Kk);
+                simulation.k=remove_common_bits(this->k, new_Kk);
+                simulation.y=remove_common_bits(this->y, new_Kk);
+                simulation.z=remove_common_bits(this->z, new_Kk);
+                simulation.f=remove_common_bits(this->f, new_Kk);
+                //
+                bool legal=true;
+                for (Board child : simulation.generate_children(6)) {
+                    uint64_t other_players_pieces= child.B|child.L|child.X|child.T|child.Q|child.K|child.Y|child.Z|child.F;
+                    if (is_one_at_this_index(other_players_pieces, 59) || is_one_at_this_index(other_players_pieces, 60) || is_one_at_this_index(other_players_pieces, 61)) {
+                        legal=false;
+                        break;
+                    }
+                }
+                if (legal) {children.push_back(simulation);}
+            }
+        }
     }
 
     std::vector<Board> generate_children(int playerk) {
