@@ -29,6 +29,15 @@ void print_bitboard(const uint64_t bitboard) {
     }
 }
 
+std::vector<std::vector<int>> matrix_minus(std::vector<std::vector<int>> matrix) {
+    for (int i=0; i<matrix.size(); ++i) {
+        for (int j=0; j<matrix[i].size(); ++j) {
+            matrix[i][j]=-matrix[i][j];
+        }
+    }
+    return matrix;
+}
+
 //
 
 bool is_one_at_this_index(const uint64_t bitboard, int index) {
@@ -323,6 +332,105 @@ std::vector<std::pair<uint64_t, uint64_t>> gcBb(int player, const uint64_t pawn_
 
 //
 
+std::vector<std::vector<int>> B_matrix = {
+    { 0,  0,  0,  0,  0,  0,  0,  0},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 2,  2,  2,  2,  2,  2,  2,  2},
+    { 3,  3,  4,  4,  4,  4,  3,  3},
+    { 3,  3,  4,  4,  4,  4,  3,  3},
+    { 4,  4,  4,  4,  4,  4,  4,  4},
+    { 5,  5,  5,  5,  5,  5,  5,  5},
+    { 0,  0,  0,  0,  0,  0,  0,  0}
+};
+
+std::vector<std::vector<int>> b_matrix = {
+    { 0,  0,  0,  0,  0,  0,  0,  0},
+    { 5,  5,  5,  5,  5,  5,  5,  5},
+    { 4,  4,  4,  4,  4,  4,  4,  4},
+    { 3,  3,  4,  4,  4,  4,  3,  3},
+    { 3,  3,  4,  4,  4,  4,  3,  3},
+    { 2,  2,  2,  2,  2,  2,  2,  2},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 0,  0,  0,  0,  0,  0,  0,  0}
+};
+
+std::vector<std::vector<int>> Ll_matrix = {
+    {-1, -3, -2, -2, -2, -2, -3, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1, -3, -2, -2, -2, -2, -3, -1}
+};
+
+std::vector<std::vector<int>> Xx_matrix = {
+    {-2, -1, -1, -1, -1, -1, -1, -2},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-2, -1, -1, -1, -1, -1, -1, -2}
+};
+
+std::vector<std::vector<int>> Tt_matrix = {
+    { 0,  0,  0,  0,  0,  0,  0,  0},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 0,  0,  0,  0,  0,  0,  0,  0}
+};
+
+std::vector<std::vector<int>> Qq_matrix = {
+    {-1, -1, -1, -1, -1, -1, -1, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1, -1, -1, -1, -1, -1, -1, -1}
+};
+
+std::vector<std::vector<int>> K_matrix = {
+    { 2,  3,  1,  0,  0,  1,  3,  2},
+    { 2,  2,  0,  0,  0,  0,  2,  2},
+    {-1, -2, -2, -2, -2, -2, -2, -1},
+    {-2, -3, -3, -4, -4, -3, -3, -2},
+    {-3, -4, -4, -5, -5, -4, -4, -3},
+    {-3, -4, -4, -5, -5, -4, -4, -3},
+    {-4, -5, -5, -6, -6, -5, -5, -4},
+    {-4, -5, -5, -6, -6, -5, -5, -4}
+};
+
+std::vector<std::vector<int>> k_matrix = {
+    { -4,  -5,  -5,  -6,  -6,  -5,  -5,  -4},
+    { -4,  -5,  -5,  -6,  -6,  -5,  -5,  -4},
+    { -3,  -4,  -4,  -5,  -5,  -4,  -4,  -3},
+    { -3,  -4,  -4,  -5,  -5,  -4,  -4,  -3},
+    { -2,  -3,  -3,  -4,  -4,  -3,  -3,  -2},
+    { -1,  -2,  -2,  -2,  -2,  -2,  -2,  -1},
+    {  2,   2,   0,   0,   0,   0,   2,   2},
+    {  2,   3,   1,   0,   0,   1,   3,   2}
+};
+
+std::vector<std::vector<int>> other_B_matrix = matrix_minus(B_matrix);
+std::vector<std::vector<int>> other_b_matrix = matrix_minus(b_matrix);
+std::vector<std::vector<int>> other_Ll_matrix = matrix_minus(Ll_matrix);
+std::vector<std::vector<int>> other_Xx_matrix = matrix_minus(Xx_matrix);
+std::vector<std::vector<int>> other_Tt_matrix = matrix_minus(Tt_matrix);
+std::vector<std::vector<int>> other_Qq_matrix = matrix_minus(Qq_matrix);
+std::vector<std::vector<int>> other_K_matrix = matrix_minus(K_matrix);
+std::vector<std::vector<int>> other_k_matrix = matrix_minus(k_matrix);
+
+//
+
 //forward declarartions
 class Board;
 std::vector<Board> generate_children(int playerk);
@@ -412,6 +520,171 @@ public:
         else {
             if (this->K==0 && this->Y==0) {return true;}
             else {return false;}
+        }
+    }
+
+    int evaluate_position(int playerk) {
+        int val = 0;
+        if (playerk==6) {
+            for (int p=0; p<8; ++p) {
+                for (int o=0; o<8; ++o) {
+                    if (is_one_at_this_index(this->B, yx_zu_index(p, o)) || is_one_at_this_index(this->F, yx_zu_index(p, o))) {
+                        val += -100;
+                        val += other_B_matrix[p][o];
+                        // Pawn structure
+                        if (p+1<=7 && o+1<=7) {
+                            if (is_one_at_this_index(this->B, yx_zu_index(p+1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p+1, o+1))) {val += -1;}
+                        }
+                        if (p-1>=0 && o-1>=0) {
+                            if (is_one_at_this_index(this->B, yx_zu_index(p-1, o-1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o-1))) {val += -1;}
+                        }
+                        if (p+1<=7 && o-1>=0) {
+                            if (is_one_at_this_index(this->B, yx_zu_index(p+1, o-1)) || is_one_at_this_index(this->F, yx_zu_index(p+1, o-1))) {val += -1;}
+                        }
+                        if (p-1>=0 && o+1<=7) {
+                            if (is_one_at_this_index(this->B, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o+1))) {val += -1;}
+                        }
+                    }
+                    else if (is_one_at_this_index(this->b, yx_zu_index(p, o)) || is_one_at_this_index(this->f, yx_zu_index(p, o))) {
+                        val += 100;
+                        val += b_matrix[p][o];
+                        // Pawn structure
+                        if (p+1<=7 && o+1<=7) {
+                            if (pos[p+1][o+1]==1 || pos[p+1][o+1]==9) {val += 1;}
+                        }
+                        if (p-1>=0 && o-1>=0) {
+                            if (pos[p-1][o-1]==1 || pos[p-1][o-1]==9) {val += 1;}
+                        }
+                        if (p+1<=7 && o-1>=0) {
+                            if (pos[p+1][o-1]==1 || pos[p+1][o-1]==9) {val += 1;}
+                        }
+                        if (p-1>=0 && o+1<=7) {
+                            if (pos[p-1][o+1]==1 || pos[p-1][o+1]==9) {val += 1;}
+                        }
+                    }
+                    else if (pos[p][o]==-2) {
+                        val += -300;
+                        val += other_Ll_matrix[p][o];
+                    }
+                    else if (pos[p][o]==-3) {
+                        val += -300;
+                        val += other_Xx_matrix[o][p];
+                    }
+                    else if (pos[p][o]==-4 || pos[p][o]==-7) {
+                        val += -500;
+                        val += other_Tt_matrix[p][o];
+                    }
+                    else if (pos[p][o]==2) {
+                        val += 300;
+                        val += Ll_matrix[p][o];
+                    }
+                    else if (pos[p][o]==3) {
+                        val += 300;
+                        val += Xx_matrix[o][p];
+                    }
+                    else if (pos[p][o]==4 || pos[p][o]==7) {
+                        val += 500;
+                        val += Tt_matrix[p][o];
+                    }
+                    else if (pos[p][o]==-5) {
+                        val += -900;
+                        val += other_Qq_matrix[p][o];
+                    }
+                    else if (pos[p][o]==-6 || pos[p][o]==-8) {
+                        val += -100000;
+                        val += other_K_matrix[p][o];
+                    }
+                    else if (pos[p][o]==5) {
+                        val += 900;
+                        val += Qq_matrix[p][o];
+                    }
+                    else if (pos[p][o]==6 || pos[p][o]==8) {
+                        val += 100000;
+                        val += k_matrix[p][o];
+                    }
+                }
+            }
+        }
+        else if (playerk==-6) {
+            for (int p=0; p<8; ++p) {
+                for (int o=0; o<8; ++o) {
+                    if (pos[p][o]==0) {;}
+                    else if (pos[p][o]==-1 || pos[p][o]==-9) {
+                        val += 100;
+                        val += B_matrix[p][o];
+                        // Pawn structure
+                        if (p+1<=7 && o+1<=7) {
+                            if (pos[p+1][o+1]==-1 || pos[p+1][o+1]==-9) {val += 1;}
+                        }
+                        if (p-1>=0 && o-1>=0) {
+                            if (pos[p-1][o-1]==-1 || pos[p-1][o-1]==-9) {val += 1;}
+                        }
+                        if (p+1<=7 && o-1>=0) {
+                            if (pos[p+1][o-1]==-1 || pos[p+1][o-1]==-9) {val += 1;}
+                        }
+                        if (p-1>=0 && o+1<=7) {
+                            if (pos[p-1][o+1]==-1 || pos[p-1][o+1]==-9) {val += 1;}
+                        }
+                    }
+                    else if (pos[p][o]==1 || pos[p][o]==9) {
+                        val += -100;
+                        val += other_b_matrix[p][o];
+                        // Pawn structure
+                        if (p+1<=7 && o+1<=7) {
+                            if (pos[p+1][o+1]==1 || pos[p+1][o+1]==9) {val += -1;}
+                        }
+                        if (p-1>=0 && o-1>=0) {
+                            if (pos[p-1][o-1]==1 || pos[p-1][o-1]==9) {val += -1;}
+                        }
+                        if (p+1<=7 && o-1>=0) {
+                            if (pos[p+1][o-1]==1 || pos[p+1][o-1]==9) {val += -1;}
+                        }
+                        if (p-1>=0 && o+1<=7) {
+                            if (pos[p-1][o+1]==1 || pos[p-1][o+1]==9) {val += -1;}
+                        }
+                    }
+                    else if (pos[p][o]==-2) {
+                        val += 300;
+                        val += Ll_matrix[p][o];
+                    }
+                    else if (pos[p][o]==-3) {
+                        val += 300;
+                        val += Xx_matrix[p][o];
+                    }
+                    else if (pos[p][o]==-4 || pos[p][o]==-7) {
+                        val += 500;
+                        val += Tt_matrix[p][o];
+                    }
+                    else if (pos[p][o]==2) {
+                        val += -300;
+                        val += other_Ll_matrix[p][o];
+                    }
+                    else if (pos[p][o]==3) {
+                        val += -300;
+                        val += other_Xx_matrix[p][o];
+                    }
+                    else if (pos[p][o]==4 || pos[p][o]==7) {
+                        val += -500;
+                        val += other_Tt_matrix[p][o];
+                    }
+                    else if (pos[p][o]==-5) {
+                        val += 900;
+                        val += other_Qq_matrix[p][o];
+                    }
+                    else if (pos[p][o]==-6 || pos[p][o]==-8) {
+                        val += 100000;
+                        val += other_K_matrix[p][o];
+                    }
+                    else if (pos[p][o]==5) {
+                        val += -900;
+                        val += Qq_matrix[p][o];
+                    }
+                    else if (pos[p][o]==6 || pos[p][o]==8) {
+                        val += -100000;
+                        val += other_k_matrix[p][o];
+                    }
+                }
+            }
         }
     }
 
