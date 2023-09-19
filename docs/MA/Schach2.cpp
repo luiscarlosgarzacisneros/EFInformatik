@@ -1892,3 +1892,4 @@ int main() {
 //wieso board_0 bei minimaxerer
 //wieso get_move(BOARD)? board bei humanp als param
 
+//evaluatposfür geschlossenes Spiel anpassen.
