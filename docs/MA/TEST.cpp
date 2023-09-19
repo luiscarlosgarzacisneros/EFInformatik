@@ -544,61 +544,61 @@ public:
                         if (p-1>=0 && o+1<=7) {
                             if (is_one_at_this_index(this->B, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o+1))) {val += -1;}
                         }
-                    }
+                    }//
                     else if (is_one_at_this_index(this->b, yx_zu_index(p, o)) || is_one_at_this_index(this->f, yx_zu_index(p, o))) {
                         val += 100;
                         val += b_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
-                            if (pos[p+1][o+1]==1 || pos[p+1][o+1]==9) {val += 1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p+1, o+1)) || is_one_at_this_index(this->f, yx_zu_index(p+1, o+1))) {val += 1;}
                         }
                         if (p-1>=0 && o-1>=0) {
-                            if (pos[p-1][o-1]==1 || pos[p-1][o-1]==9) {val += 1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p-1, o-1)) || is_one_at_this_index(this->f, yx_zu_index(p-1, o-1))) {val += 1;}
                         }
                         if (p+1<=7 && o-1>=0) {
-                            if (pos[p+1][o-1]==1 || pos[p+1][o-1]==9) {val += 1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p+1, o-1)) || is_one_at_this_index(this->f, yx_zu_index(p+1, o-1))) {val += 1;}
                         }
                         if (p-1>=0 && o+1<=7) {
-                            if (pos[p-1][o+1]==1 || pos[p-1][o+1]==9) {val += 1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->f, yx_zu_index(p-1, o+1))) {val += 1;}
                         }
                     }
-                    else if (pos[p][o]==-2) {
+                    else if (is_one_at_this_index(this->L, yx_zu_index(p, o))) {
                         val += -300;
                         val += other_Ll_matrix[p][o];
                     }
-                    else if (pos[p][o]==-3) {
+                    else if (is_one_at_this_index(this->X, yx_zu_index(p, o))) {
                         val += -300;
                         val += other_Xx_matrix[o][p];
                     }
-                    else if (pos[p][o]==-4 || pos[p][o]==-7) {
+                    else if (is_one_at_this_index(this->T, yx_zu_index(p, o)) || is_one_at_this_index(this->Z, yx_zu_index(p, o))) {
                         val += -500;
                         val += other_Tt_matrix[p][o];
                     }
-                    else if (pos[p][o]==2) {
+                    else if (is_one_at_this_index(this->l, yx_zu_index(p, o))) {
                         val += 300;
                         val += Ll_matrix[p][o];
                     }
-                    else if (pos[p][o]==3) {
+                    else if (is_one_at_this_index(this->x, yx_zu_index(p, o))) {
                         val += 300;
                         val += Xx_matrix[o][p];
                     }
-                    else if (pos[p][o]==4 || pos[p][o]==7) {
+                    else if (is_one_at_this_index(this->t, yx_zu_index(p, o)) || is_one_at_this_index(this->z, yx_zu_index(p, o))) {
                         val += 500;
                         val += Tt_matrix[p][o];
                     }
-                    else if (pos[p][o]==-5) {
+                    else if (is_one_at_this_index(this->Q, yx_zu_index(p, o))) {
                         val += -900;
                         val += other_Qq_matrix[p][o];
                     }
-                    else if (pos[p][o]==-6 || pos[p][o]==-8) {
+                    else if (is_one_at_this_index(this->K, yx_zu_index(p, o)) || is_one_at_this_index(this->Y, yx_zu_index(p, o))) {
                         val += -100000;
                         val += other_K_matrix[p][o];
                     }
-                    else if (pos[p][o]==5) {
+                    else if (is_one_at_this_index(this->q, yx_zu_index(p, o))) {
                         val += 900;
                         val += Qq_matrix[p][o];
                     }
-                    else if (pos[p][o]==6 || pos[p][o]==8) {
+                    else if (is_one_at_this_index(this->k, yx_zu_index(p, o)) || is_one_at_this_index(this->y, yx_zu_index(p, o))) {
                         val += 100000;
                         val += k_matrix[p][o];
                     }
@@ -608,78 +608,77 @@ public:
         else if (playerk==-6) {
             for (int p=0; p<8; ++p) {
                 for (int o=0; o<8; ++o) {
-                    if (pos[p][o]==0) {;}
-                    else if (pos[p][o]==-1 || pos[p][o]==-9) {
+                    if (is_one_at_this_index(this->B, yx_zu_index(p, o)) || is_one_at_this_index(this->F, yx_zu_index(p, o))) {
                         val += 100;
                         val += B_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
-                            if (pos[p+1][o+1]==-1 || pos[p+1][o+1]==-9) {val += 1;}
+                            if (is_one_at_this_index(this->B, yx_zu_index(p+1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p+1, o+1))) {val += 1;}
                         }
                         if (p-1>=0 && o-1>=0) {
-                            if (pos[p-1][o-1]==-1 || pos[p-1][o-1]==-9) {val += 1;}
+                            if (is_one_at_this_index(this->B, yx_zu_index(p-1, o-1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o-1))) {val += 1;}
                         }
                         if (p+1<=7 && o-1>=0) {
-                            if (pos[p+1][o-1]==-1 || pos[p+1][o-1]==-9) {val += 1;}
+                            if (is_one_at_this_index(this->B, yx_zu_index(p+1, o-1)) || is_one_at_this_index(this->F, yx_zu_index(p+1, o-1))) {val += 1;}
                         }
                         if (p-1>=0 && o+1<=7) {
-                            if (pos[p-1][o+1]==-1 || pos[p-1][o+1]==-9) {val += 1;}
+                            if (is_one_at_this_index(this->B, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o+1))) {val += 1;}
                         }
                     }
-                    else if (pos[p][o]==1 || pos[p][o]==9) {
+                    else if (is_one_at_this_index(this->b, yx_zu_index(p, o)) || is_one_at_this_index(this->f, yx_zu_index(p, o))) {
                         val += -100;
                         val += other_b_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
-                            if (pos[p+1][o+1]==1 || pos[p+1][o+1]==9) {val += -1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p+1, o+1)) || is_one_at_this_index(this->f, yx_zu_index(p+1, o+1))) {val += -1;}
                         }
                         if (p-1>=0 && o-1>=0) {
-                            if (pos[p-1][o-1]==1 || pos[p-1][o-1]==9) {val += -1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p-1, o-1)) || is_one_at_this_index(this->f, yx_zu_index(p-1, o-1))) {val += -1;}
                         }
                         if (p+1<=7 && o-1>=0) {
-                            if (pos[p+1][o-1]==1 || pos[p+1][o-1]==9) {val += -1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p+1, o-1)) || is_one_at_this_index(this->f, yx_zu_index(p+1, o-1))) {val += -1;}
                         }
                         if (p-1>=0 && o+1<=7) {
-                            if (pos[p-1][o+1]==1 || pos[p-1][o+1]==9) {val += -1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->f, yx_zu_index(p-1, o+1))) {val += -1;}
                         }
                     }
-                    else if (pos[p][o]==-2) {
+                    else if (is_one_at_this_index(this->L, yx_zu_index(p, o))) {
                         val += 300;
                         val += Ll_matrix[p][o];
                     }
-                    else if (pos[p][o]==-3) {
+                    else if (is_one_at_this_index(this->X, yx_zu_index(p, o))) {
                         val += 300;
                         val += Xx_matrix[p][o];
                     }
-                    else if (pos[p][o]==-4 || pos[p][o]==-7) {
+                    else if (is_one_at_this_index(this->T, yx_zu_index(p, o)) || is_one_at_this_index(this->Z, yx_zu_index(p, o))) {
                         val += 500;
                         val += Tt_matrix[p][o];
                     }
-                    else if (pos[p][o]==2) {
+                    else if (is_one_at_this_index(this->l, yx_zu_index(p, o))) {
                         val += -300;
                         val += other_Ll_matrix[p][o];
                     }
-                    else if (pos[p][o]==3) {
+                    else if (is_one_at_this_index(this->x, yx_zu_index(p, o))) {
                         val += -300;
                         val += other_Xx_matrix[p][o];
                     }
-                    else if (pos[p][o]==4 || pos[p][o]==7) {
+                    else if (is_one_at_this_index(this->t, yx_zu_index(p, o)) || is_one_at_this_index(this->z, yx_zu_index(p, o))) {
                         val += -500;
                         val += other_Tt_matrix[p][o];
                     }
-                    else if (pos[p][o]==-5) {
+                    else if (is_one_at_this_index(this->Q, yx_zu_index(p, o))) {
                         val += 900;
                         val += other_Qq_matrix[p][o];
                     }
-                    else if (pos[p][o]==-6 || pos[p][o]==-8) {
+                    else if (is_one_at_this_index(this->K, yx_zu_index(p, o)) || is_one_at_this_index(this->Y, yx_zu_index(p, o))) {
                         val += 100000;
                         val += other_K_matrix[p][o];
                     }
-                    else if (pos[p][o]==5) {
+                    else if (is_one_at_this_index(this->q, yx_zu_index(p, o))) {
                         val += -900;
                         val += Qq_matrix[p][o];
                     }
-                    else if (pos[p][o]==6 || pos[p][o]==8) {
+                    else if (is_one_at_this_index(this->k, yx_zu_index(p, o)) || is_one_at_this_index(this->y, yx_zu_index(p, o))) {
                         val += -100000;
                         val += other_k_matrix[p][o];
                     }
