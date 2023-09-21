@@ -344,18 +344,9 @@ class VierGewinnt():
 
 #
 
-class Player():
+class HumanPlayer():
     def __init__(self, token):
-        self.token = token
-
-    def get_move(self, board):
-        raise NotImplementedError('Not implemented')
-
-#
-
-class HumanPlayer(Player):
-    def __init__(self, token):
-        super().__init__(token)
+        self.token=token
 
     def player(self, board):
         try:
@@ -376,9 +367,9 @@ class HumanPlayer(Player):
 
 #
 
-class MCTSPlayer(Player):
+class MCTSPlayer():
     def __init__(self, token):
-        super().__init__(token)
+        self.token=token
         self.counter=0
         self.numberofiterations=0
         #-----
@@ -502,10 +493,10 @@ class MCTSNode(MCTSPlayer):
 
 #
 
-class MinimaxPlayer(Player):
+class MinimaxPlayer():
     #sucht bis max zeit erreicht ist, depth =+1, move sorting
     def __init__(self, token):
-        super().__init__(token)
+        self.token=token
         self.maxtime=3
         self.starting_depth=1 #wenn suche bei layer1 nicht fertig wird: crash
 
