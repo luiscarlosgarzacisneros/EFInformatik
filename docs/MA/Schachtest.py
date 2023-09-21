@@ -1649,8 +1649,8 @@ class MinimaxPlayer():
     
     def get_move(self, board):
         start=time.time()
-        global minimax_counter4
-        minimax_counter4=0
+        global minimax_counter
+        minimax_counter=0
         #rootnode
         self.rootnode=MinimaxNode()
         self.rootnode.position=board
@@ -1680,7 +1680,7 @@ class MinimaxPlayer():
             if depth==20:
                 break
             #
-        print("---",minimax_counter4)
+        print("---",minimax_counter)
         return bestmove
 
 class MinimaxNode():
@@ -1708,8 +1708,8 @@ class MinimaxNode():
 
     def minimax(self, alpha, beta, maxplayer, maxdepth):
         #
-        global minimax_counter4
-        minimax_counter4+=1
+        global minimax_counter
+        minimax_counter+=1
         #
         if self.playeramzug==6:
             other_player=-6
