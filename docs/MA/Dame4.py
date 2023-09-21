@@ -27,8 +27,8 @@ def printboard(board):
 
 #
 
-def keinezugmoeglichkeiten(pos,player):
-    if genchildren(pos,player)==[]:
+def keine_zugmoeglichkeiten(pos,player):
+    if generate_children(pos,player)==[]:
         return True
     else:
         return False
@@ -62,7 +62,7 @@ def verloren2(pos,player):
             eval=eval+1
     if eval==0:
         return True
-    elif keinezugmoeglichkeiten(pos,player):
+    elif keine_zugmoeglichkeiten(pos,player):
         return True
     else:
         return False
@@ -72,7 +72,7 @@ def verloren2(pos,player):
 childrens=[]
 childrensWM=[]
 
-def genchildren(position, player):
+def generate_children(position, player):
     children1=[]
     children2=[]
     boardcopy = copy.deepcopy(position)
@@ -1486,15 +1486,15 @@ class MCTSPlayer():
         self.rootnode.visits=0
         self.rootnode.children=[]
         #
-        self.rootnode.expand()
+        self.rootnode.expand_node()
         start = time.time()
         while True:
             self.counter+=1
-            selectednode=self.rootnode.selectleafnode()
+            selectednode=self.rootnode.select_leafnode()
             if selectednode.visits==0:
                 selectednode.backpropagate(selectednode.simulate(),selectednode.numberofsimulations)
             else:
-                selectednode.expand()
+                selectednode.expand_node()
             #
             if (time.time() - start) > self.maxtime:
                 break
@@ -1507,12 +1507,12 @@ class MCTSPlayer():
         self.rootnode.visits=0
         self.rootnode.children=[]
         #
-        self.rootnode.expand()
+        self.rootnode.expand_node()
         start = time.time()
         while True:
             self.counter+=1
-            selectednode=self.rootnode.selectleafnode()
-            selectednode.expand()
+            selectednode=self.rootnode.select_leafnode()
+            selectednode.expand_node()
             for child_node in selectednode.children:
                 child_node.backpropagate(child_node.simulate(),child_node.numberofsimulations)
                 if (time.time() - start) > self.maxtime:
@@ -1544,7 +1544,7 @@ class MCTSNode(MCTSPlayer):
         self.score=0
         self.visits=0
     
-    def calculateubc(self):
+    def calculate_ubc(self):
         par=self.parent
         if self.visits==0:
             ubc=math.inf
@@ -1552,8 +1552,8 @@ class MCTSNode(MCTSPlayer):
             ubc=(self.score/self.visits)+self.c*(math.sqrt(math.log(par.visits)/self.visits))
         return ubc
     
-    def expand(self):
-        children=genchildren(self.position,self.playeramzug)
+    def expand_node(self):
+        children=generate_children(self.position,self.playeramzug)
         for i in range(len(children)):
             self.numberofiterations+=1
             instance = MCTSNode(self.token)
@@ -1582,18 +1582,18 @@ class MCTSNode(MCTSPlayer):
         value=sum(values)/len(values)
         return value
     
-    def selectleafnode(self):
+    def select_leafnode(self):
         children = self.children
         bestvalue = -math.inf
         for child in children:
-            ucbofchild = child.calculateubc()
+            ucbofchild = child.calculate_ubc()
             if ucbofchild > bestvalue:
                 bestvalue = ucbofchild
                 selectednode = child
         if selectednode.children == []:
             return selectednode
         else:
-            return selectednode.selectleafnode()
+            return selectednode.select_leafnode()
 
     def backpropagate(self, newscore, numberofsimulations):
         self.score += newscore
@@ -1652,7 +1652,7 @@ class MinimaxPlayer():
         self.rootnode.value=None
         self.rootnode.token=self.token
         self.rootnode.depth=0
-        self.rootnode.children=self.rootnode.expandnode()
+        self.rootnode.children=self.rootnode.expand_node()
         #
         depth=self.starting_depth
         while (time.time() - start) < self.maxtime:
@@ -1677,8 +1677,8 @@ class MinimaxNode():
         self.depth=None
         self.expanded=False
 
-    def expandnode(self):
-        children=genchildren(self.position,self.playeramzug)
+    def expand_node(self):
+        children=generate_children(self.position,self.playeramzug)
         for i in range(len(children)):
             instance=MinimaxNode()
             instance.position=children[i]
@@ -1703,7 +1703,7 @@ class MinimaxNode():
             return self.value
         #
         if not self.expanded:
-            self.expandnode()
+            self.expand_node()
             self.expanded=True
         #
         if self.children == []:

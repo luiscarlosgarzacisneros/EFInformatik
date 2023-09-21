@@ -1463,11 +1463,11 @@ class MCTSPlayer():
         #
         while True:
             self.counter+=1
-            selectednode=self.rootnode.selectleafnode()
+            selectednode=self.rootnode.select_leafnode()
             if selectednode.visits==0:
                 selectednode.backpropagate(selectednode.simulate(),selectednode.numberofsimulations)
             else:
-                selectednode.expand()
+                selectednode.expand_node()
             #
             if (time.time() - start) > self.maxtime:
                 break
@@ -1477,8 +1477,8 @@ class MCTSPlayer():
         #
         while True:
             self.counter+=1
-            selectednode=self.rootnode.selectleafnode()
-            selectednode.expand()
+            selectednode=self.rootnode.select_leafnode()
+            selectednode.expand_node()
             for child_node in selectednode.children:
                 child_node.backpropagate(child_node.simulate(),child_node.numberofsimulations)
                 if (time.time() - start) > self.maxtime:
@@ -1499,11 +1499,11 @@ class MCTSPlayer():
         #
         #
         #Illegale Züge weg
-        self.rootnode.expand()
+        self.rootnode.expand_node()
         number_of_legal_moves = 0
         legal_moves = []
         for child_of_root in self.rootnode.children:
-            child_of_root.expand()
+            child_of_root.expand_node()
             king_is_killed = False
             for child_of_child in child_of_root.children:
                 if verloren(child_of_child.position, self.rootnode.playeramzug):
@@ -1542,7 +1542,7 @@ class MCTSNode(MCTSPlayer):
         self.score=0
         self.visits=0
     
-    def calculateubc(self):
+    def calculate_ubc(self):
         par=self.parent
         if self.visits==0:
             ubc=math.inf
@@ -1550,7 +1550,7 @@ class MCTSNode(MCTSPlayer):
             ubc=(self.score/self.visits)+self.c*(math.sqrt(math.log(par.visits)/self.visits))
         return ubc
     
-    def expand(self):
+    def expand_node(self):
         children=genchildren(self.position,self.playeramzug)
         for i in range(len(children)):
             self.numberofiterations+=1
@@ -1585,18 +1585,18 @@ class MCTSNode(MCTSPlayer):
         value=sum(values)/len(values)
         return value
     
-    def selectleafnode(self):
+    def select_leafnode(self):
         children = self.children
         bestvalue = -math.inf
         for child in children:
-            ucbofchild = child.calculateubc()
+            ucbofchild = child.calculate_ubc()
             if ucbofchild > bestvalue:
                 bestvalue = ucbofchild
                 selectednode = child
         if selectednode.children == []:
             return selectednode
         else:
-            return selectednode.selectleafnode()
+            return selectednode.select_leafnode()
 
     def backpropagate(self, newscore, numberofsimulations):
         self.score += newscore
@@ -1658,7 +1658,7 @@ class MinimaxPlayer():
         self.rootnode.value=None
         self.rootnode.token=self.token
         self.rootnode.depth=0
-        self.rootnode.children=self.rootnode.expandnode()
+        self.rootnode.children=self.rootnode.expand_node()
         #
         depth=self.starting_depth
         bestmove=[]
@@ -1693,7 +1693,7 @@ class MinimaxNode():
         self.depth=None
         self.expanded=False
 
-    def expandnode(self):
+    def expand_node(self):
         children=genchildren(self.position,self.playeramzug)
         for i in range(len(children)):
             instance=MinimaxNode()
@@ -1729,7 +1729,7 @@ class MinimaxNode():
             return self.value
         #
         if not self.expanded:
-            self.expandnode()
+            self.expand_node()
             self.expanded=True
         #
         if self.children == []:
