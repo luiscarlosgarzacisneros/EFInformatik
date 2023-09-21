@@ -531,7 +531,7 @@ class MinimaxPlayer():
         self.rootnode.value=None
         self.rootnode.token=self.token
         self.rootnode.depth=0
-        self.rootnode.children=self.rootnode.expandnode()
+        self.rootnode.expand_node()
         #
         depth=self.starting_depth
         while (time.time() - start) < self.maxtime:
@@ -556,7 +556,7 @@ class MinimaxNode():
         self.depth=None
         self.expanded=False
 
-    def expandnode(self):
+    def expand_node(self):
         children=generate_children(self.position,self.playeramzug)
         for i in range(len(children)):
             instance=MinimaxNode()
@@ -567,7 +567,6 @@ class MinimaxNode():
             instance.depth=self.depth+1
             instance.expanded=False
             self.children.append(instance)
-        return self.children
 
     def minimax(self, alpha, beta, maxplayer, maxdepth):
         #
@@ -584,16 +583,16 @@ class MinimaxNode():
         if self.expanded:
             children=self.children
         else:
-            children=self.expandnode()
+            self.expand_node()
             self.expanded=True
         #
-        if children == []:
+        if self.children==[]:
             self.value = evaluate_position(self.position, self.token)
             return self.value
         #
         if maxplayer:
             maxvalue = -math.inf
-            for child in children:
+            for child in self.children:
                 eval = child.minimax(alpha, beta, False, maxdepth)
                 if eval>maxvalue:
                     maxvalue=eval
@@ -607,7 +606,7 @@ class MinimaxNode():
         #
         else:
             minvalue = math.inf
-            for child in children:
+            for child in self.children:
                 eval = child.minimax(alpha, beta, True, maxdepth)
                 if eval<minvalue:
                     minvalue=eval

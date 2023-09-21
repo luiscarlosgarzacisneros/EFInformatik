@@ -751,7 +751,7 @@ class Dame():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(MCTSPlayer(1))
+        self.players.append(MinimaxPlayer(1))
         self.players.append(MCTSPlayer(-1))
         #
         current=0
@@ -1652,7 +1652,7 @@ class MinimaxPlayer():
         self.rootnode.value=None
         self.rootnode.token=self.token
         self.rootnode.depth=0
-        self.rootnode.children=self.rootnode.expand_node()
+        self.rootnode.expand_node()
         #
         depth=self.starting_depth
         while (time.time() - start) < self.maxtime:
@@ -1688,7 +1688,6 @@ class MinimaxNode():
             instance.depth=self.depth+1
             instance.expanded=False
             self.children.append(instance)
-        return self.children
 
     def minimax(self, alpha, beta, maxplayer, maxdepth):
         #
