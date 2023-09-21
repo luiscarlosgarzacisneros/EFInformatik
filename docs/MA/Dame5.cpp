@@ -1617,7 +1617,7 @@ public:
             //
             for (const MinimaxNode& child : this->children) {
                 if (!child.value_not_none) {none_children.push_back(child);}
-                else if (child.value_not_none) {not_none_children.push_back(child);}
+                else {not_none_children.push_back(child);}
             }
             //
             if (max_player) {
@@ -1629,7 +1629,7 @@ public:
                 //
                 for (MinimaxNode& child : not_none_children) {child.sort(false);}
             }
-            else if (!max_player) {
+            else {
                 std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode& a, const MinimaxNode& b) {return a.value < b.value;});
                 //
                 sorted_children.insert(sorted_children.end(), not_none_children.begin(), not_none_children.end());
