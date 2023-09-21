@@ -29,10 +29,10 @@ def gewonnen(board, player):
                 gew = True
     return gew
 
-def gameover(boar):
+def game_over(board):
     isover = True
     for q in range(6):
-        if boar[q].count(0) > 0:
+        if board[q].count(0) > 0:
             isover = False
     return isover
 
@@ -329,7 +329,7 @@ class VierGewinnt():
             self.board=player.get_move(copy.deepcopy(self.board))
             current = (current + 1) % 2
             self.turn+=1
-            if gameover(self.board) or gewonnen(self.board,-1)or gewonnen(self.board,1):
+            if game_over(self.board) or gewonnen(self.board,-1)or gewonnen(self.board,1):
                 break
         self.printboard(self.board)
         if gewonnen(self.board,-1):
