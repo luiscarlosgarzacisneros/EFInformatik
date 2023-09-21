@@ -250,7 +250,7 @@ def inarow(board,player):
                     score=score-3
     return score
  
-def genchildren(position, player):
+def generate_children(position, player):
     children = []
     boardcopy = copy.deepcopy(position)
     for x in range(7):
@@ -432,7 +432,7 @@ class MCTSNode(MCTSPlayer):
         return ubc
     
     def expand_node(self):
-        children=genchildren(self.position,self.playeramzug)
+        children=generate_children(self.position,self.playeramzug)
         for i in range(len(children)):
             self.numberofiterations+=1
             instance = MCTSNode(self.token)
@@ -557,7 +557,7 @@ class MinimaxNode():
         self.expanded=False
 
     def expandnode(self):
-        children=genchildren(self.position,self.playeramzug)
+        children=generate_children(self.position,self.playeramzug)
         for i in range(len(children)):
             instance=MinimaxNode()
             instance.position=children[i]

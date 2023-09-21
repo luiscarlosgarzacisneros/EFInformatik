@@ -116,7 +116,7 @@ def printboard(board):
 
 #
 
-def genchildren(position, playerk):
+def generate_children(position, playerk):
     children=[]
     #9&-9 zu 1&-1
     if playerk==6:
@@ -289,7 +289,7 @@ def gcKk(y, x, pos, player):
             boardc[0][0]=0
             boardc[0][4]=0
             legal=True
-            for child in genchildren(boardc,6):
+            for child in generate_children(boardc,6):
                 if child[0][2]>0 or child[0][3]>0 or child[0][4]>0:
                     legal=False
                     break
@@ -302,7 +302,7 @@ def gcKk(y, x, pos, player):
             boardc[0][7]=0
             boardc[0][4]=0
             legal=True
-            for child in genchildren(boardc,6):
+            for child in generate_children(boardc,6):
                 if child[0][4]>0 or child[0][5]>0 or child[0][6]>0:
                     legal=False
                     break
@@ -316,7 +316,7 @@ def gcKk(y, x, pos, player):
             boardc[7][0]=0
             boardc[7][4]=0
             legal=True
-            for child in genchildren(boardc,-6):
+            for child in generate_children(boardc,-6):
                 if child[7][2]<0 or child[7][3]<0 or child[7][4]<0:
                     legal=False
                     break
@@ -329,7 +329,7 @@ def gcKk(y, x, pos, player):
             boardc[7][7]=0
             boardc[7][4]=0
             legal=True
-            for child in genchildren(boardc,-6):
+            for child in generate_children(boardc,-6):
                 if child[7][4]<0 or child[7][5]<0 or child[7][6]<0:
                     legal=False
                     break
@@ -654,7 +654,7 @@ def gorcKk(y,x,boardc,player):
             boardcc[0][0]=0
             boardcc[0][4]=0
             legal=True
-            for child in genchildren(boardcc,6):
+            for child in generate_children(boardcc,6):
                 if child[0][2]>0 or child[0][3]>0 or child[0][4]>0:
                     legal=False
                     break
@@ -667,7 +667,7 @@ def gorcKk(y,x,boardc,player):
             boardcc[0][7]=0
             boardcc[0][4]=0
             legal=True
-            for child in genchildren(boardcc,6):
+            for child in generate_children(boardcc,6):
                 if child[0][4]>0 or child[0][5]>0 or child[0][6]>0:
                     legal=False
                     break
@@ -681,7 +681,7 @@ def gorcKk(y,x,boardc,player):
             boardcc[7][0]=0
             boardcc[7][4]=0
             legal=True
-            for child in genchildren(boardcc,-6):
+            for child in generate_children(boardcc,-6):
                 if child[7][2]<0 or child[7][3]<0 or child[7][4]<0:
                     legal=False
                     break
@@ -694,7 +694,7 @@ def gorcKk(y,x,boardc,player):
             boardcc[7][7]=0
             boardcc[7][4]=0
             legal=True
-            for child in genchildren(boardcc,-6):
+            for child in generate_children(boardcc,-6):
                 if child[7][4]<0 or child[7][5]<0 or child[7][6]<0:
                     legal=False
                     break
@@ -1253,7 +1253,7 @@ class Schach():
                     other=-6
                 else:
                     other=6
-                for child in genchildren(self.board,other):
+                for child in generate_children(self.board,other):
                     if verloren(child,player.token):
                         king_captured=True
                 if not king_captured:
@@ -1313,11 +1313,11 @@ class HumanPlayer():
         
         legal_moves = []
         legal_move_exists = False
-        all_moves=genchildren(pos, self.token)
+        all_moves=generate_children(pos, self.token)
 
         for child_of_root in all_moves:
             king_is_killed = False
-            for child_of_child in genchildren(child_of_root, other_player):
+            for child_of_child in generate_children(child_of_root, other_player):
                 if verloren(child_of_child, self.token):
                     king_is_killed = True
                     break
@@ -1551,7 +1551,7 @@ class MCTSNode(MCTSPlayer):
         return ubc
     
     def expand_node(self):
-        children=genchildren(self.position,self.playeramzug)
+        children=generate_children(self.position,self.playeramzug)
         for i in range(len(children)):
             self.numberofiterations+=1
             instance = MCTSNode(self.token)
@@ -1694,7 +1694,7 @@ class MinimaxNode():
         self.expanded=False
 
     def expand_node(self):
-        children=genchildren(self.position,self.playeramzug)
+        children=generate_children(self.position,self.playeramzug)
         for i in range(len(children)):
             instance=MinimaxNode()
             instance.position=children[i]
@@ -1827,7 +1827,7 @@ board=[
 ]
 
 def test():
-    for child in genchildren(board,-6):
+    for child in generate_children(board,-6):
         printboard(child)
 
 def test2():
