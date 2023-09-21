@@ -672,7 +672,7 @@ X_matrix=[2,0,0,1,2,3,4,5]
 
 O_matrix=[5,4,3,2,1,0,0,2]
 
-def evaluatepos(pos,player):
+def evaluate_position(pos,player):
     eval=0
     if player==1:
         anz_X=0
@@ -1578,7 +1578,7 @@ class MCTSNode(MCTSPlayer):
                 else:
                     pos=nextpos
                     player=-player
-            values.append(evaluatepos(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
+            values.append(evaluate_position(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
         value=sum(values)/len(values)
         return value
     
@@ -1696,10 +1696,10 @@ class MinimaxNode():
         minimax_counter4+=1
         #
         if self.depth==maxdepth:
-            self.value = evaluatepos(self.position, self.token)
+            self.value = evaluate_position(self.position, self.token)
             return self.value
         elif verloren1(self.position, 1) or verloren1(self.position, -1):
-            self.value = evaluatepos(self.position, self.token)
+            self.value = evaluate_position(self.position, self.token)
             return self.value
         #
         if not self.expanded:
@@ -1806,4 +1806,4 @@ board = [
 
 #------------------------------------------------------
 
-#evaluatepos: open v closed?!!
+#evaluate_position: open v closed?!!

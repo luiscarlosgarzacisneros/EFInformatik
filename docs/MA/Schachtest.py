@@ -897,7 +897,7 @@ other_K_matrix = [[-v for v in row] for row in K_matrix]
 other_k_matrix = [[-v for v in row] for row in k_matrix]
 
 
-def evaluatepos(pos,playerk):
+def evaluate_position(pos,playerk):
     #mit Matrixen+pawn structure
     val=0
     if playerk==6:
@@ -1581,7 +1581,7 @@ class MCTSNode(MCTSPlayer):
                     player=1
                 elif player==1:
                     player=-1
-            values.append(evaluatepos(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
+            values.append(evaluate_position(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
         value=sum(values)/len(values)
         return value
     
@@ -1717,15 +1717,15 @@ class MinimaxNode():
             other_player=6
         #
         if verloren(self.position, self.playeramzug):
-            self.value = evaluatepos(self.position, self.token)
+            self.value = evaluate_position(self.position, self.token)
             return self.value
         #
         elif verloren(self.position, other_player):
-            self.value = evaluatepos(self.position, self.token)
+            self.value = evaluate_position(self.position, self.token)
             return self.value
         #
         elif self.depth==maxdepth:
-            self.value = evaluatepos(self.position, self.token)
+            self.value = evaluate_position(self.position, self.token)
             return self.value
         #
         if not self.expanded:
@@ -1733,7 +1733,7 @@ class MinimaxNode():
             self.expanded=True
         #
         if self.children == []:
-            self.value = evaluatepos(self.position, self.token)
+            self.value = evaluate_position(self.position, self.token)
             return self.value
         #
         if maxplayer:
@@ -1837,8 +1837,8 @@ def test2():
 #test2()
 
 #printboard(board)
-#print(evaluatepos(board,6))
+#print(evaluate_position(board,6))
 #----------------------------------------------------------------test
 
-#evaluatepos verbessern mobility?
+#evaluate_position verbessern mobility?
 #board

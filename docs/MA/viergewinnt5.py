@@ -46,7 +46,7 @@ def fall( board, y, x, player):
         else:
             pass
 
-def inarow(board,player):
+def evaluate_position(board,player):
     score=0
     if player==1:
         otherplayer=-1
@@ -461,7 +461,7 @@ class MCTSNode(MCTSPlayer):
                     player=1
                 elif player==1:
                     player=-1
-            values.append(inarow(pos,self.token))#wichtig das inarow mit token übereinstimmt.-+
+            values.append(evaluate_position(pos,self.token))#wichtig das evaluate_position mit token übereinstimmt.-+
         value=sum(values)/len(values)
         return value
     
@@ -575,10 +575,10 @@ class MinimaxNode():
         minimax_counter4+=1
         #
         if self.depth==maxdepth:
-            self.value = inarow(self.position, self.token)
+            self.value = evaluate_position(self.position, self.token)
             return self.value
         elif gewonnen(self.position, 1) or gewonnen(self.position, -1):
-            self.value = inarow(self.position, self.token)
+            self.value = evaluate_position(self.position, self.token)
             return self.value
         #
         if self.expanded:
@@ -588,7 +588,7 @@ class MinimaxNode():
             self.expanded=True
         #
         if children == []:
-            self.value = inarow(self.position, self.token)
+            self.value = evaluate_position(self.position, self.token)
             return self.value
         #
         if maxplayer:
