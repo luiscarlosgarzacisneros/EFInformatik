@@ -1617,6 +1617,7 @@ class MinimaxPlayer():
 
     def minimaxer(self, depth, vergangene_zeit):
         start=time.time()
+        self.rootnode
         for child in self.rootnode.children:
             if child.value==None or child.value>-90000:#illegal moves are not searched
                 child.minimax(-math.inf,math.inf,False, depth)
@@ -1658,7 +1659,7 @@ class MinimaxPlayer():
         self.rootnode.value=None
         self.rootnode.token=self.token
         self.rootnode.depth=0
-        self.rootnode.children=self.rootnode.expand_node()
+        self.rootnode.expand_node()
         #
         depth=self.starting_depth
         bestmove=[]
@@ -1704,8 +1705,7 @@ class MinimaxNode():
             instance.depth=self.depth+1
             instance.expanded=False
             self.children.append(instance)
-        return self.children
-
+        
     def minimax(self, alpha, beta, maxplayer, maxdepth):
         #
         global minimax_counter
