@@ -1370,6 +1370,11 @@ public:
         }
         //
         if (!this->expanded) {this->children=this->expand_node(); this->expanded = true;}
+        if (this->children.empty()) {
+            this->value = evaluate_position(this->board, this->token);
+            this->value_not_none=true;
+            return this->value;
+        }
         //
         if (max_player) {
             int max_value=-1000000;

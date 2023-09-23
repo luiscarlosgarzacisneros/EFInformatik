@@ -38,6 +38,18 @@ std::vector<std::vector<int>> matrix_minus(std::vector<std::vector<int>> matrix)
     return matrix;
 }
 
+bool is_int(int value) {
+    std::string input = std::to_string(value);
+    std::istringstream iss(input);
+    int extracted_value;
+    return (iss >> extracted_value) && (iss.eof());
+}
+
+int generate_random_int(int min, int max) {
+    int random_number=min+rand()%(max-min+1);
+    return random_number;
+}
+
 //
 
 bool is_one_at_this_index(const uint64_t bitboard, int index) {
@@ -460,7 +472,7 @@ public:
 
     Board() {}
 
-    void print_board() {
+    void print_board() const {
         std::vector<std::vector<std::string>> board;
         //initialize board with spaces
         for (int i = 0; i < 8; i++) {
@@ -512,7 +524,7 @@ public:
         }
     }
 
-    bool verloren(int playerk) {
+    bool verloren(int playerk) const {
         if (playerk==6) {
             if (this->k==0 && this->y==0) {return true;}
             else {return false;}
@@ -523,7 +535,7 @@ public:
         }
     }
 
-    int evaluate_position(int playerk) {
+    int evaluate_position(int playerk) const {
         int val = 0;
         if (playerk==6) {
             for (int p=0; p<8; ++p) {
@@ -685,6 +697,7 @@ public:
                 }
             }
         }
+        return val;
     }
 
     std::vector<Board> gcYy(int player, const uint64_t this_players_pieces, const uint64_t all_pieces) {
@@ -1375,40 +1388,356 @@ public:
 
 //
 
-main() {
-    Board root_node;
-    root_node.b   = 0b0000000000000000000000000000000000000000000000001111101100000000ULL;
-    root_node.l = 0b0000000000000000000000000000000000000000000000000000000001000000ULL;
-    root_node.x = 0b0000000000000000000000000000000000000000000000000000000000100000ULL;
-    root_node.t   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.q  = 0b0000000000000000000000000000000000000000000000000000000000010000ULL;
-    root_node.k   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+int minimax_counter=0;
 
-    root_node.y   = 0b0000000000000000000000000000000000000000000000000000000000001000ULL;
-    root_node.z   = 0b0000000000000000000000000000000000000000000000000000000010000001ULL;
-    root_node.f   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+class MinimaxNode {
+public:
+    MinimaxNode() : value(0), value_not_none(false), children(), board(), player_am_zug(0), token(0), depth(0), expanded(false) {}
 
-    root_node.B   = 0b0000000011111111000000000000000000000000000000000000000000000000ULL;
-    root_node.L = 0b0100001000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.X = 0b0010010000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.T   = 0b0000000000000000000000000000000000000100000000000000000000000000ULL;
-    root_node.Q  = 0b0001000000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.K   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+    int value;
+    bool value_not_none;
+    std::vector<MinimaxNode> children;
+    Board board;
+    int player_am_zug;
+    int token;
+    int depth;
+    bool expanded;
 
-    root_node.Y   = 0b0000100000000000000000000000000000000000000000000000000000000000ULL;
-    root_node.Z   = 0b1000000100000000000000000000000000000000000000000000000000000000ULL;
-    root_node.F   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
-
-    uint64_t white_pieces = root_node.b|root_node.l|root_node.x|root_node.t|root_node.q|root_node.k|root_node.y|root_node.z|root_node.f;
-    uint64_t black_pieces = root_node.B|root_node.L|root_node.X|root_node.T|root_node.Q|root_node.K|root_node.Y|root_node.Z|root_node.F;
-
-    root_node.print_board();
-    std::cout<<"--------------"<<std::endl;
-    for (Board child : root_node.generate_children(6)) {
-        child.print_board();
+    std::vector<MinimaxNode> expand_node() {
+        std::vector<MinimaxNode> new_children;
+        std::vector<Board> list_of_positions = this->board.generate_children(this->player_am_zug);
+        for (const Board& board_position : list_of_positions) {
+            MinimaxNode child;
+            child.board = board_position;
+            child.player_am_zug = -this->player_am_zug;
+            child.token = this->token;
+            child.depth = this->depth + 1;
+            child.value_not_none = false;
+            child.value=0;
+            child.children;
+            new_children.push_back(child);
+        }
+        return new_children;
     }
-    std::cout<<"--------------"<<std::endl;
-    root_node.print_board();
 
+    int minimax(int alpha, int beta, bool max_player, const int max_depth) {
+        //
+        minimax_counter+=1;
+        //
+        if (this->depth>=max_depth || this->board.verloren(6) || this->board.verloren(-6)) {
+            this->value = this->board.evaluate_position(this->token);
+            this->value_not_none=true;
+            return this->value;
+        }
+        //
+        if (!this->expanded) {this->children=this->expand_node(); this->expanded = true;}
+        if (this->children.empty()) {
+            this->value = this->board.evaluate_position(this->token);
+            this->value_not_none=true;
+            return this->value;
+        }
+        //
+        if (max_player) {
+            int max_value=-1000000;
+            for (MinimaxNode& child : this->children) {
+                int eval=child.minimax(alpha,beta,false,max_depth);
+                if (eval>max_value) {max_value=eval;}
+                //pruning
+                if (eval>alpha) {alpha=eval;}
+                if (beta<=alpha) {break;}
+            }
+            this->value=max_value;
+            return max_value;
+        }
+        else if (!max_player) {
+            int min_value=1000000;
+            for (MinimaxNode& child : this->children) {
+                int eval=child.minimax(alpha,beta,true,max_depth);
+                if (eval<min_value) {min_value=eval;}
+                //pruning
+                if (eval<beta) {beta=eval;}
+                if (beta<=alpha) {break;}
+            }
+            this->value=min_value;
+            return min_value;
+        }
+
+    }
+
+    void sort(bool max_player) {
+        if (this->expanded) {
+            //
+            std::vector<MinimaxNode> not_none_children;
+            std::list<MinimaxNode> none_children;
+            std::vector<MinimaxNode> sorted_children;
+            //
+            for (const MinimaxNode& child : this->children) {
+                if (!child.value_not_none) {none_children.push_back(child);}
+                else {not_none_children.push_back(child);}
+            }
+            //
+            if (max_player) {
+                std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode& a, const MinimaxNode& b) {return a.value > b.value;});
+                //
+                sorted_children.insert(sorted_children.end(), not_none_children.begin(), not_none_children.end());
+                sorted_children.insert(sorted_children.end(), none_children.begin(), none_children.end());
+                this->children=sorted_children;
+                //
+                for (MinimaxNode& child : not_none_children) {child.sort(false);}
+            }
+            else {
+                std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode& a, const MinimaxNode& b) {return a.value < b.value;});
+                //
+                sorted_children.insert(sorted_children.end(), not_none_children.begin(), not_none_children.end());
+                sorted_children.insert(sorted_children.end(), none_children.begin(), none_children.end());
+                this->children=sorted_children;
+                //
+                for (MinimaxNode& child : not_none_children) {child.sort(true);}
+            }
+        }
+    }
+
+};
+
+class MinimaxPlayer {
+public:
+    MinimaxPlayer(int token, Board board) : token(token), board(board) {
+        root_node.board = board;
+        root_node.player_am_zug = token;
+        root_node.token=token;
+        root_node.value_not_none = false;
+        root_node.value = 0;
+        root_node.depth = 0;
+        root_node.children = root_node.expand_node();
+        root_node.expanded=true;
+        //
+        minimax_counter=0;
+    }
+    MinimaxNode root_node;
+    int token;
+    Board board;
+    int max_time=1;
+    int max_depth=10;
+    int starting_depth=1;
+
+    Board* minimaxer(const int depth, const std::chrono::duration<double> vergangene_zeit) {
+        auto start = std::chrono::high_resolution_clock::now();
+        //
+        std::vector<int> values;
+        std::vector<MinimaxNode> best_moves;
+        MinimaxNode best_move;
+        int best_value = -1000000;
+        std::vector<MinimaxNode>& root_node_children=root_node.children;
+        Board return_board;
+        //
+        for (MinimaxNode& child : root_node_children){
+            int eval;
+            if (child.value>-90000) {
+                eval=child.minimax(-1000000,1000000,false, depth);
+                child.value=eval;
+                std::cout<<"a ";//child wurde fertig berechnet
+            }
+            //
+            auto now = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
+            if (vergangene_zeit2.count() >= max_time) {std::cout<<" NICHT FERTIG"; break;}
+        }
+        //
+        for (MinimaxNode& child : root_node_children) {
+            if (child.value>-90000) {
+                values.push_back(child.value);
+            }
+        }
+        if (values.empty()) {return nullptr;}
+        for (int v : values) {if (v > best_value) {best_value = v;}}
+        for (MinimaxNode& child : root_node_children) {if (child.value==best_value) {best_moves.push_back(child);}}
+        //
+        //output---------
+        std::cout << std::endl;
+        std::cout << best_value << std::endl;
+        std::cout<<"COUNTER: "; std::cout<<minimax_counter<<std::endl;
+        //---------------
+        best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
+        return_board=best_move.board;
+        //
+        Board* ret=&return_board;
+        return ret;
+
+    }
+
+    Board* get_move() {
+        auto start = std::chrono::high_resolution_clock::now();
+        //
+        int depth=this->starting_depth;
+        Board move;
+        while (true) {
+            //break
+            auto now = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> vergangene_zeit = now - start;
+            if (vergangene_zeit.count() >= max_time) {break;}
+            else if (depth>max_depth) {break;}
+            //calculate move
+            std::cout<<"---DEPTH: ";
+            std::cout<<depth<<std::endl;
+            //
+            Board* new_move=minimaxer(depth,vergangene_zeit);
+            move=*new_move;
+            if (new_move==nullptr) {return nullptr;}
+            //
+            for (const MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
+            std::cout<<std::endl;
+            //sort+depth
+            //this->root_node.sort(true);
+            //
+            for (MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
+            std::cout<<std::endl;
+            if (depth>max_depth) {break;}
+            depth+=1;
+        }
+        std::cout<<"BOARD"<<std::endl;
+        move.print_board();
+        return &move;
+    }
+
+};
+
+//
+
+int max_turns=10;
+
+class Schach {
+public:
+Board board;
+int turn;
+    Schach() : turn(1) {
+        board.b   = 0b0000000000000000000000000000000000000000000000001111111100000000ULL;
+        board.l = 0b0000000000000000000000000000000000000000000000000000000001000010ULL;
+        board.x = 0b0000000000000000000000000000000000000000000000000000000000100100ULL;
+        board.t   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+        board.q  = 0b0000000000000000000000000000000000000000000000000000000000010000ULL;
+        board.k   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+
+        board.y   = 0b0000000000000000000000000000000000000000000000000000000000001000ULL;
+        board.z   = 0b0000000000000000000000000000000000000000000000000000000010000001ULL;
+        board.f   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+
+        board.B   = 0b0000000011111111000000000000000000000000000000000000000000000000ULL;
+        board.L = 0b0100001000000000000000000000000000000000000000000000000000000000ULL;
+        board.X = 0b0010010000000000000000000000000000000000000000000000000000000000ULL;
+        board.T   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+        board.Q  = 0b0001000000000000000000000000000000000000000000000000000000000000ULL;
+        board.K   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+
+        board.Y   = 0b0000100000000000000000000000000000000000000000000000000000000000ULL;
+        board.Z   = 0b1000000100000000000000000000000000000000000000000000000000000000ULL;
+        board.F   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+    }
+
+    int play() {
+        int current = 1;
+        while (true) {
+            //-----------------------------------------
+            MinimaxPlayer player_1(6, this->board);
+            MinimaxPlayer player_2(-6, this->board);
+            //-----------------------------------------
+            std::cout<<this->turn<<std::endl;
+            this->board.print_board();
+            //
+            Board new_move;
+            Board* new_board;
+            if (current==1) {
+                std::cout <<"k ist am Zug"<<std::endl;
+                new_board = player_1.get_move();
+            }
+            else if (current==2) {
+                std::cout<<"K ist am Zug"<<std::endl;
+                new_board = player_2.get_move();
+            }
+            //
+            if (new_board != nullptr) {new_move = *new_board;}
+            else {std::cout<<"NULLPOINTER2"<<std::endl;}
+            //
+            if (!(new_board==nullptr)) {this->board = new_move;}
+            else {
+                bool king_captured = false;
+                int other;
+                int this_players_token;
+                //
+                if(current == 1) {other = -6;}
+                else {other = 6;}
+                if (current == 1) {this_players_token = 6;}
+                else {this_players_token = -6;}
+                //
+                std::vector<Board> children = this->board.generate_children(other);
+                for (const Board& child : children) {
+                    if (child.verloren(this_players_token)) {
+                        king_captured = true;
+                    }
+                }
+                if (!king_captured) {
+                    this->board.print_board();
+                    std::cout << "UNENTSCHIEDEN" << std::endl;
+                    return 0;
+                }
+                else {
+                    if (this_players_token == 6) {
+                        this->board.print_board();
+                        std::cout << "K HAT GEWONNEN" << std::endl;
+                        return -1;
+                    }
+                    else {
+                        this->board.print_board();
+                        std::cout << "k HAT GEWONNEN" << std::endl;
+                        return 1;
+                    }
+                }
+            }
+            //
+            if (this->turn==max_turns) {this->board.print_board();; std::cout<<"UNENTSCHIEDEN"<<std::endl; return 0;}
+            //
+            if (current==1) {current = 2;}
+            else {current = 1;}
+            this->turn += 1;
+        }
+    }
+
+private:
+    
+};
+
+//
+
+void spielen(int z) {
+    std::cout<<"NEUES SPIEL"<<std::endl;
+    int k_wins=0;
+    int K_wins=0;
+    int unentschieden=0;
+    //
+    for (int i=0; i<z; ++i) {
+        Schach game;
+        int r = game.play();
+        if (r==1) {k_wins+=1;}
+        else if (r==-1) {K_wins+=1;}
+        else if (r==0) {unentschieden+=1;}
+        std::cout<<"k: "<<k_wins<<std::endl;
+        std::cout<<"K: "<<K_wins<<std::endl;
+        std::cout<<"-: "<<unentschieden<<std::endl;
+    }
+    std::cout<<"FERTIG"<<std::endl;
 }
 
+//
+
+int main() {
+    srand(time(0)); //seed
+    spielen(1);
+    //test-------------------
+    //Schach game;
+    //game.board.print_board();
+    //for (const Board& child : game.board.generate_children(-6)) {
+        //child.print_board();
+    //}
+    //test-----------------
+}
+
+//
