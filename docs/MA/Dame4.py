@@ -1585,14 +1585,14 @@ class MCTSNode(MCTSPlayer):
     def select_leafnode(self):
         children = self.children
         bestvalue = -math.inf
-        for child in children:
-            ucbofchild = child.calculate_ucb()
-            if ucbofchild > bestvalue:
-                bestvalue = ucbofchild
-                selectednode = child
         if selectednode.children == []:
             return selectednode
-        else:
+        else: 
+            for child in children:
+                ucbofchild = child.calculate_ucb()
+                if ucbofchild > bestvalue:
+                    bestvalue = ucbofchild
+                    selectednode = child
             return selectednode.select_leafnode()
 
     def backpropagate(self, newscore, numberofsimulations):

@@ -579,7 +579,7 @@ public:
     MCTSNode* select_leaf_node() {
         double best_value = -std::numeric_limits<double>::infinity();
         MCTSNode* selected_node = nullptr;
-
+        if (!selected_node->expanded) {return selected_node;}
         for (MCTSNode& child : this->children) {
             double ucb_of_child = child.calculate_ucb();
             if (ucb_of_child > best_value) {
@@ -587,10 +587,9 @@ public:
                 selected_node = &child;
             }
         }
-
-        if (!selected_node->expanded) {return selected_node;}
-        else {return selected_node->select_leaf_node();}
+        return selected_node->select_leaf_node();
     }
+
 
     void backpropagate(double new_value, int number_of_simulations) {
         this->value += new_value;
