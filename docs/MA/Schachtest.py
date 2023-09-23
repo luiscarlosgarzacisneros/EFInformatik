@@ -1542,13 +1542,13 @@ class MCTSNode(MCTSPlayer):
         self.score=0
         self.visits=0
     
-    def calculate_ubc(self):
+    def calculate_ucb(self):
         par=self.parent
         if self.visits==0:
-            ubc=math.inf
+            ucb=math.inf
         else:
-            ubc=(self.score/self.visits)+self.c*(math.sqrt(math.log(par.visits)/self.visits))
-        return ubc
+            ucb=(self.score/self.visits)+self.c*(math.sqrt(math.log(par.visits)/self.visits))
+        return ucb
     
     def expand_node(self):
         children=generate_children(self.position,self.playeramzug)
@@ -1589,7 +1589,7 @@ class MCTSNode(MCTSPlayer):
         children = self.children
         bestvalue = -math.inf
         for child in children:
-            ucbofchild = child.calculate_ubc()
+            ucbofchild = child.calculate_ucb()
             if ucbofchild > bestvalue:
                 bestvalue = ucbofchild
                 selectednode = child

@@ -545,14 +545,14 @@ public:
     int token;
     bool expanded;
 
-    double calculate_ubc() {
+    double calculate_ucb() {
         MCTSNode* par = this->parent;
         if (this->visits == 0) {
             return std::numeric_limits<double>::infinity();
         }
         else {
-            double ubc = (static_cast<double>(this->value) / this->visits) +c * (std::sqrt(std::log(static_cast<double>(par->visits)) / this->visits));
-            return ubc;
+            double ucb = (static_cast<double>(this->value) / this->visits) +c * (std::sqrt(std::log(static_cast<double>(par->visits)) / this->visits));
+            return ucb;
         }
     }
 
@@ -581,7 +581,7 @@ public:
         MCTSNode* selected_node = nullptr;
 
         for (MCTSNode& child : this->children) {
-            double ucb_of_child = child.calculate_ubc();
+            double ucb_of_child = child.calculate_ucb();
             if (ucb_of_child > best_value) {
                 best_value = ucb_of_child;
                 selected_node = &child;
