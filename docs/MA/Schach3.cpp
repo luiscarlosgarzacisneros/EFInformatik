@@ -1519,7 +1519,7 @@ public:
     Board board;
     int max_time=5;
     int max_depth=10;
-    int starting_depth=1;
+    int starting_depth=2;
 
     Board* minimaxer(const int depth, const std::chrono::duration<double> vergangene_zeit) {
         auto start = std::chrono::high_resolution_clock::now();
