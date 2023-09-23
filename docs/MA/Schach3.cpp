@@ -1742,3 +1742,5 @@ int main() {
 }
 
 //
+
+//lifetime of move in get_move(): nullpointer in play()
