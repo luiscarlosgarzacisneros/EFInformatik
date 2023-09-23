@@ -1513,10 +1513,11 @@ public:
         //
         minimax_counter=0;
     }
+
     MinimaxNode root_node;
     int token;
     Board board;
-    int max_time=1;
+    int max_time=5;
     int max_depth=10;
     int starting_depth=1;
 
@@ -1569,7 +1570,7 @@ public:
         auto start = std::chrono::high_resolution_clock::now();
         //
         int depth=this->starting_depth;
-        Board* move = new Board;  //dynamically allocate memory for move
+        Board move;
         while (true) {
             //break
             auto now = std::chrono::high_resolution_clock::now();
@@ -1580,8 +1581,9 @@ public:
             std::cout<<"---DEPTH: ";
             std::cout<<depth<<std::endl;
             //
-            Board* move=minimaxer(depth,vergangene_zeit);
-            if (move==nullptr) {delete move; return nullptr;}
+            Board* new_move=minimaxer(depth,vergangene_zeit);
+            move=*new_move;
+            if (new_move==nullptr) {return nullptr;}
             //
             for (const MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
             std::cout<<std::endl;
@@ -1593,9 +1595,9 @@ public:
             if (depth>max_depth) {break;}
             depth+=1;
         }
-        Board nn= *move;
-        nn.print_board();
-        return move;
+        std::cout<<"BOARD"<<std::endl;
+        move.print_board();
+        return &move;
     }
 
 };
@@ -1653,10 +1655,10 @@ int turn;
                 new_board = player_2.get_move();
             }
             //
-            if (!(new_board==nullptr)) {
-                new_move = *new_board;
-                this->board = new_move;
-            }
+            if (new_board != nullptr) {new_move = *new_board;}
+            else {std::cout<<"NULLPOINTER2"<<std::endl;}
+            //
+            if (!(new_board==nullptr)) {this->board = new_move;}
             else {
                 bool king_captured = false;
                 int other;
@@ -1696,7 +1698,6 @@ int turn;
             //
             if (current==1) {current = 2;}
             else {current = 1;}
-            delete new_board;
             this->turn += 1;
         }
     }
