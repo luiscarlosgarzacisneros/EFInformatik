@@ -1514,7 +1514,7 @@ class MCTSPlayer():
             selectednode=self.rootnode.select_leafnode()
             selectednode.expand_node()
             for child_node in selectednode.children:
-                child_node.backpropagate(child_node.simulate(),child_node.numberofsimulations)
+                child_node.backpropagate(child_node.simulate())
                 if (time.time() - start) > self.maxtime:
                     break
             #
@@ -1536,7 +1536,6 @@ class MCTSPlayer():
 class MCTSNode(MCTSPlayer):
     def __init__(self,token):
         super().__init__(token)
-        #
         self.position=[]
         self.playeramzug=0
         self.parent=None
@@ -1558,7 +1557,6 @@ class MCTSNode(MCTSPlayer):
             self.numberofiterations+=1
             instance = MCTSNode(self.token)
             self.children.append(instance)
-            #
             instance.position=children[i]
             instance.playeramzug=-self.playeramzug
             instance.parent=self
@@ -1583,25 +1581,31 @@ class MCTSNode(MCTSPlayer):
         return value
     
     def select_leafnode(self):
-        children = self.children
         bestvalue = -math.inf
-        if selectednode.children == []:
-            return selectednode
+        if self.children == []:
+            return self
         else: 
-            for child in children:
+            for child in self.children:
                 ucbofchild = child.calculate_ucb()
                 if ucbofchild > bestvalue:
                     bestvalue = ucbofchild
                     selectednode = child
             return selectednode.select_leafnode()
 
-    def backpropagate(self, newscore, numberofsimulations):
+    def backpropagate2(self, newscore, numberofsimulations):
         self.score += newscore
         self.visits += numberofsimulations
+        #self.visits+=1
         parent=self.parent
-
         if parent is not None:
             parent.backpropagate(newscore, numberofsimulations)
+
+    def backpropagate(self, newscore):
+        self.score += newscore
+        self.visits+=1
+        parent=self.parent
+        if parent is not None:
+            parent.backpropagate(newscore)
 
 #
 
