@@ -1388,6 +1388,213 @@ public:
 
 //
 
+class HumanPlayer {
+public:
+    HumanPlayer(int token) : token(token) {}
+    int token=token;
+
+    bool do_these_two_vectors_have_the_same_elements(const std::vector<std::vector<int>>& vector1, const std::vector<std::vector<int>>& vector2) {
+        for (size_t i=0; i<vector1.size(); ++i) {
+            for (size_t j=0; j<vector1[i].size(); ++j) {
+                if (vector1[i][j] != vector2[i][j]) {return false;}
+            }
+        }
+        return true;
+    }
+
+    std::vector<int> eingabe() {
+        try {
+            int vx, vy, zx, zy;
+            std::cout <<"von x: ";
+            std::cin>> vx;
+            std::cout <<"von y: ";
+            std::cin>> vy;
+            std::cout <<"zu x: ";
+            std::cin>> zx;
+            std::cout <<"zu y: ";
+            std::cin >> zy;
+            //
+            vx -= 1;
+            vy -= 1;
+            zx -= 1;
+            zy -= 1;
+            //
+            if (vy < 8 && vy > -1 && vx < 8 && vx > -1 && zy < 8 && zy > -1 && zx < 8 && zx > -1 && is_int(vx) && is_int(vy)&& is_int(zx)&& is_int(zy)) {
+                    return {vy, vx, zy, zx};
+            }
+            else {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "EINGABE NICHT KORREKT1" << std::endl;
+                return eingabe();
+            }
+        }
+        catch (...) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "EINGABE NICHT KORREKT1" << std::endl;
+            return eingabe();
+        }
+    }
+
+    Board* player(Board& pos) {
+        int other_player = (this->token == 6) ? -6 : 6;
+        std::vector<Board> legal_moves;
+        bool legal_move_exists = false;
+        std::vector<Board> all_moves = pos.generate_children(this->token);
+        //
+        for (Board& child_of_root : all_moves) {
+            bool king_is_killed = false;
+            for (const auto& child_of_child : child_of_root.generate_children(other_player)) {
+                if (child_of_child.verloren(this->token)) {
+                    king_is_killed = true;
+                    break;
+                }
+            }
+            if (!king_is_killed) {
+                legal_move_exists = true;
+                legal_moves.push_back(child_of_root);
+            }
+        }
+        //
+        if (!legal_move_exists) {return nullptr;}
+        //
+        while (true) {
+            Board boardcopy = pos;
+            std::vector<int> input_move = this->eingabe();
+            int vy = input_move[0];
+            int vx = input_move[1];
+            int zy = input_move[2];
+            int zx = input_move[3];
+
+            //update boardcopy
+            //1 & -1 to 5 & -5
+            for (int x=0; x<8; ++x) {
+                if (is_one_at_this_index(boardcopy.b, 56+x)) {clear_bit(boardcopy.b, 56+x); set_bit_to_one(boardcopy.q, 56+x);}
+            }
+            for (int x=0; x<8; ++x) {
+                if (is_one_at_this_index(boardcopy.B, 0+x)) {clear_bit(boardcopy.B, 0+x); set_bit_to_one(boardcopy.Q, +x);}
+            }
+            //9 & -9weg man konete nur die korrekten y suchen
+            if (this->token==6) {
+                for (int y=0; y<8; ++y) {
+                    for (int x=0; x<8; ++x) {
+                        if (is_one_at_this_index(boardcopy.f, yx_zu_index(y,x))) {clear_bit(boardcopy.f, yx_zu_index(y,x)); set_bit_to_one(boardcopy.b, yx_zu_index(y,x))}
+                    }
+                }
+            }
+            else if (this->token==-6) {
+                for (int y=0; y<8; ++y) {
+                    for (int x=0; x<8; ++x) {
+                        if (is_one_at_this_index(boardcopy.F, yx_zu_index(y,x))) {clear_bit(boardcopy.F, yx_zu_index(y,x)); set_bit_to_one(boardcopy.B, yx_zu_index(y,x))}
+                    }
+                }
+            }
+            //special moves
+            bool special = false;
+            //rochade
+            if (vy==7 && vx==4 && zy==7 && zx==2 && this->token==6 && boardcopy[vy][vx]==8) {
+                special = true;
+                boardcopy[7][2] = 6;
+                boardcopy[7][3] = 4;
+                boardcopy[7][0] = 0;
+                boardcopy[7][4] = 0;
+            }
+            if (vy==7 && vx==4 && zy==7 && zx==6 && this->token==6 && boardcopy[vy][vx]==8) {
+                special = true;
+                boardcopy[7][6] = 6;
+                boardcopy[7][5] = 4;
+                boardcopy[7][7] = 0;
+                boardcopy[7][4] = 0;
+            }
+            if (vy==0 && vx==4 && zy==0 && zx==2 && this->token==-6 && boardcopy[vy][vx]==-8) {
+                special = true;
+                boardcopy[0][2] = -6;
+                boardcopy[0][3] = -4;
+                boardcopy[0][0] = 0;
+                boardcopy[0][4] = 0;
+            }
+            if (vy==0 && vx==4 && zy==0 && zx==6 && this->token==-6 && boardcopy[vy][vx]==-8) {
+                special = true;
+                boardcopy[0][6] = -6;
+                boardcopy[0][5] = -4;
+                boardcopy[0][7] = 0;
+                boardcopy[0][4] = 0;
+            }
+            // Bb 2 nach vorne
+            if (boardcopy[vy][vx]==1 && vy==6 && boardcopy[zy][zx]==0 && boardcopy[vy-1][vx]==0 && vx==zx && zy==vy-2) {
+                special = true;
+                boardcopy[zy][zx] = 9;
+                boardcopy[vy][vx] = 0;
+            }
+            if (boardcopy[vy][vx]==-1 && vy==1 && boardcopy[zy][zx]==0 && boardcopy[vy+1][vx]==0 && vx==zx && zy==vy+2) {
+                special = true;
+                boardcopy[zy][zx] = -9;
+                boardcopy[vy][vx] = 0;
+            }
+            // En passant
+            if (boardcopy[vy][vx]==1 && zy==vy-1 && zx==vx-1 && boardcopy[zy][zx]==0) {
+                special = true;
+                boardcopy[vy][vx] = 0;
+                boardcopy[zy][zx] = 1;
+                boardcopy[vy][zx] = 0;
+            }
+            if (boardcopy[vy][vx]==1 && zy==vy-1 && zx==vx+1 && boardcopy[zy][zx]==0) {
+                special = true;
+                boardcopy[vy][vx] = 0;
+                boardcopy[zy][zx] = 1;
+                boardcopy[vy][zx] = 0;
+            }
+            if (boardcopy[vy][vx]==-1 && zy==vy+1 && zx==vx-1 && boardcopy[zy][zx]==0) {
+                special = true;
+                boardcopy[vy][vx] = 0;
+                boardcopy[zy][zx] = -1;
+                boardcopy[vy][zx] = 0;
+            }
+            if (boardcopy[vy][vx]==-1 && zy==vy+1 && zx==vx+1 && boardcopy[zy][zx]==0) {
+                special = true;
+                boardcopy[vy][vx] = 0;
+                boardcopy[zy][zx] = -1;
+                boardcopy[vy][zx] = 0;
+            }
+            //normal
+            if (!special) {
+                if (boardcopy[vy][vx]==7) {boardcopy[zy][zx] = 4;}
+                else if (boardcopy[vy][vx]==-7) {boardcopy[zy][zx] = -4;}
+                else if (boardcopy[vy][vx]==8) {boardcopy[zy][zx] = 6;}
+                else if (boardcopy[vy][vx]==-8) {boardcopy[zy][zx] = -6;}
+                else {boardcopy[zy][zx] = boardcopy[vy][vx];}
+                boardcopy[vy][vx] = 0;
+            }
+            //
+            bool move_legal = false;
+            for (const auto& legal_move : legal_moves) {
+                if (do_these_two_vectors_have_the_same_elements(boardcopy, legal_move)) {
+                    move_legal = true;
+                    break;
+                }
+            }
+            if (move_legal) {return &boardcopy;}
+            else {
+                boardcopy.print_board();
+                std::cout << "legal_children" << std::endl;
+                for (Board& s : legal_moves) {s.print_board();}
+                std::cout << "---------------------------------" << std::endl;
+                pos.print_board();
+                std::cout << "EINGABE NICHT KORREKT2" << std::endl;
+            }
+        }
+    }
+
+    std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
+        return player(board);
+    }
+
+};
+
+
+//
+
 int minimax_counter=0;
 
 class MinimaxNode {
