@@ -1391,8 +1391,9 @@ public:
 
 class HumanPlayer {
 public:
-    HumanPlayer(int token) : token(token) {}
+    HumanPlayer(int token, Board board) : token(token), board(board) {}
     int token=token;
+    Board board;
 
     bool do_these_two_vectors_have_the_same_elements(const std::vector<std::vector<int>>& vector1, const std::vector<std::vector<int>>& vector2) {
         for (size_t i=0; i<vector1.size(); ++i) {
@@ -1475,7 +1476,7 @@ public:
                 if (is_one_at_this_index(boardcopy.b, 56+x)) {clear_bit(boardcopy.b, 56+x); set_bit_to_one(boardcopy.q, 56+x);}
             }
             for (int x=0; x<8; ++x) {
-                if (is_one_at_this_index(boardcopy.B, 0+x)) {clear_bit(boardcopy.B, 0+x); set_bit_to_one(boardcopy.Q, +x);}
+                if (is_one_at_this_index(boardcopy.B, 0+x)) {clear_bit(boardcopy.B, 0+x); set_bit_to_one(boardcopy.Q, 0+x);}
             }
             //9 & -9weg man konete nur die korrekten y suchen
             if (this->token==6) {
@@ -1495,28 +1496,28 @@ public:
             //special moves
             bool special = false;
             //rochade
-            if (vy==7 && vx==4 && zy==7 && zx==2 && this->token==6 && is_one_at_this_index(boardcopy.y, yx_zu_index(vy,vx))) {
+            if (vy==0 && vx==4 && zy==0 && zx==6 && this->token==6 && is_one_at_this_index(boardcopy.y, yx_zu_index(vy,vx))) {
                 special = true;
                 set_bit_to_one(boardcopy.k, 1);
                 set_bit_to_one(boardcopy.t, 2);
                 clear_bit(boardcopy.y, 3);
                 clear_bit(boardcopy.z, 0);
             }
-            if (vy==7 && vx==4 && zy==7 && zx==6 && this->token==6 && is_one_at_this_index(boardcopy.y, yx_zu_index(vy,vx))) {
+            if (vy==0 && vx==4 && zy==0 && zx==2 && this->token==6 && is_one_at_this_index(boardcopy.y, yx_zu_index(vy,vx))) {
                 special = true;
                 set_bit_to_one(boardcopy.k, 5);
                 set_bit_to_one(boardcopy.t, 4);
                 clear_bit(boardcopy.y, 3);
                 clear_bit(boardcopy.z, 7);
             }
-            if (vy==0 && vx==4 && zy==0 && zx==2 && this->token==-6 && is_one_at_this_index(boardcopy.Y, yx_zu_index(vy,vx))) {
+            if (vy==7 && vx==4 && zy==7 && zx==6 && this->token==-6 && is_one_at_this_index(boardcopy.Y, yx_zu_index(vy,vx))) {
                 special = true;
                 set_bit_to_one(boardcopy.k, 57);
                 set_bit_to_one(boardcopy.t, 58);
                 clear_bit(boardcopy.y, 59);
                 clear_bit(boardcopy.z, 56);
             }
-            if (vy==0 && vx==4 && zy==0 && zx==6 && this->token==-6 && is_one_at_this_index(boardcopy.Y, yx_zu_index(vy,vx))) {
+            if (vy==7 && vx==4 && zy==7 && zx==2 && this->token==-6 && is_one_at_this_index(boardcopy.Y, yx_zu_index(vy,vx))) {
                 special = true;
                 set_bit_to_one(boardcopy.k, 61);
                 set_bit_to_one(boardcopy.t, 60);
@@ -1524,42 +1525,42 @@ public:
                 clear_bit(boardcopy.z, 63);
             }
             // Bb 2 nach vorne
-            if (is_one_at_this_index(boardcopy.b, yx_zu_index(vy,vx)) && vy==6 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1,vx))) && vx==zx && zy==vy-2) {
+            if (is_one_at_this_index(boardcopy.b, yx_zu_index(vy,vx)) && vy==6 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1,vx))) && vx==zx && zy==vy+2) {
                 special = true;
-                boardcopy[zy][zx] = 9;
-                boardcopy[vy][vx] = 0;
+                set_bit_to_one(boardcopy.f, yx_zu_index(zy,zx));
+                clear_bit(boardcopy.b, yx_zu_index(vy,vx));
             }
-            if (is_one_at_this_index(boardcopy.B, yx_zu_index(vy,vx)) && vy==1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1,vx))) && vx==zx && zy==vy+2) {
+            if (is_one_at_this_index(boardcopy.B, yx_zu_index(vy,vx)) && vy==1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1,vx))) && vx==zx && zy==vy-2) {
                 special = true;
-                boardcopy[zy][zx] = -9;
-                boardcopy[vy][vx] = 0;
+                set_bit_to_one(boardcopy.F, yx_zu_index(zy,zx));
+                clear_bit(boardcopy.B, yx_zu_index(vy,vx));
             }
             // En passant
-            if (boardcopy[vy][vx]==1 && zy==vy-1 && zx==vx-1 && boardcopy[zy][zx]==0) {
+            if (is_one_at_this_index(boardcopy.b, yx_zu_index(vy,vx)) && zy==vy+1 && zx==vx-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx)))) {
                 special = true;
-                boardcopy[vy][vx] = 0;
-                boardcopy[zy][zx] = 1;
-                boardcopy[vy][zx] = 0;
+                clear_bit(boardcopy.b, yx_zu_index(vy,vx));
+                set_bit_to_one(boardcopy.b, yx_zu_index(zy,zx));
+                clear_bit(boardcopy.F, yx_zu_index(vy,zx));
             }
-            if (boardcopy[vy][vx]==1 && zy==vy-1 && zx==vx+1 && boardcopy[zy][zx]==0) {
+            if (is_one_at_this_index(boardcopy.b, yx_zu_index(vy,vx)) && zy==vy+1 && zx==vx+1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx)))) {
                 special = true;
-                boardcopy[vy][vx] = 0;
-                boardcopy[zy][zx] = 1;
-                boardcopy[vy][zx] = 0;
+                clear_bit(boardcopy.b, yx_zu_index(vy,vx));
+                set_bit_to_one(boardcopy.b, yx_zu_index(zy,zx));
+                clear_bit(boardcopy.F, yx_zu_index(vy,zx));
             }
-            if (boardcopy[vy][vx]==-1 && zy==vy+1 && zx==vx-1 && boardcopy[zy][zx]==0) {
+            if (is_one_at_this_index(boardcopy.B, yx_zu_index(vy,vx)) && zy==vy-1 && zx==vx-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx)))) {
                 special = true;
-                boardcopy[vy][vx] = 0;
-                boardcopy[zy][zx] = -1;
-                boardcopy[vy][zx] = 0;
+                clear_bit(boardcopy.B, yx_zu_index(vy,vx));
+                set_bit_to_one(boardcopy.B, yx_zu_index(zy,zx));
+                clear_bit(boardcopy.f, yx_zu_index(vy,zx));
             }
-            if (boardcopy[vy][vx]==-1 && zy==vy+1 && zx==vx+1 && boardcopy[zy][zx]==0) {
+            if (is_one_at_this_index(boardcopy.B, yx_zu_index(vy,vx)) && zy==vy-1 && zx==vx+1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx)))) {
                 special = true;
-                boardcopy[vy][vx] = 0;
-                boardcopy[zy][zx] = -1;
-                boardcopy[vy][zx] = 0;
+                clear_bit(boardcopy.B, yx_zu_index(vy,vx));
+                set_bit_to_one(boardcopy.B, yx_zu_index(zy,zx));
+                clear_bit(boardcopy.f, yx_zu_index(vy,zx));
             }
-            //normal
+            //normal muss geändert werden!!!
             if (!special) {
                 if (boardcopy[vy][vx]==7) {boardcopy[zy][zx] = 4;}
                 else if (boardcopy[vy][vx]==-7) {boardcopy[zy][zx] = -4;}
@@ -1588,8 +1589,8 @@ public:
         }
     }
 
-    std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {
-        return player(board);
+    Board* get_move() {
+        return player(this->board);
     }
 
 };
