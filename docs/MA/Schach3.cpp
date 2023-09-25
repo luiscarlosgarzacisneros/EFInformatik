@@ -75,6 +75,7 @@ uint64_t shift_bit(uint64_t bitboard, int vy, int vx, int zy, int zx) {//wenn (v
 
 uint64_t clear_bit(uint64_t bitboard, int index) {
     //m with a 0 bit at index and 1s everywhere else
+    //if already 0: does nothing
     uint64_t m = ~(1ULL << index);
     return bitboard & m;
 }
@@ -509,7 +510,7 @@ public:
         for (int i=0; i<8; i++) {std::reverse(board[i].begin(), board[i].end());}
         //
         //print the board
-        std::cout <<"    1   2   3   4   5   6   7   8\n";
+        std::cout <<"    8   7   6   5   4   3   2   1\n";
         std::cout <<"  ---------------------------------\n";
         for (int i=0; i<8; i++) {
             std::cout << i+1 <<" I";
@@ -1442,6 +1443,7 @@ public:
         std::vector<Board> legal_moves;
         bool legal_move_exists = false;
         std::vector<Board> all_moves = pos.generate_children(this->token);
+        uint64_t all_pieces=pos.b|pos.l|pos.x|pos.t|pos.q|pos.k|pos.f|pos.z|pos.y|pos.B|pos.L|pos.X|pos.T|pos.Q|pos.K|pos.F|pos.Z|pos.Y;
         //
         for (Board& child_of_root : all_moves) {
             bool king_is_killed = false;
@@ -1479,55 +1481,55 @@ public:
             if (this->token==6) {
                 for (int y=0; y<8; ++y) {
                     for (int x=0; x<8; ++x) {
-                        if (is_one_at_this_index(boardcopy.f, yx_zu_index(y,x))) {clear_bit(boardcopy.f, yx_zu_index(y,x)); set_bit_to_one(boardcopy.b, yx_zu_index(y,x))}
+                        if (is_one_at_this_index(boardcopy.f, yx_zu_index(y,x))) {clear_bit(boardcopy.f, yx_zu_index(y,x)); set_bit_to_one(boardcopy.b, yx_zu_index(y,x));}
                     }
                 }
             }
             else if (this->token==-6) {
                 for (int y=0; y<8; ++y) {
                     for (int x=0; x<8; ++x) {
-                        if (is_one_at_this_index(boardcopy.F, yx_zu_index(y,x))) {clear_bit(boardcopy.F, yx_zu_index(y,x)); set_bit_to_one(boardcopy.B, yx_zu_index(y,x))}
+                        if (is_one_at_this_index(boardcopy.F, yx_zu_index(y,x))) {clear_bit(boardcopy.F, yx_zu_index(y,x)); set_bit_to_one(boardcopy.B, yx_zu_index(y,x));}
                     }
                 }
             }
             //special moves
             bool special = false;
             //rochade
-            if (vy==7 && vx==4 && zy==7 && zx==2 && this->token==6 && boardcopy[vy][vx]==8) {
+            if (vy==7 && vx==4 && zy==7 && zx==2 && this->token==6 && is_one_at_this_index(boardcopy.y, yx_zu_index(vy,vx))) {
                 special = true;
-                boardcopy[7][2] = 6;
-                boardcopy[7][3] = 4;
-                boardcopy[7][0] = 0;
-                boardcopy[7][4] = 0;
+                set_bit_to_one(boardcopy.k, 1);
+                set_bit_to_one(boardcopy.t, 2);
+                clear_bit(boardcopy.y, 3);
+                clear_bit(boardcopy.z, 0);
             }
-            if (vy==7 && vx==4 && zy==7 && zx==6 && this->token==6 && boardcopy[vy][vx]==8) {
+            if (vy==7 && vx==4 && zy==7 && zx==6 && this->token==6 && is_one_at_this_index(boardcopy.y, yx_zu_index(vy,vx))) {
                 special = true;
-                boardcopy[7][6] = 6;
-                boardcopy[7][5] = 4;
-                boardcopy[7][7] = 0;
-                boardcopy[7][4] = 0;
+                set_bit_to_one(boardcopy.k, 5);
+                set_bit_to_one(boardcopy.t, 4);
+                clear_bit(boardcopy.y, 3);
+                clear_bit(boardcopy.z, 7);
             }
-            if (vy==0 && vx==4 && zy==0 && zx==2 && this->token==-6 && boardcopy[vy][vx]==-8) {
+            if (vy==0 && vx==4 && zy==0 && zx==2 && this->token==-6 && is_one_at_this_index(boardcopy.Y, yx_zu_index(vy,vx))) {
                 special = true;
-                boardcopy[0][2] = -6;
-                boardcopy[0][3] = -4;
-                boardcopy[0][0] = 0;
-                boardcopy[0][4] = 0;
+                set_bit_to_one(boardcopy.k, 57);
+                set_bit_to_one(boardcopy.t, 58);
+                clear_bit(boardcopy.y, 59);
+                clear_bit(boardcopy.z, 56);
             }
-            if (vy==0 && vx==4 && zy==0 && zx==6 && this->token==-6 && boardcopy[vy][vx]==-8) {
+            if (vy==0 && vx==4 && zy==0 && zx==6 && this->token==-6 && is_one_at_this_index(boardcopy.Y, yx_zu_index(vy,vx))) {
                 special = true;
-                boardcopy[0][6] = -6;
-                boardcopy[0][5] = -4;
-                boardcopy[0][7] = 0;
-                boardcopy[0][4] = 0;
+                set_bit_to_one(boardcopy.k, 61);
+                set_bit_to_one(boardcopy.t, 60);
+                clear_bit(boardcopy.y, 59);
+                clear_bit(boardcopy.z, 63);
             }
             // Bb 2 nach vorne
-            if (boardcopy[vy][vx]==1 && vy==6 && boardcopy[zy][zx]==0 && boardcopy[vy-1][vx]==0 && vx==zx && zy==vy-2) {
+            if (is_one_at_this_index(boardcopy.b, yx_zu_index(vy,vx)) && vy==6 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1,vx))) && vx==zx && zy==vy-2) {
                 special = true;
                 boardcopy[zy][zx] = 9;
                 boardcopy[vy][vx] = 0;
             }
-            if (boardcopy[vy][vx]==-1 && vy==1 && boardcopy[zy][zx]==0 && boardcopy[vy+1][vx]==0 && vx==zx && zy==vy+2) {
+            if (is_one_at_this_index(boardcopy.B, yx_zu_index(vy,vx)) && vy==1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1,vx))) && vx==zx && zy==vy+2) {
                 special = true;
                 boardcopy[zy][zx] = -9;
                 boardcopy[vy][vx] = 0;
@@ -1948,4 +1950,7 @@ int main() {
 
 //
 
-//lifetime of move in get_move(): nullpointer in play()
+
+//MCTS bitboard
+//nur schlagen ab einer gewissen tiefe
+//remove_common_bits_rochade nicht nötig
