@@ -1570,7 +1570,7 @@ public:
         auto start = std::chrono::high_resolution_clock::now();
         //
         int depth=this->starting_depth;
-        Board move;
+        Board* move = new Board();
         while (true) {
             //break
             auto now = std::chrono::high_resolution_clock::now();
@@ -1582,7 +1582,7 @@ public:
             std::cout<<depth<<std::endl;
             //
             Board* new_move=minimaxer(depth,vergangene_zeit);
-            move=*new_move;
+            *move=*new_move;
             if (new_move==nullptr) {return nullptr;}
             //
             for (const MinimaxNode& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
@@ -1595,9 +1595,7 @@ public:
             if (depth>max_depth) {break;}
             depth+=1;
         }
-        std::cout<<"BOARD"<<std::endl;
-        move.print_board();
-        return &move;
+        return move;
     }
 
 };
