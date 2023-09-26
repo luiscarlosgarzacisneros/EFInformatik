@@ -1453,6 +1453,59 @@ void print_vector_board(const std::vector<std::vector<int>>& board) {
     }
 }
 
+Board* convert_vector_to_board(std::vector<std::vector<int>> vector) {
+    Board* board = new Board;
+    //
+    std::reverse(vector.begin(), vector.end());
+    for (int i=0; i<8; i++) {std::reverse(vector[i].begin(), vector[i].end());}
+    //
+    board->b = 0ULL;
+    board->l = 0ULL;
+    board->x = 0ULL;
+    board->t = 0ULL;
+    board->q = 0ULL;
+    board->k = 0ULL;
+    board->z = 0ULL;
+    board->y = 0ULL;
+    board->f = 0ULL;
+    board->B = 0ULL;
+    board->L = 0ULL;
+    board->X = 0ULL;
+    board->T = 0ULL;
+    board->Q = 0ULL;
+    board->K = 0ULL;
+    board->Y = 0ULL;
+    board->Z = 0ULL;
+    board->F = 0ULL;
+    //
+    for (int row=0; row<8; row++) {
+        for (int col=0; col<8; col++) {
+            int piece = vector[row][col];
+            if (piece==-1) board->B |= (1ULL << (row*8+col));
+            else if (piece==-2) board->L |= (1ULL << (row*8+col));
+            else if (piece==-3) board->X |= (1ULL << (row*8+col));
+            else if (piece==-4) board->T |= (1ULL << (row*8+col));
+            else if (piece==-5) board->Q |= (1ULL << (row*8+col));
+            else if (piece==-6) board->K |= (1ULL << (row*8+col));
+            else if (piece==-7) board->Z |= (1ULL << (row*8+col));
+            else if (piece==-8) board->Y |= (1ULL << (row*8+col));
+            else if (piece==-9) board->F |= (1ULL << (row*8+col));
+
+            else if (piece==1) board->b |= (1ULL << (row*8+col));
+            else if (piece==2) board->l |= (1ULL << (row*8+col));
+            else if (piece==3) board->x |= (1ULL << (row*8+col));
+            else if (piece==4) board->t |= (1ULL << (row*8+col));
+            else if (piece==5) board->q |= (1ULL << (row*8+col));
+            else if (piece==6) board->k |= (1ULL << (row*8+col));
+            else if (piece==7) board->z |= (1ULL << (row*8+col));
+            else if (piece==8) board->y |= (1ULL << (row*8+col));
+            else if (piece==9) board->f |= (1ULL << (row*8+col));
+        }
+    }
+    board->print_board();
+    return board;
+}
+
 //
 
 int minimax_counter=0;
@@ -1802,9 +1855,12 @@ int main() {
     Schach game;
     std::vector<std::vector<int>> b;
     b=convert_board_to_vector(game.board);
-    print_vector_board(b);
     game.board.print_board();
+    print_vector_board(b);
+    Board* new_b = convert_vector_to_board(b);
+    Board nn = *new_b;
+    nn.print_board();
     //test-----------------
 }
 
-//
+//memory leaks
