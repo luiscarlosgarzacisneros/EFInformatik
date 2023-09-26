@@ -112,8 +112,6 @@ void print_board(const std::vector<std::vector<int>>& board) {
     }
 }
 
-//
-
 std::vector<std::vector<std::vector<int>>> generate_children(std::vector<std::vector<int>> position, int playerk);//declaration weil gcKk gc in def hat und gc gcKk in def hat.
 
 std::vector<std::vector<std::vector<int>>> gcKk(int y, int x, const std::vector<std::vector<int>> pos, int player) {
