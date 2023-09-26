@@ -113,6 +113,7 @@ uint64_t remove_common_bits(uint64_t from_this_bitboard, uint64_t by_comparing_w
     return result;
 }
 
+
 //
 
 //Tt: {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
@@ -1409,6 +1410,508 @@ public:
 
 //
 
+std::vector<std::vector<std::vector<int>>> generate_childrenv(std::vector<std::vector<int>> position, int playerk);//declaration weil gcKk gc in def hat und gc gcKk in def hat.
+
+std::vector<std::vector<std::vector<int>>> gcKkv(int y, int x, const std::vector<std::vector<int>> pos, int player) {
+    std::vector<std::vector<int>> boardc = pos;
+    std::vector<std::vector<std::vector<int>>> childrenK;
+
+    int direction_y[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+    int direction_x[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+    for (int i=0; i<8; ++i) {
+        int new_y = y + direction_y[i];
+        int new_x = x + direction_x[i];
+
+        if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8) {
+            if ((player==-6 || player==-8) && boardc[new_y][new_x]>=0) {
+                boardc[y][x]=0;
+                boardc[new_y][new_x]=-6;
+                childrenK.push_back(boardc);
+                boardc=pos;
+            }
+            else if ((player==6 || player==8) && boardc[new_y][new_x]<=0) {
+                boardc[y][x]=0;
+                boardc[new_y][new_x]=6;
+                childrenK.push_back(boardc);
+                boardc=pos;
+            }
+        }
+    }
+    //Rochade
+    if (player==-8) {
+        if (boardc[0][0]==-7 && boardc[0][1]==0 && boardc[0][2]==0 && boardc[0][3]==0) {
+            boardc[0][2]=-6;
+            boardc[0][3]=-4;
+            boardc[0][0]=0;
+            boardc[0][4]=0;
+            bool legal = true;
+            for (auto child : generate_childrenv(boardc, 6)) {
+                if (child[0][2]>0 || child[0][3]>0 || child[0][4]>0) {legal = false; break;}
+            }
+            if (legal) {childrenK.push_back(boardc);}
+            boardc = pos;
+        }
+        if (boardc[0][7]==-7 && boardc[0][6]==0 && boardc[0][5]==0) {
+            boardc[0][6]=-6;
+            boardc[0][5]=-4;
+            boardc[0][7]=0;
+            boardc[0][4]=0;
+            bool legal = true;
+            for (auto child : generate_childrenv(boardc, 6)) {
+                if (child[0][4]>0 || child[0][5]>0 || child[0][6]>0) {legal = false; break;}
+            }
+            if (legal) {childrenK.push_back(boardc);}
+            boardc = pos;
+        }
+    }
+    else if (player==8) {
+        if (boardc[7][0]==7 && boardc[7][1]==0 && boardc[7][2]==0 && boardc[7][3]==0) {
+            boardc[7][2]=6;
+            boardc[7][3]=4;
+            boardc[7][0]=0;
+            boardc[7][4]=0;
+            bool legal = true;
+            for (auto child : generate_childrenv(boardc, -6)) {
+                if (child[7][2]<0 || child[7][3]<0 || child[7][4]<0) {legal = false; break;}
+            }
+            if (legal) {childrenK.push_back(boardc);}
+            boardc = pos;
+        }
+        if (boardc[7][7]==7 && boardc[7][6]==0 && boardc[7][5]==0) {
+            boardc[7][6]=6;
+            boardc[7][5]=4;
+            boardc[7][7]=0;
+            boardc[7][4]=0;
+            bool legal = true;
+            for (auto child : generate_childrenv(boardc, -6)) {
+                if (child[7][4]<0 || child[7][5]<0 || child[7][6]<0) {legal = false; break;}
+            }
+            if (legal) {childrenK.push_back(boardc);}
+            boardc = pos;
+        }
+    }
+    //
+    return childrenK;
+}
+
+std::vector<std::vector<std::vector<int>>> gcLlv(int y, int x, const std::vector<std::vector<int>> pos, int player) {
+    std::vector<std::vector<int>> boardc = pos;
+    std::vector<std::vector<std::vector<int>>> childrenL;
+    //
+    int direction_y[] = {-2, -2, 2, 2, 1, -1, 1, -1};
+    int direction_x[] = {1, -1, 1, -1, 2, 2, -2, -2};
+    //
+    if (player==-2) {
+        for (int i=0; i<8; ++i) {
+            int new_y= y+direction_y[i];
+            int new_x= x+direction_x[i];
+            if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8 && pos[new_y][new_x]>=0) {
+                boardc=pos;
+                boardc[y][x]=0;
+                boardc[new_y][new_x]=-2;
+                childrenL.push_back(boardc);
+            }
+        }
+    }
+    else if (player==2) {
+        for (int i=0; i<8; ++i) {
+            int new_y= y+direction_y[i];
+            int new_x= x+direction_x[i];
+            if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8 && pos[new_y][new_x]<=0) {
+                boardc=pos;
+                boardc[y][x]=0;
+                boardc[new_y][new_x]=2;
+                childrenL.push_back(boardc);
+            }
+        }
+    }
+    //
+    return childrenL;
+}
+
+std::vector<std::vector<std::vector<int>>> gcBbv(int y, int x, const std::vector<std::vector<int>> pos, int player) {
+    std::vector<std::vector<int>> boardc = pos;
+    std::vector<std::vector<std::vector<int>>> childrenB;
+    //
+    if (player==-1) {
+        if (y==1 && boardc[y+2][x]==0 && boardc[y+1][x]==0) {
+            boardc[y][x]=0;
+            boardc[y+2][x]=-9;
+            childrenB.push_back(boardc);
+            boardc=pos;
+        }
+        if (y+1<8) {
+            if (boardc[y+1][x]==0) {
+                boardc[y][x]=0;
+                boardc[y+1][x]=-1;
+                if (y+1==7) {boardc[y+1][x]=-5;}
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+        if (x-1>-1 && y+1<8) {
+            if (boardc[y+1][x-1]>0) {
+                boardc[y][x]=0;
+                boardc[y+1][x-1]=-1;
+                if (y+1==7) {boardc[y+1][x-1]=-5;}
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+        if (x+1<8 && y+1<8) {
+            if (boardc[y+1][x+1]>0) {
+                boardc[y][x]=0;
+                boardc[y+1][x+1]=-1;
+                if (y+1==7) {boardc[y+1][x+1]=-5;}
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+        //en passant
+        if (x-1>-1 && y+1<8) {
+            if (boardc[y][x-1]==9 && boardc[y+1][x-1]==0) {
+                boardc[y][x]=0;
+                boardc[y+1][x-1]=-1;
+                boardc[y][x-1]=0;
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+        if (x+1<8 && y+1<8) {
+            if (boardc[y][x+1]==9 && boardc[y+1][x+1]==0) {
+                boardc[y][x]=0;
+                boardc[y+1][x+1]=-1;
+                boardc[y][x+1]=0;
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+    }
+    else if (player==1) {
+        if (y==6 && boardc[y-2][x]==0 && boardc[y-1][x]==0) {
+            boardc[y][x]=0;
+            boardc[y-2][x]=9;
+            childrenB.push_back(boardc);
+            boardc=pos;
+        }
+        if (y-1>-1) {
+            if (boardc[y-1][x]==0) {
+                boardc[y][x]=0;
+                boardc[y-1][x]=1;
+                if (y-1==0) {boardc[y-1][x]=5;}
+                childrenB.push_back(boardc);
+                boardc = pos;
+            }
+        }
+        if (x-1>-1 && y-1>-1) {
+            if (boardc[y-1][x-1]<0) {
+                boardc[y][x]=0;
+                boardc[y-1][x-1]=1;
+                if (y-1==0) {boardc[y-1][x-1]=5;}
+                childrenB.push_back(boardc);
+                boardc = pos;
+            }
+        }
+        if (x+1<8 && y-1>-1) {
+            if (boardc[y-1][x+1]<0) {
+                boardc[y][x]=0;
+                boardc[y-1][x+1]=1;
+                if (y-1==0) {boardc[y-1][x+1]=5;}
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+        //en passant
+        if (x-1>-1 && y-1>-1) {
+            if (boardc[y][x-1]==-9 && boardc[y-1][x-1]==0) {
+                boardc[y][x]=0;
+                boardc[y-1][x-1]=1;
+                boardc[y][x-1]=0;
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+        if (x+1<8 && y-1>-1) {
+            if (boardc[y][x+1]==-9 && boardc[y-1][x+1]==0) {
+                boardc[y][x]=0;
+                boardc[y-1][x+1]=1;
+                boardc[y][x+1]=0;
+                childrenB.push_back(boardc);
+                boardc=pos;
+            }
+        }
+    }
+    return childrenB;
+}
+
+std::vector<std::vector<std::vector<int>>> gcTtXxQqv(int y, int x, const std::vector<std::vector<int>> pos, int player, std::vector<int> direction_y, std::vector<int> direction_x) {
+    std::vector<std::vector<std::vector<int>>> children;
+    std::vector<std::vector<int>> boardc;
+    //
+    if (player<0) {
+        for (int dir=0; dir<direction_y.size(); ++dir) {
+            for (int step=1; step<8; ++step) {
+                int new_y = y+step * direction_y[dir];
+                int new_x = x+step * direction_x[dir];
+                //
+                if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8) {
+                    if (pos[new_y][new_x]>=0) {
+                        boardc=pos;
+                        boardc[y][x]=0;
+                        boardc[new_y][new_x]=player;
+                        children.push_back(boardc);
+                        if (pos[new_y][new_x]!=0) {break;}
+                    }
+                    else {break;}
+                }
+                else {break;}
+            }
+        }
+    }
+    else if (player>0) {
+        for (int dir=0; dir<direction_y.size(); ++dir) {
+            for (int step = 1; step <8; ++step) {
+                int new_y = y + step * direction_y[dir];
+                int new_x = x + step * direction_x[dir];
+                //
+                if (new_y>-1 && new_y<8 && new_x>-1 && new_x<8) {
+                    if (pos[new_y][new_x]<=0) {
+                        boardc=pos;
+                        boardc[y][x]=0;
+                        boardc[new_y][new_x]=player;
+                        children.push_back(boardc);
+                        if (pos[new_y][new_x]!=0) {break;}
+                    }
+                    else {break;}
+                }
+                else {break;}
+            }
+        }
+    }
+    //
+    return children;
+}
+
+std::vector<std::vector<std::vector<int>>> generate_childrenv(std::vector<std::vector<int>> position, int playerk) {
+    std::vector<std::vector<std::vector<int>>> children;
+    // 9&-9 zu 1&-1
+    if (playerk==6) {
+        for (int y=0; y<position.size(); ++y) {
+            for (int x=0; x<position[y].size(); ++x) {
+                if (position[y][x]==9) {position[y][x]=1;}
+            }
+        }
+    }
+    else if (playerk==-6) {
+        for (int y=0; y<position.size(); ++y) {
+            for (int x=0; x<position[y].size(); ++x) {
+                if (position[y][x]==-9) {position[y][x]=-1;}
+            }
+        }
+    }
+    //
+    if (playerk==6) {
+        for (int y=0; y<8; ++y) {
+            for (int x=0; x<8; ++x) {
+                if (position[y][x]==1) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcBbv(y, x, position, 1);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
+                }
+                else if (position[y][x]==6) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcKkv(y, x, position, 6);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
+                }
+                else if (position[y][x]==4 || position[y][x]==7) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQqv(y, x, position, 4, {0, 0, 1, -1}, {1, -1, 0, 0});
+                    children.insert(children.end(), new_children.begin(), new_children.end());                
+                }
+                else if (position[y][x]==3) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQqv(y, x, position, 3, {1, -1, -1, 1}, {1, 1, -1, -1});
+                    children.insert(children.end(), new_children.begin(), new_children.end());
+                }
+                else if (position[y][x]==5) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQqv(y, x, position, 5, {1, -1, -1, 1, 0, 0, 1, -1}, {1, 1, -1, -1, 1, -1, 0, 0});
+                    children.insert(children.end(), new_children.begin(), new_children.end());
+                }
+                else if (position[y][x]==2) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcLlv(y, x, position, 2);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
+                }
+                else if (position[y][x]==8) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcKkv(y, x, position, 8);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
+                }
+            }
+        }
+    }
+    else if (playerk==-6) {
+        for (int y=0; y<8; ++y) {
+            for (int x=0; x<8; ++x) {
+                if (position[y][x]==-1) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcBbv(y, x, position, -1);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
+                }
+                else if (position[y][x]==-6) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcKkv(y, x, position, -6);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
+                }
+                else if (position[y][x]==-4 || position[y][x]==-7) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQqv(y, x, position, -4, {0, 0, 1, -1}, {1, -1, 0, 0});
+                    children.insert(children.end(), new_children.begin(), new_children.end());                
+                }
+                else if (position[y][x]==-3) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQqv(y, x, position, -3, {1, -1, -1, 1}, {1, 1, -1, -1});
+                    children.insert(children.end(), new_children.begin(), new_children.end());
+                }
+                else if (position[y][x]==-5) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcTtXxQqv(y, x, position, -5, {1, -1, -1, 1, 0, 0, 1, -1}, {1, 1, -1, -1, 1, -1, 0, 0});
+                    children.insert(children.end(), new_children.begin(), new_children.end());
+                }
+                else if (position[y][x]==-2) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcLlv(y, x, position, -2);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
+                }
+                else if (position[y][x]==-8) {
+                    std::vector<std::vector<std::vector<int>>> new_children=gcKkv(y, x, position, -8);
+                    children.insert(children.end(), new_children.begin(), new_children.end());
+                }
+            }
+        }
+    }
+    return children;
+}
+
+std::vector<std::vector<int>> convert_board_to_vector(const Board& board) {
+    std::vector<std::vector<int>> result(8, std::vector<int>(8, 0));
+    for (int i=0; i<64; i++) {
+        int row = i/8;
+        int col = i%8;
+
+        if (board.B & (1ULL << i)) result[row][col]= -1;
+        else if (board.L & (1ULL<<i)) result[row][col]= -2;
+        else if (board.X & (1ULL<<i)) result[row][col]= -3;
+        else if (board.T & (1ULL<<i)) result[row][col]= -4;
+        else if (board.Q & (1ULL<<i)) result[row][col]= -5;
+        else if (board.K & (1ULL<<i)) result[row][col]= -6;
+        else if (board.Z & (1ULL<<i)) result[row][col]= -7;
+        else if (board.Y & (1ULL<<i)) result[row][col]= -8;
+        else if (board.F & (1ULL<<i)) result[row][col]= -9;
+
+        else if (board.b & (1ULL<<i)) result[row][col]= 1;
+        else if (board.l & (1ULL<<i)) result[row][col]= 2;
+        else if (board.x & (1ULL<<i)) result[row][col]= 3;
+        else if (board.t & (1ULL<<i)) result[row][col]= 4;
+        else if (board.q & (1ULL<<i)) result[row][col]= 5;
+        else if (board.k & (1ULL<<i)) result[row][col]= 6;
+        else if (board.z & (1ULL<<i)) result[row][col]= 7;
+        else if (board.y & (1ULL<<i)) result[row][col]= 8;
+        else if (board.f & (1ULL<<i)) result[row][col]= 9;
+    }
+    std::reverse(result.begin(), result.end());
+    for (int i=0; i<8; i++) {std::reverse(result[i].begin(), result[i].end());}
+    return result;
+}
+
+Board* convert_vector_to_board(std::vector<std::vector<int>> vector) {
+    Board* board = new Board;
+    //
+    std::reverse(vector.begin(), vector.end());
+    for (int i=0; i<8; i++) {std::reverse(vector[i].begin(), vector[i].end());}
+    //
+    board->b = 0ULL;
+    board->l = 0ULL;
+    board->x = 0ULL;
+    board->t = 0ULL;
+    board->q = 0ULL;
+    board->k = 0ULL;
+    board->z = 0ULL;
+    board->y = 0ULL;
+    board->f = 0ULL;
+    board->B = 0ULL;
+    board->L = 0ULL;
+    board->X = 0ULL;
+    board->T = 0ULL;
+    board->Q = 0ULL;
+    board->K = 0ULL;
+    board->Y = 0ULL;
+    board->Z = 0ULL;
+    board->F = 0ULL;
+    //
+    for (int row=0; row<8; row++) {
+        for (int col=0; col<8; col++) {
+            int piece = vector[row][col];
+            if (piece==-1) board->B |= (1ULL << (row*8+col));
+            else if (piece==-2) board->L |= (1ULL << (row*8+col));
+            else if (piece==-3) board->X |= (1ULL << (row*8+col));
+            else if (piece==-4) board->T |= (1ULL << (row*8+col));
+            else if (piece==-5) board->Q |= (1ULL << (row*8+col));
+            else if (piece==-6) board->K |= (1ULL << (row*8+col));
+            else if (piece==-7) board->Z |= (1ULL << (row*8+col));
+            else if (piece==-8) board->Y |= (1ULL << (row*8+col));
+            else if (piece==-9) board->F |= (1ULL << (row*8+col));
+
+            else if (piece==1) board->b |= (1ULL << (row*8+col));
+            else if (piece==2) board->l |= (1ULL << (row*8+col));
+            else if (piece==3) board->x |= (1ULL << (row*8+col));
+            else if (piece==4) board->t |= (1ULL << (row*8+col));
+            else if (piece==5) board->q |= (1ULL << (row*8+col));
+            else if (piece==6) board->k |= (1ULL << (row*8+col));
+            else if (piece==7) board->z |= (1ULL << (row*8+col));
+            else if (piece==8) board->y |= (1ULL << (row*8+col));
+            else if (piece==9) board->f |= (1ULL << (row*8+col));
+        }
+    }
+    board->print_board();
+    return board;
+}
+
+void print_vector_board(const std::vector<std::vector<int>>& board) {
+    std::cout <<"    1   2   3   4   5   6   7   8\n";
+    std::cout <<"  ---------------------------------\n";
+    for (int i=0; i<8; ++i) {
+        std::cout << i+1 <<" I";
+        for (int j=0; j<8; ++j) {
+            std::cout << " ";
+            if (board[i][j]==1) {std::cout << 'b';}
+            else if (board[i][j]==9) {std::cout <<'f';}
+            else if (board[i][j]==2) {std::cout <<'l';}
+            else if (board[i][j]==3) {std::cout <<'x';}
+            else if (board[i][j]==4) {std::cout <<'t';}
+            else if (board[i][j]==7) {std::cout <<'z';}
+            else if (board[i][j]==5) {std::cout <<'q';}
+            else if (board[i][j]==6) {std::cout <<'k';}
+            else if (board[i][j]==8) {std::cout <<'y';}
+            else if (board[i][j]==-1) {std::cout <<'B';}
+            else if (board[i][j]==-9) {std::cout <<'F';}
+            else if (board[i][j]==-2) {std::cout <<'L';}
+            else if (board[i][j]==-3) {std::cout <<'X';}
+            else if (board[i][j]==-4) {std::cout <<'T';}
+            else if (board[i][j]==-7) {std::cout <<'Z';}
+            else if (board[i][j]==-5) {std::cout <<'Q';}
+            else if (board[i][j]==-6) {std::cout <<'K';}
+            else if (board[i][j]==-8) {std::cout <<'Y';}
+            else if (board[i][j]==0) {std::cout <<' ';}
+            std::cout << " ";
+            std::cout << "I";
+        }
+        std::cout <<'\n';
+        std::cout <<"  ---------------------------------\n";
+    }
+}
+
+bool verlorenv(const std::vector<std::vector<int>>& board, int playerk) {
+    int player_2 = (playerk == 6) ? 8 : -8;
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            if (board[i][j] == playerk || board[i][j] == player_2) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 class HumanPlayer {
 public:
     HumanPlayer(int token, Board board) : token(token), board(board) {}
@@ -1459,18 +1962,16 @@ public:
         }
     }
 
-    Board* player(Board& pos) {
+    std::vector<std::vector<int>> player(std::vector<std::vector<int>>& pos) {
         int other_player = (this->token == 6) ? -6 : 6;
-        std::vector<Board> legal_moves;
+        std::vector<std::vector<std::vector<int>>> legal_moves;
         bool legal_move_exists = false;
-        Board* return_board= new Board();
-        std::vector<Board> all_moves = pos.generate_children(this->token);
-        uint64_t all_pieces=pos.b|pos.l|pos.x|pos.t|pos.q|pos.k|pos.f|pos.z|pos.y|pos.B|pos.L|pos.X|pos.T|pos.Q|pos.K|pos.F|pos.Z|pos.Y;
+        std::vector<std::vector<std::vector<int>>> all_moves = generate_childrenv(pos, this->token);
         //
-        for (Board& child_of_root : all_moves) {
+        for (const auto& child_of_root : all_moves) {
             bool king_is_killed = false;
-            for (const auto& child_of_child : child_of_root.generate_children(other_player)) {
-                if (child_of_child.verloren(this->token)) {
+            for (const auto& child_of_child : generate_childrenv(child_of_root, other_player)) {
+                if (verlorenv(child_of_child, this->token)) {
                     king_is_killed = true;
                     break;
                 }
@@ -1481,10 +1982,13 @@ public:
             }
         }
         //
-        if (!legal_move_exists) {return nullptr;}
+        if (!legal_move_exists) {
+            std::vector<std::vector<int>> empty_vector;
+            return empty_vector;
+        }
         //
         while (true) {
-            Board boardcopy = pos;
+            std::vector<std::vector<int>> boardcopy = pos;
             std::vector<int> input_move = this->eingabe();
             int vy = input_move[0];
             int vx = input_move[1];
@@ -1493,114 +1997,96 @@ public:
 
             //update boardcopy
             //1 & -1 to 5 & -5
-            for (int x=0; x<8; ++x) {
-                if (is_one_at_this_index(boardcopy.b, 56+x)) {clear_bit(boardcopy.b, 56+x); set_bit_to_one(boardcopy.q, 56+x);}
+            for (int x=0; x<boardcopy[0].size(); ++x) {
+                if (boardcopy[0][x]==1) {boardcopy[0][x]=5;}
             }
-            for (int x=0; x<8; ++x) {
-                if (is_one_at_this_index(boardcopy.B, 0+x)) {clear_bit(boardcopy.B, 0+x); set_bit_to_one(boardcopy.Q, 0+x);}
+            for (int x=0; x<boardcopy[7].size(); ++x) {
+                if (boardcopy[7][x]==-1) {boardcopy[7][x]=-5;}
             }
-            //9 & -9weg man konete nur die korrekten y suchen
+            //9 & -9weg
             if (this->token==6) {
-                for (int y=0; y<8; ++y) {
-                    for (int x=0; x<8; ++x) {
-                        if (is_one_at_this_index(boardcopy.f, yx_zu_index(y,x))) {clear_bit(boardcopy.f, yx_zu_index(y,x)); set_bit_to_one(boardcopy.b, yx_zu_index(y,x));}
+                for (int y=0; y<boardcopy.size(); ++y) {
+                    for (int x=0; x<boardcopy[y].size(); ++x) {
+                        if (boardcopy[y][x]==9) {boardcopy[y][x] = 1;}
                     }
                 }
             }
             else if (this->token==-6) {
-                for (int y=0; y<8; ++y) {
-                    for (int x=0; x<8; ++x) {
-                        if (is_one_at_this_index(boardcopy.F, yx_zu_index(y,x))) {clear_bit(boardcopy.F, yx_zu_index(y,x)); set_bit_to_one(boardcopy.B, yx_zu_index(y,x));}
+                for (int y=0; y<boardcopy.size(); ++y) {
+                    for (int x=0; x<boardcopy[y].size(); ++x) {
+                        if (boardcopy[y][x]==-9) {boardcopy[y][x] = -1;}
                     }
                 }
             }
             //special moves
             bool special = false;
             //rochade
-            if (vy==0 && vx==4 && zy==0 && zx==6 && this->token==6 && is_one_at_this_index(boardcopy.y, yx_zu_index(vy,vx))) {
+            if (vy==7 && vx==4 && zy==7 && zx==2 && this->token==6 && boardcopy[vy][vx]==8) {
                 special = true;
-                set_bit_to_one(boardcopy.k, 1);
-                set_bit_to_one(boardcopy.t, 2);
-                clear_bit(boardcopy.y, 3);
-                clear_bit(boardcopy.z, 0);
+                boardcopy[7][2] = 6;
+                boardcopy[7][3] = 4;
+                boardcopy[7][0] = 0;
+                boardcopy[7][4] = 0;
             }
-            if (vy==0 && vx==4 && zy==0 && zx==2 && this->token==6 && is_one_at_this_index(boardcopy.y, yx_zu_index(vy,vx))) {
+            if (vy==7 && vx==4 && zy==7 && zx==6 && this->token==6 && boardcopy[vy][vx]==8) {
                 special = true;
-                set_bit_to_one(boardcopy.k, 5);
-                set_bit_to_one(boardcopy.t, 4);
-                clear_bit(boardcopy.y, 3);
-                clear_bit(boardcopy.z, 7);
+                boardcopy[7][6] = 6;
+                boardcopy[7][5] = 4;
+                boardcopy[7][7] = 0;
+                boardcopy[7][4] = 0;
             }
-            if (vy==7 && vx==4 && zy==7 && zx==6 && this->token==-6 && is_one_at_this_index(boardcopy.Y, yx_zu_index(vy,vx))) {
+            if (vy==0 && vx==4 && zy==0 && zx==2 && this->token==-6 && boardcopy[vy][vx]==-8) {
                 special = true;
-                set_bit_to_one(boardcopy.k, 57);
-                set_bit_to_one(boardcopy.t, 58);
-                clear_bit(boardcopy.y, 59);
-                clear_bit(boardcopy.z, 56);
+                boardcopy[0][2] = -6;
+                boardcopy[0][3] = -4;
+                boardcopy[0][0] = 0;
+                boardcopy[0][4] = 0;
             }
-            if (vy==7 && vx==4 && zy==7 && zx==2 && this->token==-6 && is_one_at_this_index(boardcopy.Y, yx_zu_index(vy,vx))) {
+            if (vy==0 && vx==4 && zy==0 && zx==6 && this->token==-6 && boardcopy[vy][vx]==-8) {
                 special = true;
-                set_bit_to_one(boardcopy.k, 61);
-                set_bit_to_one(boardcopy.t, 60);
-                clear_bit(boardcopy.y, 59);
-                clear_bit(boardcopy.z, 63);
+                boardcopy[0][6] = -6;
+                boardcopy[0][5] = -4;
+                boardcopy[0][7] = 0;
+                boardcopy[0][4] = 0;
             }
             // Bb 2 nach vorne
-            if (is_one_at_this_index(boardcopy.b, yx_zu_index(vy,vx)) && vy==6 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1,vx))) && vx==zx && zy==vy+2) {
+            if (boardcopy[vy][vx]==1 && vy==6 && boardcopy[zy][zx]==0 && boardcopy[vy-1][vx]==0 && vx==zx && zy==vy-2) {
                 special = true;
-                set_bit_to_one(boardcopy.f, yx_zu_index(zy,zx));
-                clear_bit(boardcopy.b, yx_zu_index(vy,vx));
+                boardcopy[zy][zx] = 9;
+                boardcopy[vy][vx] = 0;
             }
-            if (is_one_at_this_index(boardcopy.B, yx_zu_index(vy,vx)) && vy==1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1,vx))) && vx==zx && zy==vy-2) {
+            if (boardcopy[vy][vx]==-1 && vy==1 && boardcopy[zy][zx]==0 && boardcopy[vy+1][vx]==0 && vx==zx && zy==vy+2) {
                 special = true;
-                set_bit_to_one(boardcopy.F, yx_zu_index(zy,zx));
-                clear_bit(boardcopy.B, yx_zu_index(vy,vx));
+                boardcopy[zy][zx] = -9;
+                boardcopy[vy][vx] = 0;
             }
             // En passant
-            if (is_one_at_this_index(boardcopy.b, yx_zu_index(vy,vx)) && zy==vy+1 && zx==vx-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx)))) {
+            if (boardcopy[vy][vx]==1 && zy==vy-1 && zx==vx-1 && boardcopy[zy][zx]==0) {
                 special = true;
-                clear_bit(boardcopy.b, yx_zu_index(vy,vx));
-                set_bit_to_one(boardcopy.b, yx_zu_index(zy,zx));
-                clear_bit(boardcopy.F, yx_zu_index(vy,zx));
-                
+                boardcopy[vy][vx] = 0;
+                boardcopy[zy][zx] = 1;
+                boardcopy[vy][zx] = 0;
             }
-            if (is_one_at_this_index(boardcopy.b, yx_zu_index(vy,vx)) && zy==vy+1 && zx==vx+1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx)))) {
+            if (boardcopy[vy][vx]==1 && zy==vy-1 && zx==vx+1 && boardcopy[zy][zx]==0) {
                 special = true;
-                clear_bit(boardcopy.b, yx_zu_index(vy,vx));
-                set_bit_to_one(boardcopy.b, yx_zu_index(zy,zx));
-                clear_bit(boardcopy.F, yx_zu_index(vy,zx));
+                boardcopy[vy][vx] = 0;
+                boardcopy[zy][zx] = 1;
+                boardcopy[vy][zx] = 0;
             }
-            if (is_one_at_this_index(boardcopy.B, yx_zu_index(vy,vx)) && zy==vy-1 && zx==vx-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx)))) {
+            if (boardcopy[vy][vx]==-1 && zy==vy+1 && zx==vx-1 && boardcopy[zy][zx]==0) {
                 special = true;
-                clear_bit(boardcopy.B, yx_zu_index(vy,vx));
-                set_bit_to_one(boardcopy.B, yx_zu_index(zy,zx));
-                clear_bit(boardcopy.f, yx_zu_index(vy,zx));
+                boardcopy[vy][vx] = 0;
+                boardcopy[zy][zx] = -1;
+                boardcopy[vy][zx] = 0;
             }
-            if (is_one_at_this_index(boardcopy.B, yx_zu_index(vy,vx)) && zy==vy-1 && zx==vx+1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx)))) {
+            if (boardcopy[vy][vx]==-1 && zy==vy+1 && zx==vx+1 && boardcopy[zy][zx]==0) {
                 special = true;
-                clear_bit(boardcopy.B, yx_zu_index(vy,vx));
-                set_bit_to_one(boardcopy.B, yx_zu_index(zy,zx));
-                clear_bit(boardcopy.f, yx_zu_index(vy,zx));
+                boardcopy[vy][vx] = 0;
+                boardcopy[zy][zx] = -1;
+                boardcopy[vy][zx] = 0;
             }
-            //normal muss geändert werden!!!
+            //normal
             if (!special) {
-                if (is_one_at_this_index(boardcopy.b, yx_zu_index(vy,vx))) {
-                    clear_bit(boardcopy.b, yx_zu_index(vy,vx));
-                    set_bit_to_one()
-                }
-                if (is_one_at_this_index(boardcopy.B, yx_zu_index(vy,vx))) {}
-                if (is_one_at_this_index(boardcopy.l, yx_zu_index(vy,vx))) {}
-                if (is_one_at_this_index(boardcopy.L, yx_zu_index(vy,vx))) {}
-                if (is_one_at_this_index(boardcopy.x, yx_zu_index(vy,vx))) {}
-                if (is_one_at_this_index(boardcopy.X, yx_zu_index(vy,vx))) {}
-                if (is_one_at_this_index(boardcopy.t, yx_zu_index(vy,vx))) {}
-                if (is_one_at_this_index(boardcopy.T, yx_zu_index(vy,vx))) {}
-                if (is_one_at_this_index(boardcopy.q, yx_zu_index(vy,vx))) {}
-                if (is_one_at_this_index(boardcopy.Q, yx_zu_index(vy,vx))) {}
-                if (is_one_at_this_index(boardcopy.k, yx_zu_index(vy,vx))) {}
-                if (is_one_at_this_index(boardcopy.K, yx_zu_index(vy,vx))) {}
-
-                //
                 if (boardcopy[vy][vx]==7) {boardcopy[zy][zx] = 4;}
                 else if (boardcopy[vy][vx]==-7) {boardcopy[zy][zx] = -4;}
                 else if (boardcopy[vy][vx]==8) {boardcopy[zy][zx] = 6;}
@@ -1616,13 +2102,13 @@ public:
                     break;
                 }
             }
-            if (move_legal) {return &boardcopy;}
+            if (move_legal) {return boardcopy;}
             else {
-                boardcopy.print_board();
+                print_vector_board(boardcopy);
                 std::cout << "legal_children" << std::endl;
-                for (Board& s : legal_moves) {s.print_board();}
+                for (const auto& s : legal_moves) {print_vector_board(s);}
                 std::cout << "---------------------------------" << std::endl;
-                pos.print_board();
+                print_vector_board(pos);
                 std::cout << "EINGABE NICHT KORREKT2" << std::endl;
             }
         }
@@ -1633,7 +2119,6 @@ public:
     }
 
 };
-
 
 //
 
