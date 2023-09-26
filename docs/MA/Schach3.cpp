@@ -10,6 +10,26 @@
 #include <sstream>
 #include <string>
 
+//-1:B
+//-2:L
+//-3:X
+//-4:T
+//-5:Q
+//-6:K
+//-7:Z not moved towerT
+//-8:Y not moved kingK
+//-9:F en passant B (just moved 2 forw)
+
+//1:b
+//2:l
+//3:x
+//4:t
+//5:q
+//6:k
+//7:z not moved towert
+//8:y not moved kingk
+//9:f en passant b (just moved 2 forw)
+
 
 void print_bitboard(const uint64_t bitboard) {
     std::vector<int> bits;
@@ -1443,6 +1463,7 @@ public:
         int other_player = (this->token == 6) ? -6 : 6;
         std::vector<Board> legal_moves;
         bool legal_move_exists = false;
+        Board* return_board= new Board();
         std::vector<Board> all_moves = pos.generate_children(this->token);
         uint64_t all_pieces=pos.b|pos.l|pos.x|pos.t|pos.q|pos.k|pos.f|pos.z|pos.y|pos.B|pos.L|pos.X|pos.T|pos.Q|pos.K|pos.F|pos.Z|pos.Y;
         //
@@ -1541,6 +1562,7 @@ public:
                 clear_bit(boardcopy.b, yx_zu_index(vy,vx));
                 set_bit_to_one(boardcopy.b, yx_zu_index(zy,zx));
                 clear_bit(boardcopy.F, yx_zu_index(vy,zx));
+                
             }
             if (is_one_at_this_index(boardcopy.b, yx_zu_index(vy,vx)) && zy==vy+1 && zx==vx+1 && !(is_one_at_this_index(all_pieces, yx_zu_index(zy,zx)))) {
                 special = true;
@@ -1562,6 +1584,23 @@ public:
             }
             //normal muss geändert werden!!!
             if (!special) {
+                if (is_one_at_this_index(boardcopy.b, yx_zu_index(vy,vx))) {
+                    clear_bit(boardcopy.b, yx_zu_index(vy,vx));
+                    set_bit_to_one()
+                }
+                if (is_one_at_this_index(boardcopy.B, yx_zu_index(vy,vx))) {}
+                if (is_one_at_this_index(boardcopy.l, yx_zu_index(vy,vx))) {}
+                if (is_one_at_this_index(boardcopy.L, yx_zu_index(vy,vx))) {}
+                if (is_one_at_this_index(boardcopy.x, yx_zu_index(vy,vx))) {}
+                if (is_one_at_this_index(boardcopy.X, yx_zu_index(vy,vx))) {}
+                if (is_one_at_this_index(boardcopy.t, yx_zu_index(vy,vx))) {}
+                if (is_one_at_this_index(boardcopy.T, yx_zu_index(vy,vx))) {}
+                if (is_one_at_this_index(boardcopy.q, yx_zu_index(vy,vx))) {}
+                if (is_one_at_this_index(boardcopy.Q, yx_zu_index(vy,vx))) {}
+                if (is_one_at_this_index(boardcopy.k, yx_zu_index(vy,vx))) {}
+                if (is_one_at_this_index(boardcopy.K, yx_zu_index(vy,vx))) {}
+
+                //
                 if (boardcopy[vy][vx]==7) {boardcopy[zy][zx] = 4;}
                 else if (boardcopy[vy][vx]==-7) {boardcopy[zy][zx] = -4;}
                 else if (boardcopy[vy][vx]==8) {boardcopy[zy][zx] = 6;}

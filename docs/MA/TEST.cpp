@@ -1388,6 +1388,73 @@ public:
 
 //
 
+std::vector<std::vector<int>> convert_board_to_vector(const Board& board) {
+    std::vector<std::vector<int>> result(8, std::vector<int>(8, 0));
+    for (int i=0; i<64; i++) {
+        int row = i/8;
+        int col = i%8;
+
+        if (board.B & (1ULL << i)) result[row][col]= -1;
+        else if (board.L & (1ULL<<i)) result[row][col]= -2;
+        else if (board.X & (1ULL<<i)) result[row][col]= -3;
+        else if (board.T & (1ULL<<i)) result[row][col]= -4;
+        else if (board.Q & (1ULL<<i)) result[row][col]= -5;
+        else if (board.K & (1ULL<<i)) result[row][col]= -6;
+        else if (board.Z & (1ULL<<i)) result[row][col]= -7;
+        else if (board.Y & (1ULL<<i)) result[row][col]= -8;
+        else if (board.F & (1ULL<<i)) result[row][col]= -9;
+
+        else if (board.b & (1ULL<<i)) result[row][col]= 1;
+        else if (board.l & (1ULL<<i)) result[row][col]= 2;
+        else if (board.x & (1ULL<<i)) result[row][col]= 3;
+        else if (board.t & (1ULL<<i)) result[row][col]= 4;
+        else if (board.q & (1ULL<<i)) result[row][col]= 5;
+        else if (board.k & (1ULL<<i)) result[row][col]= 6;
+        else if (board.z & (1ULL<<i)) result[row][col]= 7;
+        else if (board.y & (1ULL<<i)) result[row][col]= 8;
+        else if (board.f & (1ULL<<i)) result[row][col]= 9;
+    }
+    std::reverse(result.begin(), result.end());
+    for (int i=0; i<8; i++) {std::reverse(result[i].begin(), result[i].end());}
+    return result;
+}
+
+void print_vector_board(const std::vector<std::vector<int>>& board) {
+    std::cout <<"    1   2   3   4   5   6   7   8\n";
+    std::cout <<"  ---------------------------------\n";
+    for (int i=0; i<8; ++i) {
+        std::cout << i+1 <<" I";
+        for (int j=0; j<8; ++j) {
+            std::cout << " ";
+            if (board[i][j]==1) {std::cout << 'b';}
+            else if (board[i][j]==9) {std::cout <<'f';}
+            else if (board[i][j]==2) {std::cout <<'l';}
+            else if (board[i][j]==3) {std::cout <<'x';}
+            else if (board[i][j]==4) {std::cout <<'t';}
+            else if (board[i][j]==7) {std::cout <<'z';}
+            else if (board[i][j]==5) {std::cout <<'q';}
+            else if (board[i][j]==6) {std::cout <<'k';}
+            else if (board[i][j]==8) {std::cout <<'y';}
+            else if (board[i][j]==-1) {std::cout <<'B';}
+            else if (board[i][j]==-9) {std::cout <<'F';}
+            else if (board[i][j]==-2) {std::cout <<'L';}
+            else if (board[i][j]==-3) {std::cout <<'X';}
+            else if (board[i][j]==-4) {std::cout <<'T';}
+            else if (board[i][j]==-7) {std::cout <<'Z';}
+            else if (board[i][j]==-5) {std::cout <<'Q';}
+            else if (board[i][j]==-6) {std::cout <<'K';}
+            else if (board[i][j]==-8) {std::cout <<'Y';}
+            else if (board[i][j]==0) {std::cout <<' ';}
+            std::cout << " ";
+            std::cout << "I";
+        }
+        std::cout <<'\n';
+        std::cout <<"  ---------------------------------\n";
+    }
+}
+
+//
+
 int minimax_counter=0;
 
 class MinimaxNode {
@@ -1730,13 +1797,13 @@ void spielen(int z) {
 
 int main() {
     srand(time(0)); //seed
-    spielen(1);
+    //spielen(1);
     //test-------------------
-    //Schach game;
-    //game.board.print_board();
-    //for (const Board& child : game.board.generate_children(-6)) {
-        //child.print_board();
-    //}
+    Schach game;
+    std::vector<std::vector<int>> b;
+    b=convert_board_to_vector(game.board);
+    print_vector_board(b);
+    game.board.print_board();
     //test-----------------
 }
 
