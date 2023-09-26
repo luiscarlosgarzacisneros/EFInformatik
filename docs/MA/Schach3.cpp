@@ -531,7 +531,7 @@ public:
         for (int i=0; i<8; i++) {std::reverse(board[i].begin(), board[i].end());}
         //
         //print the board
-        std::cout <<"    8   7   6   5   4   3   2   1\n";
+        std::cout <<"    1   2   3   4   5   6   7   8\n";
         std::cout <<"  ---------------------------------\n";
         for (int i=0; i<8; i++) {
             std::cout << i+1 <<" I";
@@ -2115,7 +2115,12 @@ public:
     }
 
     Board* get_move() {
-        return player(this->board);
+        std::vector<std::vector<int>> vector_board= convert_board_to_vector(board);
+        std::vector<std::vector<int>> return_vector;
+        return_vector= player(vector_board);
+        Board* return_board= new Board;
+        return_board=convert_vector_to_board(return_vector);
+        return return_board;
     }
 
 };
@@ -2370,7 +2375,7 @@ int turn;
         int current = 1;
         while (true) {
             //-----------------------------------------
-            MinimaxPlayer player_1(6, this->board);
+            HumanPlayer player_1(6, this->board);
             MinimaxPlayer player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
