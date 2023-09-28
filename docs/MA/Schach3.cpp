@@ -2484,7 +2484,7 @@ public:
         if (max_player) {
             int max_value=-1000000;
             for (MinimaxNode2& child : this->children) {
-                int eval=child.minimax(alpha,beta,false,max_depth);
+                int eval=child.minimax(alpha,beta,false,max_depth,depth_fuer_nur_schlagen);
                 if (eval>max_value) {max_value=eval;}
                 //pruning
                 if (eval>alpha) {alpha=eval;}
@@ -2496,7 +2496,7 @@ public:
         else if (!max_player) {
             int min_value=1000000;
             for (MinimaxNode2& child : this->children) {
-                int eval=child.minimax(alpha,beta,true,max_depth);
+                int eval=child.minimax(alpha,beta,true,max_depth,depth_fuer_nur_schlagen);
                 if (eval<min_value) {min_value=eval;}
                 //pruning
                 if (eval<beta) {beta=eval;}
@@ -2714,7 +2714,7 @@ int turn;
                 if (current == 1) {this_players_token = 6;}
                 else {this_players_token = -6;}
                 //
-                std::vector<Board> children = this->board.generate_children(other);
+                std::vector<Board> children = this->board.generate_children(other, false);
                 for (const Board& child : children) {
                     if (child.verloren(this_players_token)) {
                         king_captured = true;
