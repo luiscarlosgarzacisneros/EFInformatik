@@ -113,7 +113,6 @@ uint64_t remove_common_bits(uint64_t from_this_bitboard, uint64_t by_comparing_w
     return result;
 }
 
-
 //
 
 //Tt: {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
@@ -854,7 +853,7 @@ public:
                 simulation.schlagen=true;
                 //
                 bool legal=true;
-                for (Board child : simulation.generate_children(-6, false)) {
+                for (Board child : simulation.generate_children(-6)) {
                     uint64_t other_players_pieces= child.B|child.L|child.X|child.T|child.Q|child.K|child.Y|child.Z|child.F;
                     if (is_one_at_this_index(other_players_pieces, 1) || is_one_at_this_index(other_players_pieces, 2) || is_one_at_this_index(other_players_pieces, 3)) {
                         legal=false;
@@ -894,7 +893,7 @@ public:
                 simulation.schlagen=true;
                 //
                 bool legal=true;
-                for (Board child : simulation.generate_children(-6, false)) {
+                for (Board child : simulation.generate_children(-6)) {
                     uint64_t other_players_pieces= child.B|child.L|child.X|child.T|child.Q|child.K|child.Y|child.Z|child.F;
                     if (is_one_at_this_index(other_players_pieces, 3) || is_one_at_this_index(other_players_pieces, 4) || is_one_at_this_index(other_players_pieces, 5)) {
                         legal=false;
@@ -935,7 +934,7 @@ public:
                 simulation.schlagen=true;
                 //
                 bool legal=true;
-                for (Board child : simulation.generate_children(6, false)) {
+                for (Board child : simulation.generate_children(6)) {
                     uint64_t other_players_pieces= child.b|child.l|child.x|child.t|child.q|child.k|child.y|child.z|child.f;
                     if (is_one_at_this_index(other_players_pieces, 59) || is_one_at_this_index(other_players_pieces, 58) || is_one_at_this_index(other_players_pieces, 57)) {
                         legal=false;
@@ -975,7 +974,7 @@ public:
                 simulation.schlagen=true;
                 //
                 bool legal=true;
-                for (Board child : simulation.generate_children(6, false)) {
+                for (Board child : simulation.generate_children(6)) {
                     uint64_t other_players_pieces= child.b|child.l|child.x|child.t|child.q|child.k|child.y|child.z|child.f;
                     if (is_one_at_this_index(other_players_pieces, 59) || is_one_at_this_index(other_players_pieces, 60) || is_one_at_this_index(other_players_pieces, 61)) {
                         legal=false;
@@ -989,7 +988,7 @@ public:
         return children;
     }
 
-    std::vector<Board> generate_children(int playerk, bool nur_schlagen) {
+    std::vector<Board> generate_children(int playerk) {
         std::vector<Board> children;
         //
         //Ff zu Bb
@@ -1057,8 +1056,7 @@ public:
                     if (child_black_pieces!=black_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1089,8 +1087,7 @@ public:
                     if (child_black_pieces!=black_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1121,8 +1118,7 @@ public:
                     if (child_black_pieces!=black_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1153,8 +1149,7 @@ public:
                     if (child_black_pieces!=black_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1185,8 +1180,7 @@ public:
                     if (child_black_pieces!=black_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1217,8 +1211,7 @@ public:
                     if (child_black_pieces!=black_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1249,8 +1242,7 @@ public:
                     if (child_black_pieces!=black_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1286,8 +1278,7 @@ public:
                     if (child_white_pieces!=white_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1318,8 +1309,7 @@ public:
                     if (child_white_pieces!=white_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1350,8 +1340,7 @@ public:
                     if (child_white_pieces!=white_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1382,8 +1371,7 @@ public:
                     if (child_white_pieces!=white_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1414,8 +1402,7 @@ public:
                     if (child_white_pieces!=white_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1446,8 +1433,7 @@ public:
                     if (child_white_pieces!=white_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -1478,8 +1464,7 @@ public:
                     if (child_white_pieces!=white_pieces) {child.schlagen=true;}
                     else {child.schlagen=false;}
                     //
-                    if (!nur_schlagen) {children.push_back(child);}
-                    else {if (child.schlagen) {children.push_back(child);}}
+                    children.push_back(child);
                 }
             }
             //
@@ -2228,7 +2213,7 @@ public:
 
     std::vector<MinimaxNode> expand_node() {
         std::vector<MinimaxNode> new_children;
-        std::vector<Board> list_of_positions = this->board.generate_children(this->player_am_zug, false);
+        std::vector<Board> list_of_positions = this->board.generate_children(this->player_am_zug);
         for (const Board& board_position : list_of_positions) {
             MinimaxNode child;
             child.board = board_position;
@@ -2438,11 +2423,9 @@ public:
     int depth;
     bool expanded;
 
-    std::vector<MinimaxNode2> expand_node(bool nur_schlagen) {
+    std::vector<MinimaxNode2> expand_node() {
         std::vector<MinimaxNode2> new_children;
-        std::vector<Board> list_of_positions;
-        if (nur_schlagen) {list_of_positions = this->board.generate_children(this->player_am_zug, true);}
-        else {list_of_positions = this->board.generate_children(this->player_am_zug, false);}
+        std::vector<Board> list_of_positions=this->board.generate_children(this->player_am_zug);
         for (const Board& board_position : list_of_positions) {
             MinimaxNode2 child;
             child.board = board_position;
@@ -2469,11 +2452,14 @@ public:
         //
         if (!this->expanded) {
             if (this->depth<depth_fuer_nur_schlagen) {
-                this->children=this->expand_node(false); this->expanded = true;
+                if (this->board.schlagen) {this->children=this->expand_node(); this->expanded = true;}
+                else {
+                    this->value = this->board.evaluate_position(this->token);
+                    this->value_not_none=true;
+                    return this->value;
+                }
             }
-            else {
-                this->children=this->expand_node(true); this->expanded = true;
-            }
+            else {this->children=this->expand_node(); this->expanded = true;}
         }
         if (this->children.empty()) {
             this->value = this->board.evaluate_position(this->token);
@@ -2552,7 +2538,7 @@ public:
         root_node.value_not_none = false;
         root_node.value = 0;
         root_node.depth = 0;
-        root_node.children = root_node.expand_node(false);
+        root_node.children = root_node.expand_node();
         root_node.expanded=true;
         //
         minimax_counter=0;
@@ -2561,7 +2547,7 @@ public:
     MinimaxNode2 root_node;
     int token;
     Board board;
-    int max_time=5;
+    int max_time=10;
     int max_depth=10;
     int starting_depth=2;
     int depth_fuer_nur_schlagen=4;
