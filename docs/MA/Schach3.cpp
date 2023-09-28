@@ -472,6 +472,8 @@ std::vector<Board> generate_children(int playerk);
 class Board {
 public:
 
+    bool schlagen;
+
     uint64_t b;
     uint64_t l;
     uint64_t x;
@@ -787,6 +789,8 @@ public:
                             child.Y=remove_common_bits(this->Y, new_Kk);
                             child.Z=remove_common_bits(this->Z, new_Kk);
                             child.F=remove_common_bits(this->F, new_Kk);
+                            //
+                            child.schlagen=false;
                         }
                         else {
                             child.B=this->B;
@@ -808,6 +812,8 @@ public:
                             child.y=remove_common_bits(this->y, new_Kk);
                             child.z=remove_common_bits(this->z, new_Kk);
                             child.f=remove_common_bits(this->f, new_Kk);
+                            //
+                            child.schlagen=false;
                         }
                         //
                         children.push_back(child);
@@ -844,6 +850,8 @@ public:
                 simulation.Y=remove_common_bits(this->Y, new_Kk);
                 simulation.Z=remove_common_bits(this->Z, new_Kk);
                 simulation.F=remove_common_bits(this->F, new_Kk);
+                //
+                simulation.schlagen=false;
                 //
                 bool legal=true;
                 for (Board child : simulation.generate_children(-6)) {
@@ -882,6 +890,8 @@ public:
                 simulation.Y=remove_common_bits(this->Y, new_Kk);
                 simulation.Z=remove_common_bits(this->Z, new_Kk);
                 simulation.F=remove_common_bits(this->F, new_Kk);
+                //
+                simulation.schlagen=false;
                 //
                 bool legal=true;
                 for (Board child : simulation.generate_children(-6)) {
@@ -922,6 +932,8 @@ public:
                 simulation.z=remove_common_bits(this->z, new_Kk);
                 simulation.f=remove_common_bits(this->f, new_Kk);
                 //
+                simulation.schlagen=false;
+                //
                 bool legal=true;
                 for (Board child : simulation.generate_children(6)) {
                     uint64_t other_players_pieces= child.b|child.l|child.x|child.t|child.q|child.k|child.y|child.z|child.f;
@@ -959,6 +971,8 @@ public:
                 simulation.y=remove_common_bits(this->y, new_Kk);
                 simulation.z=remove_common_bits(this->z, new_Kk);
                 simulation.f=remove_common_bits(this->f, new_Kk);
+                //
+                simulation.schlagen=false;
                 //
                 bool legal=true;
                 for (Board child : simulation.generate_children(6)) {
@@ -1039,6 +1053,10 @@ public:
                     child.Z=remove_common_bits(this->Z, board.first);
                     child.F=remove_common_bits(board.second, board.first);
                     //
+                    uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                    if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
+                    //
                     children.push_back(child);
                 }
             }
@@ -1065,6 +1083,10 @@ public:
                     child.Y=remove_common_bits(this->Y, board);
                     child.Z=remove_common_bits(this->Z, board);
                     child.F=remove_common_bits(this->F, board);
+                    //
+                    uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                    if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
                     //
                     children.push_back(child);
                 }
@@ -1093,6 +1115,10 @@ public:
                     child.Z=remove_common_bits(this->Z, board);
                     child.F=remove_common_bits(this->F, board);
                     //
+                    uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                    if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
+                    //
                     children.push_back(child);
                 }
             }
@@ -1119,6 +1145,10 @@ public:
                     child.Y=remove_common_bits(this->Y, board);
                     child.Z=remove_common_bits(this->Z, board);
                     child.F=remove_common_bits(this->F, board);
+                    //
+                    uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                    if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
                     //
                     children.push_back(child);
                 }
@@ -1147,6 +1177,10 @@ public:
                     child.Z=remove_common_bits(this->Z, board);
                     child.F=remove_common_bits(this->F, board);
                     //
+                    uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                    if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
+                    //
                     children.push_back(child);
                 }
             }
@@ -1174,6 +1208,10 @@ public:
                     child.Z=remove_common_bits(this->Z, board.first);
                     child.F=remove_common_bits(this->F, board.first);
                     //
+                    uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                    if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
+                    //
                     children.push_back(child);
                 }
             }
@@ -1200,6 +1238,10 @@ public:
                     child.Y=remove_common_bits(this->Y, board);
                     child.Z=remove_common_bits(this->Z, board);
                     child.F=remove_common_bits(this->F, board);
+                    //
+                    uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                    if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
                     //
                     children.push_back(child);
                 }
@@ -1233,6 +1275,10 @@ public:
                     child.z=remove_common_bits(this->z, board.first);
                     child.f=remove_common_bits(board.second, board.first);
                     //
+                    uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                    if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
+                    //
                     children.push_back(child);
                 }
             }
@@ -1259,6 +1305,10 @@ public:
                     child.y=remove_common_bits(this->y, board);
                     child.z=remove_common_bits(this->z, board);
                     child.f=remove_common_bits(this->f, board);
+                    //
+                    uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                    if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
                     //
                     children.push_back(child);
                 }
@@ -1287,6 +1337,10 @@ public:
                     child.z=remove_common_bits(this->z, board);
                     child.f=remove_common_bits(this->f, board);
                     //
+                    uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                    if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
+                    //
                     children.push_back(child);
                 }
             }
@@ -1313,6 +1367,10 @@ public:
                     child.y=remove_common_bits(this->y, board);
                     child.z=remove_common_bits(this->z, board);
                     child.f=remove_common_bits(this->f, board);
+                    //
+                    uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                    if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
                     //
                     children.push_back(child);
                 }
@@ -1341,6 +1399,10 @@ public:
                     child.z=remove_common_bits(this->z, board);
                     child.f=remove_common_bits(this->f, board);
                     //
+                    uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                    if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
+                    //
                     children.push_back(child);
                 }
             }
@@ -1368,6 +1430,10 @@ public:
                     child.z=remove_common_bits(this->z, board.first);
                     child.f=remove_common_bits(this->f, board.first);
                     //
+                    uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                    if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
+                    //
                     children.push_back(child);
                 }
             }
@@ -1394,6 +1460,10 @@ public:
                     child.y=remove_common_bits(this->y, board);
                     child.z=remove_common_bits(this->z, board);
                     child.f=remove_common_bits(this->f, board);
+                    //
+                    uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                    if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                    else {child.schlagen=false;}
                     //
                     children.push_back(child);
                 }
@@ -2581,6 +2651,8 @@ int turn;
         board.Y   = 0b0000100000000000000000000000000000000000000000000000000000000000ULL;
         board.Z   = 0b1000000100000000000000000000000000000000000000000000000000000000ULL;
         board.F   = 0b0000000000000000000000000000000000000000000000000000000000000000ULL;
+
+        board.schlagen=false;
     }
 
     int play() {
@@ -2692,7 +2764,7 @@ int main() {
 
 //
 
-
+//Minimax2: Y-children:schlagen immre false
 //MCTS bitboard
 //nur schlagen ab einer gewissen tiefe
 //remove_common_bits_rochade nicht nötig
