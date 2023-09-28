@@ -69,8 +69,8 @@ def verloren2(pos,player):
 
 #
 
-childrens=[]
-childrensWM=[]
+children_schlagen_XO=[]
+children_schlagen_WM=[]
 
 def generate_children(position, player):
     children1=[]
@@ -101,11 +101,11 @@ def generate_children(position, player):
                     else:
                         pass
                     #
-                    for h in genchildrenschlagen(y,x,boardcopy,1,True):
+                    for h in gen_children_schlagen(y,x,boardcopy,1,True):
                         children1.append(h)
                 #
                 elif boardcopy[y][x] == 2:
-                    for r in genchildrenWM(y,x,boardcopy,2):
+                    for r in generate_children_WM(y,x,boardcopy,2):
                         children1.append(r)
             elif player==-1:
                 if boardcopy[y][x] == -1:
@@ -130,21 +130,21 @@ def generate_children(position, player):
                     else:
                         pass
                     #
-                    for h in genchildrenschlagen(y,x,boardcopy,-1,True):
+                    for h in gen_children_schlagen(y,x,boardcopy,-1,True):
                         children1.append(h)
                 #
                 elif boardcopy[y][x] == -2:
-                    for r in genchildrenWM(y,x,boardcopy,-2):
+                    for r in generate_children_WM(y,x,boardcopy,-2):
                         children1.append(r)
     #
     children1.extend(children2)
     #
     return children1
 
-def genchildrenschlagen(y,x,position,player,new):
-    global childrens
+def gen_children_schlagen(y,x,position,player,new):
+    global children_schlagen_XO
     if new:
-        childrens=[]
+        children_schlagen_XO=[]
     boardcopy = copy.deepcopy(position)
     if player==1:
         if y-2>-1 and x-2>-1 and  boardcopy[y-2][x-2]==0:
@@ -154,8 +154,8 @@ def genchildrenschlagen(y,x,position,player,new):
                 boardcopy[y][x]=0
                 if y-2==0:
                     boardcopy[y-2][x-2]=2
-                childrens.append(copy.deepcopy(boardcopy))
-                genchildrenschlagen(y-2,x-2,boardcopy,player,False)
+                children_schlagen_XO.append(copy.deepcopy(boardcopy))
+                gen_children_schlagen(y-2,x-2,boardcopy,player,False)
                 boardcopy = copy.deepcopy(position)
         if y-2>-1 and x+ 2<8 and  boardcopy[y-2][x+2]==0:
             if boardcopy[y-1][x+ 1]<0:
@@ -164,8 +164,8 @@ def genchildrenschlagen(y,x,position,player,new):
                 boardcopy[y][x]=0
                 if y-2==0:
                     boardcopy[y-2][x+2]=2
-                childrens.append(copy.deepcopy(boardcopy))
-                genchildrenschlagen(y-2,x+2,boardcopy,player,False)
+                children_schlagen_XO.append(copy.deepcopy(boardcopy))
+                gen_children_schlagen(y-2,x+2,boardcopy,player,False)
                 boardcopy = copy.deepcopy(position)
     elif player==-1:
         if y+ 2<8 and x-2>-1 and boardcopy[y+2][x-2]==0:
@@ -175,8 +175,8 @@ def genchildrenschlagen(y,x,position,player,new):
                 boardcopy[y][x]=0
                 if y+2==7:
                     boardcopy[y+2][x-2]=-2
-                childrens.append(copy.deepcopy(boardcopy))
-                genchildrenschlagen(y+2,x-2,boardcopy,player,False)
+                children_schlagen_XO.append(copy.deepcopy(boardcopy))
+                gen_children_schlagen(y+2,x-2,boardcopy,player,False)
                 boardcopy = copy.deepcopy(position)
         if y+ 2<8 and x+ 2<8 and boardcopy[y+2][x+2]==0:
             if boardcopy[y+ 1][x+ 1]>0:
@@ -185,16 +185,16 @@ def genchildrenschlagen(y,x,position,player,new):
                 boardcopy[y][x]=0
                 if y+2==7:
                     boardcopy[y+2][x+2]=-2
-                childrens.append(copy.deepcopy(boardcopy))
-                genchildrenschlagen(y+2,x+2,boardcopy,player,False)
+                children_schlagen_XO.append(copy.deepcopy(boardcopy))
+                gen_children_schlagen(y+2,x+2,boardcopy,player,False)
                 boardcopy = copy.deepcopy(position)
-    childrens.reverse()
-    return childrens
+    children_schlagen_XO.reverse()
+    return children_schlagen_XO
 
-def genchildrenschlagenWM(y,x,pos,player,new):
-    global childrensWM
+def gen_children_schlagen_WM(y,x,pos,player,new):
+    global children_schlagen_WM
     if new:
-        childrensWM=[]
+        children_schlagen_WM=[]
     #
     directions=[(1,1), (-1,1), (1,-1), (-1,-1)]
     #
@@ -213,8 +213,8 @@ def genchildrenschlagenWM(y,x,pos,player,new):
                         boardcopy[y+(1+o)*dy][x+(1+o)*dx]=-2
                         boardcopy[y+o*dy][x+o*dx]=0
                         boardcopy[y][x]=0
-                        childrensWM.append(boardcopy)
-                        genchildrenschlagenWM(y+(1+o)*dy,x+(1+o)*dx,boardcopy,-2,False)
+                        children_schlagen_WM.append(boardcopy)
+                        gen_children_schlagen_WM(y+(1+o)*dy,x+(1+o)*dx,boardcopy,-2,False)
                         boardcopy=copy.deepcopy(pos)
                         break
                     else:
@@ -234,17 +234,17 @@ def genchildrenschlagenWM(y,x,pos,player,new):
                         boardcopy[y+(1+o)*dy][x+(1+o)*dx]=2
                         boardcopy[y+o*dy][x+o*dx]=0
                         boardcopy[y][x]=0
-                        childrensWM.append(boardcopy)
-                        genchildrenschlagenWM(y+(1+o)*dy,x+(1+o)*dx,boardcopy,2,False)
+                        children_schlagen_WM.append(boardcopy)
+                        gen_children_schlagen_WM(y+(1+o)*dy,x+(1+o)*dx,boardcopy,2,False)
                         boardcopy=copy.deepcopy(pos)
                         break
                     else:
                         break
     #
-    childrensWM.reverse()
-    return childrensWM
+    children_schlagen_WM.reverse()
+    return children_schlagen_WM
 
-def genchildrenWM(y,x,pos,player):
+def generate_children_WM(y,x,pos,player):
     directions=[(1,1), (-1,1), (1,-1), (-1,-1)]
     childrenWM1=[]
     childrenWM2=[]
@@ -274,7 +274,7 @@ def genchildrenWM(y,x,pos,player):
                         boardcopy[y][x]=0
                         boardcopy[y+o*dy][x+o*dx]=0
                         childrenWM1.append(boardcopy)
-                        for r in genchildrenschlagenWM(y+(o+1)*dy,x+(o+1)*dx,boardcopy,-2,True):
+                        for r in gen_children_schlagen_WM(y+(o+1)*dy,x+(o+1)*dx,boardcopy,-2,True):
                             childrenWM1.append(r)
                         boardcopy=copy.deepcopy(pos)
                         schlagen=False
@@ -305,7 +305,7 @@ def genchildrenWM(y,x,pos,player):
                         boardcopy[y][x]=0
                         boardcopy[y+o*dy][x+o*dx]=0
                         childrenWM1.append(boardcopy)
-                        for r in genchildrenschlagenWM(y+(o+1)*dy,x+(o+1)*dx,boardcopy,2,True):
+                        for r in gen_children_schlagen_WM(y+(o+1)*dy,x+(o+1)*dx,boardcopy,2,True):
                             childrenWM1.append(r)
                         boardcopy=copy.deepcopy(pos)
                         schlagen=False

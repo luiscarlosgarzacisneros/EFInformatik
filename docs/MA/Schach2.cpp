@@ -1453,7 +1453,7 @@ public:
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time=5;
+    int max_time=1;
     int max_depth=10;
     int starting_depth=1;
 
