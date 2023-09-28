@@ -2647,7 +2647,7 @@ public:
 
 //
 
-int max_turns=10;
+int max_turns=88;
 
 class Schach {
 public:
@@ -2684,7 +2684,7 @@ int turn;
         while (true) {
             //-----------------------------------------
             HumanPlayer player_1(6, this->board);
-            MinimaxPlayer player_2(-6, this->board);
+            MinimaxPlayer2 player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             this->board.print_board();
