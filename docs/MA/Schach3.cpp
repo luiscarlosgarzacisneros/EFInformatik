@@ -2451,7 +2451,7 @@ public:
         }
         //
         if (!this->expanded) {
-            if (this->depth<depth_fuer_nur_schlagen) {
+            if (this->depth>=depth_fuer_nur_schlagen) {
                 if (this->board.schlagen) {this->children=this->expand_node(); this->expanded = true;}
                 else {
                     this->value = this->board.evaluate_position(this->token);
@@ -2550,7 +2550,7 @@ public:
     int max_time=10;
     int max_depth=10;
     int starting_depth=2;
-    int depth_fuer_nur_schlagen=4;
+    int depth_fuer_nur_schlagen=5;
 
     Board* minimaxer(const int depth, const std::chrono::duration<double> vergangene_zeit) {
         auto start = std::chrono::high_resolution_clock::now();
@@ -2700,7 +2700,7 @@ int turn;
                 if (current == 1) {this_players_token = 6;}
                 else {this_players_token = -6;}
                 //
-                std::vector<Board> children = this->board.generate_children(other, false);
+                std::vector<Board> children = this->board.generate_children(other);
                 for (const Board& child : children) {
                     if (child.verloren(this_players_token)) {
                         king_captured = true;
@@ -2774,7 +2774,11 @@ int main() {
 
 //
 
-//Minimax2: Y-children:schlagen immer true
+//Positionsmatrixen: Zentrumeinnahme
+
+//Minimax2: sb welcher Tiefe?
+
 //MCTS bitboard
-//nur schlagen ab einer gewissen tiefe
+//MCTS Parameter bestimmen
+
 //remove_common_bits_rochade nicht nötig
