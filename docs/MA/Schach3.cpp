@@ -2341,6 +2341,218 @@ public:
 
 //
 
+class MinimaxNode2 {
+public:
+    MinimaxNode2() : value(0), value_not_none(false), children(), board(), player_am_zug(0), token(0), depth(0), expanded(false) {}
+
+    int value;
+    bool value_not_none;
+    std::vector<MinimaxNode2> children;
+    Board board;
+    int player_am_zug;
+    int token;
+    int depth;
+    bool expanded;
+
+    std::vector<MinimaxNode2> expand_node() {
+        std::vector<MinimaxNode2> new_children;
+        std::vector<Board> list_of_positions = this->board.generate_children(this->player_am_zug);
+        for (const Board& board_position : list_of_positions) {
+            MinimaxNode2 child;
+            child.board = board_position;
+            child.player_am_zug = -this->player_am_zug;
+            child.token = this->token;
+            child.depth = this->depth + 1;
+            child.value_not_none = false;
+            child.value=0;
+            child.children;
+            new_children.push_back(child);
+        }
+        return new_children;
+    }
+
+    int minimax(int alpha, int beta, bool max_player, const int max_depth) {
+        //
+        minimax_counter+=1;
+        //
+        if (this->depth>=max_depth || this->board.verloren(6) || this->board.verloren(-6)) {
+            this->value = this->board.evaluate_position(this->token);
+            this->value_not_none=true;
+            return this->value;
+        }
+        //
+        if (!this->expanded) {this->children=this->expand_node(); this->expanded = true;}
+        if (this->children.empty()) {
+            this->value = this->board.evaluate_position(this->token);
+            this->value_not_none=true;
+            return this->value;
+        }
+        //
+        if (max_player) {
+            int max_value=-1000000;
+            for (MinimaxNode2& child : this->children) {
+                int eval=child.minimax(alpha,beta,false,max_depth);
+                if (eval>max_value) {max_value=eval;}
+                //pruning
+                if (eval>alpha) {alpha=eval;}
+                if (beta<=alpha) {break;}
+            }
+            this->value=max_value;
+            return max_value;
+        }
+        else if (!max_player) {
+            int min_value=1000000;
+            for (MinimaxNode2& child : this->children) {
+                int eval=child.minimax(alpha,beta,true,max_depth);
+                if (eval<min_value) {min_value=eval;}
+                //pruning
+                if (eval<beta) {beta=eval;}
+                if (beta<=alpha) {break;}
+            }
+            this->value=min_value;
+            return min_value;
+        }
+
+    }
+
+    void sort(bool max_player) {
+        if (this->expanded) {
+            //
+            std::vector<MinimaxNode2> not_none_children;
+            std::list<MinimaxNode2> none_children;
+            std::vector<MinimaxNode2> sorted_children;
+            //
+            for (const MinimaxNode2& child : this->children) {
+                if (!child.value_not_none) {none_children.push_back(child);}
+                else {not_none_children.push_back(child);}
+            }
+            //
+            if (max_player) {
+                std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode2& a, const MinimaxNode2& b) {return a.value > b.value;});
+                //
+                sorted_children.insert(sorted_children.end(), not_none_children.begin(), not_none_children.end());
+                sorted_children.insert(sorted_children.end(), none_children.begin(), none_children.end());
+                this->children=sorted_children;
+                //
+                for (MinimaxNode2& child : not_none_children) {child.sort(false);}
+            }
+            else {
+                std::sort(not_none_children.begin(), not_none_children.end(),[](const MinimaxNode2& a, const MinimaxNode2& b) {return a.value < b.value;});
+                //
+                sorted_children.insert(sorted_children.end(), not_none_children.begin(), not_none_children.end());
+                sorted_children.insert(sorted_children.end(), none_children.begin(), none_children.end());
+                this->children=sorted_children;
+                //
+                for (MinimaxNode2& child : not_none_children) {child.sort(true);}
+            }
+        }
+    }
+
+};
+
+class MinimaxPlayer2 {
+public:
+    MinimaxPlayer2(int token, Board board) : token(token), board(board) {
+        root_node.board = board;
+        root_node.player_am_zug = token;
+        root_node.token=token;
+        root_node.value_not_none = false;
+        root_node.value = 0;
+        root_node.depth = 0;
+        root_node.children = root_node.expand_node();
+        root_node.expanded=true;
+        //
+        minimax_counter=0;
+    }
+
+    MinimaxNode2 root_node;
+    int token;
+    Board board;
+    int max_time=5;
+    int max_depth=10;
+    int starting_depth=2;
+
+    Board* minimaxer(const int depth, const std::chrono::duration<double> vergangene_zeit) {
+        auto start = std::chrono::high_resolution_clock::now();
+        //
+        std::vector<int> values;
+        std::vector<MinimaxNode2> best_moves;
+        MinimaxNode2 best_move;
+        int best_value = -1000000;
+        std::vector<MinimaxNode2>& root_node_children=root_node.children;
+        Board return_board;
+        //
+        for (MinimaxNode2& child : root_node_children){
+            int eval;
+            if (child.value>-90000) {
+                eval=child.minimax(-1000000,1000000,false, depth);
+                child.value=eval;
+                std::cout<<"a ";//child wurde fertig berechnet
+            }
+            //
+            auto now = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> vergangene_zeit2 =(now+vergangene_zeit)-start;
+            if (vergangene_zeit2.count() >= max_time) {std::cout<<" NICHT FERTIG"; break;}
+        }
+        //
+        for (MinimaxNode2& child : root_node_children) {
+            if (child.value>-90000) {
+                values.push_back(child.value);
+            }
+        }
+        if (values.empty()) {return nullptr;}
+        for (int v : values) {if (v > best_value) {best_value = v;}}
+        for (MinimaxNode2& child : root_node_children) {if (child.value==best_value) {best_moves.push_back(child);}}
+        //
+        //output---------
+        std::cout << std::endl;
+        std::cout << best_value << std::endl;
+        std::cout<<"COUNTER: "; std::cout<<minimax_counter<<std::endl;
+        //---------------
+        best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
+        return_board=best_move.board;
+        //
+        Board* ret=&return_board;
+        return ret;
+
+    }
+
+    Board* get_move() {
+        auto start = std::chrono::high_resolution_clock::now();
+        //
+        int depth=this->starting_depth;
+        Board* move = new Board();
+        while (true) {
+            //break
+            auto now = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> vergangene_zeit = now - start;
+            if (vergangene_zeit.count() >= max_time) {break;}
+            else if (depth>max_depth) {break;}
+            //calculate move
+            std::cout<<"---DEPTH: ";
+            std::cout<<depth<<std::endl;
+            //
+            Board* new_move=minimaxer(depth,vergangene_zeit);
+            *move=*new_move;
+            if (new_move==nullptr) {return nullptr;}
+            //
+            for (const MinimaxNode2& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
+            std::cout<<std::endl;
+            //sort+depth
+            //this->root_node.sort(true);
+            //
+            for (MinimaxNode2& child : root_node.children) {std::cout<<child.value;  std::cout<<", ";}
+            std::cout<<std::endl;
+            if (depth>max_depth) {break;}
+            depth+=1;
+        }
+        return move;
+    }
+
+};
+
+//
+
 int max_turns=10;
 
 class Schach {
