@@ -1896,7 +1896,6 @@ public:
         for (int anzahl_max_versuche=0; anzahl_max_versuche<100; ++anzahl_max_versuche) {
             int chosen_index=generate_random_int(0, pieces.size()-1);
             int chosen_piece=pieces[chosen_index];
-            std::cout<<chosen_piece<<std::endl;//-----------------------------------------TEST
             //
             if (playerk==6) {
                 if (chosen_piece==1) {
@@ -2118,9 +2117,11 @@ public:
                 //
                 else if (chosen_piece==8) {
                     std::vector<Board> children_Yy= gcYy(6, white_pieces, all_pieces);
-                    int chosen_index=generate_random_int(0, children_Yy.size()-1);
-                    Board child_Yy=children_Yy[chosen_index];
-                    children.push_back(child_Yy);
+                    if (children_Yy.size()!=0) {
+                        int chosen_index=generate_random_int(0, children_Yy.size()-1);
+                        Board child_Yy=children_Yy[chosen_index];
+                        children.push_back(child_Yy);
+                    }
                 }
             }
             else {
@@ -2343,9 +2344,11 @@ public:
                 //
                 else if (chosen_piece==8) {
                     std::vector<Board> children_Yy= gcYy(-6, black_pieces, all_pieces);
-                    int chosen_index=generate_random_int(0, children_Yy.size()-1);
-                    Board child_Yy=children_Yy[chosen_index];
-                    children.push_back(child_Yy);
+                    if (children_Yy.size()!=0) {
+                        int chosen_index=generate_random_int(0, children_Yy.size()-1);
+                        Board child_Yy=children_Yy[chosen_index];
+                        children.push_back(child_Yy);
+                    }
                 }
             }
             if (children.size()==1) {return children;}
