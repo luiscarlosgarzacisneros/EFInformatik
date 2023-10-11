@@ -277,7 +277,7 @@ std::vector<uint64_t> gcLl(const uint64_t knight_bitboard, const uint64_t this_p
     return childrenLl;
 }
 
-std::vector<std::pair<uint64_t, uint64_t>> gcBb(int player, const uint64_t pawn_bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, const uint64_t o_p_p_en) {
+std::vector<std::pair<uint64_t, uint64_t>> gcBb(int player, const uint64_t pawn_bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, const uint64_t other_players_Ff) {
     std::vector<std::pair<uint64_t, uint64_t>> childrenBb;
     //get pawns current positions as (x, y) coord.
     std::vector<std::pair<int,int>> pawn_positions;
@@ -297,31 +297,31 @@ std::vector<std::pair<uint64_t, uint64_t>> gcBb(int player, const uint64_t pawn_
             //2 nach vorne
             if (vy==1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+2, vx)))) {
                 uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+2, vx);
-                childrenBb.push_back({child, o_p_p_en});
+                childrenBb.push_back({child, other_players_Ff});
             }
             //normal 1 nach vorne
             if (vy+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx)))) {
                 uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx);
-                childrenBb.push_back({child, o_p_p_en});
+                childrenBb.push_back({child, other_players_Ff});
             }
             //schlagen
             if (vy+1<8 && vx-1>-1 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy+1, vx-1))) {
                 uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx-1);
-                childrenBb.push_back({child, o_p_p_en});
+                childrenBb.push_back({child, other_players_Ff});
             }
             if (vy+1<8 && vx+1<8 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy+1, vx+1))) {
                 uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx+1);
-                childrenBb.push_back({child, o_p_p_en});
+                childrenBb.push_back({child, other_players_Ff});
             }
             //en passant
-            if (vy+1<8 && vx-1>-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx-1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx-1))) {
+            if (vy+1<8 && vx-1>-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx-1))) && is_one_at_this_index(other_players_Ff, yx_zu_index(vy, vx-1))) {
                 uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx-1);
-                uint64_t new_o_p_p_en=clear_bit(o_p_p_en, yx_zu_index(vy, vx-1));
+                uint64_t new_o_p_p_en=clear_bit(other_players_Ff, yx_zu_index(vy, vx-1));
                 childrenBb.push_back({child, new_o_p_p_en});
             }
-            if (vy+1<8 && vx+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx+1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx+1))) {
+            if (vy+1<8 && vx+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy+1, vx+1))) && is_one_at_this_index(other_players_Ff, yx_zu_index(vy, vx+1))) {
                 uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx+1);
-                uint64_t new_o_p_p_en=clear_bit(o_p_p_en, yx_zu_index(vy, vx+1));
+                uint64_t new_o_p_p_en=clear_bit(other_players_Ff, yx_zu_index(vy, vx+1));
                 childrenBb.push_back({child, new_o_p_p_en});
             }
         }
@@ -330,37 +330,80 @@ std::vector<std::pair<uint64_t, uint64_t>> gcBb(int player, const uint64_t pawn_
             //2 nach vorne
             if (vy==6 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx))) && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-2, vx)))) {
                 uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-2, vx);
-                childrenBb.push_back({child, o_p_p_en});
+                childrenBb.push_back({child, other_players_Ff});
             }
             //normal 1 nach vorne
             if (vy+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx)))) {
                 uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx);
-                childrenBb.push_back({child, o_p_p_en});
+                childrenBb.push_back({child, other_players_Ff});
             }
             //schlagen
             if (vy-1>-1 && vx-1>-1 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy-1, vx-1))) {
                 uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx-1);
-                childrenBb.push_back({child, o_p_p_en});
+                childrenBb.push_back({child, other_players_Ff});
             }
             if (vy-1>-1 && vx+1<8 && is_one_at_this_index(other_players_pieces, yx_zu_index(vy-1, vx+1))) {
                 uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx+1);
-                childrenBb.push_back({child, o_p_p_en});
+                childrenBb.push_back({child, other_players_Ff});
             }
             //en passant
-            if (vy-1>-1 && vx-1>-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx-1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx-1))) {
+            if (vy-1>-1 && vx-1>-1 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx-1))) && is_one_at_this_index(other_players_Ff, yx_zu_index(vy, vx-1))) {
                 uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx-1);
-                uint64_t new_o_p_p_en=clear_bit(o_p_p_en, yx_zu_index(vy, vx-1));
+                uint64_t new_o_p_p_en=clear_bit(other_players_Ff, yx_zu_index(vy, vx-1));
                 childrenBb.push_back({child, new_o_p_p_en});
             }
-            if (vy-1>.1 && vx+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx+1))) && is_one_at_this_index(o_p_p_en, yx_zu_index(vy, vx+1))) {
+            if (vy-1>.1 && vx+1<8 && !(is_one_at_this_index(all_pieces, yx_zu_index(vy-1, vx+1))) && is_one_at_this_index(other_players_Ff, yx_zu_index(vy, vx+1))) {
                 uint64_t child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx+1);
-                uint64_t new_o_p_p_en=clear_bit(o_p_p_en, yx_zu_index(vy, vx+1));
+                uint64_t new_o_p_p_en=clear_bit(other_players_Ff, yx_zu_index(vy, vx+1));
                 childrenBb.push_back({child, new_o_p_p_en});
             }
         }
     }
     //
     return childrenBb; //return a pair with child_pawn_this_player and new_o_p_p_en_other_player_of_this_child: in generate_children it can be implemented.
+}
+
+//
+
+std::vector<uint64_t> gorcLl(const uint64_t knight_bitboard, const uint64_t this_players_pieces) {
+    std::vector<std::vector<int>> childrenLl;
+    //
+    int dx[] = {1, 2, 2, 1, -1, -2, -2, -1};
+    int dy[] = {2, 1, -1, -2, -2, -1, 1, 2};
+    
+    //get knights current position as (x, y) coord.
+    std::vector<std::pair<int,int>> knight_positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(knight_bitboard, yx_zu_index(y, x))) {knight_positions.push_back({y, x});}
+        }
+    }
+    if (knight_positions.empty()) {std::vector<uint64_t> empty_vector; return empty_vector;}
+    //collect coordinates of moves
+    for (const auto& position : knight_positions) {
+        int y_current = position.first;
+        int x_current = position.second;
+        //
+        for (int i=0; i<8; ++i) {
+            int y_new = y_current + dy[i];
+            int x_new = x_current + dx[i];
+            //
+            if (is_in_board(y_new, x_new)) {
+                if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
+                    childrenLl.push_back({y_current, x_current, y_new, x_new});
+                }
+            }
+        }
+    }
+    int chosen_index=generate_random_int(0, childrenLl.size()-1);
+    std::vector chosen_move=childrenLl[chosen_index];
+    int vy=chosen_move[0];
+    int vx=chosen_move[1];
+    int zy=chosen_move[2];
+    int zx=chosen_move[3];
+    uint64_t child=shift_bit(knight_bitboard, vy, vx, zy, zx);
+    std::vector return_vector={child};
+    return return_vector;
 }
 
 //
