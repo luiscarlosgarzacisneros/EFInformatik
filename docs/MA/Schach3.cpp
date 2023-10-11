@@ -1847,14 +1847,14 @@ public:
         uint64_t black_pieces = this->B|this->L|this->X|this->T|this->Q|this->K|this->Y|this->Z|this->F;
         uint64_t all_pieces = white_pieces|black_pieces;
         //
-        int anz_Bb;
-        int anz_Ll;
-        int anz_Xx;
-        int anz_Tt;
-        int anz_Qq;
-        int anz_Kk;
-        int anz_Zz;
-        int anz_Yy;
+        int anz_Bb=0;
+        int anz_Ll=0;
+        int anz_Xx=0;
+        int anz_Tt=0;
+        int anz_Qq=0;
+        int anz_Kk=0;
+        int anz_Zz=0;
+        int anz_Yy=0;
         int Bb_c=1;
         int Ll_c=1;
         int Xx_c=2;
@@ -1863,29 +1863,26 @@ public:
         int Kk_c=1;
         int Zz_c=2;
         int Yy_c=1;
-        std::cout<<"TEST1"<<std::endl;
         if (playerk==6) {
-            int anz_Bb=count_bits_in_bitboard(this->b);
-            int anz_Ll=count_bits_in_bitboard(this->l);
-            int anz_Xx=count_bits_in_bitboard(this->x);
-            int anz_Tt=count_bits_in_bitboard(this->t);
-            int anz_Qq=count_bits_in_bitboard(this->q);
-            int anz_Kk=count_bits_in_bitboard(this->k);
-            int anz_Zz=count_bits_in_bitboard(this->z);
-            int anz_Yy=count_bits_in_bitboard(this->y);
+            anz_Bb=count_bits_in_bitboard(this->b);
+            anz_Ll=count_bits_in_bitboard(this->l);
+            anz_Xx=count_bits_in_bitboard(this->x);
+            anz_Tt=count_bits_in_bitboard(this->t);
+            anz_Qq=count_bits_in_bitboard(this->q);
+            anz_Kk=count_bits_in_bitboard(this->k);
+            anz_Zz=count_bits_in_bitboard(this->z);
+            anz_Yy=count_bits_in_bitboard(this->y);
         }
         else {
-            int anz_Bb=count_bits_in_bitboard(this->B);
-            int anz_Ll=count_bits_in_bitboard(this->L);
-            int anz_Xx=count_bits_in_bitboard(this->X);
-            int anz_Tt=count_bits_in_bitboard(this->T);
-            int anz_Qq=count_bits_in_bitboard(this->Q);
-            int anz_Kk=count_bits_in_bitboard(this->K);
-            int anz_Zz=count_bits_in_bitboard(this->Z);
-            int anz_Yy=count_bits_in_bitboard(this->Y);
+            anz_Bb=count_bits_in_bitboard(this->B);
+            anz_Ll=count_bits_in_bitboard(this->L);
+            anz_Xx=count_bits_in_bitboard(this->X);
+            anz_Tt=count_bits_in_bitboard(this->T);
+            anz_Qq=count_bits_in_bitboard(this->Q);
+            anz_Kk=count_bits_in_bitboard(this->K);
+            anz_Zz=count_bits_in_bitboard(this->Z);
+            anz_Yy=count_bits_in_bitboard(this->Y);
         }
-        std::cout<<anz_Bb<<" "<<anz_Kk<<" "<<anz_Ll<<" "<<anz_Qq<<" "<<anz_Tt<<std::endl;
-        std::cout<<"TEST1.5"<<std::endl;
         std::vector<int> pieces;
         for (int i=0; i<anz_Bb; ++i) {for (int j=0; j<Bb_c; ++j) {pieces.push_back(1);}}
         for (int i=0; i<anz_Ll; ++i) {for (int j=0; j<Ll_c; ++j) {pieces.push_back(2);}}
@@ -1896,12 +1893,11 @@ public:
         for (int i=0; i<anz_Zz; ++i) {for (int j=0; j<Zz_c; ++j) {pieces.push_back(7);}}
         for (int i=0; i<anz_Yy; ++i) {for (int j=0; j<Yy_c; ++j) {pieces.push_back(8);}}
         //
-        std::cout<<"TEST2"<<std::endl;
         for (int anzahl_max_versuche=0; anzahl_max_versuche<100; ++anzahl_max_versuche) {
             int chosen_index=generate_random_int(0, pieces.size()-1);
             int chosen_piece=pieces[chosen_index];
+            std::cout<<chosen_piece<<std::endl;//-----------------------------------------TEST
             //
-            std::cout<<chosen_piece<<std::endl;
             if (playerk==6) {
                 if (chosen_piece==1) {
                     for (const auto& board : gorcBb(1, this->b, white_pieces, black_pieces, this->F)) {
@@ -2352,7 +2348,6 @@ public:
                     children.push_back(child_Yy);
                 }
             }
-            std::cout<<children.size()<<std::endl;
             if (children.size()==1) {return children;}
         }
     }
@@ -3648,9 +3643,12 @@ int main() {
     //test-------------------
     Schach game;
     game.board.print_board();
-    std::vector<Board> bb=game.board.generate_one_random_child(6);
-    Board bbb=bb[0];
-    bbb.print_board();
+    for (int i; i<10; ++i) {
+        std::vector<Board> bb=game.board.generate_one_random_child(6);
+        Board bbb=bb[0];
+        bbb.print_board();
+    }
+    std::cout<<"FINISHED"<<std::endl;
     //test-----------------
 }
 
