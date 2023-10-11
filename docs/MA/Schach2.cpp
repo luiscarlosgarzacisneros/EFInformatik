@@ -787,6 +787,10 @@ std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<
         }
     }
     //
+    //Hier haben alle Figuren die gleiche Chance ausgewählt zu werden
+    //->Alle Zuege haben nicht die gleiche Chance ausgewählt zu werden
+    //Man koente das anders machen, indem man Figuren mehrmals zu piecesy und -x appediert
+    //wird in Schach3 so gemacht.
     std::vector<int> piecesy;
     std::vector<int> piecesx;
     if (playerk==6) {
