@@ -114,15 +114,15 @@ uint64_t remove_common_bits(uint64_t from_this_bitboard, uint64_t by_comparing_w
 }
 
 int count_bits_in_bitboard(uint64_t bitboard) {
-    int count = 0;
+    int counter = 0;
     uint64_t m = 1ULL;
     for (int i = 0; i < 64; i++) {
         if ((bitboard & m)!=0) {
-            count+=1;
+            counter+=1;
         }
         m <<= 1;
     }
-    return count;
+    return counter;
 }
 
 //
@@ -800,7 +800,6 @@ std::vector<std::vector<int>> other_k_matrix = matrix_minus(k_matrix);
 //forward declarartions
 class Board;
 std::vector<Board> generate_children(int playerk);
-std::vector<Board> generate_one_random_child(int playerk);
 
 class Board {
 public:
@@ -1810,6 +1809,7 @@ public:
     }
 
     std::vector<Board> generate_one_random_child(int playerk) {
+        std::vector<Board> children; //will always contain 1 child
         //Ff zu Bb
         std::vector<std::pair<int,int>> positions_Ff;
         if (playerk==6) {
@@ -1847,7 +1847,508 @@ public:
         uint64_t black_pieces = this->B|this->L|this->X|this->T|this->Q|this->K|this->Y|this->Z|this->F;
         uint64_t all_pieces = white_pieces|black_pieces;
         //
-        
+        int anz_Bb;
+        int anz_Ll;
+        int anz_Xx;
+        int anz_Tt;
+        int anz_Qq;
+        int anz_Kk;
+        int anz_Zz;
+        int anz_Yy;
+        int Bb_c=1;
+        int Ll_c=1;
+        int Xx_c=2;
+        int Tt_c=2;
+        int Qq_c=2;
+        int Kk_c=1;
+        int Zz_c=2;
+        int Yy_c=1;
+        if (playerk==6) {
+            int anz_Bb=count_bits_in_bitboard(this->b);
+            int anz_Ll=count_bits_in_bitboard(this->l);
+            int anz_Xx=count_bits_in_bitboard(this->x);
+            int anz_Tt=count_bits_in_bitboard(this->t);
+            int anz_Qq=count_bits_in_bitboard(this->q);
+            int anz_Kk=count_bits_in_bitboard(this->k);
+            int anz_Zz=count_bits_in_bitboard(this->z);
+            int anz_Yy=count_bits_in_bitboard(this->y);
+        }
+        else {
+            int anz_Bb=count_bits_in_bitboard(this->B);
+            int anz_Ll=count_bits_in_bitboard(this->L);
+            int anz_Xx=count_bits_in_bitboard(this->X);
+            int anz_Tt=count_bits_in_bitboard(this->T);
+            int anz_Qq=count_bits_in_bitboard(this->Q);
+            int anz_Kk=count_bits_in_bitboard(this->K);
+            int anz_Zz=count_bits_in_bitboard(this->Z);
+            int anz_Yy=count_bits_in_bitboard(this->Y);
+        }
+        std::vector<int> pieces;
+        for (int i=0; i<anz_Bb; ++i) {for (int j=0; j<Bb_c; ++j) {pieces.push_back(1);}}
+        for (int i=0; i<anz_Ll; ++i) {for (int j=0; j<Ll_c; ++j) {pieces.push_back(2);}}
+        for (int i=0; i<anz_Xx; ++i) {for (int j=0; j<Xx_c; ++j) {pieces.push_back(3);}}
+        for (int i=0; i<anz_Tt; ++i) {for (int j=0; j<Tt_c; ++j) {pieces.push_back(4);}}
+        for (int i=0; i<anz_Qq; ++i) {for (int j=0; j<Qq_c; ++j) {pieces.push_back(5);}}
+        for (int i=0; i<anz_Kk; ++i) {for (int j=0; j<Kk_c; ++j) {pieces.push_back(6);}}
+        for (int i=0; i<anz_Zz; ++i) {for (int j=0; j<Zz_c; ++j) {pieces.push_back(7);}}
+        for (int i=0; i<anz_Yy; ++i) {for (int j=0; j<Yy_c; ++j) {pieces.push_back(8);}}
+        //
+        for (int anzahl_max_versuche=0; anzahl_max_versuche<7; ++anzahl_max_versuche) {
+            int chosen_index=generate_random_int(0, pieces.size()-1);
+            int chosen_piece=pieces[chosen_index];
+            //
+            if (playerk==6) {
+                if (chosen_piece==1) {
+                    for (const auto& board : gorcBb(1, this->b, white_pieces, black_pieces, this->F)) {
+                        Board child;
+                        child.b=board.first;
+                        child.l=this->l;
+                        child.x=this->x;
+                        child.t=this->t;
+                        child.q=this->q;
+                        child.k=this->k;
+                        child.y=this->y;
+                        child.z=this->z;
+                        child.f=this->f;
+                        //
+                        child.B=remove_common_bits(this->B, board.first);
+                        child.L=remove_common_bits(this->L, board.first);
+                        child.X=remove_common_bits(this->X, board.first);
+                        child.T=remove_common_bits(this->T, board.first);
+                        child.Q=remove_common_bits(this->Q, board.first);
+                        child.K=remove_common_bits(this->K, board.first);
+                        child.Y=remove_common_bits(this->Y, board.first);
+                        child.Z=remove_common_bits(this->Z, board.first);
+                        child.F=remove_common_bits(board.second, board.first);
+                        //
+                        uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                        if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==2) {
+                    for (const auto& board : gorcLl(this->l, white_pieces)) {
+                        Board child;
+                        child.b=this->b;
+                        child.l=board;
+                        child.x=this->x;
+                        child.t=this->t;
+                        child.q=this->q;
+                        child.k=this->k;
+                        child.y=this->y;
+                        child.z=this->z;
+                        child.f=this->f;
+                        //
+                        child.B=remove_common_bits(this->B, board);
+                        child.L=remove_common_bits(this->L, board);
+                        child.X=remove_common_bits(this->X, board);
+                        child.T=remove_common_bits(this->T, board);
+                        child.Q=remove_common_bits(this->Q, board);
+                        child.K=remove_common_bits(this->K, board);
+                        child.Y=remove_common_bits(this->Y, board);
+                        child.Z=remove_common_bits(this->Z, board);
+                        child.F=remove_common_bits(this->F, board);
+                        //
+                        uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                        if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==4) {
+                    for (const auto& board : gorcTtXxQq(this->t, white_pieces, black_pieces, {{1, 0}, {-1, 0}, {0, 1}, {0, -1}})) {
+                        Board child;
+                        child.b=this->b;
+                        child.l=this->l;
+                        child.x=this->x;
+                        child.t=board;
+                        child.q=this->q;
+                        child.k=this->k;
+                        child.y=this->y;
+                        child.z=this->z;
+                        child.f=this->f;
+                        //
+                        child.B=remove_common_bits(this->B, board);
+                        child.L=remove_common_bits(this->L, board);
+                        child.X=remove_common_bits(this->X, board);
+                        child.T=remove_common_bits(this->T, board);
+                        child.Q=remove_common_bits(this->Q, board);
+                        child.K=remove_common_bits(this->K, board);
+                        child.Y=remove_common_bits(this->Y, board);
+                        child.Z=remove_common_bits(this->Z, board);
+                        child.F=remove_common_bits(this->F, board);
+                        //
+                        uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                        if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==3) {
+                    for (const auto& board : gorcTtXxQq(this->x, white_pieces, black_pieces, {{1, 1}, {-1, 1}, {1, -1}, {-1, -1}})) {
+                        Board child;
+                        child.b=this->b;
+                        child.l=this->l;
+                        child.x=board;
+                        child.t=this->t;
+                        child.q=this->q;
+                        child.k=this->k;
+                        child.y=this->y;
+                        child.z=this->z;
+                        child.f=this->f;
+                        //
+                        child.B=remove_common_bits(this->B, board);
+                        child.L=remove_common_bits(this->L, board);
+                        child.X=remove_common_bits(this->X, board);
+                        child.T=remove_common_bits(this->T, board);
+                        child.Q=remove_common_bits(this->Q, board);
+                        child.K=remove_common_bits(this->K, board);
+                        child.Y=remove_common_bits(this->Y, board);
+                        child.Z=remove_common_bits(this->Z, board);
+                        child.F=remove_common_bits(this->F, board);
+                        //
+                        uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                        if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==5) {
+                    for (const auto& board : gorcTtXxQq(this->q, white_pieces, black_pieces, {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}})) {
+                        Board child;
+                        child.b=this->b;
+                        child.l=this->l;
+                        child.x=this->x;
+                        child.t=this->t;
+                        child.q=board;
+                        child.k=this->k;
+                        child.y=this->y;
+                        child.z=this->z;
+                        child.f=this->f;
+                        //
+                        child.B=remove_common_bits(this->B, board);
+                        child.L=remove_common_bits(this->L, board);
+                        child.X=remove_common_bits(this->X, board);
+                        child.T=remove_common_bits(this->T, board);
+                        child.Q=remove_common_bits(this->Q, board);
+                        child.K=remove_common_bits(this->K, board);
+                        child.Y=remove_common_bits(this->Y, board);
+                        child.Z=remove_common_bits(this->Z, board);
+                        child.F=remove_common_bits(this->F, board);
+                        //
+                        uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                        if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==7) {
+                    for (const auto& board : gorcZz(this->z, this->t, white_pieces, black_pieces)) {
+                        Board child;
+                        child.b=this->b;
+                        child.l=this->l;
+                        child.x=this->x;
+                        child.t=board.first;
+                        child.q=this->q;
+                        child.k=this->k;
+                        child.y=this->y;
+                        child.z=board.second;
+                        child.f=this->f;
+                        //
+                        child.B=remove_common_bits(this->B, board.first);
+                        child.L=remove_common_bits(this->L, board.first);
+                        child.X=remove_common_bits(this->X, board.first);
+                        child.T=remove_common_bits(this->T, board.first);
+                        child.Q=remove_common_bits(this->Q, board.first);
+                        child.K=remove_common_bits(this->K, board.first);
+                        child.Y=remove_common_bits(this->Y, board.first);
+                        child.Z=remove_common_bits(this->Z, board.first);
+                        child.F=remove_common_bits(this->F, board.first);
+                        //
+                        uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                        if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==6) {
+                    for (const auto& board : gorcKk(this->k, white_pieces)) {
+                        Board child;
+                        child.b=this->b;
+                        child.l=this->l;
+                        child.x=this->x;
+                        child.t=this->t;
+                        child.q=this->q;
+                        child.k=board;
+                        child.y=this->y;
+                        child.z=this->z;
+                        child.f=this->f;
+                        //
+                        child.B=remove_common_bits(this->B, board);
+                        child.L=remove_common_bits(this->L, board);
+                        child.X=remove_common_bits(this->X, board);
+                        child.T=remove_common_bits(this->T, board);
+                        child.Q=remove_common_bits(this->Q, board);
+                        child.K=remove_common_bits(this->K, board);
+                        child.Y=remove_common_bits(this->Y, board);
+                        child.Z=remove_common_bits(this->Z, board);
+                        child.F=remove_common_bits(this->F, board);
+                        //
+                        uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
+                        if (child_black_pieces!=black_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==8) {
+                    std::vector<Board> children_Yy= gcYy(6, white_pieces, all_pieces);
+                    int chosen_index=generate_random_int(0, children_Yy.size()-1);
+                    Board child_Yy=children_Yy[chosen_index];
+                    children.push_back(child_Yy);
+                }
+            }
+            else {
+                if (chosen_piece==1) {
+                    for (const auto& board : gorcBb(-1, this->B, black_pieces, white_pieces, this->f)) {
+                        Board child;
+                        child.B=board.first;
+                        child.L=this->L;
+                        child.X=this->X;
+                        child.T=this->T;
+                        child.Q=this->Q;
+                        child.K=this->K;
+                        child.Y=this->Y;
+                        child.Z=this->Z;
+                        child.F=this->F;
+                        //
+                        child.b=remove_common_bits(this->b, board.first);
+                        child.l=remove_common_bits(this->l, board.first);
+                        child.x=remove_common_bits(this->x, board.first);
+                        child.t=remove_common_bits(this->t, board.first);
+                        child.q=remove_common_bits(this->q, board.first);
+                        child.k=remove_common_bits(this->k, board.first);
+                        child.y=remove_common_bits(this->y, board.first);
+                        child.z=remove_common_bits(this->z, board.first);
+                        child.f=remove_common_bits(board.second, board.first);
+                        //
+                        uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                        if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==2) {
+                    for (const auto& board : gorcLl(this->L, black_pieces)) {
+                        Board child;
+                        child.B=this->B;
+                        child.L=board;
+                        child.X=this->X;
+                        child.T=this->T;
+                        child.Q=this->Q;
+                        child.K=this->K;
+                        child.Y=this->Y;
+                        child.Z=this->Z;
+                        child.F=this->F;
+                        //
+                        child.b=remove_common_bits(this->b, board);
+                        child.l=remove_common_bits(this->l, board);
+                        child.x=remove_common_bits(this->x, board);
+                        child.t=remove_common_bits(this->t, board);
+                        child.q=remove_common_bits(this->q, board);
+                        child.k=remove_common_bits(this->k, board);
+                        child.y=remove_common_bits(this->y, board);
+                        child.z=remove_common_bits(this->z, board);
+                        child.f=remove_common_bits(this->f, board);
+                        //
+                        uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                        if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==4) {
+                    for (const auto& board : gorcTtXxQq(this->T, black_pieces, white_pieces, {{1, 0}, {-1, 0}, {0, 1}, {0, -1}})) {
+                        Board child;
+                        child.B=this->B;
+                        child.L=this->L;
+                        child.X=this->X;
+                        child.T=board;
+                        child.Q=this->Q;
+                        child.K=this->K;
+                        child.Y=this->Y;
+                        child.Z=this->Z;
+                        child.F=this->F;
+                        //
+                        child.b=remove_common_bits(this->b, board);
+                        child.l=remove_common_bits(this->l, board);
+                        child.x=remove_common_bits(this->x, board);
+                        child.t=remove_common_bits(this->t, board);
+                        child.q=remove_common_bits(this->q, board);
+                        child.k=remove_common_bits(this->k, board);
+                        child.y=remove_common_bits(this->y, board);
+                        child.z=remove_common_bits(this->z, board);
+                        child.f=remove_common_bits(this->f, board);
+                        //
+                        uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                        if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==3) {
+                    for (const auto& board : gorcTtXxQq(this->X, black_pieces, white_pieces, {{1, 1}, {-1, 1}, {1, -1}, {-1, -1}})) {
+                        Board child;
+                        child.B=this->B;
+                        child.L=this->L;
+                        child.X=board;
+                        child.T=this->T;
+                        child.Q=this->Q;
+                        child.K=this->K;
+                        child.Y=this->Y;
+                        child.Z=this->Z;
+                        child.F=this->F;
+                        //
+                        child.b=remove_common_bits(this->b, board);
+                        child.l=remove_common_bits(this->l, board);
+                        child.x=remove_common_bits(this->x, board);
+                        child.t=remove_common_bits(this->t, board);
+                        child.q=remove_common_bits(this->q, board);
+                        child.k=remove_common_bits(this->k, board);
+                        child.y=remove_common_bits(this->y, board);
+                        child.z=remove_common_bits(this->z, board);
+                        child.f=remove_common_bits(this->f, board);
+                        //
+                        uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                        if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==5) {
+                    for (const auto& board : gorcTtXxQq(this->Q, black_pieces, white_pieces, {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}})) {
+                        Board child;
+                        child.B=this->B;
+                        child.L=this->L;
+                        child.X=this->X;
+                        child.T=this->T;
+                        child.Q=board;
+                        child.K=this->K;
+                        child.Y=this->Y;
+                        child.Z=this->Z;
+                        child.F=this->F;
+                        //
+                        child.b=remove_common_bits(this->b, board);
+                        child.l=remove_common_bits(this->l, board);
+                        child.x=remove_common_bits(this->x, board);
+                        child.t=remove_common_bits(this->t, board);
+                        child.q=remove_common_bits(this->q, board);
+                        child.k=remove_common_bits(this->k, board);
+                        child.y=remove_common_bits(this->y, board);
+                        child.z=remove_common_bits(this->z, board);
+                        child.f=remove_common_bits(this->f, board);
+                        //
+                        uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                        if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==7) {
+                    for (const auto& board : gorcZz(this->Z, this->T, black_pieces, white_pieces)) {
+                        Board child;
+                        child.B=this->B;
+                        child.L=this->L;
+                        child.X=this->X;
+                        child.T=board.first;
+                        child.Q=this->Q;
+                        child.K=this->K;
+                        child.Y=this->Y;
+                        child.Z=board.second;
+                        child.F=this->F;
+                        //
+                        child.b=remove_common_bits(this->b, board.first);
+                        child.l=remove_common_bits(this->l, board.first);
+                        child.x=remove_common_bits(this->x, board.first);
+                        child.t=remove_common_bits(this->t, board.first);
+                        child.q=remove_common_bits(this->q, board.first);
+                        child.k=remove_common_bits(this->k, board.first);
+                        child.y=remove_common_bits(this->y, board.first);
+                        child.z=remove_common_bits(this->z, board.first);
+                        child.f=remove_common_bits(this->f, board.first);
+                        //
+                        uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                        if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==6) {
+                    for (const auto& board : gorcKk(this->K, black_pieces)) {
+                        Board child;
+                        child.B=this->B;
+                        child.L=this->L;
+                        child.X=this->X;
+                        child.T=this->T;
+                        child.Q=this->Q;
+                        child.K=board;
+                        child.Y=this->Y;
+                        child.Z=this->Z;
+                        child.F=this->F;
+                        //
+                        child.b=remove_common_bits(this->b, board);
+                        child.l=remove_common_bits(this->l, board);
+                        child.x=remove_common_bits(this->x, board);
+                        child.t=remove_common_bits(this->t, board);
+                        child.q=remove_common_bits(this->q, board);
+                        child.k=remove_common_bits(this->k, board);
+                        child.y=remove_common_bits(this->y, board);
+                        child.z=remove_common_bits(this->z, board);
+                        child.f=remove_common_bits(this->f, board);
+                        //
+                        uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
+                        if (child_white_pieces!=white_pieces) {child.schlagen=true;}
+                        else {child.schlagen=false;}
+                        //
+                        children.push_back(child);
+                    }
+                }
+                //
+                else if (chosen_piece==8) {
+                    std::vector<Board> children_Yy= gcYy(-6, black_pieces, all_pieces);
+                    int chosen_index=generate_random_int(0, children_Yy.size()-1);
+                    Board child_Yy=children_Yy[chosen_index];
+                    children.push_back(child_Yy);
+                }
+            }
+            if (children.size()==1) {return children;}
+        }
     }
 
 };
