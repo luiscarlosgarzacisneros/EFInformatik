@@ -1842,3 +1842,5 @@ def test2():
 
 #evaluate_position verbessern mobility?
 #board
+
+#Rochade zuerst und normale Züge danach?

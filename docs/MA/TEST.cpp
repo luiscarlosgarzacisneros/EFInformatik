@@ -1384,6 +1384,10 @@ public:
         return children;
     }
 
+    std::vector<Board> generate_one_random_child(int playerk) {
+        
+    }
+
 };
 
 //

@@ -834,7 +834,7 @@ std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<
             child = gorcTtXxQq(y, x, boardcopy, boardcopy[y][x], {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}});
         }
         else if (boardcopy[y][x]==6 || boardcopy[y][x]==-6 || boardcopy[y][x]==-8 || boardcopy[y][x]==8) {
-            child = gorcKk(y, x, boardcopy, boardcopy[y][x]);//problem hier
+            child = gorcKk(y, x, boardcopy, boardcopy[y][x]);
         }
         //
         if (!child.empty()) {

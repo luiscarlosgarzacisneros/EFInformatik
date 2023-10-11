@@ -195,9 +195,7 @@ def gen_children_schlagen_WM(y,x,pos,player,new):
     global children_schlagen_WM
     if new:
         children_schlagen_WM=[]
-    #
     directions=[(1,1), (-1,1), (1,-1), (-1,-1)]
-    #
     boardcopy=copy.deepcopy(pos)
     if player==-2:
         for direction in directions:
@@ -327,7 +325,7 @@ gorc_XO_schlagen_children_delete=[]
 gorc_WM_schlagen_children=[]
 gorc_WM_schlagen_children_delete=[]
 
-def gorcXOschlagen(y,x,boardc,player,delete_list):
+def gorcXO_schlagen(y,x,boardc,player,delete_list):
     geschlagen=False
     if player==1:
         if y-2>-1 and x-2>-1 and boardc[y-2][x-2]==0 and boardc[y-1][x-1]<0:
@@ -335,13 +333,13 @@ def gorcXOschlagen(y,x,boardc,player,delete_list):
             delete_list_1=[]
             delete_list_1.extend(delete_list)
             delete_list_1.append([y-1,x-1])
-            gorcXOschlagen(y-2,x-2,boardc,player,delete_list_1)
+            gorcXO_schlagen(y-2,x-2,boardc,player,delete_list_1)
         if y-2>-1 and x+2<8 and  boardc[y-2][x+2]==0 and boardc[y-1][x+1]<0:
             geschlagen=True
             delete_list_2=[]
             delete_list_2.extend(delete_list)
             delete_list_2.append([y-1,x+1])
-            gorcXOschlagen(y-2,x+2,boardc,player,delete_list_2)
+            gorcXO_schlagen(y-2,x+2,boardc,player,delete_list_2)
         if not geschlagen:
             gorc_XO_schlagen_children.append((y+1) * 10 + (x+1))
             gorc_XO_schlagen_children_delete.append(delete_list)
@@ -351,13 +349,13 @@ def gorcXOschlagen(y,x,boardc,player,delete_list):
             delete_list_1=[]
             delete_list_1.extend(delete_list)
             delete_list_1.append([y+1,x-1])
-            gorcXOschlagen(y+2,x-2,boardc,player,delete_list_1)
+            gorcXO_schlagen(y+2,x-2,boardc,player,delete_list_1)
         if y+2<8 and x+2<8 and boardc[y+2][x+2]==0 and boardc[y+1][x+1]>0:
             geschlagen=True
             delete_list_2=[]
             delete_list_2.extend(delete_list)
             delete_list_2.append([y+1,x+1])
-            gorcXOschlagen(y+2,x+2,boardc,player,delete_list_2)
+            gorcXO_schlagen(y+2,x+2,boardc,player,delete_list_2)
         if not geschlagen:
             gorc_XO_schlagen_children.append((y+1) * 10 + (x+1))
             gorc_XO_schlagen_children_delete.append(delete_list)
@@ -377,10 +375,10 @@ def gorcXO(y,x,boardc,player):
         #schlagen
         if y-2>-1 and x-2>-1 and  boardc[y-2][x-2]==0:
             if boardc[y-1][x-1]<0:
-                gorcXOschlagen(y,x,boardc,player,[])
+                gorcXO_schlagen(y,x,boardc,player,[])
         if y-2>-1 and x+ 2<8 and  boardc[y-2][x+2]==0:
             if boardc[y-1][x+1]<0:
-                gorcXOschlagen(y,x,boardc,player,[])
+                gorcXO_schlagen(y,x,boardc,player,[])
     elif player==-1:
         #normal
         if y+1<8 and x-1>-1 and  boardc[y+1][x-1]==0:
@@ -390,10 +388,10 @@ def gorcXO(y,x,boardc,player):
         #schlagen
         if y+2<8 and x-2>-1 and boardc[y+2][x-2]==0:
             if boardc[y+1][x-1]>0:
-                gorcXOschlagen(y,x,boardc,player,[])
+                gorcXO_schlagen(y,x,boardc,player,[])
         if y+2<8 and x+ 2<8 and boardc[y+2][x+2]==0:
             if boardc[y+1][x+1]>0:
-                gorcXOschlagen(y,x,boardc,player,[])
+                gorcXO_schlagen(y,x,boardc,player,[])
     #
     for i in range(schlagen_XO_c):
         childrenXO.extend(gorc_XO_schlagen_children)
@@ -457,7 +455,7 @@ def gorcXO(y,x,boardc,player):
                     boardc[feld[0]][feld[1]]=0
                 return boardc   
  
-def gorcWMschlagen(y,x,boardc,player,delete_list):
+def gorcWM_schlagen(y,x,boardc,player,delete_list):
     geschlagen=False
     directions=[(1,1), (-1,1), (1,-1), (-1,-1)]
     if player==2:
@@ -482,7 +480,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         delete_list_1=[]
                         delete_list_1.extend(delete_list)
                         delete_list_1.append([y+i*dy, x+i*dx])
-                        gorcWMschlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list_1)#
+                        gorcWM_schlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list_1)#
                         break
                     else:
                         break
@@ -509,7 +507,7 @@ def gorcWMschlagen(y,x,boardc,player,delete_list):
                         delete_list_1=[]
                         delete_list_1.extend(delete_list)
                         delete_list_1.append([y+i*dy, x+i*dx])
-                        gorcWMschlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list_1)#
+                        gorcWM_schlagen(y+(i+1)*dy,x+(i+1)*dx,boardc,player,delete_list_1)#
                         break
                     else:
                         break
@@ -540,7 +538,7 @@ def gorcWM(y,x,boardc,player):
                 if boardc[y+i*dy][x+i*dx]<0:
                     if not y+(i+1)*dy>7 and not x+(i+1)*dx>7 and not y+(i+1)*dy<0 and not x+(i+1)*dx<0:
                         if boardc[y+(i+1)*dy][x+(i+1)*dx]==0:
-                            gorcWMschlagen(y,x,boardc,player,[])
+                            gorcWM_schlagen(y,x,boardc,player,[])
                             break
                         else:
                             break
@@ -562,7 +560,7 @@ def gorcWM(y,x,boardc,player):
                 if boardc[y+i*dy][x+i*dx]>0:
                     if not y+(i+1)*dy>7 and not x+(i+1)*dx>7 and not y+(i+1)*dy<0 and not x+(i+1)*dx<0:
                         if boardc[y+(i+1)*dy][x+(i+1)*dx]==0:
-                            gorcWMschlagen(y,x,boardc,player,[])
+                            gorcWM_schlagen(y,x,boardc,player,[])
                             break
                         else:
                             break
@@ -620,7 +618,6 @@ def generate_one_random_child(position, player):#pick rand piece, then pick rand
                     piecesy.append(y)
                     piecesx.append(x)
                 elif boardcopy[y][x]==2:
-                    pass
                     for i in range(WM_c):
                         piecesy.append(y)
                         piecesx.append(x)
@@ -631,7 +628,6 @@ def generate_one_random_child(position, player):#pick rand piece, then pick rand
                     piecesy.append(y)
                     piecesx.append(x)
                 elif boardcopy[y][x]==-2:
-                    pass
                     for i in range(WM_c):
                         piecesy.append(y)
                         piecesx.append(x)
