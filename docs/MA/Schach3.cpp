@@ -396,17 +396,17 @@ std::vector<uint64_t> gorcLl(const uint64_t knight_bitboard, const uint64_t this
         }
     }
     int chosen_index=generate_random_int(0, childrenLl.size()-1);
-    std::vector chosen_move=childrenLl[chosen_index];
+    std::vector<int> chosen_move=childrenLl[chosen_index];
     int vy=chosen_move[0];
     int vx=chosen_move[1];
     int zy=chosen_move[2];
     int zx=chosen_move[3];
     uint64_t child=shift_bit(knight_bitboard, vy, vx, zy, zx);
-    std::vector return_vector={child};
+    std::vector<uint64_t> return_vector={child};
     return return_vector;
 }
 
-std::vector<uint64_t> gcTtXxQq(const uint64_t bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, std::vector<std::pair<int,int>> directions) {
+std::vector<uint64_t> gorcTtXxQq(const uint64_t bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, std::vector<std::pair<int,int>> directions) {
     std::vector<std::vector<int>> children_Tt_Xx_Qq;
     //get current positions as (x, y) coord.
     std::vector<std::pair<int,int>> positions;
@@ -415,6 +415,7 @@ std::vector<uint64_t> gcTtXxQq(const uint64_t bitboard, const uint64_t this_play
             if (is_one_at_this_index(bitboard, yx_zu_index(y, x))) {positions.push_back({y, x});}
         }
     }
+    if (positions.empty()) {std::vector<uint64_t> empty_vector; return empty_vector;}
     //collect coorinates of moves
     for (const auto& position : positions) {
         int y_current = position.first;
@@ -444,14 +445,68 @@ std::vector<uint64_t> gcTtXxQq(const uint64_t bitboard, const uint64_t this_play
     }
     //
     int chosen_index=generate_random_int(0, children_Tt_Xx_Qq.size()-1);
-    std::vector chosen_move=children_Tt_Xx_Qq[chosen_index];
+    std::vector<int> chosen_move=children_Tt_Xx_Qq[chosen_index];
     int vy=chosen_move[0];
     int vx=chosen_move[1];
     int zy=chosen_move[2];
     int zx=chosen_move[3];
     uint64_t child=shift_bit(bitboard, vy, vx, zy, zx);
+    std::vector<uint64_t> return_vector={child};
+    return return_vector;
+}
+
+std::vector<std::pair<uint64_t, uint64_t>> gorcZz(const uint64_t Zz_bitboard, const uint64_t Tt_bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces) {
+    std::vector<std::pair<int,int>> directions={{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    std::vector<int> children_Tt_Zz;
+    //position von Zz mit yx finden
+    std::vector<std::pair<int,int>> positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(Zz_bitboard, yx_zu_index(y, x))) {positions.push_back({y, x});}
+        }
+    }
+    //collect coordinates of moves
+    for (const auto& position : positions) {
+        int y_current = position.first;
+        int x_current = position.second;
+        //
+        for (const auto& direction : directions) {
+            int direction_y=direction.first;
+            int direction_x=direction.second;
+            //
+            for (int i=1; i<8; ++i) {
+                int y_new = y_current + i*direction_y;
+                int x_new = x_current + i*direction_x;
+                //
+                if (is_in_board(y_new, x_new)) {
+                    if (is_one_at_this_index(other_players_pieces, yx_zu_index(y_new, x_new))) {
+                        uint64_t child_Tt=set_bit_to_one(Tt_bitboard, yx_zu_index(y_new, x_new));
+                        uint64_t child_Zz=clear_bit(Zz_bitboard, yx_zu_index(y_current, x_current));
+                        children_Tt_Zz.push_back({child_Tt, child_Zz});
+                        break;
+                    }
+                    else if (is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new))) {break;}
+                    else {
+                        uint64_t child_Tt=set_bit_to_one(Tt_bitboard, yx_zu_index(y_new, x_new));
+                        uint64_t child_Zz=clear_bit(Zz_bitboard, yx_zu_index(y_current, x_current));
+                        children_Tt_Zz.push_back({child_Tt, child_Zz});
+                    }
+                }
+                else {break;}
+            }
+        }
+    }
+    //
+    int chosen_index=generate_random_int(0, children_Tt_Zz.size()-1);
+    std::vector chosen_move=children_Tt_Zz[chosen_index];
+    int vy=chosen_move[0];
+    int vx=chosen_move[1];
+    int zy=chosen_move[2];
+    int zx=chosen_move[3];
+    uint64_t child_Tt=shift_bit(bitboard, vy, vx, zy, zx);
     std::vector return_vector={child};
     return return_vector;
+    //return children_Tt_Zz;//{child_Tt, child_Zz}
 }
 
 
