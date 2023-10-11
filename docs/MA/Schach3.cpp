@@ -1863,6 +1863,7 @@ public:
         int Kk_c=1;
         int Zz_c=2;
         int Yy_c=1;
+        std::cout<<"TEST1"<<std::endl;
         if (playerk==6) {
             int anz_Bb=count_bits_in_bitboard(this->b);
             int anz_Ll=count_bits_in_bitboard(this->l);
@@ -1883,6 +1884,8 @@ public:
             int anz_Zz=count_bits_in_bitboard(this->Z);
             int anz_Yy=count_bits_in_bitboard(this->Y);
         }
+        std::cout<<anz_Bb<<" "<<anz_Kk<<" "<<anz_Ll<<" "<<anz_Qq<<" "<<anz_Tt<<std::endl;
+        std::cout<<"TEST1.5"<<std::endl;
         std::vector<int> pieces;
         for (int i=0; i<anz_Bb; ++i) {for (int j=0; j<Bb_c; ++j) {pieces.push_back(1);}}
         for (int i=0; i<anz_Ll; ++i) {for (int j=0; j<Ll_c; ++j) {pieces.push_back(2);}}
@@ -1893,10 +1896,12 @@ public:
         for (int i=0; i<anz_Zz; ++i) {for (int j=0; j<Zz_c; ++j) {pieces.push_back(7);}}
         for (int i=0; i<anz_Yy; ++i) {for (int j=0; j<Yy_c; ++j) {pieces.push_back(8);}}
         //
-        for (int anzahl_max_versuche=0; anzahl_max_versuche<7; ++anzahl_max_versuche) {
+        std::cout<<"TEST2"<<std::endl;
+        for (int anzahl_max_versuche=0; anzahl_max_versuche<100; ++anzahl_max_versuche) {
             int chosen_index=generate_random_int(0, pieces.size()-1);
             int chosen_piece=pieces[chosen_index];
             //
+            std::cout<<chosen_piece<<std::endl;
             if (playerk==6) {
                 if (chosen_piece==1) {
                     for (const auto& board : gorcBb(1, this->b, white_pieces, black_pieces, this->F)) {
@@ -2347,6 +2352,7 @@ public:
                     children.push_back(child_Yy);
                 }
             }
+            std::cout<<children.size()<<std::endl;
             if (children.size()==1) {return children;}
         }
     }
@@ -3638,13 +3644,13 @@ void spielen(int z) {
 
 int main() {
     srand(time(0)); //seed
-    spielen(1);
+    //spielen(1);
     //test-------------------
-    //Schach game;
-    //game.board.print_board();
-    //for (const Board& child : game.board.generate_children(-6)) {
-        //child.print_board();
-    //}
+    Schach game;
+    game.board.print_board();
+    std::vector<Board> bb=game.board.generate_one_random_child(6);
+    Board bbb=bb[0];
+    bbb.print_board();
     //test-----------------
 }
 
