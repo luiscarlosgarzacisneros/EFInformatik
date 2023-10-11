@@ -216,14 +216,14 @@ std::vector<uint64_t> gcKk(const uint64_t king_bitboard, const uint64_t this_pla
     int dy[] = {1, -1, 0, 0, 1, 1, -1, -1};
     
     //get kings current position as (x, y) coord.
-    std::vector<std::pair<int,int>> knight_positions;
+    std::vector<std::pair<int,int>> king_positions;
     for (int y=0; y<8; ++y) {
         for (int x=0; x<8; ++x) {
-            if (is_one_at_this_index(king_bitboard, yx_zu_index(y, x))) {knight_positions.push_back({y, x});}
+            if (is_one_at_this_index(king_bitboard, yx_zu_index(y, x))) {king_positions.push_back({y, x});}
         }
     }
     //modify boards
-    for (const auto& position : knight_positions) {
+    for (const auto& position : king_positions) {
         int y_current = position.first;
         int x_current = position.second;
         //
@@ -638,6 +638,50 @@ std::vector<std::pair<uint64_t, uint64_t>> gorcBb(int player, const uint64_t paw
     std::vector<std::pair<uint64_t, uint64_t>> return_vector={{child, new_o_p_p_en}};
     return return_vector;
     //return a pair with child_pawn_this_player and new_o_p_p_en_other_player_of_this_child: in generate_children it can be implemented.
+}
+
+std::vector<uint64_t> gorcKk(const uint64_t king_bitboard, const uint64_t this_players_pieces) {
+    std::vector<std::vector<int>> childrenKk;
+    //
+    int dx[] = {0, 0, 1, -1, 1, -1, 1, -1};
+    int dy[] = {1, -1, 0, 0, 1, 1, -1, -1};
+    
+    //get kings current position as (x, y) coord.
+    std::vector<std::pair<int,int>> king_positions;
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (is_one_at_this_index(king_bitboard, yx_zu_index(y, x))) {king_positions.push_back({y, x});}
+        }
+    }
+    if (king_positions.empty()) {std::vector<uint64_t> empty_vector; return empty_vector;}
+    //collect coordinates of moves
+    for (const auto& position : king_positions) {
+        int y_current = position.first;
+        int x_current = position.second;
+        //
+        for (int i=0; i<8; ++i) {
+            int y_new = y_current + dy[i];
+            int x_new = x_current + dx[i];
+            //
+            if (is_in_board(y_new, x_new)) {
+                if (!(is_one_at_this_index(this_players_pieces, yx_zu_index(y_new, x_new)))) {
+                    childrenKk.push_back({y_current, x_current, y_new, x_new});
+                }
+            }
+        }
+    }
+    //
+    if (childrenKk.empty()) {std::vector<uint64_t> empty_vector; return empty_vector;}
+    int chosen_index=generate_random_int(0, childrenKk.size()-1);
+    std::vector<int> chosen_move=childrenKk[chosen_index];
+    int vy=chosen_move[0];
+    int vx=chosen_move[1];
+    int zy=chosen_move[2];
+    int zx=chosen_move[3];
+    uint64_t child=shift_bit(king_bitboard, vy, vx, zy, zx);
+    std::vector<uint64_t> return_vector={child};
+    return return_vector;
+    //return childrenKk;
 }
 
 //
