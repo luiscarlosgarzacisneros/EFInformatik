@@ -113,6 +113,18 @@ uint64_t remove_common_bits(uint64_t from_this_bitboard, uint64_t by_comparing_w
     return result;
 }
 
+int count_bits_in_bitboard(uint64_t bitboard) {
+    int count = 0;
+    uint64_t m = 1ULL;
+    for (int i = 0; i < 64; i++) {
+        if ((bitboard & m)!=0) {
+            count+=1;
+        }
+        m <<= 1;
+    }
+    return count;
+}
+
 //
 
 //Tt: {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
@@ -788,6 +800,7 @@ std::vector<std::vector<int>> other_k_matrix = matrix_minus(k_matrix);
 //forward declarartions
 class Board;
 std::vector<Board> generate_children(int playerk);
+std::vector<Board> generate_one_random_child(int playerk);
 
 class Board {
 public:
@@ -1794,6 +1807,47 @@ public:
             }
         }
         return children;
+    }
+
+    std::vector<Board> generate_one_random_child(int playerk) {
+        //Ff zu Bb
+        std::vector<std::pair<int,int>> positions_Ff;
+        if (playerk==6) {
+            for (int y=0; y<8; ++y) {
+                for (int x=0; x<8; ++x) {
+                    if (is_one_at_this_index(this->f, yx_zu_index(y, x))) {positions_Ff.push_back({y, x});}
+                }
+            }
+            for (const auto& position_Ff : positions_Ff) {
+                int y=position_Ff.first;
+                int x=position_Ff.second;
+                uint64_t new_f=clear_bit(this->f, yx_zu_index(y, x));
+                uint64_t new_b=set_bit_to_one(this->b, yx_zu_index(y, x));
+                this->f=new_f;
+                this->b=new_b;
+            }
+        }
+        else {
+            for (int y=0; y<8; ++y) {
+                for (int x=0; x<8; ++x) {
+                    if (is_one_at_this_index(this->F, yx_zu_index(y, x))) {positions_Ff.push_back({y, x});}
+                }
+            }
+            for (const auto& position_Ff : positions_Ff) {
+                int y=position_Ff.first;
+                int x=position_Ff.second;
+                uint64_t new_F=clear_bit(this->F, yx_zu_index(y, x));
+                uint64_t new_B=set_bit_to_one(this->B, yx_zu_index(y, x));
+                this->F=new_F;
+                this->B=new_B;
+            }
+        }
+        //
+        uint64_t white_pieces = this->b|this->l|this->x|this->t|this->q|this->k|this->y|this->z|this->f;
+        uint64_t black_pieces = this->B|this->L|this->X|this->T|this->Q|this->K|this->Y|this->Z|this->F;
+        uint64_t all_pieces = white_pieces|black_pieces;
+        //
+        
     }
 
 };
