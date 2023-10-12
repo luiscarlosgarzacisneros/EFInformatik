@@ -3514,8 +3514,8 @@ public:
 //
 
 double c=std::sqrt(2);
-int number_of_simulations=20;
-int depth=2;
+int number_of_simulations=200;
+int depth=5;
 
 int mcts_counter=0;
 
@@ -3781,7 +3781,7 @@ int turn;
         int current = 1;
         while (true) {
             //-----------------------------------------
-            HumanPlayer player_1(6, this->board);
+            MCTSPlayer player_1(6, this->board);
             MinimaxPlayer2 player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
