@@ -662,5 +662,4 @@ def spielen(z):
         print('O:',o_wins)
         print('-:',unentschieden)
     print('FERTIG')
-
 spielen(20)

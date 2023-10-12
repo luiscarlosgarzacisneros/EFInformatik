@@ -1852,14 +1852,14 @@ public:
         int anz_Xx=0;
         int anz_Tt=0;
         int anz_Qq=0;
-        int anz_Kk=0;
+        int anz_Kk=0; 
         int anz_Zz=0;
         int anz_Yy=0;
         int Bb_c=1;
-        int Ll_c=1;
+        int Ll_c=2;
         int Xx_c=2;
         int Tt_c=2;
-        int Qq_c=2;
+        int Qq_c=3;
         int Kk_c=1;
         int Zz_c=2;
         int Yy_c=1;
@@ -3642,16 +3642,16 @@ void spielen(int z) {
 
 int main() {
     srand(time(0)); //seed
-    //spielen(1);
+    spielen(1);
     //test-------------------
-    Schach game;
-    game.board.print_board();
-    for (int i; i<10; ++i) {
-        std::vector<Board> bb=game.board.generate_one_random_child(6);
-        Board bbb=bb[0];
-        bbb.print_board();
-    }
-    std::cout<<"FINISHED"<<std::endl;
+    //Schach game;
+    //game.board.print_board();
+    //for (int i; i<10; ++i) {
+        //std::vector<Board> bb=game.board.generate_one_random_child(6);
+        //Board bbb=bb[0];
+        //bbb.print_board();
+    //}
+    //std::cout<<"FINISHED"<<std::endl;
     //test-----------------
 }
 
