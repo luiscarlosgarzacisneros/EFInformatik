@@ -3738,7 +3738,7 @@ public:
         else {delete best_move; nullptr;}
     }
 
-    Board* get_move(std::vector<std::vector<int>> board) {
+    Board* get_move() {
         Board* move = new Board();
         move=mctser();
         return move;
