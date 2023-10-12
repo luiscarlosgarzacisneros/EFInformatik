@@ -3697,20 +3697,18 @@ public:
         //
         while (true) {
             mcts_counter += 1;
-            MCTSNode* selected_node = root_node.select_leaf_node();
-            selected_node->children = selected_node->expand_node();
-
+            MCTSNode* selected_node=root_node.select_leaf_node();
+            selected_node->children=selected_node->expand_node();
+            //
             for (MCTSNode& child_node : selected_node->children) {
                 double new_score = child_node.simulate();
                 child_node.backpropagate(new_score, number_of_simulations);
             }
-
+            //
             std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
             double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
-
-            if (elapsed_seconds > this->max_time) {
-                break;
-            }
+            //
+            if (elapsed_seconds > this->max_time) {break;}
         }
         return true;
     }
