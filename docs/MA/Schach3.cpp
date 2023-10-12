@@ -3889,10 +3889,11 @@ int main() {
 //
 
 //Positionsmatrixen: Zentrumeinnahme
+//Hasht
+//evalpos: QT QX XX
 
 //Minimax2: sb welcher Tiefe?
 
-//MCTS bitboard
 //MCTS Parameter bestimmen
 
 //remove_common_bits_rochade nicht nötig
