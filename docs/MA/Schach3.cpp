@@ -3732,16 +3732,13 @@ public:
                     highest_number_of_visits = root_node_child.visits;
                 }
             }
-            Board* ret=best_move;
-            return ret;
+            return best_move;
         }
-        else {delete best_move; nullptr;}
+        else {delete best_move; return nullptr;}
     }
 
     Board* get_move() {
-        Board* move = new Board();
-        move=mctser();
-        return move;
+        return mctser();
     }
 
 };
