@@ -1708,7 +1708,7 @@ public:
         int number_of_legal_moves = 0;
         root_node.children=root_node.expand_node();
         for (MCTSNode& child_of_root : root_node.children) {
-            child_of_root.expand_node();
+            child_of_root.children=child_of_root.expand_node();
             bool king_is_killed = false;
             for (MCTSNode& child_of_child : child_of_root.children) {
                 if (verloren(child_of_child.board, root_node.player_am_zug)) {
@@ -1729,7 +1729,7 @@ public:
             mcts_counter += 1;
             MCTSNode* selected_node = root_node.select_leaf_node();
             MCTSNode node= *selected_node;
-            node.expand_node();
+            node.children=node.expand_node();
             for (MCTSNode& child_node : node.children) {
                 double new_score = child_node.simulate();
                 child_node.backpropagate(new_score, number_of_simulations);
