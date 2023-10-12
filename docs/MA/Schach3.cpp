@@ -3535,8 +3535,7 @@ public:
     double calculate_ucb() {
         MCTSNode* par = this->parent;
         if (this->visits == 0) {
-            //return std::numeric_limits<double>::infinity();
-            std::cout<<"T"<<std::endl;;
+            return std::numeric_limits<double>::infinity();
         }
         else {
             double ucb = (static_cast<double>(this->value) / this->visits) +c * (std::sqrt(std::log(static_cast<double>(par->visits)) / this->visits));
@@ -3575,9 +3574,8 @@ public:
                 selected_node = &child;
             }
         }
-
-        if (!selected_node->expanded) {return selected_node;}
-        else {return selected_node->select_leaf_node();}
+        if (selected_node->expanded) {return selected_node->select_leaf_node();}
+        else {return selected_node;}
     }
 
     void backpropagate(double new_value, int number_of_simulations) {
@@ -3700,17 +3698,16 @@ public:
         while (true) {
             mcts_counter += 1;
             MCTSNode* selected_node = root_node.select_leaf_node();
-            MCTSNode node= *selected_node;
-            //loop is iterated too little times 9-100, selected node is always wierd return board with on b that should be f
-            node.board.print_board();
-            node.children=node.expand_node();
-            for (MCTSNode& child_node : node.children) {
+            selected_node->children = selected_node->expand_node();
+
+            for (MCTSNode& child_node : selected_node->children) {
                 double new_score = child_node.simulate();
                 child_node.backpropagate(new_score, number_of_simulations);
             }
-            //
+
             std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
             double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
+
             if (elapsed_seconds > this->max_time) {
                 break;
             }
@@ -3904,4 +3901,3 @@ int main() {
 //---------------------------------------
 //Bb nicht zu f in gorc
 //in generate children auch nicht
-//ubc infinity problem!!!!!!
