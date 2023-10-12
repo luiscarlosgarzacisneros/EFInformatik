@@ -3719,23 +3719,23 @@ public:
         //
         bool monte_carlo=mcts();
         //
+        Board* best_move=new Board();
         if (monte_carlo) {
             std::cout <<"COUNTER: ";
             std::cout << mcts_counter << std::endl;
             //
-            Board best_move;
             int highest_number_of_visits = -1;
             //
             for (MCTSNode& root_node_child : root_node.children) {
                 if (root_node_child.visits > highest_number_of_visits) {
-                    best_move = root_node_child.board;
+                    *best_move = root_node_child.board;
                     highest_number_of_visits = root_node_child.visits;
                 }
             }
-            Board* ret=&best_move;
+            Board* ret=best_move;
             return ret;
         }
-        else {return nullptr;}
+        else {delete best_move; nullptr;}
     }
 
     Board* get_move(std::vector<std::vector<int>> board) {
@@ -3801,8 +3801,8 @@ int turn;
                 new_board = player_2.get_move();
             }
             //
-            if (new_board != nullptr) {new_move = *new_board;}
-            else {std::cout<<"NULLPOINTER2"<<std::endl;}
+            if (new_board != nullptr) {new_move = *new_board; delete new_board;}
+            else {std::cout<<"NULLPOINTER2"<<std::endl; delete new_board;}
             //
             if (!(new_board==nullptr)) {this->board = new_move;}
             else {
