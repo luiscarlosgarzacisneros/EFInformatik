@@ -3427,7 +3427,7 @@ public:
     MinimaxNode2 root_node;
     int token;
     Board board;
-    int max_time=10;
+    int max_time=2;
     int max_depth=10;
     int starting_depth=2;
     int depth_fuer_nur_schlagen=5;
@@ -3513,9 +3513,9 @@ public:
 
 //
 
-double c=std::sqrt(2);
-int number_of_simulations=200;
-int depth=5;
+double c=100;
+int number_of_simulations=3;
+int depth=3;
 
 int mcts_counter=0;
 
@@ -3535,7 +3535,8 @@ public:
     double calculate_ucb() {
         MCTSNode* par = this->parent;
         if (this->visits == 0) {
-            return std::numeric_limits<double>::infinity();
+            //return std::numeric_limits<double>::infinity();
+            std::cout<<"T"<<std::endl;;
         }
         else {
             double ucb = (static_cast<double>(this->value) / this->visits) +c * (std::sqrt(std::log(static_cast<double>(par->visits)) / this->visits));
@@ -3599,6 +3600,7 @@ public:
                 std::vector<Board> next_pos = pos.generate_one_random_child(player);
                 if (next_pos.empty()) {break;}
                 pos = next_pos[0];
+                //sim ist gut
                 if (player== -6) {player= 6;}
                 else if (player== 6) {player= -6;}
             }
@@ -3699,6 +3701,8 @@ public:
             mcts_counter += 1;
             MCTSNode* selected_node = root_node.select_leaf_node();
             MCTSNode node= *selected_node;
+            //loop is iterated too little times 9-100, selected node is always wierd return board with on b that should be f
+            node.board.print_board();
             node.children=node.expand_node();
             for (MCTSNode& child_node : node.children) {
                 double new_score = child_node.simulate();
@@ -3781,8 +3785,8 @@ int turn;
         int current = 1;
         while (true) {
             //-----------------------------------------
-            MCTSPlayer player_1(6, this->board);
-            MinimaxPlayer2 player_2(-6, this->board);
+            HumanPlayer player_1(6, this->board);
+            MCTSPlayer player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             this->board.print_board();
@@ -3876,14 +3880,14 @@ int main() {
     srand(time(0)); //seed
     spielen(1);
     //test-------------------
-    //Schach game;
-    //game.board.print_board();
-    //for (int i; i<10; ++i) {
-        //std::vector<Board> bb=game.board.generate_one_random_child(6);
-        //Board bbb=bb[0];
-        //bbb.print_board();
-    //}
-    //std::cout<<"FINISHED"<<std::endl;
+    Schach game;
+    game.board.print_board();
+    for (int i; i<10; ++i) {
+        std::vector<Board> bb=game.board.generate_one_random_child(6);
+        Board bbb=bb[0];
+        bbb.print_board();
+    }
+    std::cout<<"FINISHED"<<std::endl;
     //test-----------------
 }
 
@@ -3897,6 +3901,7 @@ int main() {
 //MCTS Parameter bestimmen
 
 //remove_common_bits_rochade nicht nötig
-
-//simulate wird nicht aufgerufen
+//---------------------------------------
 //Bb nicht zu f in gorc
+//in generate children auch nicht
+//ubc infinity problem!!!!!!
