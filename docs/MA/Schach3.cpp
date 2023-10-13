@@ -810,14 +810,14 @@ std::vector<std::vector<int>> other_x_matrix = matrix_minus(x_matrix);
 std::vector<std::vector<int>> other_t_matrix = matrix_minus(t_matrix);
 std::vector<std::vector<int>> other_q_matrix = matrix_minus(q_matrix);
 std::vector<std::vector<int>> other_k_normal_matrix = matrix_minus(k_normal_matrix);
-std::vector<std::vector<int>> other_k_engame_matrix = matrix_minus(k_endgame_matrix);
+std::vector<std::vector<int>> other_k_endgame_matrix = matrix_minus(k_endgame_matrix);
 std::vector<std::vector<int>> other_B_matrix = matrix_minus(B_matrix);
 std::vector<std::vector<int>> other_L_matrix = matrix_minus(L_matrix);
 std::vector<std::vector<int>> other_X_matrix = matrix_minus(X_matrix);
 std::vector<std::vector<int>> other_T_matrix = matrix_minus(T_matrix);
 std::vector<std::vector<int>> other_Q_matrix = matrix_minus(Q_matrix);
 std::vector<std::vector<int>> other_K_normal_matrix = matrix_minus(K_normal_matrix);
-std::vector<std::vector<int>> other_K_engame_matrix = matrix_minus(K_endgame_matrix);
+std::vector<std::vector<int>> other_K_endgame_matrix = matrix_minus(K_endgame_matrix);
 
 //
 
@@ -997,7 +997,6 @@ public:
                         val += -1000000;
                         y_other_king=p;
                         x_other_king=o;
-                        val += other_K_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->q, yx_zu_index(p, o))) {
                         val += 9000;
@@ -1008,12 +1007,22 @@ public:
                         val += 1000000;
                         y_this_king=p;
                         x_this_king=o;
-                        val += k_matrix[p][o];
                     }
                 }
             }
             if (anz_Qq==0) {
-                
+                val+=other_K_endgame_matrix[y_other_king][x_other_king];
+                val+=k_endgame_matrix[y_this_king][x_this_king];
+            }
+            else if (anz_Qq==1) {
+                if (anz_minor_pieces<3) {
+                    val+=other_K_endgame_matrix[y_other_king][x_other_king];
+                    val+=k_endgame_matrix[y_this_king][x_this_king];
+                }
+            }
+            else {
+                val+=other_K_normal_matrix[y_other_king][x_other_king];
+                val+=k_normal_matrix[y_this_king][x_this_king];
             }
         }
         else if (playerk==-6) {
@@ -1090,7 +1099,6 @@ public:
                         val += 1000000;
                         y_this_king=p;
                         x_this_king=o;
-                        val += K_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->q, yx_zu_index(p, o))) {
                         val += -9000;
@@ -1101,9 +1109,22 @@ public:
                         val += -1000000;
                         y_other_king=p;
                         x_other_king=o;
-                        val += other_k_matrix[p][o];
                     }
                 }
+            }
+            if (anz_Qq==0) {
+                val+=other_k_endgame_matrix[y_other_king][x_other_king];
+                val+=K_endgame_matrix[y_this_king][x_this_king];
+            }
+            else if (anz_Qq==1) {
+                if (anz_minor_pieces<3) {
+                    val+=other_k_endgame_matrix[y_other_king][x_other_king];
+                    val+=K_endgame_matrix[y_this_king][x_this_king];
+                }
+            }
+            else {
+                val+=other_k_normal_matrix[y_other_king][x_other_king];
+                val+=K_normal_matrix[y_this_king][x_this_king];
             }
         }
         return val;

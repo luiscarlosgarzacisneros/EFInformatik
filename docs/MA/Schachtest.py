@@ -1095,7 +1095,7 @@ def evaluate_position(pos,playerk):
             val+=K_normal_matrix[y_this_players_king][x_this_players_king]
     return val
 
-def evaluatepos2(pos,playerk):
+def evaluatepos2(pos,playerk):#nicht gut 
     #mit Matrixen
     val=0
     if playerk==6:
@@ -1188,7 +1188,7 @@ def evaluatepos2(pos,playerk):
                     val+=other_k_matrix[p][o]
     return val
 
-def evaluatepos3(pos,playerk):
+def evaluatepos3(pos,playerk):#nicht gut
     #ohne Matrixen
     val=0
     if playerk==6:
