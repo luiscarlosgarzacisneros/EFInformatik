@@ -713,9 +713,13 @@ std::vector<uint64_t> gorcKk(const uint64_t king_bitboard, const uint64_t this_p
 
 //
 
-//INVERT
+std::vector<std::vector<int>> invert_matrix(std::vector<std::vector<int>> matrix) {
+    std::vector<std::vector<int>> inverted_matrix = matrix;
+    std::reverse(inverted_matrix.begin(), inverted_matrix.end());
+    return inverted_matrix;
+}
 
-std::vector<std::vector<int>> B_matrix = {
+std::vector<std::vector<int>> B = {
     { 0,  0,  0,  0,  0,  0,  0,  0},
     { 1,  1,  1,  1,  1,  1,  1,  1},
     { 2,  2,  2,  2,  2,  2,  2,  2},
@@ -726,7 +730,7 @@ std::vector<std::vector<int>> B_matrix = {
     { 0,  0,  0,  0,  0,  0,  0,  0}
 };
 
-std::vector<std::vector<int>> b_matrix = {
+std::vector<std::vector<int>> b = {
     { 0,  0,  0,  0,  0,  0,  0,  0},
     { 5,  5,  5,  5,  5,  5,  5,  5},
     { 4,  4,  4,  4,  4,  4,  4,  4},
@@ -737,7 +741,7 @@ std::vector<std::vector<int>> b_matrix = {
     { 0,  0,  0,  0,  0,  0,  0,  0}
 };
 
-std::vector<std::vector<int>> Ll_matrix = {
+std::vector<std::vector<int>> Ll = {
     {-1, -3, -2, -2, -2, -2, -3, -1},
     {-1,  0,  0,  0,  0,  0,  0, -1},
     {-1,  0,  1,  1,  1,  1,  0, -1},
@@ -748,7 +752,7 @@ std::vector<std::vector<int>> Ll_matrix = {
     {-1, -3, -2, -2, -2, -2, -3, -1}
 };
 
-std::vector<std::vector<int>> Xx_matrix = {
+std::vector<std::vector<int>> Xx = {
     {-2, -1, -1, -1, -1, -1, -1, -2},
     {-1,  0,  0,  0,  0,  0,  0, -1},
     {-1,  0,  1,  1,  1,  1,  0, -1},
@@ -759,7 +763,7 @@ std::vector<std::vector<int>> Xx_matrix = {
     {-2, -1, -1, -1, -1, -1, -1, -2}
 };
 
-std::vector<std::vector<int>> Tt_matrix = {
+std::vector<std::vector<int>> Tt = {
     { 0,  0,  0,  0,  0,  0,  0,  0},
     { 1,  1,  1,  1,  1,  1,  1,  1},
     { 1,  1,  1,  1,  1,  1,  1,  1},
@@ -770,7 +774,7 @@ std::vector<std::vector<int>> Tt_matrix = {
     { 0,  0,  0,  0,  0,  0,  0,  0}
 };
 
-std::vector<std::vector<int>> Qq_matrix = {
+std::vector<std::vector<int>> Qq = {
     {-1, -1, -1, -1, -1, -1, -1, -1},
     {-1,  0,  0,  0,  0,  0,  0, -1},
     {-1,  0,  1,  1,  1,  1,  0, -1},
@@ -781,7 +785,7 @@ std::vector<std::vector<int>> Qq_matrix = {
     {-1, -1, -1, -1, -1, -1, -1, -1}
 };
 
-std::vector<std::vector<int>> K_matrix = {
+std::vector<std::vector<int>> K = {
     { 2,  3,  1,  0,  0,  1,  3,  2},
     { 2,  2,  0,  0,  0,  0,  2,  2},
     {-1, -2, -2, -2, -2, -2, -2, -1},
@@ -792,7 +796,7 @@ std::vector<std::vector<int>> K_matrix = {
     {-4, -5, -5, -6, -6, -5, -5, -4}
 };
 
-std::vector<std::vector<int>> k_matrix = {
+std::vector<std::vector<int>> k = {
     { -4,  -5,  -5,  -6,  -6,  -5,  -5,  -4},
     { -4,  -5,  -5,  -6,  -6,  -5,  -5,  -4},
     { -3,  -4,  -4,  -5,  -5,  -4,  -4,  -3},
@@ -802,6 +806,15 @@ std::vector<std::vector<int>> k_matrix = {
     {  2,   2,   0,   0,   0,   0,   2,   2},
     {  2,   3,   1,   0,   0,   1,   3,   2}
 };
+
+std::vector<std::vector<int>> B_matrix=invert_matrix(B);
+std::vector<std::vector<int>> b_matrix=invert_matrix(b);
+std::vector<std::vector<int>> Ll_matrix=invert_matrix(Ll);
+std::vector<std::vector<int>> Xx_matrix=invert_matrix(Xx);
+std::vector<std::vector<int>> Tt_matrix=invert_matrix(Tt);
+std::vector<std::vector<int>> Qq_matrix=invert_matrix(Qq);
+std::vector<std::vector<int>> K_matrix=invert_matrix(K);
+std::vector<std::vector<int>> k_matrix=invert_matrix(k);
 
 std::vector<std::vector<int>> other_B_matrix = matrix_minus(B_matrix);
 std::vector<std::vector<int>> other_b_matrix = matrix_minus(b_matrix);
@@ -3849,7 +3862,7 @@ int turn;
         int current = 1;
         while (true) {
             //-----------------------------------------
-            MinimaxPlayer2 player_1(6, this->board);
+            HumanPlayer player_1(6, this->board);
             MinimaxPlayer2 player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
@@ -3969,3 +3982,4 @@ int main() {
 
 //remove_common_bits_rochade nicht nötig
 //---------------------------------------
+//Kk umgekehrt

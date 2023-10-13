@@ -3921,7 +3921,7 @@ int turn;
         int current = 1;
         while (true) {
             //-----------------------------------------
-            MinimaxPlayer2 player_1(6, this->board);
+            HumanPlayer player_1(6, this->board);
             MinimaxPlayer2 player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
