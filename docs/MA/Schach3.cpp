@@ -730,9 +730,9 @@ std::vector<std::vector<int>> b = {
     {  0,   0,   0,   0,   0,   0,   0,   0},
     { 50,  50,  50,  50,  50, 50,  50,  50},
     {10, 10, 20, 30, 30, 20, 10, 10},
-    { 5,  5, 10, 25, 25, 10,  5,  5},
-    { 0,  0,  0, 20, 20,  0,  0,  0},
-    { 5, -5,-10,  0,  0,-10, -5,  5},
+    { 0,  5, 10, 40, 40, 10,  5,  0},
+    { 0,  0,  0, 60, 60,  0,  0,  0},
+    { 0, 0, 10,  10,  10, 10, 0,  0},
     { 5, 10, 10,-20,-20, 10, 10,  5},
     { 0, 0,  0,  0,  0,  0,   0,  0}
 };
@@ -818,6 +818,13 @@ std::vector<std::vector<int>> T_matrix =invert_matrix(t_matrix);
 std::vector<std::vector<int>> Q_matrix =invert_matrix(q_matrix);
 std::vector<std::vector<int>> K_normal_matrix =invert_matrix(k_normal_matrix);
 std::vector<std::vector<int>> K_endgame_matrix =invert_matrix(k_endgame_matrix);
+//std::vector<std::vector<int>> B_matrix =b_matrix;
+//std::vector<std::vector<int>> L_matrix =l_matrix;
+//std::vector<std::vector<int>> X_matrix =x_matrix;
+//std::vector<std::vector<int>> T_matrix =t_matrix;
+//std::vector<std::vector<int>> Q_matrix =q_matrix;
+//std::vector<std::vector<int>> K_normal_matrix =k_normal_matrix;
+//std::vector<std::vector<int>> K_endgame_matrix =k_endgame_matrix;
 
 std::vector<std::vector<int>> other_b_matrix = matrix_minus(b_matrix);
 std::vector<std::vector<int>> other_l_matrix = matrix_minus(l_matrix);
@@ -3568,7 +3575,7 @@ public:
     MinimaxNode2 root_node;
     int token;
     Board board;
-    int max_time=2;
+    int max_time=10;
     int max_depth=10;
     int starting_depth=2;
     int depth_fuer_nur_schlagen=5;
