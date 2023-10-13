@@ -946,16 +946,16 @@ public:
                         val += other_B_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
-                            if (is_one_at_this_index(this->B, yx_zu_index(p+1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p+1, o+1))) {val += -1;}
+                            if (is_one_at_this_index(this->B, yx_zu_index(p+1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p+1, o+1))) {val += -10;}
                         }
                         if (p-1>=0 && o-1>=0) {
-                            if (is_one_at_this_index(this->B, yx_zu_index(p-1, o-1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o-1))) {val += -1;}
+                            if (is_one_at_this_index(this->B, yx_zu_index(p-1, o-1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o-1))) {val += -10;}
                         }
                         if (p+1<=7 && o-1>=0) {
-                            if (is_one_at_this_index(this->B, yx_zu_index(p+1, o-1)) || is_one_at_this_index(this->F, yx_zu_index(p+1, o-1))) {val += -1;}
+                            if (is_one_at_this_index(this->B, yx_zu_index(p+1, o-1)) || is_one_at_this_index(this->F, yx_zu_index(p+1, o-1))) {val += -10;}
                         }
                         if (p-1>=0 && o+1<=7) {
-                            if (is_one_at_this_index(this->B, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o+1))) {val += -1;}
+                            if (is_one_at_this_index(this->B, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o+1))) {val += -10;}
                         }
                     }//
                     else if (is_one_at_this_index(this->b, yx_zu_index(p, o)) || is_one_at_this_index(this->f, yx_zu_index(p, o))) {
@@ -963,16 +963,16 @@ public:
                         val += b_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
-                            if (is_one_at_this_index(this->b, yx_zu_index(p+1, o+1)) || is_one_at_this_index(this->f, yx_zu_index(p+1, o+1))) {val += 1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p+1, o+1)) || is_one_at_this_index(this->f, yx_zu_index(p+1, o+1))) {val += 10;}
                         }
                         if (p-1>=0 && o-1>=0) {
-                            if (is_one_at_this_index(this->b, yx_zu_index(p-1, o-1)) || is_one_at_this_index(this->f, yx_zu_index(p-1, o-1))) {val += 1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p-1, o-1)) || is_one_at_this_index(this->f, yx_zu_index(p-1, o-1))) {val += 10;}
                         }
                         if (p+1<=7 && o-1>=0) {
-                            if (is_one_at_this_index(this->b, yx_zu_index(p+1, o-1)) || is_one_at_this_index(this->f, yx_zu_index(p+1, o-1))) {val += 1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p+1, o-1)) || is_one_at_this_index(this->f, yx_zu_index(p+1, o-1))) {val += 10;}
                         }
                         if (p-1>=0 && o+1<=7) {
-                            if (is_one_at_this_index(this->b, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->f, yx_zu_index(p-1, o+1))) {val += 1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->f, yx_zu_index(p-1, o+1))) {val += 10;}
                         }
                     }
                     else if (is_one_at_this_index(this->L, yx_zu_index(p, o))) {
@@ -1048,16 +1048,16 @@ public:
                         val += B_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
-                            if (is_one_at_this_index(this->B, yx_zu_index(p+1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p+1, o+1))) {val += 1;}
+                            if (is_one_at_this_index(this->B, yx_zu_index(p+1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p+1, o+1))) {val += 10;}
                         }
                         if (p-1>=0 && o-1>=0) {
-                            if (is_one_at_this_index(this->B, yx_zu_index(p-1, o-1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o-1))) {val += 1;}
+                            if (is_one_at_this_index(this->B, yx_zu_index(p-1, o-1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o-1))) {val += 10;}
                         }
                         if (p+1<=7 && o-1>=0) {
-                            if (is_one_at_this_index(this->B, yx_zu_index(p+1, o-1)) || is_one_at_this_index(this->F, yx_zu_index(p+1, o-1))) {val += 1;}
+                            if (is_one_at_this_index(this->B, yx_zu_index(p+1, o-1)) || is_one_at_this_index(this->F, yx_zu_index(p+1, o-1))) {val += 10;}
                         }
                         if (p-1>=0 && o+1<=7) {
-                            if (is_one_at_this_index(this->B, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o+1))) {val += 1;}
+                            if (is_one_at_this_index(this->B, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->F, yx_zu_index(p-1, o+1))) {val += 10;}
                         }
                     }
                     else if (is_one_at_this_index(this->b, yx_zu_index(p, o)) || is_one_at_this_index(this->f, yx_zu_index(p, o))) {
@@ -1065,16 +1065,16 @@ public:
                         val += other_b_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
-                            if (is_one_at_this_index(this->b, yx_zu_index(p+1, o+1)) || is_one_at_this_index(this->f, yx_zu_index(p+1, o+1))) {val += -1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p+1, o+1)) || is_one_at_this_index(this->f, yx_zu_index(p+1, o+1))) {val += -10;}
                         }
                         if (p-1>=0 && o-1>=0) {
-                            if (is_one_at_this_index(this->b, yx_zu_index(p-1, o-1)) || is_one_at_this_index(this->f, yx_zu_index(p-1, o-1))) {val += -1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p-1, o-1)) || is_one_at_this_index(this->f, yx_zu_index(p-1, o-1))) {val += -10;}
                         }
                         if (p+1<=7 && o-1>=0) {
-                            if (is_one_at_this_index(this->b, yx_zu_index(p+1, o-1)) || is_one_at_this_index(this->f, yx_zu_index(p+1, o-1))) {val += -1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p+1, o-1)) || is_one_at_this_index(this->f, yx_zu_index(p+1, o-1))) {val += -10;}
                         }
                         if (p-1>=0 && o+1<=7) {
-                            if (is_one_at_this_index(this->b, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->f, yx_zu_index(p-1, o+1))) {val += -1;}
+                            if (is_one_at_this_index(this->b, yx_zu_index(p-1, o+1)) || is_one_at_this_index(this->f, yx_zu_index(p-1, o+1))) {val += -10;}
                         }
                     }
                     else if (is_one_at_this_index(this->L, yx_zu_index(p, o))) {
