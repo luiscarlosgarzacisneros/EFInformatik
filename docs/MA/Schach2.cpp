@@ -1467,14 +1467,14 @@ public:
         std::vector<int> values;
         std::vector<MinimaxNode> best_moves;
         MinimaxNode best_move;
-        int best_value = -1000000;
+        int best_value = -100000000000000;
         std::vector<MinimaxNode>& root_node_children=root_node.children;
         std::vector<std::vector<int>> return_board;
         //
         for (MinimaxNode& child : root_node_children){
             int eval;
             if (child.value>-90000) {
-                eval=child.minimax(-1000000,1000000,false, depth);
+                eval=child.minimax(-10000000,10000000,false, depth);
                 child.value=eval;
                 std::cout<<"a ";//child wurde fertig berechnet
             }
