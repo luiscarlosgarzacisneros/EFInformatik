@@ -524,7 +524,7 @@ std::vector<std::pair<uint64_t, uint64_t>> gorcZz(const uint64_t Zz_bitboard, co
     //return {child_Tt, child_Zz}
 }
 
-std::vector<std::pair<uint64_t, uint64_t>> gorcBb(int player, const uint64_t pawn_bitboard, const uint64_t this_players_pieces, const uint64_t other_players_pieces, const uint64_t other_players_Ff) {
+std::vector<std::vector<uint64_t>> gorcBb(int player, const uint64_t pawn_bitboard, const uint64_t this_players_pieces, const uint64_t this_players_Ff, const uint64_t other_players_pieces, const uint64_t other_players_Ff) {
     std::vector<std::vector<int>> childrenBb;
     //get pawns current positions as (x, y) coord.
     std::vector<std::pair<int,int>> pawn_positions;
@@ -533,7 +533,7 @@ std::vector<std::pair<uint64_t, uint64_t>> gorcBb(int player, const uint64_t paw
             if (is_one_at_this_index(pawn_bitboard, yx_zu_index(y, x))) {pawn_positions.push_back({y, x});}
         }
     }
-    if (pawn_positions.empty()) {std::vector<std::pair<uint64_t, uint64_t>> empty_vector; return empty_vector;}
+    if (pawn_positions.empty()) {std::vector<std::vector<uint64_t>> empty_vector; return empty_vector;}
     //
     uint64_t all_pieces=this_players_pieces|other_players_pieces;
     //modify boards
@@ -591,7 +591,7 @@ std::vector<std::pair<uint64_t, uint64_t>> gorcBb(int player, const uint64_t paw
             }
         }
     }
-    if (childrenBb.empty()) {std::vector<std::pair<uint64_t, uint64_t>> empty_vector; return empty_vector;}
+    if (childrenBb.empty()) {std::vector<std::vector<uint64_t>> empty_vector; return empty_vector;}
     //
     int chosen_index=generate_random_int(0, childrenBb.size()-1);
     std::vector<int> chosen_move=childrenBb[chosen_index];
@@ -599,59 +599,72 @@ std::vector<std::pair<uint64_t, uint64_t>> gorcBb(int player, const uint64_t paw
     int vy=chosen_move[1];
     int vx=chosen_move[2];
     uint64_t child;
+    uint64_t child_Ff;
     uint64_t new_o_p_p_en;
     if (type_of_move==1) {
-        child=shift_bit(pawn_bitboard, vy, vx, vy+2, vx);
+        child=clear_bit(pawn_bitboard, yx_zu_index(vy,vx));
+        child_Ff=set_bit_to_one(this_players_Ff, yx_zu_index(vy+2,vx));
         new_o_p_p_en=other_players_Ff;
     }
     if (type_of_move==2) {
         child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx);
+        child_Ff=this_players_Ff;
         new_o_p_p_en=other_players_Ff;
     }
     if (type_of_move==3) {
         child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx-1);
+        child_Ff=this_players_Ff;
         new_o_p_p_en=other_players_Ff;
     }
     if (type_of_move==4) {
         child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx+1);
+        child_Ff=this_players_Ff;
         new_o_p_p_en=other_players_Ff;
     }
     if (type_of_move==5) {
         child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx-1);
+        child_Ff=this_players_Ff;
         new_o_p_p_en=clear_bit(other_players_Ff, yx_zu_index(vy, vx-1));
     }
     if (type_of_move==6) {
         child=shift_bit(pawn_bitboard, vy, vx, vy+1, vx+1);
+        child_Ff=this_players_Ff;
         new_o_p_p_en=clear_bit(other_players_Ff, yx_zu_index(vy, vx+1));
     }
     //player2
     if (type_of_move==7) {
-        child=shift_bit(pawn_bitboard, vy, vx, vy-2, vx);
+        child=clear_bit(pawn_bitboard, yx_zu_index(vy,vx));
+        child_Ff=set_bit_to_one(this_players_Ff, yx_zu_index(vy-2,vx));
         new_o_p_p_en=other_players_Ff;
     }
     if (type_of_move==8) {
         child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx);
+        child_Ff=this_players_Ff;
         new_o_p_p_en=other_players_Ff;
     }
     if (type_of_move==9) {
         child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx-1);
+        child_Ff=this_players_Ff;
         new_o_p_p_en=other_players_Ff;
     }
     if (type_of_move==10) {
         child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx+1);
+        child_Ff=this_players_Ff;
         new_o_p_p_en=other_players_Ff;
     }
     if (type_of_move==11) {
         child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx-1);
+        child_Ff=this_players_Ff;
         new_o_p_p_en=clear_bit(other_players_Ff, yx_zu_index(vy, vx-1));
     }
     if (type_of_move==12) {
         child=shift_bit(pawn_bitboard, vy, vx, vy-1, vx+1);
+        child_Ff=this_players_Ff;
         new_o_p_p_en=clear_bit(other_players_Ff, yx_zu_index(vy, vx+1));
     }
-    std::vector<std::pair<uint64_t, uint64_t>> return_vector={{child, new_o_p_p_en}};
+    std::vector<std::vector<uint64_t>> return_vector={{child, child_Ff, new_o_p_p_en}};
     return return_vector;
-    //return a pair with child_pawn_this_player and new_o_p_p_en_other_player_of_this_child: in generate_children it can be implemented.
+    //return a pair with child_pawn_this_player, child_Ff and new_o_p_p_en_other_player
 }
 
 std::vector<uint64_t> gorcKk(const uint64_t king_bitboard, const uint64_t this_players_pieces) {
