@@ -1898,27 +1898,7 @@ public:
 
     bool mcts() {
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-        //filter legal moves
-        std::vector<MCTSNode> legal_moves;
-        int number_of_legal_moves = 0;
         root_node.children=root_node.expand_node();
-        for (MCTSNode& child_of_root : root_node.children) {
-            child_of_root.children=child_of_root.expand_node();
-            bool king_is_killed = false;
-            for (MCTSNode& child_of_child : child_of_root.children) {
-                if (verloren1(child_of_child.board, root_node.player_am_zug)) {
-                    king_is_killed = true;
-                    break;
-                }
-            }
-            if (!king_is_killed) {
-                legal_moves.push_back(child_of_root);
-                number_of_legal_moves++;
-            }
-        }
-        root_node.children = legal_moves;
-        // No legal moves left
-        if (number_of_legal_moves == 0) {return false;}
         //
         while (true) {
             mcts_counter += 1;
