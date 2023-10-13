@@ -1739,7 +1739,7 @@ public:
 //
 
 double c=std::sqrt(2);
-int number_of_simulations=30;
+int number_of_simulations=20;
 int depth=2;
 
 int mcts_counter=0;
@@ -1791,7 +1791,7 @@ public:
     MCTSNode* select_leaf_node() {
         double best_value = -std::numeric_limits<double>::infinity();
         MCTSNode* selected_node = nullptr;
-        if (!selected_node->expanded) {return selected_node;}
+
         for (MCTSNode& child : this->children) {
             double ucb_of_child = child.calculate_ucb();
             if (ucb_of_child > best_value) {
@@ -1799,7 +1799,9 @@ public:
                 selected_node = &child;
             }
         }
-        return selected_node->select_leaf_node();
+
+        if (!selected_node->expanded) {return selected_node;}
+        else {return selected_node->select_leaf_node();}
     }
 
     void backpropagate(double new_value, int number_of_simulations) {
@@ -1818,13 +1820,12 @@ public:
         for (int j = 0; j < number_of_simulations; ++j) {
             std::vector<std::vector<int>> pos = this->board;
             int player = this->player_am_zug;
-
             for (int i = 0; i < depth; ++i) {
                 std::vector<std::vector<int>> next_pos = generate_one_random_child(pos, player);
                 if (next_pos.empty()) {break;}
                 pos = next_pos;
-                if (player== -1) {player= 1;}
-                else if (player== 1) {player= -1;}
+                if (player== -6) {player= 6;}
+                else if (player== 6) {player= -6;}
             }
             values.push_back(evaluate_position(pos, this->token));
         }
@@ -1853,9 +1854,29 @@ public:
     std::vector<std::vector<int>> board;
     int max_time=1;
 
-    void mcts2() {
-        root_node.children=root_node.expand_node();
+    bool mcts2() {
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+        //filter legal moves
+        std::vector<MCTSNode> legal_moves;
+        int number_of_legal_moves = 0;
+        root_node.children=root_node.expand_node();
+        for (MCTSNode& child_of_root : root_node.children) {
+            child_of_root.expand_node();
+            bool king_is_killed = false;
+            for (MCTSNode& child_of_child : child_of_root.children) {
+                if (verloren1(child_of_child.board, root_node.player_am_zug)) {
+                    king_is_killed = true;
+                    break;
+                }
+            }
+            if (!king_is_killed) {
+                legal_moves.push_back(child_of_root);
+                number_of_legal_moves++;
+            }
+        }
+        root_node.children = legal_moves;
+        // No legal moves left
+        if (number_of_legal_moves == 0) {return false;}
         //
         while (true) {
             mcts_counter += 1;
@@ -1872,46 +1893,72 @@ public:
                 break;
             }
         }
-}
+        return true;
+    }
 
-    void mcts() {
-        root_node.children=root_node.expand_node();
+    bool mcts() {
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+        //filter legal moves
+        std::vector<MCTSNode> legal_moves;
+        int number_of_legal_moves = 0;
+        root_node.children=root_node.expand_node();
+        for (MCTSNode& child_of_root : root_node.children) {
+            child_of_root.children=child_of_root.expand_node();
+            bool king_is_killed = false;
+            for (MCTSNode& child_of_child : child_of_root.children) {
+                if (verloren1(child_of_child.board, root_node.player_am_zug)) {
+                    king_is_killed = true;
+                    break;
+                }
+            }
+            if (!king_is_killed) {
+                legal_moves.push_back(child_of_root);
+                number_of_legal_moves++;
+            }
+        }
+        root_node.children = legal_moves;
+        // No legal moves left
+        if (number_of_legal_moves == 0) {return false;}
         //
         while (true) {
             mcts_counter += 1;
-            MCTSNode* selected_node = root_node.select_leaf_node();
-            MCTSNode node= *selected_node;
-            node.expand_node();
-            for (MCTSNode& child_node : node.children) {
+            MCTSNode* selected_node=root_node.select_leaf_node();
+            selected_node->children=selected_node->expand_node();
+            for (MCTSNode& child_node : selected_node->children) {
                 double new_score = child_node.simulate();
                 child_node.backpropagate(new_score, number_of_simulations);
             }
             //
             std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
             double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
+            //
             if (elapsed_seconds > this->max_time) {break;}
         }
-}
+        return true;
+    }
 
     std::vector<std::vector<int>> mctser() {
         mcts_counter = 0;
         //
-        mcts();
+        bool monte_carlo=mcts();
         //
-        std::cout <<"COUNTER: ";
-        std::cout << mcts_counter << std::endl;
-        //
-        std::vector<std::vector<int>> best_move;
-        int highest_number_of_visits = -1;
-        //
-        for (MCTSNode& root_node_child : root_node.children) {
-            if (root_node_child.visits > highest_number_of_visits) {
-                best_move = root_node_child.board;
-                highest_number_of_visits = root_node_child.visits;
+        if (monte_carlo) {
+            std::cout <<"COUNTER: ";
+            std::cout << mcts_counter << std::endl;
+            //
+            std::vector<std::vector<int>> best_move;
+            int highest_number_of_visits = -1;
+            //
+            for (MCTSNode& root_node_child : root_node.children) {
+                if (root_node_child.visits > highest_number_of_visits) {
+                    best_move = root_node_child.board;
+                    highest_number_of_visits = root_node_child.visits;
+                }
             }
+            return best_move;
         }
-        return best_move;
+        else {std::vector<std::vector<int>> empty_vector; return empty_vector;}
+        
     }
 
     std::vector<std::vector<int>> get_move(std::vector<std::vector<int>> board) {

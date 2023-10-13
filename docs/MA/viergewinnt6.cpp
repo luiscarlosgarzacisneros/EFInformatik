@@ -664,15 +664,14 @@ public:
 }
 
     void mcts() {
-        root_node.children=root_node.expand_node();
+        root_node.children = root_node.expand_node();
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
         //
         while (true) {
             mcts_counter += 1;
             MCTSNode* selected_node = root_node.select_leaf_node();
-            MCTSNode node= *selected_node;
-            node.expand_node();
-            for (MCTSNode& child_node : node.children) {
+            selected_node->expand_node();
+            for (MCTSNode& child_node : selected_node->children) {
                 double new_score = child_node.simulate();
                 child_node.backpropagate(new_score, number_of_simulations);
             }
@@ -702,7 +701,6 @@ public:
                 highest_number_of_visits = root_node_child.visits;
             }
         }
-
         return best_move;
     }
 
@@ -735,7 +733,7 @@ public:
         while (true) {
             //-----------------------------------------
             HumanPlayer player_1(1);
-            MinimaxPlayer player_2(-1, this->board);
+            MCTSPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<""<<std::endl;;
             std::cout<<this->turn<<std::endl;
