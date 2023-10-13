@@ -713,6 +713,8 @@ std::vector<uint64_t> gorcKk(const uint64_t king_bitboard, const uint64_t this_p
 
 //
 
+//INVERT
+
 std::vector<std::vector<int>> B_matrix = {
     { 0,  0,  0,  0,  0,  0,  0,  0},
     { 1,  1,  1,  1,  1,  1,  1,  1},
@@ -3847,7 +3849,7 @@ int turn;
         int current = 1;
         while (true) {
             //-----------------------------------------
-            HumanPlayer player_1(6, this->board);
+            MinimaxPlayer2 player_1(6, this->board);
             MinimaxPlayer2 player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
