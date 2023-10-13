@@ -798,108 +798,121 @@ def verloren(pos,player):
 
 #
 
-B_matrix = [
-    [ 0,  0,  0,  0,  0,  0,  0,  0],
-    [ 1,  1,  1,  1,  1,  1,  1,  1],
-    [ 2,  2,  2,  2,  2,  2,  2,  2],
-    [ 3,  3,  4,  4,  4,  4,  3,  3],
-    [ 3,  3,  4,  4,  4,  4,  3,  3],
-    [ 4,  4,  4,  4,  4,  4,  4,  4],
-    [ 5,  5,  5,  5,  5,  5,  5,  5],
-    [ 0,  0,  0,  0,  0,  0,  0,  0]
-]
+def invert_matrix(matrix):
+    inverted_matrix = matrix[::-1]
+    return inverted_matrix
 
 b_matrix = [
-    [ 0,  0,  0,  0,  0,  0,  0,  0],
-    [ 5,  5,  5,  5,  5,  5,  5,  5],
-    [ 4,  4,  4,  4,  4,  4,  4,  4],
-    [ 3,  3,  4,  4,  4,  4,  3,  3],
-    [ 3,  3,  4,  4,  4,  4,  3,  3],
-    [ 2,  2,  2,  2,  2,  2,  2,  2],
-    [ 1,  1,  1,  1,  1,  1,  1,  1],
-    [ 0,  0,  0,  0,  0,  0,  0,  0]
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [50, 50, 50, 50, 50, 50, 50, 50],
+    [10, 10, 20, 30, 30, 20, 10, 10],
+    [5, 5, 10, 25, 25, 10, 5, 5],
+    [0, 0, 0, 20, 20, 0, 0, 0],
+    [5, -5, -10, 0, 0, -10, -5, 5],
+    [5, 10, 10, -20, -20, 10, 10, 5],
+    [0, 0, 0, 0, 0, 0, 0, 0]
 ]
 
-Ll_matrix = [
-    [-1, -3, -2, -2, -2, -2, -3, -1],
-    [-1,  0,  0,  0,  0,  0,  0, -1],
-    [-1,  0,  1,  1,  1,  1,  0, -1],
-    [-1,  0,  1,  2,  2,  1,  0, -1],
-    [-1,  0,  1,  2,  2,  1,  0, -1],
-    [-1,  0,  1,  1,  1,  1,  0, -1],
-    [-1,  0,  0,  0,  0,  0,  0, -1],
-    [-1, -3, -2, -2, -2, -2, -3, -1]
+l_matrix = [
+    [-50, -40, -30, -30, -30, -30, -40, -50],
+    [-40, -20, 0, 0, 0, 0, -20, -40],
+    [-30, 0, 10, 15, 15, 10, 0, -30],
+    [-30, 5, 15, 20, 20, 15, 5, -30],
+    [-30, 0, 15, 20, 20, 15, 0, -30],
+    [-30, 5, 10, 15, 15, 10, 5, -30],
+    [-40, -20, 0, 5, 5, 0, -20, -40],
+    [-50, -40, -30, -30, -30, -30, -40, -50]
 ]
 
-Xx_matrix = [
-    [-2, -1, -1, -1, -1, -1, -1, -2],
-    [-1,  0,  0,  0,  0,  0,  0, -1],
-    [-1,  0,  1,  1,  1,  1,  0, -1],
-    [-1,  0,  1,  2,  2,  1,  0, -1],
-    [-1,  0,  1,  2,  2,  1,  0, -1],
-    [-1,  0,  1,  1,  1,  1,  0, -1],
-    [-1,  0,  0,  0,  0,  0,  0, -1],
-    [-2, -1, -1, -1, -1, -1, -1, -2]
+x_matrix = [
+    [-20, -10, -10, -10, -10, -10, -10, -20],
+    [-10, 0, 0, 0, 0, 0, 0, -10],
+    [-10, 0, 5, 10, 10, 5, 0, -10],
+    [-10, 5, 5, 10, 10, 5, 5, -10],
+    [-10, 0, 10, 10, 10, 10, 0, -10],
+    [-10, 10, 10, 10, 10, 10, 10, -10],
+    [-10, 5, 0, 0, 0, 0, 5, -10],
+    [-20, -10, -10, -10, -10, -10, -10, -20]
 ]
 
-Tt_matrix = [
-    [ 0, -1,  1,  0,  0,  1, -1,  0],
-    [ 1,  1,  1,  1,  1,  1,  1,  1],
-    [ 1,  1,  1,  1,  1,  1,  1,  1],
-    [ 1,  1,  1,  1,  1,  1,  1,  1],
-    [ 1,  1,  1,  1,  1,  1,  1,  1],
-    [ 1,  1,  1,  1,  1,  1,  1,  1],
-    [ 1,  1,  1,  1,  1,  1,  1,  1],
-    [ 0, -1,  1,  0,  0,  1, -1,  0]
+t_matrix = [
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [5, 10, 10, 10, 10, 10, 10, 5],
+    [-5, 0, 0, 0, 0, 0, 0, -5],
+    [-5, 0, 0, 0, 0, 0, 0, -5],
+    [-5, 0, 0, 0, 0, 0, 0, -5],
+    [-5, 0, 0, 0, 0, 0, 0, -5],
+    [-5, 0, 0, 0, 0, 0, 0, -5],
+    [0, 0, 0, 5, 5, 0, 0, 0]
 ]
 
-Qq_matrix = [
-    [-1, -1, -1, -1, -1, -1, -1, -1],
-    [-1,  0,  0,  0,  0,  0,  0, -1],
-    [-1,  0,  1,  1,  1,  1,  0, -1],
-    [-1,  0,  1,  2,  2,  1,  0, -1],
-    [-1,  0,  1,  2,  2,  1,  0, -1],
-    [-1,  0,  1,  1,  1,  1,  0, -1],
-    [-1,  0,  0,  0,  0,  0,  0, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1]
+q_matrix = [
+    [-20, -10, -10, -5, -5, -10, -10, -20],
+    [-10, 0, 0, 0, 0, 0, 0, -10],
+    [-10, 0, 5, 5, 5, 5, 0, -10],
+    [-5, 0, 5, 5, 5, 5, 0, -5],
+    [0, 0, 5, 5, 5, 5, 0, -5],
+    [-10, 5, 5, 5, 5, 5, 0, -10],
+    [-10, 0, 5, 0, 0, 0, 0, -10],
+    [-20, -10, -10, -5, -5, -10, -10, -20]
 ]
 
-K_matrix = [
-    [ 2,  3,  1,  0,  0,  1,  3,  2],
-    [ 2,  2,  0,  0,  0,  0,  2,  2],
-    [-1, -2, -2, -2, -2, -2, -2, -1],
-    [-2, -3, -3, -4, -4, -3, -3, -2],
-    [-3, -4, -4, -5, -5, -4, -4, -3],
-    [-3, -4, -4, -5, -5, -4, -4, -3],
-    [-4, -5, -5, -6, -6, -5, -5, -4],
-    [-4, -5, -5, -6, -6, -5, -5, -4]
+k_normal_matrix = [
+    [-30, -40, -40, -50, -50, -40, -40, -30],
+    [-30, -40, -40, -50, -50, -40, -40, -30],
+    [-30, -40, -40, -50, -50, -40, -40, -30],
+    [-30, -40, -40, -50, -50, -40, -40, -30],
+    [-20, -30, -30, -40, -40, -30, -30, -20],
+    [-10, -20, -20, -20, -20, -20, -20, -10],
+    [20, 20, 0, 0, 0, 0, 20, 20],
+    [20, 30, 10, 0, 0, 10, 30, 20]
 ]
 
-k_matrix = [
-    [ -4,  -5,  -5,  -6,  -6,  -5,  -5,  -4],
-    [ -4,  -5,  -5,  -6,  -6,  -5,  -5,  -4],
-    [ -3,  -4,  -4,  -5,  -5,  -4,  -4,  -3],
-    [ -3,  -4,  -4,  -5,  -5,  -4,  -4,  -3],
-    [ -2,  -3,  -3,  -4,  -4,  -3,  -3,  -2],
-    [ -1,  -2,  -2,  -2,  -2,  -2,  -2,  -1],
-    [  2,   2,   0,   0,   0,   0,   2,   2],
-    [  2,   3,   1,   0,   0,   1,   3,   2]
+k_endgame_matrix = [
+    [-50, -40, -30, -20, -20, -30, -40, -50],
+    [-30, -20, -10, 0, 0, -10, -20, -30],
+    [-30, -10, 20, 30, 30, 20, -10, -30],
+    [-30, -10, 30, 40, 40, 30, -10, -30],
+    [-30, -10, 30, 40, 40, 30, -10, -30],
+    [-30, -10, 20, 30, 30, 20, -10, -30],
+    [-30, -30, 0, 0, 0, 0, -30, -30],
+    [-50, -30, -30, -30, -30, -30, -30, -50]
 ]
 
+B_matrix=invert_matrix(b_matrix)
+L_matrix=invert_matrix(l_matrix)
+X_matrix=invert_matrix(x_matrix)
+T_matrix=invert_matrix(t_matrix)
+Q_matrix=invert_matrix(q_matrix)
+K_normal_matrix=invert_matrix(k_normal_matrix)
+K_endgame_matrix=invert_matrix(k_endgame_matrix)
+
+other_b_matrix = [[-v for v in row] for row in b_matrix]
+other_l_matrix = [[-v for v in row] for row in l_matrix]
+other_x_matrix = [[-v for v in row] for row in x_matrix]
+other_t_matrix = [[-v for v in row] for row in t_matrix]
+other_q_matrix = [[-v for v in row] for row in q_matrix]
+other_k_normal_matrix = [[-v for v in row] for row in k_normal_matrix]
+other_k_endgame_matrix = [[-v for v in row] for row in k_endgame_matrix]
 
 other_B_matrix = [[-v for v in row] for row in B_matrix]
-other_b_matrix = [[-v for v in row] for row in b_matrix]
-other_Ll_matrix = [[-v for v in row] for row in Ll_matrix]
-other_Xx_matrix = [[-v for v in row] for row in Xx_matrix]
-other_Tt_matrix = [[-v for v in row] for row in Tt_matrix]
-other_Qq_matrix = [[-v for v in row] for row in Qq_matrix]
-other_K_matrix = [[-v for v in row] for row in K_matrix]
-other_k_matrix = [[-v for v in row] for row in k_matrix]
+other_L_matrix = [[-v for v in row] for row in L_matrix]
+other_X_matrix = [[-v for v in row] for row in X_matrix]
+other_T_matrix = [[-v for v in row] for row in T_matrix]
+other_Q_matrix = [[-v for v in row] for row in Q_matrix]
+other_K_normal_matrix = [[-v for v in row] for row in K_normal_matrix]
+other_K_endgame_matrix = [[-v for v in row] for row in K_endgame_matrix]
 
 
 def evaluate_position(pos,playerk):
     #mit Matrixen+pawn structure
     val=0
+    anz_Qq=0
+    anz_minor_pieces=0
+    y_this_players_king=0
+    x_this_players_king=0
+    y_other_players_king=0
+    x_other_players_king=0
     if playerk==6:
         for p in range(8):
             for o in range(8):
@@ -943,35 +956,53 @@ def evaluate_position(pos,playerk):
                 #
                 elif pos[p][o]==-2:
                     val+=-3000
-                    val+=other_Ll_matrix[p][o]
+                    val+=other_L_matrix[p][o]
+                    anz_minor_pieces+=1
                 elif pos[p][o]==-3:
                     val+=-3000
-                    val+=other_Xx_matrix[o][p]
+                    val+=other_X_matrix[o][p]
+                    anz_minor_pieces+=1
                 elif pos[p][o]==-4 or pos[p][o]==-7:
                     val+=-5000
-                    val+=other_Tt_matrix[p][o]
+                    val+=other_T_matrix[p][o]
                 elif pos[p][o]==2:
                     val+=+3000
-                    val+=Ll_matrix[p][o]
+                    val+=l_matrix[p][o]
+                    anz_minor_pieces+=1
                 elif pos[p][o]==3:
                     val+=+3000
-                    val+=Xx_matrix[o][p]
+                    val+=x_matrix[o][p]
+                    anz_minor_pieces+=1
                 elif pos[p][o]==4 or pos[p][o]==7:
                     val+=+5000
-                    val+=Tt_matrix[p][o]
+                    val+=t_matrix[p][o]
                 #
                 elif pos[p][o]==-5:
                     val+=-9000
-                    val+=other_Qq_matrix[p][o]
+                    val+=other_Q_matrix[p][o]
+                    anz_Qq+=1
                 elif pos[p][o]==-6 or pos[p][o]==-8:
                     val+=-1000000
-                    val+=other_K_matrix[p][o]
+                    y_other_players_king=p
+                    x_other_players_king=o
                 elif pos[p][o]==5:
                     val+=+9000
-                    val+=Qq_matrix[p][o]
+                    val+=q_matrix[p][o]
+                    anz_Qq+=1
                 elif pos[p][o]==6 or pos[p][o]==8:
                     val+=1000000
-                    val+=k_matrix[p][o]
+                    y_this_players_king=p
+                    x_this_players_king=o
+        if anz_Qq==0:
+            val+=other_K_endgame_matrix[y_other_players_king][x_other_players_king]
+            val+=k_endgame_matrix[y_this_players_king][x_this_players_king]
+        elif anz_Qq==1:
+            if anz_minor_pieces<=2:
+                val+=other_K_endgame_matrix[y_other_players_king][x_other_players_king]
+                val+=k_endgame_matrix[y_this_players_king][x_this_players_king]
+        else:
+            val+=other_K_normal_matrix[y_other_players_king][x_other_players_king]
+            val+=k_normal_matrix[y_this_players_king][x_this_players_king]
     elif playerk==-6:
         for p in range(8):
             for o in range(8):
@@ -1015,35 +1046,53 @@ def evaluate_position(pos,playerk):
                 #
                 elif pos[p][o]==-2:
                     val+=+3000
-                    val+=Ll_matrix[p][o]
+                    val+=L_matrix[p][o]
+                    anz_minor_pieces+=1
                 elif pos[p][o]==-3:
                     val+=+3000
-                    val+=Xx_matrix[p][o]
+                    val+=X_matrix[p][o]
+                    anz_minor_pieces+=1
                 elif pos[p][o]==-4 or pos[p][o]==-7:
                     val+=+5000
-                    val+=Tt_matrix[p][o]
+                    val+=T_matrix[p][o]
                 elif pos[p][o]==2:
                     val+=-3000
-                    val+=other_Ll_matrix[p][o]
+                    val+=other_l_matrix[p][o]
+                    anz_minor_pieces+=1
                 elif pos[p][o]==3:
                     val+=-3000
-                    val+=other_Xx_matrix[p][o]
+                    val+=other_x_matrix[p][o]
+                    anz_minor_pieces+=1
                 elif pos[p][o]==4 or pos[p][o]==7:
                     val+=-5000
-                    val+=other_Tt_matrix[p][o]
+                    val+=other_t_matrix[p][o]
                 #
                 elif pos[p][o]==-5:
                     val+=+9000
-                    val+=Qq_matrix[p][o]
+                    val+=Q_matrix[p][o]
+                    anz_Qq+=1
                 elif pos[p][o]==-6 or pos[p][o]==-8:
                     val+=1000000
-                    val+=K_matrix[p][o]
+                    y_this_players_king=p
+                    x_this_players_king=o
                 elif pos[p][o]==5:
                     val+=-9000
-                    val+=other_Qq_matrix[p][o]
+                    val+=other_q_matrix[p][o]
+                    anz_Qq+=1
                 elif pos[p][o]==6 or pos[p][o]==8:
                     val+=-1000000
-                    val+=other_k_matrix[p][o]
+                    y_other_players_king=p
+                    x_other_players_king=o
+        if anz_Qq==0:
+            val+=other_k_endgame_matrix[y_other_players_king][x_other_players_king]
+            val+=K_endgame_matrix[y_this_players_king][x_this_players_king]
+        elif anz_Qq==1:
+            if anz_minor_pieces<=2:
+                val+=other_k_endgame_matrix[y_other_players_king][x_other_players_king]
+                val+=K_endgame_matrix[y_this_players_king][x_this_players_king]
+        else:
+            val+=other_k_normal_matrix[y_other_players_king][x_other_players_king]
+            val+=K_normal_matrix[y_this_players_king][x_this_players_king]
     return val
 
 def evaluatepos2(pos,playerk):
