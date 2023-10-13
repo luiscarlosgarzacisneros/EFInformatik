@@ -49,15 +49,6 @@ void print_bitboard(const uint64_t bitboard) {
     }
 }
 
-std::vector<std::vector<int>> matrix_minus(std::vector<std::vector<int>> matrix) {
-    for (int i=0; i<matrix.size(); ++i) {
-        for (int j=0; j<matrix[i].size(); ++j) {
-            matrix[i][j]=-matrix[i][j];
-        }
-    }
-    return matrix;
-}
-
 bool is_int(int value) {
     std::string input = std::to_string(value);
     std::istringstream iss(input);
@@ -719,20 +710,29 @@ std::vector<std::vector<int>> invert_matrix(const std::vector<std::vector<int>>&
     return inverted_matrix;
 }
 
-std::vector<std::vector<int>> b_matrix = {
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {50, 50, 50, 50, 50, 50, 50, 50},
+std::vector<std::vector<int>> matrix_minus(std::vector<std::vector<int>> matrix) {
+    for (int i=0; i<matrix.size(); ++i) {
+        for (int j=0; j<matrix[i].size(); ++j) {
+            matrix[i][j]=-matrix[i][j];
+        }
+    }
+    return matrix;
+}
+
+std::vector<std::vector<int>> B_matrix = {
+    {  0,   0,   0,   0,   0,   0,   0,   0},
+    { 50,  50,  50,  50,  50, 50,  50,  50},
     {10, 10, 20, 30, 30, 20, 10, 10},
-    {5, 5, 10, 25, 25, 10, 5, 5},
-    {0, 0, 0, 20, 20, 0, 0, 0},
-    {5, -5, -10, 0, 0, -10, -5, 5},
-    {5, 10, 10, -20, -20, 10, 10, 5},
-    {0, 0, 0, 0, 0, 0, 0, 0}
+    { 5,  5, 10, 25, 25, 10,  5,  5},
+    { 0,  0,  0, 20, 20,  0,  0,  0},
+    { 5, -5,-10,  0,  0,-10, -5,  5},
+    { 5, 10, 10,-20,-20, 10, 10,  5},
+    { 0, 0,  0,  0,  0,  0,   0,  0}
 };
 
-std::vector<std::vector<int>> l_matrix = {
+std::vector<std::vector<int>> L_matrix = {
     {-50, -40, -30, -30, -30, -30, -40, -50},
-    {-40, -20, 0, 0, 0, 0, -20, -40},
+    {-40, -20,   0,   0,    0,  0, -20, -40},
     {-30, 0, 10, 15, 15, 10, 0, -30},
     {-30, 5, 15, 20, 20, 15, 5, -30},
     {-30, 0, 15, 20, 20, 15, 0, -30},
@@ -741,7 +741,7 @@ std::vector<std::vector<int>> l_matrix = {
     {-50, -40, -30, -30, -30, -30, -40, -50}
 };
 
-std::vector<std::vector<int>> x_matrix = {
+std::vector<std::vector<int>> X_matrix = {
     {-20, -10, -10, -10, -10, -10, -10, -20},
     {-10, 0, 0, 0, 0, 0, 0, -10},
     {-10, 0, 5, 10, 10, 5, 0, -10},
@@ -752,7 +752,7 @@ std::vector<std::vector<int>> x_matrix = {
     {-20, -10, -10, -10, -10, -10, -10, -20}
 };
 
-std::vector<std::vector<int>> t_matrix = {
+std::vector<std::vector<int>> T_matrix = {
     {0, 0, 0, 0, 0, 0, 0, 0},
     {5, 10, 10, 10, 10, 10, 10, 5},
     {-5, 0, 0, 0, 0, 0, 0, -5},
@@ -763,7 +763,7 @@ std::vector<std::vector<int>> t_matrix = {
     {0, 0, 0, 5, 5, 0, 0, 0}
 };
 
-std::vector<std::vector<int>> q_matrix = {
+std::vector<std::vector<int>> Q_matrix = {
     {-20, -10, -10, -5, -5, -10, -10, -20},
     {-10, 0, 0, 0, 0, 0, 0, -10},
     {-10, 0, 5, 5, 5, 5, 0, -10},
@@ -774,7 +774,7 @@ std::vector<std::vector<int>> q_matrix = {
     {-20, -10, -10, -5, -5, -10, -10, -20}
 };
 
-std::vector<std::vector<int>> k_normal_matrix = {
+std::vector<std::vector<int>> K_normal_matrix = {
     {-30, -40, -40, -50, -50, -40, -40, -30},
     {-30, -40, -40, -50, -50, -40, -40, -30},
     {-30, -40, -40, -50, -50, -40, -40, -30},
@@ -785,7 +785,7 @@ std::vector<std::vector<int>> k_normal_matrix = {
     {20, 30, 10, 0, 0, 10, 30, 20}
 };
 
-std::vector<std::vector<int>> k_endgame_matrix = {
+std::vector<std::vector<int>> K_endgame_matrix = {
     {-50, -40, -30, -20, -20, -30, -40, -50},
     {-30, -20, -10, 0, 0, -10, -20, -30},
     {-30, -10, 20, 30, 30, 20, -10, -30},
@@ -796,13 +796,13 @@ std::vector<std::vector<int>> k_endgame_matrix = {
     {-50, -30, -30, -30, -30, -30, -30, -50}
 };
 
-std::vector<std::vector<int>> B_matrix =invert_matrix(b_matrix);
-std::vector<std::vector<int>> L_matrix =invert_matrix(l_matrix);
-std::vector<std::vector<int>> X_matrix =invert_matrix(x_matrix);
-std::vector<std::vector<int>> T_matrix =invert_matrix(t_matrix);
-std::vector<std::vector<int>> Q_matrix =invert_matrix(q_matrix);
-std::vector<std::vector<int>> K_normal_matrix =invert_matrix(k_normal_matrix);
-std::vector<std::vector<int>> K_endgame_matrix =invert_matrix(k_endgame_matrix);
+std::vector<std::vector<int>> b_matrix =invert_matrix(B_matrix);
+std::vector<std::vector<int>> l_matrix =invert_matrix(L_matrix);
+std::vector<std::vector<int>> x_matrix =invert_matrix(X_matrix);
+std::vector<std::vector<int>> t_matrix =invert_matrix(T_matrix);
+std::vector<std::vector<int>> q_matrix =invert_matrix(Q_matrix);
+std::vector<std::vector<int>> k_normal_matrix =invert_matrix(K_normal_matrix);
+std::vector<std::vector<int>> k_endgame_matrix =invert_matrix(K_endgame_matrix);
 
 std::vector<std::vector<int>> other_b_matrix = matrix_minus(b_matrix);
 std::vector<std::vector<int>> other_l_matrix = matrix_minus(l_matrix);
