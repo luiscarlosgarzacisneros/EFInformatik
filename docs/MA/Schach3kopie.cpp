@@ -49,6 +49,15 @@ void print_bitboard(const uint64_t bitboard) {
     }
 }
 
+std::vector<std::vector<int>> matrix_minus(std::vector<std::vector<int>> matrix) {
+    for (int i=0; i<matrix.size(); ++i) {
+        for (int j=0; j<matrix[i].size(); ++j) {
+            matrix[i][j]=-matrix[i][j];
+        }
+    }
+    return matrix;
+}
+
 bool is_int(int value) {
     std::string input = std::to_string(value);
     std::istringstream iss(input);
@@ -704,135 +713,102 @@ std::vector<uint64_t> gorcKk(const uint64_t king_bitboard, const uint64_t this_p
 
 //
 
-std::vector<std::vector<int>> invert_matrix(std::vector<std::vector<int>> matrix) {
-    std::vector<std::vector<int>> inverted_matrix = matrix;
-    std::reverse(inverted_matrix.begin(), inverted_matrix.end());
-    return inverted_matrix;
-}
-
-std::vector<std::vector<int>> matrix_minus(std::vector<std::vector<int>> matrix) {
-    for (int i=0; i<matrix.size(); ++i) {
-        for (int j=0; j<matrix[i].size(); ++j) {
-            matrix[i][j]=-matrix[i][j];
-        }
-    }
-    return matrix;
-}
-
-std::vector<std::vector<int>> reverse_matrix(std::vector<std::vector<int>> matrix) {
-    std::reverse(matrix.begin(), matrix.end());
-    for (int i = 0; i < 8; i++) {std::reverse(matrix[i].begin(), matrix[i].end());}
-    return matrix;
-}
-
-
-std::vector<std::vector<int>> b = {
-    {  0,   0,   0,   0,   0,   0,   0,   0},
-    { 50,  50,  50,  50,  50, 50,  50,  50},
-    {10, 10, 20, 30, 30, 20, 10, 10},
-    { 5,  5, 10, 25, 25, 10,  5,  5},
-    { 0,  0,  0, 20, 20,  0,  0,  0},
-    { 5, -5,-10,  0,  0,-10, -5,  5},
-    { 5, 10, 10,-20,-20, 10, 10,  5},
-    { 0, 0,  0,  0,  0,  0,   0,  0}
+std::vector<std::vector<int>> B_matrix = {
+    { 0,  0,  0,  0,  0,  0,  0,  0},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 2,  2,  2,  2,  2,  2,  2,  2},
+    { 3,  3,  4,  4,  4,  4,  3,  3},
+    { 3,  3,  4,  4,  4,  4,  3,  3},
+    { 4,  4,  4,  4,  4,  4,  4,  4},
+    { 5,  5,  5,  5,  5,  5,  5,  5},
+    { 0,  0,  0,  0,  0,  0,  0,  0}
 };
 
-std::vector<std::vector<int>> l = {
-    {-50, -40, -30, -30, -30, -30, -40, -50},
-    {-40, -20,   0,   0,    0,  0, -20, -40},
-    {-30, 0, 10, 15, 15, 10, 0, -30},
-    {-30, 5, 15, 20, 20, 15, 5, -30},
-    {-30, 0, 15, 20, 20, 15, 0, -30},
-    {-30, 5, 10, 15, 15, 10, 5, -30},
-    {-40, -20, 0, 5, 5, 0, -20, -40},
-    {-50, -40, -30, -30, -30, -30, -40, -50}
+std::vector<std::vector<int>> b_matrix = {
+    { 0,  0,  0,  0,  0,  0,  0,  0},
+    { 5,  5,  5,  5,  5,  5,  5,  5},
+    { 4,  4,  4,  4,  4,  4,  4,  4},
+    { 3,  3,  4,  4,  4,  4,  3,  3},
+    { 3,  3,  4,  4,  4,  4,  3,  3},
+    { 2,  2,  2,  2,  2,  2,  2,  2},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 0,  0,  0,  0,  0,  0,  0,  0}
 };
 
-std::vector<std::vector<int>> x = {
-    {-20, -10, -10, -10, -10, -10, -10, -20},
-    {-10, 0, 0, 0, 0, 0, 0, -10},
-    {-10, 0, 5, 10, 10, 5, 0, -10},
-    {-10, 5, 5, 10, 10, 5, 5, -10},
-    {-10, 0, 10, 10, 10, 10, 0, -10},
-    {-10, 10, 10, 10, 10, 10, 10, -10},
-    {-10, 5, 0, 0, 0, 0, 5, -10},
-    {-20, -10, -10, -10, -10, -10, -10, -20}
+std::vector<std::vector<int>> Ll_matrix = {
+    {-1, -3, -2, -2, -2, -2, -3, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1, -3, -2, -2, -2, -2, -3, -1}
 };
 
-std::vector<std::vector<int>> t = {
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {5, 10, 10, 10, 10, 10, 10, 5},
-    {-5, 0, 0, 0, 0, 0, 0, -5},
-    {-5, 0, 0, 0, 0, 0, 0, -5},
-    {-5, 0, 0, 0, 0, 0, 0, -5},
-    {-5, 0, 0, 0, 0, 0, 0, -5},
-    {-5, 0, 0, 0, 0, 0, 0, -5},
-    {0, 0, 0, 5, 5, 0, 0, 0}
+std::vector<std::vector<int>> Xx_matrix = {
+    {-2, -1, -1, -1, -1, -1, -1, -2},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-2, -1, -1, -1, -1, -1, -1, -2}
 };
 
-std::vector<std::vector<int>> q = {
-    {-20, -10, -10, -5, -5, -10, -10, -20},
-    {-10, 0, 0, 0, 0, 0, 0, -10},
-    {-10, 0, 5, 5, 5, 5, 0, -10},
-    {-5, 0, 5, 5, 5, 5, 0, -5},
-    {0, 0, 5, 5, 5, 5, 0, -5},
-    {-10, 5, 5, 5, 5, 5, 0, -10},
-    {-10, 0, 5, 0, 0, 0, 0, -10},
-    {-20, -10, -10, -5, -5, -10, -10, -20}
+std::vector<std::vector<int>> Tt_matrix = {
+    { 0,  0,  0,  0,  0,  0,  0,  0},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 1,  1,  1,  1,  1,  1,  1,  1},
+    { 0,  0,  0,  0,  0,  0,  0,  0}
 };
 
-std::vector<std::vector<int>> k_normal = {
-    {-30, -40, -40, -50, -50, -40, -40, -30},
-    {-30, -40, -40, -50, -50, -40, -40, -30},
-    {-30, -40, -40, -50, -50, -40, -40, -30},
-    {-30, -40, -40, -50, -50, -40, -40, -30},
-    {-20, -30, -30, -40, -40, -30, -30, -20},
-    {-10, -20, -20, -20, -20, -20, -20, -10},
-    {20, 20, 0, 0, 0, 0, 20, 20},
-    {20, 30, 10, 0, 0, 10, 30, 20}
+std::vector<std::vector<int>> Qq_matrix = {
+    {-1, -1, -1, -1, -1, -1, -1, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  2,  2,  1,  0, -1},
+    {-1,  0,  1,  1,  1,  1,  0, -1},
+    {-1,  0,  0,  0,  0,  0,  0, -1},
+    {-1, -1, -1, -1, -1, -1, -1, -1}
 };
 
-std::vector<std::vector<int>> k_endgame = {
-    {-50, -40, -30, -20, -20, -30, -40, -50},
-    {-30, -20, -10, 0, 0, -10, -20, -30},
-    {-30, -10, 20, 30, 30, 20, -10, -30},
-    {-30, -10, 30, 40, 40, 30, -10, -30},
-    {-30, -10, 30, 40, 40, 30, -10, -30},
-    {-30, -10, 20, 30, 30, 20, -10, -30},
-    {-30, -30, 0, 0, 0, 0, -30, -30},
-    {-50, -30, -30, -30, -30, -30, -30, -50}
+std::vector<std::vector<int>> K_matrix = {
+    { 2,  3,  1,  0,  0,  1,  3,  2},
+    { 2,  2,  0,  0,  0,  0,  2,  2},
+    {-1, -2, -2, -2, -2, -2, -2, -1},
+    {-2, -3, -3, -4, -4, -3, -3, -2},
+    {-3, -4, -4, -5, -5, -4, -4, -3},
+    {-3, -4, -4, -5, -5, -4, -4, -3},
+    {-4, -5, -5, -6, -6, -5, -5, -4},
+    {-4, -5, -5, -6, -6, -5, -5, -4}
 };
 
-std::vector<std::vector<int>> b_matrix=reverse_matrix(b);
-std::vector<std::vector<int>> l_matrix=reverse_matrix(l);
-std::vector<std::vector<int>> x_matrix=reverse_matrix(x);
-std::vector<std::vector<int>> t_matrix=reverse_matrix(t);
-std::vector<std::vector<int>> q_matrix=reverse_matrix(q);
-std::vector<std::vector<int>> k_normal_matrix=reverse_matrix(k_normal);
-std::vector<std::vector<int>> k_endgame_matrix=reverse_matrix(k_endgame);
+std::vector<std::vector<int>> k_matrix = {
+    { -4,  -5,  -5,  -6,  -6,  -5,  -5,  -4},
+    { -4,  -5,  -5,  -6,  -6,  -5,  -5,  -4},
+    { -3,  -4,  -4,  -5,  -5,  -4,  -4,  -3},
+    { -3,  -4,  -4,  -5,  -5,  -4,  -4,  -3},
+    { -2,  -3,  -3,  -4,  -4,  -3,  -3,  -2},
+    { -1,  -2,  -2,  -2,  -2,  -2,  -2,  -1},
+    {  2,   2,   0,   0,   0,   0,   2,   2},
+    {  2,   3,   1,   0,   0,   1,   3,   2}
+};
 
-std::vector<std::vector<int>> B_matrix =invert_matrix(b_matrix);
-std::vector<std::vector<int>> L_matrix =invert_matrix(l_matrix);
-std::vector<std::vector<int>> X_matrix =invert_matrix(x_matrix);
-std::vector<std::vector<int>> T_matrix =invert_matrix(t_matrix);
-std::vector<std::vector<int>> Q_matrix =invert_matrix(q_matrix);
-std::vector<std::vector<int>> K_normal_matrix =invert_matrix(k_normal_matrix);
-std::vector<std::vector<int>> K_endgame_matrix =invert_matrix(k_endgame_matrix);
-
-std::vector<std::vector<int>> other_b_matrix = matrix_minus(b_matrix);
-std::vector<std::vector<int>> other_l_matrix = matrix_minus(l_matrix);
-std::vector<std::vector<int>> other_x_matrix = matrix_minus(x_matrix);
-std::vector<std::vector<int>> other_t_matrix = matrix_minus(t_matrix);
-std::vector<std::vector<int>> other_q_matrix = matrix_minus(q_matrix);
-std::vector<std::vector<int>> other_k_normal_matrix = matrix_minus(k_normal_matrix);
-std::vector<std::vector<int>> other_k_endgame_matrix = matrix_minus(k_endgame_matrix);
 std::vector<std::vector<int>> other_B_matrix = matrix_minus(B_matrix);
-std::vector<std::vector<int>> other_L_matrix = matrix_minus(L_matrix);
-std::vector<std::vector<int>> other_X_matrix = matrix_minus(X_matrix);
-std::vector<std::vector<int>> other_T_matrix = matrix_minus(T_matrix);
-std::vector<std::vector<int>> other_Q_matrix = matrix_minus(Q_matrix);
-std::vector<std::vector<int>> other_K_normal_matrix = matrix_minus(K_normal_matrix);
-std::vector<std::vector<int>> other_K_endgame_matrix = matrix_minus(K_endgame_matrix);
+std::vector<std::vector<int>> other_b_matrix = matrix_minus(b_matrix);
+std::vector<std::vector<int>> other_Ll_matrix = matrix_minus(Ll_matrix);
+std::vector<std::vector<int>> other_Xx_matrix = matrix_minus(Xx_matrix);
+std::vector<std::vector<int>> other_Tt_matrix = matrix_minus(Tt_matrix);
+std::vector<std::vector<int>> other_Qq_matrix = matrix_minus(Qq_matrix);
+std::vector<std::vector<int>> other_K_matrix = matrix_minus(K_matrix);
+std::vector<std::vector<int>> other_k_matrix = matrix_minus(k_matrix);
 
 //
 
@@ -932,17 +908,11 @@ public:
 
     int evaluate_position(int playerk) const {
         int val = 0;
-        int y_this_king;
-        int x_this_king;
-        int y_other_king;
-        int x_other_king;
-        int anz_Qq;
-        int anz_minor_pieces;
         if (playerk==6) {
             for (int p=0; p<8; ++p) {
                 for (int o=0; o<8; ++o) {
                     if (is_one_at_this_index(this->B, yx_zu_index(p, o)) || is_one_at_this_index(this->F, yx_zu_index(p, o))) {
-                        val += -1000;
+                        val += -100;
                         val += other_B_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
@@ -959,7 +929,7 @@ public:
                         }
                     }//
                     else if (is_one_at_this_index(this->b, yx_zu_index(p, o)) || is_one_at_this_index(this->f, yx_zu_index(p, o))) {
-                        val += 1000;
+                        val += 100;
                         val += b_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
@@ -976,75 +946,53 @@ public:
                         }
                     }
                     else if (is_one_at_this_index(this->L, yx_zu_index(p, o))) {
-                        val += -3000;
-                        val += other_L_matrix[p][o];
-                        anz_minor_pieces+=1;
+                        val += -300;
+                        val += other_Ll_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->X, yx_zu_index(p, o))) {
-                        val += -3000;
-                        val += other_X_matrix[o][p];
-                        anz_minor_pieces+=1;
+                        val += -300;
+                        val += other_Xx_matrix[o][p];
                     }
                     else if (is_one_at_this_index(this->T, yx_zu_index(p, o)) || is_one_at_this_index(this->Z, yx_zu_index(p, o))) {
-                        val += -5000;
-                        val += other_T_matrix[p][o];
+                        val += -500;
+                        val += other_Tt_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->l, yx_zu_index(p, o))) {
-                        val += 3000;
-                        val += l_matrix[p][o];
-                        anz_minor_pieces+=1;
+                        val += 300;
+                        val += Ll_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->x, yx_zu_index(p, o))) {
-                        val += 3000;
-                        val += x_matrix[o][p];
-                        anz_minor_pieces+=1;
+                        val += 300;
+                        val += Xx_matrix[o][p];
                     }
                     else if (is_one_at_this_index(this->t, yx_zu_index(p, o)) || is_one_at_this_index(this->z, yx_zu_index(p, o))) {
-                        val += 5000;
-                        val += t_matrix[p][o];
+                        val += 500;
+                        val += Tt_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->Q, yx_zu_index(p, o))) {
-                        val += -9000;
-                        val += other_Q_matrix[p][o];
-                        anz_Qq+=1;
+                        val += -900;
+                        val += other_Qq_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->K, yx_zu_index(p, o)) || is_one_at_this_index(this->Y, yx_zu_index(p, o))) {
-                        val += -10000000;
-                        y_other_king=p;
-                        x_other_king=o;
+                        val += -100000;
+                        val += other_K_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->q, yx_zu_index(p, o))) {
-                        val += 9000;
-                        val += q_matrix[p][o];
-                        anz_Qq+=1;
+                        val += 900;
+                        val += Qq_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->k, yx_zu_index(p, o)) || is_one_at_this_index(this->y, yx_zu_index(p, o))) {
-                        val += 10000000;
-                        y_this_king=p;
-                        x_this_king=o;
+                        val += 100000;
+                        val += k_matrix[p][o];
                     }
                 }
-            }
-            if (anz_Qq==0) {
-                val+=other_K_endgame_matrix[y_other_king][x_other_king];
-                val+=k_endgame_matrix[y_this_king][x_this_king];
-            }
-            else if (anz_Qq==1) {
-                if (anz_minor_pieces<3) {
-                    val+=other_K_endgame_matrix[y_other_king][x_other_king];
-                    val+=k_endgame_matrix[y_this_king][x_this_king];
-                }
-            }
-            else {
-                val+=other_K_normal_matrix[y_other_king][x_other_king];
-                val+=k_normal_matrix[y_this_king][x_this_king];
             }
         }
         else if (playerk==-6) {
             for (int p=0; p<8; ++p) {
                 for (int o=0; o<8; ++o) {
                     if (is_one_at_this_index(this->B, yx_zu_index(p, o)) || is_one_at_this_index(this->F, yx_zu_index(p, o))) {
-                        val += 1000;
+                        val += 100;
                         val += B_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
@@ -1061,7 +1009,7 @@ public:
                         }
                     }
                     else if (is_one_at_this_index(this->b, yx_zu_index(p, o)) || is_one_at_this_index(this->f, yx_zu_index(p, o))) {
-                        val += -1000;
+                        val += -100;
                         val += other_b_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
@@ -1078,68 +1026,46 @@ public:
                         }
                     }
                     else if (is_one_at_this_index(this->L, yx_zu_index(p, o))) {
-                        val += 3000;
-                        val += L_matrix[p][o];
-                        anz_minor_pieces+=1;
+                        val += 300;
+                        val += Ll_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->X, yx_zu_index(p, o))) {
-                        val += 3000;
-                        val += X_matrix[p][o];
-                        anz_minor_pieces+=1;
+                        val += 300;
+                        val += Xx_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->T, yx_zu_index(p, o)) || is_one_at_this_index(this->Z, yx_zu_index(p, o))) {
-                        val += 5000;
-                        val += T_matrix[p][o];
+                        val += 500;
+                        val += Tt_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->l, yx_zu_index(p, o))) {
-                        val += -3000;
-                        val += other_l_matrix[p][o];
-                        anz_minor_pieces+=1;
+                        val += -300;
+                        val += other_Ll_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->x, yx_zu_index(p, o))) {
-                        val += -3000;
-                        val += other_x_matrix[p][o];
-                        anz_minor_pieces+=1;
+                        val += -300;
+                        val += other_Xx_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->t, yx_zu_index(p, o)) || is_one_at_this_index(this->z, yx_zu_index(p, o))) {
-                        val += -5000;
-                        val += other_t_matrix[p][o];
+                        val += -500;
+                        val += other_Tt_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->Q, yx_zu_index(p, o))) {
-                        val += 9000;
-                        val += Q_matrix[p][o];
-                        anz_Qq+=1;
+                        val += 900;
+                        val += other_Qq_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->K, yx_zu_index(p, o)) || is_one_at_this_index(this->Y, yx_zu_index(p, o))) {
-                        val += 10000000;
-                        y_this_king=p;
-                        x_this_king=o;
+                        val += 100000;
+                        val += other_K_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->q, yx_zu_index(p, o))) {
-                        val += -9000;
-                        val += other_q_matrix[p][o];
-                        anz_Qq+=1;
+                        val += -900;
+                        val += Qq_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->k, yx_zu_index(p, o)) || is_one_at_this_index(this->y, yx_zu_index(p, o))) {
-                        val += -10000000;
-                        y_other_king=p;
-                        x_other_king=o;
+                        val += -100000;
+                        val += other_k_matrix[p][o];
                     }
                 }
-            }
-            if (anz_Qq==0) {
-                val+=other_k_endgame_matrix[y_other_king][x_other_king];
-                val+=K_endgame_matrix[y_this_king][x_this_king];
-            }
-            else if (anz_Qq==1) {
-                if (anz_minor_pieces<3) {
-                    val+=other_k_endgame_matrix[y_other_king][x_other_king];
-                    val+=K_endgame_matrix[y_this_king][x_this_king];
-                }
-            }
-            else {
-                val+=other_k_normal_matrix[y_other_king][x_other_king];
-                val+=K_normal_matrix[y_this_king][x_this_king];
             }
         }
         return val;
@@ -3356,14 +3282,14 @@ public:
         std::vector<int> values;
         std::vector<MinimaxNode> best_moves;
         MinimaxNode best_move;
-        int best_value = -100000000;
+        int best_value = -1000000;
         std::vector<MinimaxNode>& root_node_children=root_node.children;
         Board return_board;
         //
         for (MinimaxNode& child : root_node_children){
             int eval;
-            if (child.value>-9000000) {
-                eval=child.minimax(-100000000,100000000,false, depth);
+            if (child.value>-90000) {
+                eval=child.minimax(-1000000,1000000,false, depth);
                 child.value=eval;
                 std::cout<<"a ";//child wurde fertig berechnet
             }
@@ -3374,7 +3300,7 @@ public:
         }
         //
         for (MinimaxNode& child : root_node_children) {
-            if (child.value>-9000000) {
+            if (child.value>-90000) {
                 values.push_back(child.value);
             }
         }
@@ -3579,14 +3505,14 @@ public:
         std::vector<int> values;
         std::vector<MinimaxNode2> best_moves;
         MinimaxNode2 best_move;
-        int best_value = -100000000;
+        int best_value = -1000000;
         std::vector<MinimaxNode2>& root_node_children=root_node.children;
         Board return_board;
         //
         for (MinimaxNode2& child : root_node_children){
             int eval;
-            if (child.value>-9000000) {
-                eval=child.minimax(-100000000,100000000,false, depth, depth_fuer_nur_schlagen);
+            if (child.value>-90000) {
+                eval=child.minimax(-1000000,1000000,false, depth, depth_fuer_nur_schlagen);
                 child.value=eval;
                 std::cout<<"a ";//child wurde fertig berechnet
             }
@@ -3597,7 +3523,7 @@ public:
         }
         //
         for (MinimaxNode2& child : root_node_children) {
-            if (child.value>-9000000) {
+            if (child.value>-90000) {
                 values.push_back(child.value);
             }
         }
@@ -4041,5 +3967,3 @@ int main() {
 
 //remove_common_bits_rochade nicht nötig
 //---------------------------------------
-//wegen neuer evaluate pos komisch
-//crsh: mit alt evpos probieren
