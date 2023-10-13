@@ -843,14 +843,14 @@ Xx_matrix = [
 ]
 
 Tt_matrix = [
-    [ 0,  0,  0,  0,  0,  0,  0,  0],
+    [ 0, -1,  1,  0,  0,  1, -1,  0],
     [ 1,  1,  1,  1,  1,  1,  1,  1],
     [ 1,  1,  1,  1,  1,  1,  1,  1],
     [ 1,  1,  1,  1,  1,  1,  1,  1],
     [ 1,  1,  1,  1,  1,  1,  1,  1],
     [ 1,  1,  1,  1,  1,  1,  1,  1],
     [ 1,  1,  1,  1,  1,  1,  1,  1],
-    [ 0,  0,  0,  0,  0,  0,  0,  0]
+    [ 0, -1,  1,  0,  0,  1, -1,  0]
 ]
 
 Qq_matrix = [
@@ -904,10 +904,10 @@ def evaluate_position(pos,playerk):
         for p in range(8):
             for o in range(8):
                 if pos[p][o]==0:
-                    pass
+                    continue
                 #
                 elif pos[p][o]==-1 or pos[p][o]==-9:
-                    val+=-100
+                    val+=-1000
                     val+=other_B_matrix[p][o]
                     #pawn structure
                     if p+1<=7 and o+1<=7:
@@ -924,7 +924,7 @@ def evaluate_position(pos,playerk):
                             val+=-1
                     #
                 elif pos[p][o]==1 or pos[p][o]==9:
-                    val+=+100
+                    val+=+1000
                     val+=b_matrix[p][o]
                     #pawn structure
                     if p+1<=7 and o+1<=7:
@@ -942,44 +942,44 @@ def evaluate_position(pos,playerk):
                     #
                 #
                 elif pos[p][o]==-2:
-                    val+=-300
+                    val+=-3000
                     val+=other_Ll_matrix[p][o]
                 elif pos[p][o]==-3:
-                    val+=-300
+                    val+=-3000
                     val+=other_Xx_matrix[o][p]
                 elif pos[p][o]==-4 or pos[p][o]==-7:
-                    val+=-500
+                    val+=-5000
                     val+=other_Tt_matrix[p][o]
                 elif pos[p][o]==2:
-                    val+=+300
+                    val+=+3000
                     val+=Ll_matrix[p][o]
                 elif pos[p][o]==3:
-                    val+=+300
+                    val+=+3000
                     val+=Xx_matrix[o][p]
                 elif pos[p][o]==4 or pos[p][o]==7:
-                    val+=+500
+                    val+=+5000
                     val+=Tt_matrix[p][o]
                 #
                 elif pos[p][o]==-5:
-                    val+=-900
+                    val+=-9000
                     val+=other_Qq_matrix[p][o]
                 elif pos[p][o]==-6 or pos[p][o]==-8:
-                    val+=-100000
+                    val+=-1000000
                     val+=other_K_matrix[p][o]
                 elif pos[p][o]==5:
-                    val+=+900
+                    val+=+9000
                     val+=Qq_matrix[p][o]
                 elif pos[p][o]==6 or pos[p][o]==8:
-                    val+=100000
+                    val+=1000000
                     val+=k_matrix[p][o]
     elif playerk==-6:
         for p in range(8):
             for o in range(8):
                 if pos[p][o]==0:
-                    pass
+                    continue
                 #
                 elif pos[p][o]==-1 or pos[p][o]==-9:
-                    val+=+100
+                    val+=+1000
                     val+=B_matrix[p][o]
                     #pawn structure
                     if p+1<=7 and o+1<=7:
@@ -996,7 +996,7 @@ def evaluate_position(pos,playerk):
                             val+=1
                     #
                 elif pos[p][o]==1 or pos[p][o]==9:
-                    val+=-100
+                    val+=-1000
                     val+=other_b_matrix[p][o]
                     #pawn structure
                     if p+1<=7 and o+1<=7:
@@ -1014,35 +1014,35 @@ def evaluate_position(pos,playerk):
                     #
                 #
                 elif pos[p][o]==-2:
-                    val+=+300
+                    val+=+3000
                     val+=Ll_matrix[p][o]
                 elif pos[p][o]==-3:
-                    val+=+300
+                    val+=+3000
                     val+=Xx_matrix[p][o]
                 elif pos[p][o]==-4 or pos[p][o]==-7:
-                    val+=+500
+                    val+=+5000
                     val+=Tt_matrix[p][o]
                 elif pos[p][o]==2:
-                    val+=-300
+                    val+=-3000
                     val+=other_Ll_matrix[p][o]
                 elif pos[p][o]==3:
-                    val+=-300
+                    val+=-3000
                     val+=other_Xx_matrix[p][o]
                 elif pos[p][o]==4 or pos[p][o]==7:
-                    val+=-500
+                    val+=-5000
                     val+=other_Tt_matrix[p][o]
                 #
                 elif pos[p][o]==-5:
-                    val+=+900
+                    val+=+9000
                     val+=Qq_matrix[p][o]
                 elif pos[p][o]==-6 or pos[p][o]==-8:
-                    val+=100000
+                    val+=1000000
                     val+=K_matrix[p][o]
                 elif pos[p][o]==5:
-                    val+=-900
+                    val+=-9000
                     val+=other_Qq_matrix[p][o]
                 elif pos[p][o]==6 or pos[p][o]==8:
-                    val+=-100000
+                    val+=-1000000
                     val+=other_k_matrix[p][o]
     return val
 
@@ -1053,7 +1053,7 @@ def evaluatepos2(pos,playerk):
         for p in range(8):
             for o in range(8):
                 if pos[p][o]==0:
-                    pass
+                    continue
                 #
                 elif pos[p][o]==-1 or pos[p][o]==-9:
                     val+=-100
@@ -1097,7 +1097,7 @@ def evaluatepos2(pos,playerk):
         for p in range(8):
             for o in range(8):
                 if pos[p][o]==0:
-                    pass
+                    continue
                 #
                 elif pos[p][o]==-1 or pos[p][o]==-9:
                     val+=+100
@@ -1146,7 +1146,7 @@ def evaluatepos3(pos,playerk):
         for p in range(8):
             for o in range(8):
                 if pos[p][o]==0:
-                    pass
+                    continue
                 #
                 elif pos[p][o]==-1 or pos[p][o]==-9:
                     val=val-100
@@ -1178,7 +1178,7 @@ def evaluatepos3(pos,playerk):
         for p in range(8):
             for o in range(8):
                 if pos[p][o]==0:
-                    pass
+                    continue
                 #
                 elif pos[p][o]==-1 or pos[p][o]==-9:
                     val=val+100
@@ -1619,7 +1619,7 @@ class MinimaxPlayer():
         start=time.time()
         self.rootnode#was?
         for child in self.rootnode.children:
-            if child.value==None or child.value>-90000:#illegale Zuege werden nicht durchgesucht
+            if child.value==None or child.value>-900000:#illegale Zuege werden nicht durchgesucht
                 child.minimax(-math.inf,math.inf,False, depth)
                 print("a ",end="") # child wurde fertig berechnet(und ist legal)
             if ((time.time()+vergangene_zeit) - start) > self.maxtime:
@@ -1628,7 +1628,7 @@ class MinimaxPlayer():
         values=[]
         #illegale Zuege werden nicht ausgewaehlt: Wert ist sehr tief->verloren
         for child in self.rootnode.children:
-            if child.value>-90000:
+            if child.value>-900000:
                 values.append(child.value)
         #
         if values!=[]:

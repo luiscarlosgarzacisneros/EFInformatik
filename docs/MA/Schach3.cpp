@@ -912,7 +912,7 @@ public:
             for (int p=0; p<8; ++p) {
                 for (int o=0; o<8; ++o) {
                     if (is_one_at_this_index(this->B, yx_zu_index(p, o)) || is_one_at_this_index(this->F, yx_zu_index(p, o))) {
-                        val += -100;
+                        val += -1000;
                         val += other_B_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
@@ -929,7 +929,7 @@ public:
                         }
                     }//
                     else if (is_one_at_this_index(this->b, yx_zu_index(p, o)) || is_one_at_this_index(this->f, yx_zu_index(p, o))) {
-                        val += 100;
+                        val += 1000;
                         val += b_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
@@ -946,43 +946,43 @@ public:
                         }
                     }
                     else if (is_one_at_this_index(this->L, yx_zu_index(p, o))) {
-                        val += -300;
+                        val += -3000;
                         val += other_Ll_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->X, yx_zu_index(p, o))) {
-                        val += -300;
+                        val += -3000;
                         val += other_Xx_matrix[o][p];
                     }
                     else if (is_one_at_this_index(this->T, yx_zu_index(p, o)) || is_one_at_this_index(this->Z, yx_zu_index(p, o))) {
-                        val += -500;
+                        val += -5000;
                         val += other_Tt_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->l, yx_zu_index(p, o))) {
-                        val += 300;
+                        val += 3000;
                         val += Ll_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->x, yx_zu_index(p, o))) {
-                        val += 300;
+                        val += 3000;
                         val += Xx_matrix[o][p];
                     }
                     else if (is_one_at_this_index(this->t, yx_zu_index(p, o)) || is_one_at_this_index(this->z, yx_zu_index(p, o))) {
-                        val += 500;
+                        val += 5000;
                         val += Tt_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->Q, yx_zu_index(p, o))) {
-                        val += -900;
+                        val += -9000;
                         val += other_Qq_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->K, yx_zu_index(p, o)) || is_one_at_this_index(this->Y, yx_zu_index(p, o))) {
-                        val += -100000;
+                        val += -1000000;
                         val += other_K_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->q, yx_zu_index(p, o))) {
-                        val += 900;
+                        val += 9000;
                         val += Qq_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->k, yx_zu_index(p, o)) || is_one_at_this_index(this->y, yx_zu_index(p, o))) {
-                        val += 100000;
+                        val += 1000000;
                         val += k_matrix[p][o];
                     }
                 }
@@ -992,7 +992,7 @@ public:
             for (int p=0; p<8; ++p) {
                 for (int o=0; o<8; ++o) {
                     if (is_one_at_this_index(this->B, yx_zu_index(p, o)) || is_one_at_this_index(this->F, yx_zu_index(p, o))) {
-                        val += 100;
+                        val += 1000;
                         val += B_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
@@ -1009,7 +1009,7 @@ public:
                         }
                     }
                     else if (is_one_at_this_index(this->b, yx_zu_index(p, o)) || is_one_at_this_index(this->f, yx_zu_index(p, o))) {
-                        val += -100;
+                        val += -1000;
                         val += other_b_matrix[p][o];
                         // Pawn structure
                         if (p+1<=7 && o+1<=7) {
@@ -1026,43 +1026,43 @@ public:
                         }
                     }
                     else if (is_one_at_this_index(this->L, yx_zu_index(p, o))) {
-                        val += 300;
+                        val += 3000;
                         val += Ll_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->X, yx_zu_index(p, o))) {
-                        val += 300;
+                        val += 3000;
                         val += Xx_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->T, yx_zu_index(p, o)) || is_one_at_this_index(this->Z, yx_zu_index(p, o))) {
-                        val += 500;
+                        val += 5000;
                         val += Tt_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->l, yx_zu_index(p, o))) {
-                        val += -300;
+                        val += -3000;
                         val += other_Ll_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->x, yx_zu_index(p, o))) {
-                        val += -300;
+                        val += -3000;
                         val += other_Xx_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->t, yx_zu_index(p, o)) || is_one_at_this_index(this->z, yx_zu_index(p, o))) {
-                        val += -500;
+                        val += -5000;
                         val += other_Tt_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->Q, yx_zu_index(p, o))) {
-                        val += 900;
+                        val += 9000;
                         val += other_Qq_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->K, yx_zu_index(p, o)) || is_one_at_this_index(this->Y, yx_zu_index(p, o))) {
-                        val += 100000;
+                        val += 1000000;
                         val += other_K_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->q, yx_zu_index(p, o))) {
-                        val += -900;
+                        val += -9000;
                         val += Qq_matrix[p][o];
                     }
                     else if (is_one_at_this_index(this->k, yx_zu_index(p, o)) || is_one_at_this_index(this->y, yx_zu_index(p, o))) {
-                        val += -100000;
+                        val += -1000000;
                         val += other_k_matrix[p][o];
                     }
                 }
@@ -3288,7 +3288,7 @@ public:
         //
         for (MinimaxNode& child : root_node_children){
             int eval;
-            if (child.value>-90000) {
+            if (child.value>-900000) {
                 eval=child.minimax(-1000000,1000000,false, depth);
                 child.value=eval;
                 std::cout<<"a ";//child wurde fertig berechnet
@@ -3300,7 +3300,7 @@ public:
         }
         //
         for (MinimaxNode& child : root_node_children) {
-            if (child.value>-90000) {
+            if (child.value>-900000) {
                 values.push_back(child.value);
             }
         }
@@ -3511,7 +3511,7 @@ public:
         //
         for (MinimaxNode2& child : root_node_children){
             int eval;
-            if (child.value>-90000) {
+            if (child.value>-900000) {
                 eval=child.minimax(-1000000,1000000,false, depth, depth_fuer_nur_schlagen);
                 child.value=eval;
                 std::cout<<"a ";//child wurde fertig berechnet
@@ -3523,7 +3523,7 @@ public:
         }
         //
         for (MinimaxNode2& child : root_node_children) {
-            if (child.value>-90000) {
+            if (child.value>-900000) {
                 values.push_back(child.value);
             }
         }
