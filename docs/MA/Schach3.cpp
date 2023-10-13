@@ -994,7 +994,7 @@ public:
                         anz_Qq+=1;
                     }
                     else if (is_one_at_this_index(this->K, yx_zu_index(p, o)) || is_one_at_this_index(this->Y, yx_zu_index(p, o))) {
-                        val += -1000000;
+                        val += -10000000;
                         y_other_king=p;
                         x_other_king=o;
                     }
@@ -1004,7 +1004,7 @@ public:
                         anz_Qq+=1;
                     }
                     else if (is_one_at_this_index(this->k, yx_zu_index(p, o)) || is_one_at_this_index(this->y, yx_zu_index(p, o))) {
-                        val += 1000000;
+                        val += 10000000;
                         y_this_king=p;
                         x_this_king=o;
                     }
@@ -1096,7 +1096,7 @@ public:
                         anz_Qq+=1;
                     }
                     else if (is_one_at_this_index(this->K, yx_zu_index(p, o)) || is_one_at_this_index(this->Y, yx_zu_index(p, o))) {
-                        val += 1000000;
+                        val += 10000000;
                         y_this_king=p;
                         x_this_king=o;
                     }
@@ -1106,7 +1106,7 @@ public:
                         anz_Qq+=1;
                     }
                     else if (is_one_at_this_index(this->k, yx_zu_index(p, o)) || is_one_at_this_index(this->y, yx_zu_index(p, o))) {
-                        val += -1000000;
+                        val += -10000000;
                         y_other_king=p;
                         x_other_king=o;
                     }
@@ -3341,14 +3341,14 @@ public:
         std::vector<int> values;
         std::vector<MinimaxNode> best_moves;
         MinimaxNode best_move;
-        int best_value = -1000000;
+        int best_value = -100000000;
         std::vector<MinimaxNode>& root_node_children=root_node.children;
         Board return_board;
         //
         for (MinimaxNode& child : root_node_children){
             int eval;
-            if (child.value>-900000) {
-                eval=child.minimax(-1000000,1000000,false, depth);
+            if (child.value>-9000000) {
+                eval=child.minimax(-100000000,100000000,false, depth);
                 child.value=eval;
                 std::cout<<"a ";//child wurde fertig berechnet
             }
@@ -3359,7 +3359,7 @@ public:
         }
         //
         for (MinimaxNode& child : root_node_children) {
-            if (child.value>-900000) {
+            if (child.value>-9000000) {
                 values.push_back(child.value);
             }
         }
@@ -3564,14 +3564,14 @@ public:
         std::vector<int> values;
         std::vector<MinimaxNode2> best_moves;
         MinimaxNode2 best_move;
-        int best_value = -1000000;
+        int best_value = -100000000;
         std::vector<MinimaxNode2>& root_node_children=root_node.children;
         Board return_board;
         //
         for (MinimaxNode2& child : root_node_children){
             int eval;
-            if (child.value>-900000) {
-                eval=child.minimax(-1000000,1000000,false, depth, depth_fuer_nur_schlagen);
+            if (child.value>-9000000) {
+                eval=child.minimax(-100000000,100000000,false, depth, depth_fuer_nur_schlagen);
                 child.value=eval;
                 std::cout<<"a ";//child wurde fertig berechnet
             }
@@ -3582,7 +3582,7 @@ public:
         }
         //
         for (MinimaxNode2& child : root_node_children) {
-            if (child.value>-900000) {
+            if (child.value>-9000000) {
                 values.push_back(child.value);
             }
         }
@@ -4026,4 +4026,5 @@ int main() {
 
 //remove_common_bits_rochade nicht nötig
 //---------------------------------------
-
+//wegen neuer evaluate pos komisch
+//crash?
