@@ -472,7 +472,6 @@ public:
         best_move=best_moves[generate_random_int(0, best_moves.size()-1)];
         return_board=deepcopy(best_move.board);
         return return_board;
-
     }
 
     std::vector<std::vector<int>> minimaxerer(const std::vector<std::vector<int>> board_0) {
@@ -491,24 +490,18 @@ public:
             std::cout<<depth<<std::endl;
             //
             std::vector<std::vector<int>> new_move=minimaxer(depth,vergangene_zeit);
-            //
             //sort+ depth
-            //
             //PRINT CHILD.VALUE FUER ALLE ROOTNODE CHILDREN
             for (MinimaxNode& child : root_node.children) {std::cout<<child.value; std::cout<<", ";}
             std::cout << std::endl;
-            //
             //MOVE SORTING:-------------------
-            this->root_node.sort(true);
+            //this->root_node.sort(true);
             //--------------------------------
-            //
             //break2, damit nicht move=new_move wenn depth nicht fertig
             now = std::chrono::high_resolution_clock::now();
             vergangene_zeit = now - start;
             if (vergangene_zeit.count() >= max_time) {break;}
-            //
             move=new_move;
-            //
             //PRINT CHILD.VALUE FUER ALLE ROOTNODE CHILDREN NACH SORTIEREN
             for (MinimaxNode& child : root_node.children) {std::cout<<child.value; std::cout<<", ";}
             //
@@ -737,7 +730,7 @@ public:
         while (true) {
             //-----------------------------------------
             HumanPlayer player_1(1);
-            MCTSPlayer player_2(-1, this->board);
+            MinimaxPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<""<<std::endl;;
             std::cout<<this->turn<<std::endl;
