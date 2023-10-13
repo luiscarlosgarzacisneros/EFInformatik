@@ -3959,6 +3959,7 @@ int main() {
 //Hasht
 //evalpos: QT QX XX
 //evalpos: nicht zurueckgehen
+//evalpos: zu viel BB zigzag, nicht genug Ll und Xx am Anfang
 
 //Minimax2: sb welcher Tiefe?
 
@@ -3966,5 +3967,4 @@ int main() {
 
 //remove_common_bits_rochade nicht nötig
 //---------------------------------------
-//Bb nicht zu f in gorc
-//in generate children auch nicht
+
