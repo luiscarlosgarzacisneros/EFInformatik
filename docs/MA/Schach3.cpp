@@ -1402,15 +1402,15 @@ public:
                         child.F=remove_common_bits(board[2], board[0]);
                     }
                     else {
-                        child.B=remove_common_bits(this->B, board[1]);
-                        child.L=remove_common_bits(this->L, board[1]);
-                        child.X=remove_common_bits(this->X, board[1]);
-                        child.T=remove_common_bits(this->T, board[1]);
-                        child.Q=remove_common_bits(this->Q, board[1]);
-                        child.K=remove_common_bits(this->K, board[1]);
-                        child.Y=remove_common_bits(this->Y, board[1]);
-                        child.Z=remove_common_bits(this->Z, board[1]);
-                        child.F=remove_common_bits(board[2], board[1]);
+                        child.B=this->B;
+                        child.L=this->L;
+                        child.X=this->X;
+                        child.T=this->T;
+                        child.Q=this->Q;
+                        child.K=this->K;
+                        child.Y=this->Y;
+                        child.Z=this->Z;
+                        child.F=this->F;
                     }
                     //
                     uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
@@ -1637,15 +1637,15 @@ public:
                         child.f=remove_common_bits(board[2], board[0]);
                     }
                     else {
-                        child.b=remove_common_bits(this->b, board[1]);
-                        child.l=remove_common_bits(this->l, board[1]);
-                        child.x=remove_common_bits(this->x, board[1]);
-                        child.t=remove_common_bits(this->t, board[1]);
-                        child.q=remove_common_bits(this->q, board[1]);
-                        child.k=remove_common_bits(this->k, board[1]);
-                        child.y=remove_common_bits(this->y, board[1]);
-                        child.z=remove_common_bits(this->z, board[1]);
-                        child.f=remove_common_bits(board[2], board[1]);
+                        child.b=this->b;
+                        child.l=this->l;
+                        child.x=this->x;
+                        child.t=this->t;
+                        child.q=this->q;
+                        child.k=this->k;
+                        child.y=this->y;
+                        child.z=this->z;
+                        child.f=this->f;
                     }
                     //
                     uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
@@ -1963,16 +1963,16 @@ public:
                             child.Z=remove_common_bits(this->Z, board[0]);
                             child.F=remove_common_bits(board[2], board[0]);
                         }
-                        else {
-                            child.B=remove_common_bits(this->B, board[1]);
-                            child.L=remove_common_bits(this->L, board[1]);
-                            child.X=remove_common_bits(this->X, board[1]);
-                            child.T=remove_common_bits(this->T, board[1]);
-                            child.Q=remove_common_bits(this->Q, board[1]);
-                            child.K=remove_common_bits(this->K, board[1]);
-                            child.Y=remove_common_bits(this->Y, board[1]);
-                            child.Z=remove_common_bits(this->Z, board[1]);
-                            child.F=remove_common_bits(board[2], board[1]);
+                        else { //Zug war 2 nach vorne, kein Schlagen
+                            child.B=this->B;
+                            child.L=this->L;
+                            child.X=this->X;
+                            child.T=this->T;
+                            child.Q=this->Q;
+                            child.K=this->K;
+                            child.Y=this->Y;
+                            child.Z=this->Z;
+                            child.F=this->F;
                         }
                         //
                         uint64_t child_black_pieces=child.B|child.L|child.X|child.T|child.Q|child.K|child.Z|child.Y|child.F;
@@ -2204,15 +2204,15 @@ public:
                             child.f=remove_common_bits(board[2], board[0]);
                         }
                         else {
-                            child.b=remove_common_bits(this->b, board[1]);
-                            child.l=remove_common_bits(this->l, board[1]);
-                            child.x=remove_common_bits(this->x, board[1]);
-                            child.t=remove_common_bits(this->t, board[1]);
-                            child.q=remove_common_bits(this->q, board[1]);
-                            child.k=remove_common_bits(this->k, board[1]);
-                            child.y=remove_common_bits(this->y, board[1]);
-                            child.z=remove_common_bits(this->z, board[1]);
-                            child.f=remove_common_bits(board[2], board[1]);
+                            child.b=this->b;
+                            child.l=this->l;
+                            child.x=this->x;
+                            child.t=this->t;
+                            child.q=this->q;
+                            child.k=this->k;
+                            child.y=this->y;
+                            child.z=this->z;
+                            child.f=this->f;
                         }
                         //
                         uint64_t child_white_pieces=child.b|child.l|child.x|child.t|child.q|child.k|child.z|child.y|child.f;
