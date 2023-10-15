@@ -799,7 +799,7 @@ class HumanPlayer():
                 print('EINGABE NICHT KORREKT1')
                 continue
 
-            if vy < 8 and vy > -1 and vx < 8 and vx > -1 and zy < 8 and zy > -1 and zx < 8 and zx > -1:
+            if vy<8 and vy>-1 and vx<8 and vx>-1 and zy<8 and zy>-1 and zx<8 and zx>-1:
                 return [vy, vx, zy, zx]
             else:
                 print('EINGABE NICHT KORREKT1')

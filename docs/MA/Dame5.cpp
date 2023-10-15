@@ -701,13 +701,14 @@ std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<
 
 bool verloren1(const std::vector<std::vector<int>>& pos, int player) {
     int player2 =(player==1) ? 2 : -2;
-    int eval=0;
+    int eval=false;
     //
-    for (size_t sl=0; sl < pos.size(); ++sl) {
-        eval+=std::count(pos[sl].begin(), pos[sl].end(), player);
-        eval+=std::count(pos[sl].begin(), pos[sl].end(), player2);
+    for (int y=0; y<8; ++y) {
+        for (int x=0; x<8; ++x) {
+            if (pos[y][x]==player || pos[y][x]==player2) {eval=true; break;}
+        }
     }
-    return (eval == 0) ? true : false;
+    return eval;
 }
 
 bool keine_zugmoeglichkeiten(const std::vector<std::vector<int>>& pos, int player) {
