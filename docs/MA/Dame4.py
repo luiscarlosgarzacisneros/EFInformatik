@@ -38,16 +38,13 @@ def verloren1(pos,player):
         player2=2
     else:
         player2=-2
-    eval=False
-    for sl in range(len(pos)):
-        for o in range(pos[sl].count(player)):
-            eval=eval+1
-        for p in range(pos[sl].count(player2)):
-            eval=eval+1
-    if eval==0:
-        return True
-    else:
-        return False
+    eval=True
+    for y in range(len(pos)):
+        for x in range(len(pos)):
+            if pos[y][x]==player or player2:
+                eval=False
+                break
+    return eval
 
 def verloren2(pos,player):
     eval=0
