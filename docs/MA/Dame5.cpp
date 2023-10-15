@@ -701,11 +701,11 @@ std::vector<std::vector<int>> generate_one_random_child(std::vector<std::vector<
 
 bool verloren1(const std::vector<std::vector<int>>& pos, int player) {
     int player2 =(player==1) ? 2 : -2;
-    int eval=false;
+    int eval=true;
     //
     for (int y=0; y<8; ++y) {
         for (int x=0; x<8; ++x) {
-            if (pos[y][x]==player || pos[y][x]==player2) {eval=true; break;}
+            if (pos[y][x]==player || pos[y][x]==player2) {eval=false; break;}
         }
     }
     return eval;

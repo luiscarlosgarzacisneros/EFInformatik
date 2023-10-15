@@ -38,7 +38,7 @@ def verloren1(pos,player):
         player2=2
     else:
         player2=-2
-    eval=0
+    eval=False
     for sl in range(len(pos)):
         for o in range(pos[sl].count(player)):
             eval=eval+1
