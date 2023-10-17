@@ -435,7 +435,7 @@ public:
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time=2;
+    int max_time=3;
     int max_depth=10;
     int starting_depth=1;
 
@@ -519,9 +519,9 @@ public:
 
 //
 
-double c=std::sqrt(2);
-int number_of_simulations=20;
-int depth=2;
+double c=10000;
+int number_of_simulations=100;
+int depth=4;
 
 int mcts_counter=0;
 
@@ -633,7 +633,7 @@ public:
     MCTSNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time=1;
+    int max_time=3;
 
     bool mcts2() {
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
@@ -790,7 +790,7 @@ void spielen(int z) {
 
 int main() {
     srand(time(0)); //seed
-    spielen(3);
+    spielen(30);
 }
 
 //sort?

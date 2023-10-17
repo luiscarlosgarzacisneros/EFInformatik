@@ -1950,7 +1950,7 @@ public:
 
 //
 
-int max_turns=50;
+int max_turns=70;
 
 class Dame {
 public:
@@ -1973,8 +1973,8 @@ public:
 
         while (true) {
             //-----------------------------------------
-            MinimaxPlayer player_1(1, this->board);
-            MCTSPlayer player_2(-1, this->board);
+            HumanPlayer player_1(1);
+            MinimaxPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
             print_board(this->board);
