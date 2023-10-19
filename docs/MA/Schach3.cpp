@@ -3799,7 +3799,7 @@ public:
     MinimaxNode3 root_node;
     int token;
     Board board;
-    int max_time=10;
+    int max_time=30;
     int max_depth=10;
     int starting_depth=2;
     int depth_fuer_nur_schlagen=5;

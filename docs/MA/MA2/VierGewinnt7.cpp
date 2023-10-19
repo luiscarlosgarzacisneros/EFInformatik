@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 #include <list>
@@ -7,6 +8,7 @@
 #include <chrono>
 #include <cmath>
 #include <sstream>
+#include <SFML/Graphics.hpp>
 
 //
 std::vector<std::vector<int>> deepcopy(const std::vector<std::vector<int>>& board) {
@@ -432,6 +434,7 @@ public:
         //
         minimax_counter=0;
     }
+
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
@@ -630,6 +633,7 @@ public:
         root_node.token=token;
         root_node.expanded=false;
     }
+
     MCTSNode root_node;
     int token;
     std::vector<std::vector<int>> board;
@@ -759,7 +763,6 @@ public:
         }
     }
 
-
 private:
     std::vector<std::vector<int>> board;
     int turn;
@@ -789,6 +792,7 @@ void spielen(int z) {
 //
 
 int main() {
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Window");
     srand(time(0)); //seed
     spielen(30);
 }

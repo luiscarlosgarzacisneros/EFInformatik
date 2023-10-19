@@ -1661,8 +1661,8 @@ public:
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time=1;
-    int max_depth=10;
+    int max_time=10;
+    int max_depth=12;
     int starting_depth=1;
 
     std::vector<std::vector<int>> minimaxer(const int depth, const std::chrono::duration<double> vergangene_zeit) {
