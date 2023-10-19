@@ -3,9 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "C:/Users/luisc_z021/Downloads/SFML-2.6.0-windows-gcc-13.1.0-mingw-32-bit/SFML-2.6.0/include/**",
-                "C:/Users/luisc_z021/Downloads/SFML-2.6.0-windows-gcc-13.1.0-mingw-32-bit/SFML-2.6.0/lib/**"
+                "${workspaceFolder}/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -20,4 +18,4 @@
         }
     ],
     "version": 4
-}        
+}
