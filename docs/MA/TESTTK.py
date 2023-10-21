@@ -4,7 +4,7 @@ import time
 import math
 import tkinter as tk
 import os
-
+import threading
 #
 
 
@@ -76,7 +76,7 @@ def printboard(board):
             if board[i][j]==-2:
                 canvas.create_image(x0+25, y0+25, image=b_q_image)
     #
-    root.update()
+    #root.update()
     root.mainloop()
     open_window=root
 
