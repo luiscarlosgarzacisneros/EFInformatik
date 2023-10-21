@@ -277,49 +277,53 @@ def generate_one_random_child(position,player):#für Monte Carlo Simulation
 minimax_counter4=0
 #
 
+open_window=None
+
+def printboard(board):
+    global open_window
+    print('  1   2   3   4   5   6   7')
+    print('-----------------------------')
+    for i in range(6):
+        print('I ', end='')
+        for j in range(7):
+            if board[i][j]==1:
+                print('X', end='')
+            elif board[i][j]==-1:
+                print('O', end='')
+            else:
+                print(' ', end='')
+            print(' I ', end='')
+        print('')
+        print('-----------------------------')
+    #tkinter--------------------------------------
+    if open_window!=None:
+        open_window.destroy()
+    root = tk.Tk()
+    root.title("4-Gewinnt")
+    canvas = tk.Canvas(root, width=350, height=300, background="blue")
+    canvas.grid(row=0, column=0, padx=10, pady=10)
+    # Draw the initial board state
+    for i in range(6):
+        for j in range(7):
+            canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="black")
+    #Fill with pieces
+    for i in range(6):
+        for j in range(7):
+            if board[i][j] == 1:
+                canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="yellow")
+            elif board[i][j] == -1:
+                canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="red")
+    root.update()
+    open_window=root
+
+#
+
 class VierGewinnt():
     def __init__(self):
         self.board = []
         self.turn=0
         self.players=[]
-        self.open_window=None
     
-    def printboard(self, board):
-        print('  1   2   3   4   5   6   7')
-        print('-----------------------------')
-        for i in range(6):
-            print('I ', end='')
-            for j in range(7):
-                if board[i][j]==1:
-                    print('X', end='')
-                elif board[i][j]==-1:
-                    print('O', end='')
-                else:
-                    print(' ', end='')
-                print(' I ', end='')
-            print('')
-            print('-----------------------------')
-        #tkinter--------------------------------------
-        if self.open_window!=None:
-            self.open_window.destroy()
-        root = tk.Tk()
-        root.title("Connect Four")
-        canvas = tk.Canvas(root, width=350, height=300, background="blue")
-        canvas.grid(row=0, column=0, padx=10, pady=10)
-        # Draw the initial board state
-        for i in range(6):
-            for j in range(7):
-                canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="black")
-        #Fill with pieces
-        for i in range(6):
-            for j in range(7):
-                if self.board[i][j] == 1:
-                    canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="yellow")
-                elif self.board[i][j] == -1:
-                    canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="red")
-        self.open_window=root
-        root.update_idletasks()
-
     def play(self):
         self.board = [
         [0, 0, 0, 0, 0, 0, 0],
@@ -341,7 +345,7 @@ class VierGewinnt():
         current=0
         while True:
             print(self.turn)
-            self.printboard(self.board)
+            printboard(copy.deepcopy(self.board))
             player = self.players[current]
             if player.token==1:
                 istamzug='X'
@@ -353,7 +357,7 @@ class VierGewinnt():
             self.turn+=1
             if game_over(self.board) or gewonnen(self.board,-1)or gewonnen(self.board,1):
                 break
-        self.printboard(self.board)
+        printboard(self.board)
         if gewonnen(self.board,-1):
             print('O HAT GEWONNEN')
             return 'O'
@@ -385,7 +389,7 @@ class HumanPlayer():
 
     def get_move(self, board):
         self.player(board)
-        return board
+        return copy.deepcopy(board)
 
 #
 
