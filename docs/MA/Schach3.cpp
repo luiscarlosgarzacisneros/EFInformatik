@@ -818,13 +818,6 @@ std::vector<std::vector<int>> T_matrix =invert_matrix(t_matrix);
 std::vector<std::vector<int>> Q_matrix =invert_matrix(q_matrix);
 std::vector<std::vector<int>> K_normal_matrix =invert_matrix(k_normal_matrix);
 std::vector<std::vector<int>> K_endgame_matrix =invert_matrix(k_endgame_matrix);
-//std::vector<std::vector<int>> B_matrix =b_matrix;
-//std::vector<std::vector<int>> L_matrix =l_matrix;
-//std::vector<std::vector<int>> X_matrix =x_matrix;
-//std::vector<std::vector<int>> T_matrix =t_matrix;
-//std::vector<std::vector<int>> Q_matrix =q_matrix;
-//std::vector<std::vector<int>> K_normal_matrix =k_normal_matrix;
-//std::vector<std::vector<int>> K_endgame_matrix =k_endgame_matrix;
 
 std::vector<std::vector<int>> other_b_matrix = matrix_minus(b_matrix);
 std::vector<std::vector<int>> other_l_matrix = matrix_minus(l_matrix);
@@ -875,6 +868,7 @@ public:
     Board() {}
 
     void print_board() const {
+        std::vector zahlen= {8,7,6,5,4,3,2,1};
         std::vector<std::vector<std::string>> board;
         //initialize board with spaces
         for (int i = 0; i < 8; i++) {
@@ -911,10 +905,10 @@ public:
         for (int i=0; i<8; i++) {std::reverse(board[i].begin(), board[i].end());}
         //
         //print the board
-        std::cout <<"    1   2   3   4   5   6   7   8\n";
+        std::cout <<"    a   b   c   d   e   f   g   h\n";
         std::cout <<"  ---------------------------------\n";
         for (int i=0; i<8; i++) {
-            std::cout << i+1 <<" I";
+            std::cout << zahlen[i] <<" I";
             for (int j=0; j<8; j++) {
                 std::cout << " ";
                 std::cout << board[i][j];
@@ -3009,6 +3003,9 @@ bool verlorenv(const std::vector<std::vector<int>>& board, int playerk) {
     return true;
 }
 
+std::vector x_inputs={'a','b','c', 'd', 'e', 'f', 'g', 'h'};
+std::vector y_inputs={8,7,6,5,4,3,2,1};
+
 class HumanPlayer {
 public:
     HumanPlayer(int token, Board board) : token(token), board(board) {}
@@ -3026,28 +3023,37 @@ public:
 
     std::vector<int> eingabe() {
         try {
-            int vx, vy, zx, zy;
+            char vx_i, zx_i;
+            int vy_i, zy_i;
             std::cout <<"von x: ";
-            std::cin>> vx;
+            std::cin>> vx_i;
             std::cout <<"von y: ";
-            std::cin>> vy;
+            std::cin>> vy_i;
             std::cout <<"zu x: ";
-            std::cin>> zx;
+            std::cin>> zx_i;
             std::cout <<"zu y: ";
-            std::cin >> zy;
+            std::cin >> zy_i;
             //
-            vx -= 1;
-            vy -= 1;
-            zx -= 1;
-            zy -= 1;
+            auto it_vx = std::find(x_inputs.begin(), x_inputs.end(), vx_i);
+            auto it_zx = std::find(x_inputs.begin(), x_inputs.end(), zx_i);
+            auto it_vy = std::find(y_inputs.begin(), y_inputs.end(), vy_i);
+            auto it_zy = std::find(y_inputs.begin(), y_inputs.end(), zy_i);
+            int vx_index = std::distance(x_inputs.begin(), it_vx);
+            int zx_index = std::distance(x_inputs.begin(), it_zx);
+            int vy_index = std::distance(y_inputs.begin(), it_vy);
+            int zy_index = std::distance(y_inputs.begin(), it_zy);
+            int vy=vy_index;
+            int zy=zy_index;
+            int vx=vx_index;
+            int zx=zx_index;
             //
             if (vy < 8 && vy > -1 && vx < 8 && vx > -1 && zy < 8 && zy > -1 && zx < 8 && zx > -1 && is_int(vx) && is_int(vy)&& is_int(zx)&& is_int(zy)) {
-                    return {vy, vx, zy, zx};
+                return {vy, vx, zy, zx};
             }
             else {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "EINGABE NICHT KORREKT1" << std::endl;
+                std::cout << "EINGABE NICHT KORREKT0" << std::endl;
                 return eingabe();
             }
         }
@@ -4005,48 +4011,6 @@ public:
     Board board;
     int max_time=10;
 
-    bool mcts2() {
-        std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-        //filter legal moves
-        std::vector<MCTSNode> legal_moves;
-        int number_of_legal_moves = 0;
-        root_node.children=root_node.expand_node();
-        for (MCTSNode& child_of_root : root_node.children) {
-            child_of_root.expand_node();
-            bool king_is_killed = false;
-            for (MCTSNode& child_of_child : child_of_root.children) {
-                if (child_of_child.board.verloren(root_node.player_am_zug)) {
-                    king_is_killed = true;
-                    break;
-                }
-            }
-            if (!king_is_killed) {
-                legal_moves.push_back(child_of_root);
-                number_of_legal_moves++;
-            }
-        }
-        root_node.children = legal_moves;
-        // No legal moves left
-        if (number_of_legal_moves == 0) {return false;}
-        //
-        while (true) {
-            mcts_counter += 1;
-            MCTSNode* selected_node = root_node.select_leaf_node();
-            if (selected_node->visits==0) {
-                double new_score = selected_node->simulate();
-                selected_node->backpropagate(new_score, number_of_simulations);
-            }
-            else {selected_node->expand_node();}
-            //
-            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-            double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
-            if (elapsed_seconds > this->max_time) {
-                break;
-            }
-        }
-        return true;
-    }
-
     bool mcts() {
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
         //filter legal moves
@@ -4156,7 +4120,7 @@ int turn;
         int current = 1;
         while (true) {
             //-----------------------------------------
-            MinimaxPlayer2 player_1(6, this->board);
+            HumanPlayer player_1(6, this->board);
             MinimaxPlayer3 player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
@@ -4261,18 +4225,3 @@ int main() {
     std::cout<<"FINISHED"<<std::endl;
     //test-----------------
 }
-
-//
-
-//Positionsmatrixen: Zentrumeinnahme
-//Hasht
-//evalpos: QT QX XX
-//evalpos: nicht zurueckgehen
-//evalpos: zu viel BB zigzag, nicht genug Ll und Xx am Anfang
-
-//Minimax2: sb welcher Tiefe?
-
-//MCTS Parameter bestimmen
-
-//remove_common_bits_rochade nicht nötig
-//---------------------------------------

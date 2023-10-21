@@ -270,7 +270,8 @@ std::vector<std::vector<int>> generate_one_random_child(const std::vector<std::v
 
 class HumanPlayer {
 public:
-    HumanPlayer(int token) : token(token) {}
+    HumanPlayer(int token, std::vector<std::vector<int>> board) : token(token) {}
+    //braucht board nicht, ist aber besser bei Austauche von Playertypen
 
     std::vector<std::vector<int>> player(std::vector<std::vector<int>>& board) {
         try {
@@ -709,7 +710,7 @@ public:
 
         while (true) {
             //-----------------------------------------
-            HumanPlayer player_1(1);
+            HumanPlayer player_1(1, this->board);
             MinimaxPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<""<<std::endl;;
