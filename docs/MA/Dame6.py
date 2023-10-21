@@ -3,7 +3,6 @@ import random
 import time
 import math
 import tkinter as tk
-import os
 
 #
 
@@ -32,18 +31,10 @@ def printboard(board):
     #---------------------------------------------------
     if open_window!=None:
         open_window.destroy()
-    # Get the current script's directory
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    w_q_path = os.path.join(current_dir, "white_queen.png")
-    b_q_path = os.path.join(current_dir, "black_queen.png")
     root= tk.Tk()
     root.title("Dame")
-    queen_size = 40
     canvas = tk.Canvas(root, width=400, height=400)
     canvas.grid(row=0, column=0, padx=10, pady=10)
-    #circle und queen colors und positions
-    circle_colors = {1: "white", -1: "black"}
-    queen_colors = {2: w_q_path, -2: b_q_path}
     #Board zeichnen
     for i in range(8):
         for j in range(8):
@@ -62,15 +53,17 @@ def printboard(board):
             y0 = i * 50
             x1 = x0 + 50
             y1 = y0 + 50
-            # Check board values and draw circles/queens
-            if board[i][j] in circle_colors:
-                fill_color = circle_colors[board[i][j]]
-                canvas.create_oval(x0, y0, x1, y1, fill=fill_color, outline="black")
-            if board[i][j] in queen_colors:
-                image_path = queen_colors[board[i][j]]
-                queen_image = tk.PhotoImage(file=image_path)
-                q_image = queen_image.subsample(queen_image.width() // queen_size, queen_image.height() // queen_size)
-                canvas.create_image(x0+25, y0+25, image=q_image)
+            # Check board values and draw circles
+            if board[i][j]==1:
+                canvas.create_oval(x0, y0, x1, y1, fill="white", outline="black")
+            if board[i][j]==-1:
+                canvas.create_oval(x0, y0, x1, y1, fill="black", outline="black")
+            if board[i][j]==2:
+                canvas.create_oval(x0, y0, x1, y1, fill="white", outline="black")
+                canvas.create_oval(x0+10, y0+10, x1-10, y1-10, fill="white", outline="black")
+            if board[i][j]==-2:
+                canvas.create_oval(x0, y0, x1, y1, fill="black", outline="black")
+                canvas.create_oval(x0+10, y0+10, x1-10, y1-10, fill="black", outline="white")
     #
     root.update()
     open_window=root
