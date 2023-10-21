@@ -339,7 +339,7 @@ class VierGewinnt():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(HumanPlayer(1))
+        self.players.append(MinimaxPlayer(1))
         self.players.append(MinimaxPlayer(-1))
         #
         current=0
