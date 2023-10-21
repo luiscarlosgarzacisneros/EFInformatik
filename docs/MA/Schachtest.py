@@ -26,8 +26,10 @@ import math
 
 #
 
+zahlen=[8,7,6,5,4,3,2,1]
+
 def printboard2(board):
-    print('  1   2   3   4   5   6   7   8')
+    print('  a   b   c   d   e   f   g   h')
     print('---------------------------------')
     for i in range(8):
         print('I ', end='')
@@ -59,11 +61,11 @@ def printboard2(board):
             elif board[i][j]==0:
                 print(' ', end='')
             print(' I ', end='')
-        print(i + 1)
+        print(zahlen[i])
         print('---------------------------------')
 
-def printboard(board):
-    print('  1   2   3   4   5   6   7   8')
+def printboard(board): #Ff, Yy, Zz
+    print('  a   b   c   d   e   f   g   h')
     print('---------------------------------')
     for i in range(8):
         print('I ', end='')
@@ -111,7 +113,7 @@ def printboard(board):
                 print('Y', end='')
             #
             print(' I ', end='')
-        print(i + 1)
+        print(zahlen[i])
         print('---------------------------------')
 
 #
@@ -1095,168 +1097,6 @@ def evaluate_position(pos,playerk):
             val+=K_normal_matrix[y_this_players_king][x_this_players_king]
     return val
 
-def evaluatepos2(pos,playerk):#nicht gut 
-    #mit Matrixen
-    val=0
-    if playerk==6:
-        for p in range(8):
-            for o in range(8):
-                if pos[p][o]==0:
-                    continue
-                #
-                elif pos[p][o]==-1 or pos[p][o]==-9:
-                    val+=-100
-                    val+=other_B_matrix[p][o]
-                elif pos[p][o]==1 or pos[p][o]==9:
-                    val+=+100
-                    val+=b_matrix[p][o]
-                #
-                elif pos[p][o]==-2:
-                    val+=-300
-                    val+=other_Ll_matrix[p][o]
-                elif pos[p][o]==-3:
-                    val+=-300
-                    val+=other_Xx_matrix[o][p]
-                elif pos[p][o]==-4 or pos[p][o]==-7:
-                    val+=-500
-                    val+=other_Tt_matrix[p][o]
-                elif pos[p][o]==2:
-                    val+=+300
-                    val+=Ll_matrix[p][o]
-                elif pos[p][o]==3:
-                    val+=+300
-                    val+=Xx_matrix[o][p]
-                elif pos[p][o]==4 or pos[p][o]==7:
-                    val+=+500
-                    val+=Tt_matrix[p][o]
-                #
-                elif pos[p][o]==-5:
-                    val+=-900
-                    val+=other_Qq_matrix[p][o]
-                elif pos[p][o]==-6 or pos[p][o]==-8:
-                    val+=-100000
-                    val+=other_K_matrix[p][o]
-                elif pos[p][o]==5:
-                    val+=+900
-                    val+=Qq_matrix[p][o]
-                elif pos[p][o]==6 or pos[p][o]==8:
-                    val+=100000
-                    val+=k_matrix[p][o]
-    elif playerk==-6:
-        for p in range(8):
-            for o in range(8):
-                if pos[p][o]==0:
-                    continue
-                #
-                elif pos[p][o]==-1 or pos[p][o]==-9:
-                    val+=+100
-                    val+=B_matrix[p][o]
-                elif pos[p][o]==1 or pos[p][o]==9:
-                    val+=-100
-                    val+=other_b_matrix[p][o]
-                #
-                elif pos[p][o]==-2:
-                    val+=+300
-                    val+=Ll_matrix[p][o]
-                elif pos[p][o]==-3:
-                    val+=+300
-                    val+=Xx_matrix[p][o]
-                elif pos[p][o]==-4 or pos[p][o]==-7:
-                    val+=+500
-                    val+=Tt_matrix[p][o]
-                elif pos[p][o]==2:
-                    val+=-300
-                    val+=other_Ll_matrix[p][o]
-                elif pos[p][o]==3:
-                    val+=-300
-                    val+=other_Xx_matrix[p][o]
-                elif pos[p][o]==4 or pos[p][o]==7:
-                    val+=-500
-                    val+=other_Tt_matrix[p][o]
-                #
-                elif pos[p][o]==-5:
-                    val+=+900
-                    val+=Qq_matrix[p][o]
-                elif pos[p][o]==-6 or pos[p][o]==-8:
-                    val+=100000
-                    val+=K_matrix[p][o]
-                elif pos[p][o]==5:
-                    val+=-900
-                    val+=other_Qq_matrix[p][o]
-                elif pos[p][o]==6 or pos[p][o]==8:
-                    val+=-100000
-                    val+=other_k_matrix[p][o]
-    return val
-
-def evaluatepos3(pos,playerk):#nicht gut
-    #ohne Matrixen
-    val=0
-    if playerk==6:
-        for p in range(8):
-            for o in range(8):
-                if pos[p][o]==0:
-                    continue
-                #
-                elif pos[p][o]==-1 or pos[p][o]==-9:
-                    val=val-100
-                elif pos[p][o]==1 or pos[p][o]==9:
-                    val=val+100
-                #
-                elif pos[p][o]==-2:
-                    val=val-300
-                elif pos[p][o]==-3:
-                    val=val-300
-                elif pos[p][o]==-4 or pos[p][o]==-7:
-                    val=val-500
-                elif pos[p][o]==2:
-                    val=val+300
-                elif pos[p][o]==3:
-                    val=val+300
-                elif pos[p][o]==4 or pos[p][o]==7:
-                    val=val+500
-                #
-                elif pos[p][o]==-5:
-                    val=val-900
-                elif pos[p][o]==-6 or pos[p][o]==-8:
-                    val+=-100000
-                elif pos[p][o]==5:
-                    val=val+900
-                elif pos[p][o]==6 or pos[p][o]==8:
-                    val+=100000
-    elif playerk==-6:
-        for p in range(8):
-            for o in range(8):
-                if pos[p][o]==0:
-                    continue
-                #
-                elif pos[p][o]==-1 or pos[p][o]==-9:
-                    val=val+100
-                elif pos[p][o]==1 or pos[p][o]==9:
-                    val=val-100
-                #
-                elif pos[p][o]==-2:
-                    val=val+300
-                elif pos[p][o]==-3:
-                    val=val+300
-                elif pos[p][o]==-4 or pos[p][o]==-7:
-                    val=val+500
-                elif pos[p][o]==2:
-                    val=val-300
-                elif pos[p][o]==3:
-                    val=val-300
-                elif pos[p][o]==4 or pos[p][o]==7:
-                    val=val-500
-                #
-                elif pos[p][o]==-5:
-                    val=val+900
-                elif pos[p][o]==-6 or pos[p][o]==-8:
-                    val+=100000
-                elif pos[p][o]==5:
-                    val=val-900
-                elif pos[p][o]==6 or pos[p][o]==8:
-                    val+=-100000
-    return val
-
 #
 
 class Schach():
@@ -1280,7 +1120,7 @@ class Schach():
         ]
         #
         self.players.clear()
-        self.players.append(MCTSPlayer(6))#k
+        self.players.append(HumanPlayer(6))#k
         self.players.append(MinimaxPlayer(-6))#K
         #
         current=0
@@ -1326,6 +1166,9 @@ class Schach():
         
 #
 
+x_inputs=['a', 'b','c', 'd', 'e', 'f', 'g', 'h']
+y_inputs=[8,7,6,5,4,3,2,1]
+
 class HumanPlayer():
     def __init__(self, token):
         self.token=token
@@ -1340,19 +1183,23 @@ class HumanPlayer():
     def eingabe(self):
         while True:
             try:
-                vx = int(input('von x: ')) - 1
-                vy = int(input('von y: ')) - 1
-                zx = int(input('zu x: ')) - 1
-                zy = int(input('zu y: ')) - 1
+                vx_s = str(input('von x: '))
+                vy_i = int(input('von y: '))
+                zx_s = str(input('zu x: '))
+                zy_i = int(input('zu y: '))
+                vy=y_inputs.index(vy_i)
+                zy=y_inputs.index(zy_i)
             except:
                 print('EINGABE NICHT KORREKT1')
-                continue 
+                continue
 
-            if vy < 8 and vy > -1 and vx < 8 and vx > -1 and zy < 8 and zy > -1 and zx < 8 and zx > -1:
+            if vy<8 and vy>-1 and zy<8 and zy>-1 and vx_s in x_inputs and zx_s in x_inputs:
+                vx = x_inputs.index(vx_s)
+                zx = x_inputs.index(zx_s)
                 return [vy, vx, zy, zx]
             else:
                 print('EINGABE NICHT KORREKT1')
-                continue 
+                continue
 
     def player(self,pos):
         if self.token == 6:
@@ -1863,34 +1710,3 @@ def spielen(z):
 spielen(3)
 
 #
-
-#----------------------------------------------------------------test
-board=[
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,1,0,0,0,0,1,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,-5,0,0,0,0],
-    [0,1,0,0,0,0,0,0],
-    [0,1,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0]
-]
-
-def test():
-    for child in generate_children(board,-6):
-        printboard(child)
-
-def test2():
-    printboard(generate_one_random_child(board, -6))
-
-#test()
-#test2()
-
-#printboard(board)
-#print(evaluate_position(board,6))
-#----------------------------------------------------------------test
-
-#evaluate_position verbessern mobility?
-#board
-
-#Rochade zuerst und normale Züge danach?
