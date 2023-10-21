@@ -51,19 +51,21 @@ def printboard(board):
         for j in range(8):
             x0 = j * 50
             y0 = i * 50
-            x1 = x0 + 50
-            y1 = y0 + 50
+            x1 = x0 + 40
+            y1 = y0 + 40
             # Check board values and draw circles
             if board[i][j]==1:
-                canvas.create_oval(x0, y0, x1, y1, fill="white", outline="black")
+                canvas.create_oval(x0+10, y0+10, x1, y1, fill="white", outline="black")
             if board[i][j]==-1:
-                canvas.create_oval(x0, y0, x1, y1, fill="black", outline="black")
+                canvas.create_oval(x0+10, y0+10, x1, y1, fill="black", outline="black")
             if board[i][j]==2:
-                canvas.create_oval(x0, y0, x1, y1, fill="white", outline="black")
-                canvas.create_oval(x0+10, y0+10, x1-10, y1-10, fill="white", outline="black")
+                canvas.create_oval(x0+10, y0+10, x1, y1, fill="white", outline="black")
+                canvas.create_oval(x0+15, y0+15, x1-5, y1-5, fill="white", outline="black")
+                canvas.create_oval(x0+20, y0+20, x1-10, y1-10, fill="white", outline="black")
             if board[i][j]==-2:
-                canvas.create_oval(x0, y0, x1, y1, fill="black", outline="black")
-                canvas.create_oval(x0+10, y0+10, x1-10, y1-10, fill="black", outline="white")
+                canvas.create_oval(x0+10, y0+10, x1, y1, fill="black", outline="black")
+                canvas.create_oval(x0+15, y0+15, x1-5, y1-5, fill="black", outline="white")
+                canvas.create_oval(x0+20, y0+20, x1-10, y1-10, fill="black", outline="white")
     #
     root.update()
     open_window=root
@@ -787,7 +789,7 @@ class Dame():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(HumanPlayer(1))
+        self.players.append(MinimaxPlayer(1))
         self.players.append(MinimaxPlayer(-1))
         #
         current=0
