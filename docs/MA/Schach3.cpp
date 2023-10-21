@@ -2958,10 +2958,11 @@ Board* convert_vector_to_board(std::vector<std::vector<int>> vector) {
 }
 
 void print_vector_board(const std::vector<std::vector<int>>& board) {
-    std::cout <<"    1   2   3   4   5   6   7   8\n";
+    std::vector zahlen= {8,7,6,5,4,3,2,1};
+    std::cout <<"    a   b   c   d   e   f   g   h\n";
     std::cout <<"  ---------------------------------\n";
     for (int i=0; i<8; ++i) {
-        std::cout << i+1 <<" I";
+        std::cout << zahlen[i] <<" I";
         for (int j=0; j<8; ++j) {
             std::cout << " ";
             if (board[i][j]==1) {std::cout << 'b';}

@@ -3771,48 +3771,6 @@ public:
     Board board;
     int max_time=1;
 
-    bool mcts2() {
-        std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-        //filter legal moves
-        std::vector<MCTSNode> legal_moves;
-        int number_of_legal_moves = 0;
-        root_node.children=root_node.expand_node();
-        for (MCTSNode& child_of_root : root_node.children) {
-            child_of_root.expand_node();
-            bool king_is_killed = false;
-            for (MCTSNode& child_of_child : child_of_root.children) {
-                if (child_of_child.board.verloren(root_node.player_am_zug)) {
-                    king_is_killed = true;
-                    break;
-                }
-            }
-            if (!king_is_killed) {
-                legal_moves.push_back(child_of_root);
-                number_of_legal_moves++;
-            }
-        }
-        root_node.children = legal_moves;
-        // No legal moves left
-        if (number_of_legal_moves == 0) {return false;}
-        //
-        while (true) {
-            mcts_counter += 1;
-            MCTSNode* selected_node = root_node.select_leaf_node();
-            if (selected_node->visits==0) {
-                double new_score = selected_node->simulate();
-                selected_node->backpropagate(new_score, number_of_simulations);
-            }
-            else {selected_node->expand_node();}
-            //
-            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-            double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
-            if (elapsed_seconds > this->max_time) {
-                break;
-            }
-        }
-        return true;
-    }
-
     bool mcts() {
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
         //filter legal moves
@@ -3886,7 +3844,7 @@ public:
 
 //
 
-int max_turns=88;
+int max_turns=100;
 
 class Schach {
 public:
@@ -3922,7 +3880,7 @@ int turn;
         int current = 1;
         while (true) {
             //-----------------------------------------
-            MinimaxPlayer2 player_1(6, this->board);
+            HumanPlayer player_1(6, this->board);
             MinimaxPlayer2 player_2(-6, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
@@ -4029,16 +3987,3 @@ int main() {
 }
 
 //
-
-//Positionsmatrixen: Zentrumeinnahme
-//Hasht
-//evalpos: QT QX XX
-//evalpos: nicht zurueckgehen
-//evalpos: zu viel BB zigzag, nicht genug Ll und Xx am Anfang
-
-//Minimax2: sb welcher Tiefe?
-
-//MCTS Parameter bestimmen
-
-//remove_common_bits_rochade nicht nötig
-//---------------------------------------

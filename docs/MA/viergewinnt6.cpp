@@ -773,5 +773,4 @@ int main() {
     spielen(30);
 }
 
-//sort?
 
