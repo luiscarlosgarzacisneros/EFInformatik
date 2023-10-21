@@ -36,7 +36,8 @@ std::vector<std::vector<int>> deepcopy(const std::vector<std::vector<int>>& boar
 }
 
 void print_board(const std::vector<std::vector<int>>& board) {
-    std::cout<<"  1   2   3   4   5   6   7   8"<<std::endl;
+    std::vector zahlen= {8,7,6,5,4,3,2,1};
+    std::cout<<"  a   b   c   d   e   f   g   h"<<std::endl;
     std::cout<<"---------------------------------"<<std::endl;
     for (int i=0; i<8; ++i) {
         std::cout << "I ";
@@ -48,7 +49,7 @@ void print_board(const std::vector<std::vector<int>>& board) {
             else {std::cout << " ";}
             std::cout << " I ";
         }
-        std::cout<<i+1 <<std::endl;
+        std::cout<<zahlen[i] <<std::endl;
         std::cout<<"---------------------------------"<<std::endl;
     }
 }
@@ -805,6 +806,9 @@ int evaluate_position(const std::vector<std::vector<int>>& pos, int player) {
 
 //
 
+std::vector x_inputs={'a','b','c', 'd', 'e', 'f', 'g', 'h'};
+std::vector y_inputs={8,7,6,5,4,3,2,1};
+
 class HumanPlayer {
 public:
     HumanPlayer(int token) : token(token) {}
@@ -813,28 +817,37 @@ public:
 
     std::vector<int> eingabe() {
         try {
-            int vx, vy, zx, zy;
+            char vx_i, zx_i;
+            int vy_i, zy_i;
             std::cout <<"von x: ";
-            std::cin>> vx;
+            std::cin>> vx_i;
             std::cout <<"von y: ";
-            std::cin>> vy;
+            std::cin>> vy_i;
             std::cout <<"zu x: ";
-            std::cin>> zx;
+            std::cin>> zx_i;
             std::cout <<"zu y: ";
-            std::cin >> zy;
+            std::cin >> zy_i;
             //
-            vx -= 1;
-            vy -= 1;
-            zx -= 1;
-            zy -= 1;
+            auto it_vx = std::find(x_inputs.begin(), x_inputs.end(), vx_i);
+            auto it_zx = std::find(x_inputs.begin(), x_inputs.end(), zx_i);
+            auto it_vy = std::find(y_inputs.begin(), y_inputs.end(), vy_i);
+            auto it_zy = std::find(y_inputs.begin(), y_inputs.end(), zy_i);
+            int vx_index = std::distance(x_inputs.begin(), it_vx);
+            int zx_index = std::distance(x_inputs.begin(), it_zx);
+            int vy_index = std::distance(y_inputs.begin(), it_vy);
+            int zy_index = std::distance(y_inputs.begin(), it_zy);
+            int vy=vy_index;
+            int zy=zy_index;
+            int vx=vx_index;
+            int zx=zx_index;
             //
             if (vy < 8 && vy > -1 && vx < 8 && vx > -1 && zy < 8 && zy > -1 && zx < 8 && zx > -1 && is_int(vx) && is_int(vy)&& is_int(zx)&& is_int(zy)) {
-                    return {vy, vx, zy, zx};
+                return {vy, vx, zy, zx};
             }
             else {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "EINGABE NICHT KORREKT1" << std::endl;
+                std::cout << "EINGABE NICHT KORREKT0" << std::endl;
                 return eingabe();
             }
         }
@@ -852,13 +865,18 @@ public:
         bool korrekt = false;
         //
         try {
-            int zx, zy;
+            char zx_i;
+            int zy_i;
             std::cout << "zu x: ";
-            std::cin >> zx;
+            std::cin >> zx_i;
             std::cout << "zu y: ";
-            std::cin >> zy;
-            zx -= 1;
-            zy -= 1;
+            std::cin >> zy_i;
+            auto it_zx = std::find(x_inputs.begin(), x_inputs.end(), zx_i);
+            auto it_zy = std::find(y_inputs.begin(), y_inputs.end(), zy_i);
+            int zy_index = std::distance(y_inputs.begin(), it_zy);
+            int zx_index = std::distance(x_inputs.begin(), it_zx);
+            int zy=zy_index;
+            int zx=zx_index;
             //
             if (!is_int(zy) || !is_int(zx)) {
                 std::cin.clear();
@@ -901,13 +919,18 @@ public:
         bool korrekt = false;
         //
         try {
-            int zx, zy;
+            char zx_i;
+            int zy_i;
             std::cout << "zu x: ";
-            std::cin >> zx;
+            std::cin >> zx_i;
             std::cout << "zu y: ";
-            std::cin >> zy;
-            zx -= 1;
-            zy -= 1;
+            std::cin >> zy_i;
+            auto it_zx = std::find(x_inputs.begin(), x_inputs.end(), zx_i);
+            auto it_zy = std::find(y_inputs.begin(), y_inputs.end(), zy_i);
+            int zy_index = std::distance(y_inputs.begin(), it_zy);
+            int zx_index = std::distance(x_inputs.begin(), it_zx);
+            int zy=zy_index;
+            int zx=zx_index;
             //
             if (!is_int(zy) || !is_int(zx)) {
                 std::cin.clear();
