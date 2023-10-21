@@ -38,6 +38,7 @@ def printboard(board):
     b_q_path = os.path.join(current_dir, "black_queen.png")
     root = tk.Tk()
     root.title("Dame")
+    queen_size = 40
     canvas = tk.Canvas(root, width=400, height=400, background="brown")
     canvas.grid(row=0, column=0, padx=10, pady=10)
     #circle und queen colors und positions
@@ -55,6 +56,12 @@ def printboard(board):
                 canvas.create_rectangle(x0, y0, x1, y1, fill="beige")
             else:
                 canvas.create_rectangle(x0, y0, x1, y1, fill="brown")
+    for i in range(8):
+        for j in range(8):
+            x0 = j * 50
+            y0 = i * 50
+            x1 = x0 + 50
+            y1 = y0 + 50
             # Check board values and draw circles/queens
             if board[i][j] in circle_colors:
                 fill_color = circle_colors[board[i][j]]
@@ -62,6 +69,7 @@ def printboard(board):
             if board[i][j] in queen_colors:
                 image_path = queen_colors[board[i][j]]
                 queen_image = tk.PhotoImage(file=image_path)
+                queen_image = queen_image.subsample(queen_image.width() // queen_size, queen_image.height() // queen_size)
                 canvas.create_image(x0 + 25, y0 + 25, image=queen_image)
     root.update()
     open_window=root
@@ -772,7 +780,7 @@ class Dame():
         self.board = [
             [0,-1,0,-1,0,-1,0,-1],
             [-1,0,-1,0,-1,0,-1,0],
-            [0,-1,0,-1,0,-1,0,-1],
+            [0,-1,0,-2,0,-1,0,-1],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [1,0,2,0,1,0,1,0],
