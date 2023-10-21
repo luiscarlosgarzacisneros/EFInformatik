@@ -7,6 +7,8 @@ import os
 
 #
 
+
+
 open_window=None
 
 def printboard(board):
@@ -31,19 +33,22 @@ def printboard(board):
         print('---------------------------------') 
     #---------------------------------------------------
     if open_window!=None:
-        open_window.destroy()
+        #open_window.destroy()
+        pass
     # Get the current script's directory
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    w_q_path = os.path.join(current_dir, "white_queen.png")
-    b_q_path = os.path.join(current_dir, "black_queen.png")
     root= tk.Tk()
     root.title("Dame")
-    queen_size = 40
     canvas = tk.Canvas(root, width=400, height=400)
     canvas.grid(row=0, column=0, padx=10, pady=10)
     #circle und queen colors und positions
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    w_q_path = os.path.join(current_dir, "white_queen.png")
+    b_q_path = os.path.join(current_dir, "black_queen.png")
+    w_q_i = tk.PhotoImage(file=w_q_path)
+    b_q_i = tk.PhotoImage(file=b_q_path)
+    w_q_image = w_q_i.subsample(w_q_i.width() // 40, w_q_i.height() // 40)
+    b_q_image = b_q_i.subsample(b_q_i.width() // 40, b_q_i.height() // 40)
     circle_colors = {1: "white", -1: "black"}
-    queen_colors = {2: w_q_path, -2: b_q_path}
     #Board zeichnen
     for i in range(8):
         for j in range(8):
@@ -66,13 +71,13 @@ def printboard(board):
             if board[i][j] in circle_colors:
                 fill_color = circle_colors[board[i][j]]
                 canvas.create_oval(x0, y0, x1, y1, fill=fill_color, outline="black")
-            if board[i][j] in queen_colors:
-                image_path = queen_colors[board[i][j]]
-                queen_image = tk.PhotoImage(file=image_path)
-                q_image = queen_image.subsample(queen_image.width() // queen_size, queen_image.height() // queen_size)
-                canvas.create_image(x0+25, y0+25, image=q_image)
+            if board[i][j]==2:
+                canvas.create_image(x0+25, y0+25, image=w_q_image)
+            if board[i][j]==-2:
+                canvas.create_image(x0+25, y0+25, image=b_q_image)
     #
     root.update()
+    root.mainloop()
     open_window=root
 
 #
