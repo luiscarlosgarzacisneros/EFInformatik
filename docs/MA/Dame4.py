@@ -6,7 +6,8 @@ import math
 #
 
 def printboard(board):
-    print('  1   2   3   4   5   6   7   8')
+    zahlen=[8,7,6,5,4,3,2,1]
+    print('  a   b   c   d   e   f   g   h')
     print('---------------------------------')
     for i in range(8):
         print('I ', end='')
@@ -22,7 +23,7 @@ def printboard(board):
             else:
                 print(' ', end='')
             print(' I ', end='')
-        print(i + 1)
+        print(zahlen[i])
         print('---------------------------------')     
 
 #
@@ -744,8 +745,8 @@ class Dame():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(MinimaxPlayer(1))
-        self.players.append(MCTSPlayer(-1))
+        self.players.append(HumanPlayer(1))
+        self.players.append(MinimaxPlayer(-1))
         #
         current=0
         while True:
@@ -779,6 +780,9 @@ class Dame():
 
 #
 
+x_inputs=['a', 'b','c', 'd', 'e', 'f', 'g', 'h']
+y_inputs=[8,7,6,5,4,3,2,1]
+
 class HumanPlayer():
     def __init__(self, token):
         self.token = token
@@ -788,15 +792,19 @@ class HumanPlayer():
     def eingabe(self):
         while True:
             try:
-                vx = int(input('von x: ')) - 1
-                vy = int(input('von y: ')) - 1
-                zx = int(input('zu x: ')) - 1
-                zy = int(input('zu y: ')) - 1
+                vx_s = str(input('von x: '))
+                vy_i = int(input('von y: '))
+                zx_s = str(input('zu x: '))
+                zy_i = int(input('zu y: '))
+                vy=y_inputs.index(vy_i)
+                zy=y_inputs.index(zy_i)
             except:
                 print('EINGABE NICHT KORREKT1')
                 continue
 
-            if vy<8 and vy>-1 and vx<8 and vx>-1 and zy<8 and zy>-1 and zx<8 and zx>-1:
+            if vy<8 and vy>-1 and zy<8 and zy>-1 and vx_s in x_inputs and zx_s in x_inputs:
+                vx = x_inputs.index(vx_s)
+                zx = x_inputs.index(zx_s)
                 return [vy, vx, zy, zx]
             else:
                 print('EINGABE NICHT KORREKT1')
@@ -807,8 +815,10 @@ class HumanPlayer():
         while True:
             korrekt=False
             try:
-                zx = int(input('zu x: ')) - 1
-                zy = int(input('zu y: ')) - 1
+                zx_s = str(input('zu x: '))
+                zy_i = int(input('zu y: '))
+                zx = x_inputs.index(zx_s)
+                zy=y_inputs.index(zy_i)
             except:
                 print('EINGABE NICHT KORREKT3')
                 continue
@@ -839,8 +849,10 @@ class HumanPlayer():
         while True:
             korrekt=False
             try:
-                zx = int(input('zu x: ')) - 1
-                zy = int(input('zu y: ')) - 1
+                zx_s = int(input('zu x: '))
+                zy_i = int(input('zu y: '))
+                zx = x_inputs.index(zx_s)
+                zy=y_inputs.index(zy_i)
             except:
                 print('EINGABE NICHT KORREKT4')
                 continue
@@ -1602,8 +1614,6 @@ class MCTSNode(MCTSPlayer):
 
 #
 
-#
-
 minimax_counter4=0
 
 class MinimaxPlayer():
@@ -1784,22 +1794,3 @@ def spielen(z):
 
 spielen(20)
 
-
-#------------------------------------------------------
-board = [
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,1,0,0,0,0],
-            [0,0,0,0,-1,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,2]
-        ]
-
-#printboard(board)
-#printboard(generate_one_random_child(board,1))
-
-#------------------------------------------------------
-
-#evaluate_position: open v closed?!!

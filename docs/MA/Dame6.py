@@ -1668,8 +1668,6 @@ class MCTSNode(MCTSPlayer):
 
 #
 
-#
-
 minimax_counter4=0
 
 class MinimaxPlayer():
