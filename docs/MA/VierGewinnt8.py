@@ -282,6 +282,7 @@ class VierGewinnt():
         self.board = []
         self.turn=0
         self.players=[]
+        self.open_window=None
     
     def printboard(self, board):
         print('  1   2   3   4   5   6   7')
@@ -298,25 +299,25 @@ class VierGewinnt():
                 print(' I ', end='')
             print('')
             print('-----------------------------')
-        #tkinter----------------------------
+        #tkinter--------------------------------------
+        if self.open_window!=None:
+            self.open_window.destroy()
         root = tk.Tk()
         root.title("Connect Four")
-
         canvas = tk.Canvas(root, width=350, height=300, background="blue")
         canvas.grid(row=0, column=0, padx=10, pady=10)
-
         # Draw the initial board state
         for i in range(6):
             for j in range(7):
                 canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="black")
-
+        #Fill with pieces
         for i in range(6):
             for j in range(7):
                 if self.board[i][j] == 1:
                     canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="yellow")
                 elif self.board[i][j] == -1:
                     canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="red")
-
+        self.open_window=root
         root.update_idletasks()
 
     def play(self):
