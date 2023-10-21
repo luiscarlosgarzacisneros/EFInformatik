@@ -4,7 +4,6 @@ import time
 import math
 import tkinter as tk
 import os
-import threading
 #
 
 open_window=None
