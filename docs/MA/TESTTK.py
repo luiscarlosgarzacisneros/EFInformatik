@@ -7,8 +7,6 @@ import os
 import threading
 #
 
-
-
 open_window=None
 
 def printboard(board):
@@ -77,8 +75,12 @@ def printboard(board):
                 canvas.create_image(x0+25, y0+25, image=b_q_image)
     #
     #root.update()
+
+    def exit_loop(event=None):
+        root.destroy()
+    root.bind("<Return>", exit_loop)
     root.mainloop()
-    open_window=root
+    #open_window=root
 
 #
 
