@@ -637,28 +637,6 @@ public:
     std::vector<std::vector<int>> board;
     int max_time=3;
 
-    bool mcts2() {
-        std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-        root_node.children=root_node.expand_node();
-        //
-        while (true) {
-            mcts_counter += 1;
-            MCTSNode* selected_node = root_node.select_leaf_node();
-            if (selected_node->visits==0) {
-                double new_score = selected_node->simulate();
-                selected_node->backpropagate(new_score, number_of_simulations);
-            }
-            else {selected_node->expand_node();}
-            //
-            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-            double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
-            if (elapsed_seconds > this->max_time) {
-                break;
-            }
-        }
-        return true;
-    }
-
     bool mcts() {
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
         root_node.children=root_node.expand_node();

@@ -1537,27 +1537,6 @@ class MCTSPlayer():
         self.numberofsimulations=30
         #-----
         
-    def mcts2(self,board):
-        self.rootnode=MCTSNode(self.token)
-        self.rootnode.position=board
-        self.rootnode.playeramzug=self.token
-        self.rootnode.score=0
-        self.rootnode.visits=0
-        self.rootnode.children=[]
-        #
-        self.rootnode.expand_node()
-        start = time.time()
-        while True:
-            self.counter+=1
-            selectednode=self.rootnode.select_leafnode()
-            if selectednode.visits==0:
-                selectednode.backpropagate(selectednode.simulate(),selectednode.numberofsimulations)
-            else:
-                selectednode.expand_node()
-            #
-            if (time.time() - start) > self.maxtime:
-                break
-
     def mcts(self,board):
         self.rootnode=MCTSNode(self.token)
         self.rootnode.position=board

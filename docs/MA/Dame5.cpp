@@ -1658,6 +1658,7 @@ public:
         //
         minimax_counter=0;
     }
+
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
@@ -1850,52 +1851,11 @@ public:
         root_node.token=token;
         root_node.expanded=false;
     }
+
     MCTSNode root_node;
     int token;
     std::vector<std::vector<int>> board;
     int max_time=1;
-
-    bool mcts2() {
-        std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-        //filter legal moves
-        std::vector<MCTSNode> legal_moves;
-        int number_of_legal_moves = 0;
-        root_node.children=root_node.expand_node();
-        for (MCTSNode& child_of_root : root_node.children) {
-            child_of_root.expand_node();
-            bool king_is_killed = false;
-            for (MCTSNode& child_of_child : child_of_root.children) {
-                if (verloren1(child_of_child.board, root_node.player_am_zug)) {
-                    king_is_killed = true;
-                    break;
-                }
-            }
-            if (!king_is_killed) {
-                legal_moves.push_back(child_of_root);
-                number_of_legal_moves++;
-            }
-        }
-        root_node.children = legal_moves;
-        // No legal moves left
-        if (number_of_legal_moves == 0) {return false;}
-        //
-        while (true) {
-            mcts_counter += 1;
-            MCTSNode* selected_node = root_node.select_leaf_node();
-            if (selected_node->visits==0) {
-                double new_score = selected_node->simulate();
-                selected_node->backpropagate(new_score, number_of_simulations);
-            }
-            else {selected_node->expand_node();}
-            //
-            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-            double elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
-            if (elapsed_seconds > this->max_time) {
-                break;
-            }
-        }
-        return true;
-    }
 
     bool mcts() {
         std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
@@ -2034,7 +1994,3 @@ int main() {
     srand(time(0)); //seed
     spielen(3);
 }
-
-//sort?
-//eval nicht schlagen
-

@@ -1354,20 +1354,6 @@ class MCTSPlayer():
         self.numberofsimulations=30
         #-----
         
-    def mcts2(self):
-        start = time.time()
-        #
-        while True:
-            self.counter+=1
-            selectednode=self.rootnode.select_leafnode()
-            if selectednode.visits==0:
-                selectednode.backpropagate(selectednode.simulate(),selectednode.numberofsimulations)
-            else:
-                selectednode.expand_node()
-            #
-            if (time.time() - start) > self.maxtime:
-                break
-    
     def mcts(self):
         start = time.time()
         #
