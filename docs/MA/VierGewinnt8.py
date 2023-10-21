@@ -300,19 +300,30 @@ def printboard(board):
         open_window.destroy()
     root = tk.Tk()
     root.title("4-Gewinnt")
-    canvas = tk.Canvas(root, width=350, height=300, background="blue")
+    canvas = tk.Canvas(root, width=350, height=350, background="blue")
     canvas.grid(row=0, column=0, padx=10, pady=10)
-    # Draw the initial board state
+    #Koordinaten
+    for j in range(7):
+        x = j * 50 + 25  #centering
+        y = 10  # Y-coordinate
+        canvas.create_text(x, y, text=str(j + 1), fill="white")
+    #Draw initial board state
     for i in range(6):
         for j in range(7):
-            canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="black")
+            circle_x = j * 50 + 25  # Center of the circle
+            circle_y = i * 50 + 50  # Center of the circle
+            canvas.create_oval(circle_x - 20, circle_y - 20, circle_x + 20, circle_y + 20, fill="black")
     #Fill with pieces
     for i in range(6):
         for j in range(7):
             if board[i][j] == 1:
-                canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="yellow")
+                circle_x = j * 50 + 25  # Center of the circle
+                circle_y = i * 50 + 50  # Center of the circle
+                canvas.create_oval(circle_x - 20, circle_y - 20, circle_x + 20, circle_y + 20, fill="yellow")
             elif board[i][j] == -1:
-                canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="red")
+                circle_x = j * 50 + 25  # Center of the circle
+                circle_y = i * 50 + 50  # Center of the circle
+                canvas.create_oval(circle_x - 20, circle_y - 20, circle_x + 20, circle_y + 20, fill="red")
     root.update()
     open_window=root
 
