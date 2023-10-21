@@ -317,7 +317,7 @@ class VierGewinnt():
                 elif self.board[i][j] == -1:
                     canvas.create_oval(j * 50 + 10, i * 50 + 10, (j + 1) * 50 - 10, (i + 1) * 50 - 10, fill="red")
 
-        root.mainloop()
+        root.update_idletasks()
 
     def play(self):
         self.board = [
