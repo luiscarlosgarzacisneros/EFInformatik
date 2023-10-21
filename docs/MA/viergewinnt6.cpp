@@ -432,6 +432,7 @@ public:
         //
         minimax_counter=0;
     }
+
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
@@ -630,6 +631,7 @@ public:
         root_node.token=token;
         root_node.expanded=false;
     }
+
     MCTSNode root_node;
     int token;
     std::vector<std::vector<int>> board;
@@ -758,7 +760,6 @@ public:
             this->turn += 1;
         }
     }
-
 
 private:
     std::vector<std::vector<int>> board;
