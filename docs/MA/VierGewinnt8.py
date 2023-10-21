@@ -307,7 +307,7 @@ def printboard(board):
         x = j * 50 + 25  #centering
         y = 10  # Y-coordinate
         canvas.create_text(x, y, text=str(j + 1), fill="white")
-    #Draw initial board state
+    #Draw board state
     for i in range(6):
         for j in range(7):
             circle_x = j * 50 + 25  # Center of the circle

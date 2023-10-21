@@ -2,10 +2,15 @@ import copy
 import random
 import time
 import math
+import tkinter as tk
+import os
 
 #
 
+open_window=None
+
 def printboard(board):
+    global open_window
     print('  1   2   3   4   5   6   7   8')
     print('---------------------------------')
     for i in range(8):
@@ -23,7 +28,43 @@ def printboard(board):
                 print(' ', end='')
             print(' I ', end='')
         print(i + 1)
-        print('---------------------------------')     
+        print('---------------------------------') 
+    #---------------------------------------------------
+    if open_window!=None:
+        open_window.destroy()
+    # Get the current script's directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    w_q_path = os.path.join(current_dir, "white_queen.png")
+    b_q_path = os.path.join(current_dir, "black_queen.png")
+    root = tk.Tk()
+    root.title("Dame")
+    canvas = tk.Canvas(root, width=400, height=400, background="brown")
+    canvas.grid(row=0, column=0, padx=10, pady=10)
+    #circle und queen colors und positions
+    circle_colors = {1: "white", -1: "black"}
+    queen_colors = {2: w_q_path, -2: b_q_path}
+    #Board zeichnen
+    for i in range(8):
+        for j in range(8):
+            x0 = j * 50
+            y0 = i * 50
+            x1 = x0 + 50
+            y1 = y0 + 50
+            #Farben abwechseln
+            if (i + j) % 2 == 0:
+                canvas.create_rectangle(x0, y0, x1, y1, fill="beige")
+            else:
+                canvas.create_rectangle(x0, y0, x1, y1, fill="brown")
+            # Check board values and draw circles/queens
+            if board[i][j] in circle_colors:
+                fill_color = circle_colors[board[i][j]]
+                canvas.create_oval(x0, y0, x1, y1, fill=fill_color, outline="black")
+            if board[i][j] in queen_colors:
+                image_path = queen_colors[board[i][j]]
+                queen_image = tk.PhotoImage(file=image_path)
+                canvas.create_image(x0 + 25, y0 + 25, image=queen_image)
+    root.update()
+    open_window=root
 
 #
 
@@ -734,7 +775,7 @@ class Dame():
             [0,-1,0,-1,0,-1,0,-1],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
-            [1,0,1,0,1,0,1,0],
+            [1,0,2,0,1,0,1,0],
             [0,1,0,1,0,1,0,1],
             [1,0,1,0,1,0,1,0]
         ]
@@ -744,8 +785,8 @@ class Dame():
         # Spieler:innen vorbereiten
         # X spielt immer zuerst
         self.players.clear()
-        self.players.append(MinimaxPlayer(1))
-        self.players.append(MCTSPlayer(-1))
+        self.players.append(HumanPlayer(1))
+        self.players.append(MinimaxPlayer(-1))
         #
         current=0
         while True:
