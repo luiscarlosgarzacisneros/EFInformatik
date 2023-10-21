@@ -33,9 +33,18 @@ def printboard(board):
         open_window.destroy()
     root= tk.Tk()
     root.title("Dame")
-    canvas = tk.Canvas(root, width=400, height=400)
+    canvas = tk.Canvas(root, width=430, height=430)
     canvas.grid(row=0, column=0, padx=10, pady=10)
     #Board zeichnen
+    column_letters = ["A", "B", "C", "D", "E", "F", "G", "H"]
+    for j in range(8):
+        x0 = j * 50 + 25
+        y0 = 8 * 60 -60
+        canvas.create_text(x0, y0, text=column_letters[j])
+    for i in range(8):
+        x0 = 8 * 50 +20
+        y0 = i * 50 + 25
+        canvas.create_text(x0, y0, text=str(8 - i))
     for i in range(8):
         for j in range(8):
             x0 = j * 50
