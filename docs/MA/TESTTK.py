@@ -4,6 +4,8 @@ import time
 import math
 import tkinter as tk
 import os
+import subprocess
+import json
 #
 
 open_window=None
@@ -74,11 +76,37 @@ def printboard(board):
                 canvas.create_image(x0+25, y0+25, image=b_q_image)
     #
     #root.update()
+    def save_canvas_content():
+        canvas_data = {"images": []}
+        for item in canvas.find_all():
+            item_type = canvas.type(item)
+            if item_type == "image":
+                coords = canvas.coords(item)
+                image_data = canvas.itemcget(item, "image")
+                canvas_data["images"].append({"coords": coords, "image_data": image_data})
+        
+        with open("canvas_content.json", "w") as json_file:
+            json.dump(canvas_data, json_file)
 
-    def exit_loop(event=None):
-        root.destroy()
-    root.bind("<Return>", exit_loop)
-    root.mainloop()
+    # Load saved canvas content from a JSON file
+    def load_canvas_content():
+        try:
+            with open("canvas_content.json", "r") as json_file:
+                canvas_data = json.load(json_file)
+                for item in canvas_data["images"]:
+                    coords = item["coords"]
+                    image_data = item["image_data"]
+                    canvas.create_image(coords, anchor=tk.NW, image=image_data)
+
+        except FileNotFoundError:
+            pass
+    
+    save_canvas_content()
+    load_canvas_content()
+    root.update()
+
+    #root.quit()
+    #root.update()
     #open_window=root
 
 #
