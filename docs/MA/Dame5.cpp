@@ -811,8 +811,8 @@ std::vector y_inputs={8,7,6,5,4,3,2,1};
 
 class HumanPlayer {
 public:
-    HumanPlayer(int token) : token(token) {}
-
+    HumanPlayer(int token, std::vector<std::vector<int>> board) : token(token) {}
+    //braucht board nicht, ist aber schoener, besser bei austausche zwischen Klassen MCTS und Minimax
     int token=token;
 
     std::vector<int> eingabe() {
@@ -1956,7 +1956,7 @@ public:
 
         while (true) {
             //-----------------------------------------
-            HumanPlayer player_1(1);
+            HumanPlayer player_1(1, this->board);
             MinimaxPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout<<this->turn<<std::endl;
