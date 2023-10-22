@@ -1653,7 +1653,7 @@ class MinimaxPlayer():
     #sucht bis max zeit erreicht ist, depth =+1, move sorting
     def __init__(self, token):
         self.token = token
-        self.maxtime=10
+        self.maxtime=5
         self.starting_depth=1 #wenn suche bei layer1 nicht fertig wird: crash
 
     def minimaxer(self, depth, vergangene_zeit):
