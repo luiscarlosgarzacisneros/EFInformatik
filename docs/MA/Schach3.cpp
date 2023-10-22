@@ -3230,7 +3230,7 @@ public:
 };
 
 //
-
+//minimax normal
 int minimax_counter=0;
 
 class MinimaxNode {
@@ -3445,7 +3445,7 @@ public:
 };
 
 //
-
+//erweitert nur schlagen-züge ab einer gewissen tiefe
 class MinimaxNode2 {
 public:
     MinimaxNode2() : value(0), value_not_none(false), children(), board(), player_am_zug(0), token(0), depth(0), expanded(false) {}
@@ -3668,7 +3668,7 @@ public:
 };
 
 //
-
+//minimax2 + ignoriert unvollständig berechnete ebenen
 class MinimaxNode3 {
 public:
     MinimaxNode3() : value(0), value_not_none(false), children(), board(), player_am_zug(0), token(0), depth(0), expanded(false) {}
