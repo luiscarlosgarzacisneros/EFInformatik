@@ -11,6 +11,12 @@
 
 //
 
+#define BROWN_TEXT "\033[38;2;139;69;19m"
+#define BEIGE_TEXT "\033[38;2;227;212;173m"
+#define RESET_TEXT "\033[0m"
+
+//
+
 bool is_int(int value) {
     std::string input = std::to_string(value);
     std::istringstream iss(input);
@@ -38,19 +44,19 @@ std::vector<std::vector<int>> deepcopy(const std::vector<std::vector<int>>& boar
 void print_board(const std::vector<std::vector<int>>& board) {
     std::vector zahlen= {8,7,6,5,4,3,2,1};
     std::cout<<"  a   b   c   d   e   f   g   h"<<std::endl;
-    std::cout<<"---------------------------------"<<std::endl;
+    std::cout<<"+---+---+---+---+---+---+---+---+"<<std::endl;
     for (int i=0; i<8; ++i) {
-        std::cout << "I ";
+        std::cout << "| ";
         for (int j = 0; j < 8; ++j) {
-            if (board[i][j]==-1) {std::cout<< "O";}
-            else if (board[i][j]==1) {std::cout<<"X";}
-            else if (board[i][j]==-2) {std::cout<<"M";}
-            else if (board[i][j]==2) {std::cout<<"W";}
+            if (board[i][j]==-1) {std::cout<<BROWN_TEXT<<"O"<<RESET_TEXT;}
+            else if (board[i][j]==1) {std::cout<<BEIGE_TEXT<<"O"<<RESET_TEXT;}
+            else if (board[i][j]==-2) {std::cout<<BROWN_TEXT<<"Q"<<RESET_TEXT;}
+            else if (board[i][j]==2) {std::cout<<BEIGE_TEXT<<"Q"<<RESET_TEXT;}
             else {std::cout << " ";}
-            std::cout << " I ";
+            std::cout << " | ";
         }
         std::cout<<zahlen[i] <<std::endl;
-        std::cout<<"---------------------------------"<<std::endl;
+        std::cout<<"+---+---+---+---+---+---+---+---+"<<std::endl;
     }
 }
 
@@ -1685,7 +1691,7 @@ public:
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time=10;
+    int max_time=3;
     int max_depth=12;
     int starting_depth=1;
 
