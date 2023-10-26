@@ -1969,20 +1969,20 @@ public:
             print_board(this->board);
 
             if (current==1) {
-                std::cout <<"X ist am Zug"<<std::endl;
+                std::cout <<"Weiss ist am Zug"<<std::endl;
                 std::vector<std::vector<int>> board_copy = deepcopy(this->board);
                 std::vector<std::vector<int>> new_board = player_1.get_move(board_copy);
                 this->board=new_board;
             }
             else if (current==2) {
-                std::cout<<"O ist am Zug"<<std::endl;
+                std::cout<<"Schwarz ist am Zug"<<std::endl;
                 std::vector<std::vector<int>> board_copy = deepcopy(this->board);
                 std::vector<std::vector<int>> new_board = player_2.get_move(board_copy);
                 this->board=new_board;
             }
             //
-            if (verloren2(this->board, -1)) {print_board(this->board); std::cout<<"X HAT GEWONNEN"<<std::endl; return 1;}
-            else if (verloren2(this->board, 1)) {print_board(this->board); std::cout<<"O HAT GEWONNEN"<<std::endl; return -1;}
+            if (verloren2(this->board, -1)) {print_board(this->board); std::cout<<"WEISS HAT GEWONNEN"<<std::endl; return 1;}
+            else if (verloren2(this->board, 1)) {print_board(this->board); std::cout<<"SCHWARZ HAT GEWONNEN"<<std::endl; return -1;}
             else if (this->turn==max_turns) {print_board(this->board); std::cout<<"UNENTSCHIEDEN"<<std::endl; return 0;}
             //
             if (current==1) {current = 2;}
@@ -2010,8 +2010,8 @@ void spielen(int z) {
         if (r==1) {x_wins+=1;}
         else if (r== -1) {o_wins+=1;}
         else if (r==0) {unentschieden+= 1;}
-        std::cout<<"X: "<<x_wins<<std::endl;
-        std::cout<<"O: "<<o_wins<<std::endl;
+        std::cout<<"Weiss: "<<x_wins<<std::endl;
+        std::cout<<"Schwarz: "<<o_wins<<std::endl;
         std::cout<<"-: "<<unentschieden<<std::endl;
     }
     std::cout<<"FERTIG"<<std::endl;

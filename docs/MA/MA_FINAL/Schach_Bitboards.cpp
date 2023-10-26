@@ -4146,11 +4146,11 @@ int turn;
             Board new_move;
             Board* new_board;
             if (current==1) {
-                std::cout <<"k ist am Zug"<<std::endl;
+                std::cout <<"Weiss ist am Zug"<<std::endl;
                 new_board = player_1.get_move();
             }
             else if (current==2) {
-                std::cout<<"K ist am Zug"<<std::endl;
+                std::cout<<"Schwarz ist am Zug"<<std::endl;
                 new_board = player_2.get_move();
             }
             //
@@ -4182,12 +4182,12 @@ int turn;
                 else {
                     if (this_players_token == 6) {
                         this->board.print_board();
-                        std::cout << "K HAT GEWONNEN" << std::endl;
+                        std::cout << "SCHWARZ HAT GEWONNEN" << std::endl;
                         return -1;
                     }
                     else {
                         this->board.print_board();
-                        std::cout << "k HAT GEWONNEN" << std::endl;
+                        std::cout << "WEISS HAT GEWONNEN" << std::endl;
                         return 1;
                     }
                 }
@@ -4219,8 +4219,8 @@ void spielen(int z) {
         if (r==1) {k_wins+=1;}
         else if (r==-1) {K_wins+=1;}
         else if (r==0) {unentschieden+=1;}
-        std::cout<<"k: "<<k_wins<<std::endl;
-        std::cout<<"K: "<<K_wins<<std::endl;
+        std::cout<<"Weiss: "<<k_wins<<std::endl;
+        std::cout<<"Schwarz: "<<K_wins<<std::endl;
         std::cout<<"-: "<<unentschieden<<std::endl;
     }
     std::cout<<"FERTIG"<<std::endl;
