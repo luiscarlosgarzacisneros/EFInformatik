@@ -5202,7 +5202,7 @@ public:
     MinimaxNode3 root_node;
     int token;
     Board board;
-    int max_time = 20;
+    int max_time = 12;
     int max_depth = 10;
     int starting_depth = 2;
     int depth_fuer_nur_schlagen = 5;
@@ -5622,7 +5622,7 @@ public:
         while (true)
         {
             //-----------------------------------------
-            HumanPlayer player_1(6, this->board);
+            MinimaxPlayer3 player_1(6, this->board);
             MinimaxPlayer3 player_2(-6, this->board);
             //-----------------------------------------
             std::cout << this->turn << std::endl;

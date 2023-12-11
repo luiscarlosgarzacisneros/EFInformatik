@@ -816,7 +816,7 @@ public:
     MinimaxNode root_node;
     int token;
     std::vector<std::vector<int>> board;
-    int max_time = 4;
+    int max_time = 3;
     int max_depth = 10;
     int starting_depth = 1;
 
@@ -1182,7 +1182,7 @@ public:
         while (true)
         {
             //-----------------------------------------
-            HumanPlayer player_1(1, this->board);
+            MinimaxPlayer player_1(1, this->board);
             MinimaxPlayer player_2(-1, this->board);
             //-----------------------------------------
             std::cout << "" << std::endl;
